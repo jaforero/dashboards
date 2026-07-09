@@ -10,9 +10,7 @@ Es la pieza práctica del ejercicio *“Métricas y eficiencia operativa”* de 
 
 > **Nota:** los datos son sintéticos (ejemplo de clase). No representan clientes ni operaciones reales.
 
-<!-- Sugerencia: agrega una captura o GIF y descoméntalo:
 ![Vista del dashboard](docs/screenshot.png)
--->
 
 ## El hallazgo que monitorea
 El cumplimiento del portafolio cae de **~91% (2025) a ~84% en Q1 2026 (−7 pp)**, con un **quiebre abrupto en enero 2026** (−9 pp de un mes a otro) que golpea a las 8 regiones y a los 4 tipos de cliente casi por igual. Esa uniformidad apunta a una causa **sistémica** —o a un cambio de medición—, no a una ruta suelta. El tablero no re-descubre esa cifra: la vigila, la defiende y la convierte en decisión.
