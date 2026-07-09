@@ -1,9 +1,0 @@
-﻿nombre,tipo,descripción de negocio,ejemplo,valor faltante esperado
-ruta,Texto,Identificador operativo de la ruta logística. Junto con mes conforma la clave primaria del dataset tidy.,R-01,No esperado
-mes,Texto,"Periodo mensual de medición del cumplimiento SLA, conservado en el formato original solicitado mmm_aaaa.",ene_2025,No esperado
-region,Texto categórico,Región logística o comercial a la que pertenece la ruta.,Oriente,No esperado
-ciudad_origen,Texto categórico,Ciudad desde la cual se origina o gestiona la operación de la ruta.,Cúcuta,No esperado
-tipo_cliente,Texto categórico,Segmento del cliente atendido por la ruta.,Retail,No esperado
-sla_objetivo_pct,Numérico decimal / porcentaje,"Meta contractual u operativa de cumplimiento SLA para la ruta, expresada en porcentaje.",96,No esperado
-cumplimiento_pct,Numérico decimal / porcentaje,"Cumplimiento real del SLA para la ruta y mes, expresado en porcentaje.",89.8,No esperado
-brecha_pp,Numérico decimal / puntos porcentuales,Diferencia en puntos porcentuales entre cumplimiento real y objetivo SLA. Valores negativos indican incumplimiento frente a la meta.,-6.2,No esperado
