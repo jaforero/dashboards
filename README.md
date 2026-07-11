@@ -8,6 +8,7 @@ Colección de **dashboards interactivos** que no solo grafican: interpretan, dia
 | Dashboard | Descripción | Enlace |
 |---|---|---|
 | **Cumplimiento de SLA · Operaciones B2B** | 8 capas, alertas, diagnóstico del quiebre, gobernanza, Q&A conversacional y brief exportable. | [`/sla-operaciones/`](./sla-operaciones/) |
+| **Pulso Financiero · Finanzas Corporativas** | Crecimiento, margen, caja y liquidez; puente precio-volumen, descomposición + Holt-Winters con backtest (MAPE 6.5%), KPIs Inteligentes (Histórico vs IA Proyectado), gobernanza y brief exportable. | [`/pulso-financiero/`](./pulso-financiero/) |
 | _Próximamente_ | El siguiente demo va como carpeta hermana. | — |
 
 ## Cómo agregar un dashboard nuevo
