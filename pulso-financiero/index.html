@@ -6,6 +6,7 @@
 <title>Pulso Financiero · Crecimiento, Margen, Caja y Predicción · Javier Forero</title>
 <meta name="description" content="Dashboard financiero decision-first: descriptivo, diagnóstico, predictivo (descomposición + Holt-Winters) y KPIs inteligentes con gobernanza."/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @font-face{font-family:'IgraSans';src:url('https://javierforero.com/fonts/IgraSans.woff2') format('woff2');font-display:swap;}
 :root{
@@ -70,7 +71,7 @@ a{color:var(--vibrant-blue);text-decoration:none;}
 .veredicto p{font-size:.92rem;margin-top:4px;}
 .veredicto b{color:var(--deep-blue);}
 /* KPI CARDS */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px;}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin-bottom:14px;}
 @media(max-width:1020px){.kpis{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:520px){.kpis{grid-template-columns:1fr;}}
 .kpi{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:13px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;}
@@ -131,6 +132,15 @@ details.metod b{color:var(--deep-blue);}
 .hint{font-size:.74rem;color:var(--muted);margin-top:8px;}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
 .tag-def{background:var(--warn-bg);color:var(--warn);border-radius:999px;padding:1px 8px;font-size:.68rem;font-weight:800;}
+.drop{border:2px dashed var(--border);border-radius:16px;padding:26px 14px;text-align:center;background:var(--bg);cursor:pointer;font-size:.9rem;color:var(--muted);}
+.drop.over,.drop:hover{border-color:var(--purple);background:var(--soft-lilac);color:var(--purple);}
+.na{background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:14px;color:var(--muted);font-size:.82rem;}
+.vr{border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:.8rem;margin-top:10px;}
+.vr.ok{border-left:4px solid var(--ok);} .vr.err{border-left:4px solid var(--bad);}
+.vr ul{margin:6px 0 0 18px;} .vr li{margin:3px 0;}
+.bq{display:inline-block;border-radius:6px;padding:0 6px;font-size:.66rem;font-weight:800;}
+.bq.req{background:var(--bad-bg);color:var(--bad);} .bq.opc{background:var(--soft-lilac);color:var(--purple);}
+.srcline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);margin:8px 2px 0;}
 @media(max-width:640px){.wrap{padding:10px 10px 24px;}.chart{min-height:260px;}}
 </style>
 </head>
@@ -144,6 +154,7 @@ details.metod b{color:var(--deep-blue);}
     <div class="nr">
       <a class="pill" href="../">← Hub de dashboards</a>
       <a class="pill" href="https://javierforero.co" target="_blank" rel="noopener">javierforero.co</a>
+      <button class="pill" id="goData" type="button">⤒ Mis datos</button>
       <button class="pill" id="themeToggle" type="button" aria-pressed="false" aria-label="Cambiar tema">🌙</button>
     </div>
   </nav>
@@ -151,14 +162,15 @@ details.metod b{color:var(--deep-blue);}
   <header class="hero">
     <div class="kicker">Demo · Finanzas corporativas · 2022–2024 (36 meses, datos simulados)</div>
     <h1>Pulso Financiero: crecimiento, margen, caja y predicción</h1>
-    <p>Del “qué pasó” al “qué hacer”: descriptivo, diagnóstico, dos modelos predictivos (descomposición + Holt-Winters con backtest) y KPIs inteligentes con factores IA — todo con incertidumbre declarada y gobernanza de la decisión.</p>
+    <p>Del “qué pasó” al “qué hacer”: descriptivo, diagnóstico, dos modelos predictivos (descomposición + Holt-Winters con backtest) y KPIs inteligentes — con incertidumbre declarada y gobernanza. Y ahora <b>con tus propios datos</b>: sube un CSV/Excel y todo el tablero se recalcula e interpreta en tu navegador.</p>
     <div class="meta">
       <span class="hchip">5 niveles de analítica</span><span class="hchip">Holt-Winters · MAPE 6.5%</span>
-      <span class="hchip">KPIs Inteligentes</span><span class="hchip">Gobernanza umbral·dueño·decisión</span><span class="hchip">Offline · 1 archivo</span>
+      <span class="hchip">KPIs Inteligentes</span><span class="hchip">Gobernanza umbral·dueño·decisión</span><span class="hchip">Offline · 1 archivo</span><span class="hchip">⤒ Trae tus datos (CSV/XLSX)</span>
     </div>
   </header>
 
   <div class="veredicto" id="veredicto"></div>
+  <div class="srcline" id="srcChip"></div>
 
   <div class="tabs" id="tabs" role="tablist">
     <button class="tab active" data-t="resumen"><span class="n">1</span>Resumen</button>
@@ -169,6 +181,7 @@ details.metod b{color:var(--deep-blue);}
     <button class="tab" data-t="ikpi"><span class="n">6</span>KPIs Inteligentes</button>
     <button class="tab" data-t="gobernanza"><span class="n">7</span>Gobernanza</button>
     <button class="tab" data-t="qa"><span class="n">8</span>Q&amp;A · Brief</button>
+    <button class="tab" data-t="datos"><span class="n">⤒</span>Mis datos</button>
   </div>
 
   <!-- 1 RESUMEN -->
@@ -190,9 +203,9 @@ details.metod b{color:var(--deep-blue);}
     <div class="grid2">
       <div class="card"><h3>El patrón se repite cada año</h3><div class="sub">Cycle plot: los tres años superpuestos mes a mes. El valle Ene–Abr y los picos May–Jul y Dic son estructurales.</div><div class="chart" id="chCiclo"></div></div>
       <div class="card">
-        <h3 id="tPuente"></h3><div class="sub">Puente precio-volumen: cuánto del crecimiento anual aporta cada palanca (ingreso implícito = ventas/unidades).</div>
-        <div class="segsel" id="selPuente"><button class="seg" data-y="2023">2023 vs 2022</button><button class="seg active" data-y="2024">2024 vs 2023</button></div>
-        <div class="chart" id="chPuente"></div>
+        <h3 id="tPuente">Puente precio-volumen</h3><div class="sub">Cuánto del cambio en ventas aporta cada palanca (ingreso implícito = ventas/unidades), comparando ventanas de 12 meses.</div>
+        <div id="gPuente"><div class="segsel" id="selPuente"></div><div class="chart" id="chPuente"></div></div>
+        <div class="na" id="naPuente" hidden></div>
       </div>
     </div>
   </section>
@@ -203,7 +216,7 @@ details.metod b{color:var(--deep-blue);}
     <div class="sect-desc">El margen dice si el modelo de negocio es rentable; la conversión de caja dice si esa rentabilidad es real.</div>
     <div class="grid2">
       <div class="card"><h3 id="tMargen"></h3><div class="sub">Margen bruto mensual (%) contra el piso de gobernanza (30%). La media anual cae tres años seguidos.</div><div class="chart" id="chMargen"></div></div>
-      <div class="card"><h3>La caja acompaña al margen (~90%)</h3><div class="sub">Flujo de caja operativo (barras) y conversión Flujo/Margen (línea, panel inferior) contra el umbral de 85%.</div><div class="chart" id="chFlujo"></div></div>
+      <div class="card"><h3 id="tFlujo">Caja y conversión</h3><div class="sub">Flujo de caja operativo (barras) y conversión Flujo/Margen (línea, panel inferior) contra el umbral de 85%.</div><div id="gFlujo"><div class="chart" id="chFlujo"></div></div><div class="na" id="naFlujo" hidden></div></div>
     </div>
     <div class="card"><h3 id="tCostos"></h3><div class="sub">Ventas y costos indexados (Ene-2022 = 100). Cuando la línea de costos supera a la de ventas, el margen se comprime.</div><div class="chart" id="chIdx"></div></div>
   </section>
@@ -212,17 +225,17 @@ details.metod b{color:var(--deep-blue);}
   <section class="panel" id="tab-liquidez">
     <div class="sect-title">Liquidez · ¿Podemos pagar el corto plazo cada mes?</div>
     <div class="sect-desc">Razón corriente = activos corrientes / pasivos corrientes. Sana en promedio, pero con meses de estrés: el promedio esconde el riesgo.</div>
-    <div class="card"><h3 id="tRC"></h3><div class="sub">Bandas de decisión: rojo &lt; 1.0 (crítico), ámbar 1.0–1.2 (alerta), verde ≥ 1.2. Se usa el ratio (adimensional) por la inconsistencia de unidades del origen — ver nota metodológica.</div><div class="chart" id="chRC"></div></div>
+    <div class="card"><h3 id="tRC">Razón corriente</h3><div class="sub">Bandas de decisión: rojo &lt; 1.0 (crítico), ámbar 1.0–1.2 (alerta), verde ≥ 1.2. Se usa el ratio (adimensional), inmune a la unidad de origen.</div><div id="gRC"><div class="chart" id="chRC"></div></div><div class="na" id="naRC" hidden></div></div>
   </section>
 
   <!-- 5 PREDICCIÓN -->
   <section class="panel" id="tab-prediccion">
     <div class="sect-title">Predicción · ¿Qué esperar en 2025 y cuánto confiar?</div>
     <div class="sect-desc">Dos modelos clásicos sobre 36 meses: descomposición (entender la estructura) y Holt-Winters (proyectar). Regla de los Sources: una predicción sin rango ni decisión asociada es curiosidad estadística.</div>
-    <div class="card"><h3>1 · Descomposición: la serie tiene tres capas</h3><div class="sub">Observado = Tendencia + Estacionalidad + Residuo (modelo aditivo, periodo 12). Fuerza estacional: <b id="fseas"></b> — la estacionalidad explica la mayor parte de la variación de corto plazo.</div><div class="chart chart-tall" id="chDec"></div></div>
+    <div class="card"><h3>1 · Descomposición: la serie tiene tres capas</h3><div class="sub">Observado = Tendencia + Estacionalidad + Residuo (modelo aditivo, periodo 12). Fuerza estacional: <b id="fseas"></b> — la estacionalidad explica la mayor parte de la variación de corto plazo.</div><div id="gDec"><div class="chart chart-tall" id="chDec"></div></div><div class="na" id="naDec" hidden></div></div>
     <div class="grid2">
-      <div class="card"><h3>2 · Validación honesta (backtest)</h3><div class="sub">Entrenado con 2022–2023, se le pidió predecir 2024 a ciegas y se comparó contra la realidad.</div><div class="chart" id="chBT"></div><div id="btNote" class="hint"></div></div>
-      <div class="card"><h3 id="tHW"></h3><div class="sub">Holt-Winters aditivo entrenado con los 36 meses. Banda de ~80% construida con los residuos del ajuste (aproximada).</div><div class="chart" id="chHW"></div><div id="hwNote" class="hint"></div></div>
+      <div class="card"><h3>2 · Validación honesta (backtest)</h3><div class="sub">Entrenado con 2022–2023, se le pidió predecir 2024 a ciegas y se comparó contra la realidad.</div><div id="gBT"><div class="chart" id="chBT"></div><div id="btNote" class="hint"></div></div><div class="na" id="naBT" hidden></div></div>
+      <div class="card"><h3 id="tHW"></h3><div class="sub">Holt-Winters aditivo entrenado con los 36 meses. Banda de ~80% construida con los residuos del ajuste (aproximada).</div><div id="gHW"><div class="chart" id="chHW"></div><div id="hwNote" class="hint"></div></div><div class="na" id="naHW" hidden></div></div>
     </div>
   </section>
 
@@ -230,14 +243,10 @@ details.metod b{color:var(--deep-blue);}
   <section class="panel" id="tab-ikpi">
     <div class="sect-title">KPIs Inteligentes · Histórico vs IA Proyectado</div>
     <div class="sect-desc">Tres indicadores que integran los factores IA del origen (<b>IA_Factor_Tendencia</b>, <b>IA_Escenario</b>, <b>IA_Precio_Ajustado</b>) para proyectar el siguiente trimestre. Elige el escenario: los factores se recalculan desde los datos y cada tarjeta muestra su fórmula.</div>
+    <div id="gIK">
     <div class="card">
       <h3>Escenario de simulación</h3>
-      <div class="segsel" id="selEsc">
-        <button class="seg active" data-e="rec">Reciente (media 3m)</button>
-        <button class="seg" data-e="Optimista">Optimista</button>
-        <button class="seg" data-e="Base">Base</button>
-        <button class="seg" data-e="Pesimista">Pesimista</button>
-      </div>
+      <div class="segsel" id="selEsc"></div>
       <div class="hint" id="escNote"></div>
     </div>
     <div class="ikgrid" id="ikCards"></div>
@@ -246,6 +255,8 @@ details.metod b{color:var(--deep-blue);}
       <div class="sub">Triangulación: cuando la proyección IA y la estadística (Holt-Winters) divergen, la brecha es una tarea de diagnóstico, no una elección de la cifra que más guste.</div>
       <div id="ikInsight" style="font-size:.84rem;"></div>
     </div>
+    </div>
+    <div class="na" id="naIK" hidden></div>
   </section>
 
   <!-- 7 GOBERNANZA -->
@@ -278,14 +289,56 @@ details.metod b{color:var(--deep-blue);}
     </div>
   </section>
 
+  <!-- 9 MIS DATOS -->
+  <section class="panel" id="tab-datos">
+    <div class="sect-title">Trae tus datos · CSV o Excel</div>
+    <div class="sect-desc">Sube tu serie financiera mensual y <b>todo el tablero se recalcula e interpreta con tu información</b>: veredicto, KPIs, alertas, modelos predictivos, KPIs inteligentes, Q&amp;A y brief. <b>Privacidad total:</b> el archivo se procesa localmente en tu navegador — ningún dato sale de tu equipo.</div>
+    <div class="grid2">
+      <div class="card">
+        <h3>1 · Prepara el archivo</h3>
+        <div class="sub">Una fila por mes, encabezados en la primera fila. En Excel se usa la hoja “Datos” o, si no existe, la primera hoja.</div>
+        <div class="tblw"><table>
+          <tr><th>Columna</th><th>Formato</th><th>Uso</th><th>Qué habilita</th></tr>
+          <tr><td><b>Fecha</b> (o <b>Anio</b> + <b>Mes</b>)</td><td>AAAA-MM</td><td><span class="bq req">Requerida</span></td><td>La serie temporal completa</td></tr>
+          <tr><td><b>Ventas_Millones</b></td><td>número</td><td><span class="bq req">Requerida</span></td><td>Crecimiento, tendencia, predicción</td></tr>
+          <tr><td><b>Costos_Millones</b> <i>o</i> <b>Margen_Millones</b></td><td>número</td><td><span class="bq req">Requerida</span></td><td>Margen y diagnóstico de costos (la faltante se deriva)</td></tr>
+          <tr><td>FlujoCaja_Millones</td><td>número</td><td><span class="bq opc">Opcional</span></td><td>Capa de caja y conversión</td></tr>
+          <tr><td>Unidades</td><td>entero</td><td><span class="bq opc">Opcional</span></td><td>Puente precio-volumen y KPI de mix</td></tr>
+          <tr><td>Activos_Corrientes + Pasivos_Corrientes</td><td>número</td><td><span class="bq opc">Opcional</span></td><td>Capa de liquidez (razón corriente)</td></tr>
+          <tr><td>IA_Factor_Tendencia (+ IA_Escenario, IA_Precio_Ajustado)</td><td>número / texto</td><td><span class="bq opc">Opcional</span></td><td>KPIs Inteligentes por escenario</td></tr>
+        </table></div>
+        <ul class="hint" style="margin:10px 0 0 16px;">
+          <li><b>Mensual y consecutivo</b>: sin meses faltantes ni duplicados.</li>
+          <li>Mínimo <b>12 meses</b>. Con <b>24+</b> se activan predicción, descomposición y comparaciones anuales; con <b>30+</b> el backtest (completo con <b>36+</b>).</li>
+          <li>Decimales con punto (recomendado) y sin separador de miles. CSV con coma o punto y coma.</li>
+          <li>Los encabezados aceptan variantes: “Ventas”, “Ingresos”, “Revenue”, “Costos”, “COGS”, “Cash Flow”…</li>
+          <li>Escala libre (miles, millones…): el tablero es consistente mientras todas las columnas monetarias usen la misma.</li>
+        </ul>
+        <div class="btnrow">
+          <button class="btn btn-g" id="btnTpl" type="button">⤓ Plantilla CSV</button>
+          <button class="btn btn-g" id="btnDemoCsv" type="button">⤓ Datos del demo (CSV de ejemplo)</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>2 · Súbelo y valida</h3>
+        <div class="sub">El validador revisa formato, continuidad mensual y columnas antes de recalcular nada.</div>
+        <div class="drop" id="drop" role="button" tabindex="0" aria-label="Subir archivo CSV o Excel">📄 <b>Arrastra tu CSV o Excel aquí</b><br><span class="hint">o haz clic para elegir el archivo (.csv, .xlsx, .xls)</span></div>
+        <input type="file" id="fileIn" accept=".csv,.xlsx,.xls" style="display:none"/>
+        <div id="valRep" aria-live="polite"></div>
+        <div class="btnrow"><button class="btn btn-g" id="btnDemoRestore" type="button">↺ Volver a los datos del demo</button></div>
+        <p class="hint">Tus datos se guardan solo en el almacenamiento local de tu navegador para que sigan al recargar. “Volver al demo” los elimina.</p>
+      </div>
+    </div>
+  </section>
+
   <details class="metod">
     <summary>Nota metodológica y de honestidad analítica (léela antes de citar cifras)</summary>
     <ul>
-      <li><b>Datos simulados.</b> Serie mensual ficticia 2022–2024 (36 puntos) para fines demostrativos. Ninguna cifra representa una empresa real.</li>
+      <li><b>Modo demo / modo tus-datos.</b> Por defecto se muestra una serie mensual ficticia 2022–2024 (36 puntos). Si subes tu archivo, <b>todos los cálculos y modelos se re-ejecutan en tu navegador</b> con tu información; nada se envía a ningún servidor.</li>
       <li><b>Unidades de activos/pasivos corrientes.</b> El diccionario los declara “en millones”, pero su escala es inconsistente con las ventas. Por eso el tablero usa solo la <b>razón corriente</b> (ratio adimensional), que es inmune a la unidad.</li>
       <li><b>Ventas ≠ unidades × precio promedio</b> en el origen (brecha ~12%). El puente precio-volumen usa el ingreso implícito (ventas/unidades), que es internamente consistente.</li>
       <li><b>Factores IA como simulación, no como predicción validada.</b> La correlación de IA_Factor_Tendencia con la variación real de ventas es ≈ 0.06, y la de IA_Precio_Ajustado con el precio real ≈ 0.06. Además IA_Escenario está sesgado (19 de 36 meses “Optimista”). Los KPIs Inteligentes se presentan como <b>escenarios what-if declarados</b> y se triangulan contra el modelo estadístico.</li>
-      <li><b>Holt-Winters.</b> Aditivo en tendencia y estacionalidad, elegido por backtest (MAPE 6.5% vs 8.9% del naive estacional). 36 puntos es el mínimo razonable: 2 ciclos para entrenar y 1 para validar. Las bandas usan la desviación de los residuos del ajuste (aproximación, no intervalos exactos).</li>
+      <li><b>Holt-Winters.</b> Aditivo en tendencia y estacionalidad (periodo 12), con parámetros optimizados por búsqueda de mínimos cuadrados y validación por backtest contra un benchmark ingenuo estacional. Requiere ≥24 meses (2 ciclos); el backtest, ≥30. Las bandas usan la desviación de los residuos del ajuste (aproximación, no intervalos exactos).</li>
       <li><b>ROI proxy.</b> El origen no trae base de inversión; se usa Margen LTM / Costos LTM (retorno sobre costos), declarado en la tarjeta.</li>
       <li><b>Distinción de los Sources:</b> hechos (histórico), inferencias (descomposición), proyecciones con rango (HW) e hipótesis simuladas (factores IA) se etiquetan como tales y no se mezclan.</li>
     </ul>
@@ -293,362 +346,695 @@ details.metod b{color:var(--deep-blue);}
 
   <div class="footer">
     <div style="max-width:560px;margin:0 auto 8px;">Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad.</div>
-    Javier Forero <span class="sep">·</span> <span class="dom">javierforero.co</span>
+    Javier Forero <span class="sep">·</span> <span class="dom">javierforero.co</span> <span class="sep">·</span> v2 — trae tus datos
   </div>
 </div>
 <script>
-/* ===== Persistencia con degradación elegante (safeStore de marca) ===== */
+/* ===== Persistencia con degradación elegante ===== */
 const safeStore=(()=>{const mem={};let ok=false;
  try{const k='__jf__';localStorage.setItem(k,'1');localStorage.removeItem(k);ok=true;}catch(e){}
  return{get:k=>{try{return ok?localStorage.getItem(k):(k in mem?mem[k]:null);}catch(e){return k in mem?mem[k]:null;}},
-        set:(k,v)=>{try{ok?localStorage.setItem(k,v):(mem[k]=v);}catch(e){mem[k]=v;}}};})();
+        set:(k,v)=>{try{ok?localStorage.setItem(k,v):(mem[k]=v);}catch(e){mem[k]=v;}},
+        del:k=>{try{ok?localStorage.removeItem(k):(delete mem[k]);}catch(e){delete mem[k];}}};})();
 
-/* ===== Datos y modelos precalculados (Python: pandas + statsmodels) ===== */
-const DATA={"meses": ["2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"], "ventas": [104.34, 113.3, 110.85, 116.14, 119.37, 131.61, 125.84, 130.07, 133.96, 119.41, 128.33, 135.62, 130.27, 130.3, 127.55, 131.86, 157.77, 156.6, 161.43, 154.84, 152.27, 152.83, 141.39, 162.06, 134.86, 145.25, 157.31, 149.35, 169.05, 170.55, 179.82, 169.92, 159.64, 160.55, 164.84, 169.71], "costos": [71.84, 73.4, 74.43, 81.86, 79.42, 90.81, 88.12, 89.17, 87.42, 80.4, 92.3, 86.73, 87.87, 87.16, 87.05, 91.64, 112.36, 105.64, 112.4, 106.84, 104.99, 102.2, 93.32, 106.63, 89.66, 99.7, 109.36, 102.52, 113.1, 122.14, 127.74, 114.34, 105.92, 109.59, 116.27, 116.53], "margen": [32.5, 39.89, 36.42, 34.28, 39.95, 40.79, 37.72, 40.9, 46.54, 39.0, 36.04, 48.89, 42.41, 43.13, 40.51, 40.22, 45.41, 50.96, 49.04, 48.0, 47.28, 50.63, 48.06, 55.42, 45.2, 45.55, 47.95, 46.82, 55.95, 48.42, 52.08, 55.58, 53.71, 50.96, 48.57, 53.18], "margen_pct": [31.1, 35.2, 32.9, 29.5, 33.5, 31.0, 30.0, 31.4, 34.7, 32.7, 28.1, 36.0, 32.6, 33.1, 31.8, 30.5, 28.8, 32.5, 30.4, 31.0, 31.1, 33.1, 34.0, 34.2, 33.5, 31.4, 30.5, 31.3, 33.1, 28.4, 29.0, 32.7, 33.6, 31.7, 29.5, 31.3], "flujo": [30.16, 35.48, 33.61, 33.5, 35.48, 37.01, 34.43, 37.39, 38.6, 31.44, 30.6, 44.41, 39.34, 37.68, 39.25, 35.91, 40.91, 45.37, 44.46, 44.89, 44.13, 43.29, 46.92, 46.85, 40.85, 40.37, 40.64, 41.97, 48.28, 43.75, 47.92, 54.11, 49.17, 44.31, 42.76, 48.23], "unidades": [855, 894, 897, 946, 959, 995, 1048, 1037, 993, 945, 980, 1026, 956, 1008, 974, 1007, 1100, 1108, 1153, 1140, 1092, 1064, 1045, 1128, 1002, 1062, 1092, 1088, 1183, 1234, 1249, 1206, 1138, 1117, 1107, 1179], "precio": [111.39, 109.25, 108.6, 112.96, 111.8, 112.71, 112.42, 112.07, 116.08, 114.32, 117.71, 117.25, 116.48, 116.13, 117.12, 117.12, 121.65, 119.91, 121.67, 119.34, 121.65, 123.41, 122.17, 124.38, 122.41, 122.65, 125.31, 124.97, 126.77, 124.2, 128.0, 130.83, 128.26, 128.9, 129.64, 127.77], "rc": [0.71, 1.35, 1.01, 1.36, 1.52, 1.02, 1.3, 1.66, 1.41, 2.19, 1.57, 2.01, 1.16, 1.16, 3.5, 2.32, 1.16, 2.53, 2.8, 1.2, 1.27, 2.07, 1.54, 1.5, 1.79, 0.9, 1.42, 1.26, 1.6, 1.8, 1.71, 1.13, 1.73, 1.78, 2.07, 1.23], "ia_tend": [1.006, 1.047, 1.031, 1.022, 0.991, 0.991, 0.984, 1.041, 1.022, 1.03, 0.981, 1.048, 1.038, 0.995, 0.993, 0.993, 1.001, 1.017, 1.01, 1.0, 1.023, 0.99, 1.0, 1.006, 1.012, 1.035, 0.994, 1.016, 1.021, 0.983, 1.023, 0.992, 0.985, 1.046, 1.048, 1.037], "ia_esc": ["Base", "Optimista", "Base", "Optimista", "Pesimista", "Pesimista", "Base", "Pesimista", "Pesimista", "Optimista", "Base", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Base", "Pesimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Pesimista", "Pesimista", "Optimista", "Pesimista", "Base", "Optimista", "Base", "Base", "Optimista", "Pesimista"], "ia_prec": [1.033, 0.986, 0.978, 1.004, 0.964, 1.03, 0.957, 1.049, 1.027, 0.97, 0.951, 1.032, 1.021, 1.023, 1.027, 0.957, 0.986, 0.962, 1.036, 1.012, 0.983, 0.956, 0.981, 0.983, 1.023, 1.014, 1.039, 0.997, 0.962, 1.021, 1.026, 1.006, 1.027, 0.999, 1.002, 0.993], "dec": {"trend": [null, null, null, null, null, null, 123.5, 125.3, 126.7, 128.0, 130.3, 132.9, 135.4, 138.0, 139.8, 141.9, 143.8, 145.5, 146.8, 147.6, 149.5, 151.4, 152.6, 153.7, 155.0, 156.4, 157.4, 158.0, 159.3, 160.6, null, null, null, null, null, null], "seasonal": [-12.6, -9.4, -6.1, -9.3, 11.9, 10.6, 8.5, 6.0, 5.1, -3.6, -6.6, 5.6, -12.6, -9.4, -6.1, -9.3, 11.9, 10.6, 8.5, 6.0, 5.1, -3.6, -6.6, 5.6, -12.6, -9.4, -6.1, -9.3, 11.9, 10.6, 8.5, 6.0, 5.1, -3.6, -6.6, 5.6], "resid": [null, null, null, null, null, null, -6.2, -1.2, 2.2, -5.0, 4.6, -2.9, 7.5, 1.7, -6.1, -0.7, 2.1, 0.5, 6.1, 1.2, -2.3, 5.0, -4.7, 2.8, -7.5, -1.8, 6.1, 0.7, -2.1, -0.6, null, null, null, null, null, null], "seas12": [-12.6, -9.4, -6.1, -9.3, 11.9, 10.6, 8.5, 6.0, 5.1, -3.6, -6.6, 5.6], "fuerza": 0.809}, "hw": {"fitted": [103.9, 110.4, 112.7, 113.2, 129.5, 133.7, 136.4, 132.4, 129.4, 125.0, 125.6, 136.5, 123.2, 129.6, 131.9, 132.5, 148.7, 152.9, 155.7, 151.6, 148.6, 144.3, 144.9, 155.8, 142.4, 148.9, 151.2, 151.7, 168.0, 172.2, 174.9, 170.9, 167.9, 163.5, 164.1, 175.0], "fc_meses": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06"], "fc": [161.7, 168.1, 170.4, 171.0, 187.2, 191.4], "sd": 5.07, "bt_pred": [153.6, 158.1, 155.5, 160.3, 174.9, 180.4, 179.9, 178.7, 179.4, 172.4, 171.2, 185.1], "bt_mape": 6.53, "bt_rmse": 11.75, "bt_naive": 8.87, "modelo": "add/add"}, "hw_margen": {"fc": [51.0, 53.8, 52.5], "sd": 2.35}, "kpi_ia": {"F_tend": 1.0437, "F_prec": 0.998, "pm": {"base": 138.7, "proy": 144.5}, "dlr": {"base": 1.69, "factores": {"Base": 1.0082, "Optimista": 1.0164, "Pesimista": 1.0083}}, "roi": {"hist": 45.5, "proy": 47.5}}, "bridge": {"2023": {"prev": 1468.8, "efVol": 152.3, "efPrecio": 138.1, "act": 1759.2}, "2024": {"prev": 1759.2, "efVol": 121.5, "efPrecio": 50.2, "act": 1930.8}}, "corr": {"tend_ventas": 0.059, "prec_precio": 0.061}};
+/* ===== Datos de demo (crudos; TODO se recalcula en el navegador) ===== */
+const RAW_DEMO={"meses": ["2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"], "ventas": [104.34, 113.3, 110.85, 116.14, 119.37, 131.61, 125.84, 130.07, 133.96, 119.41, 128.33, 135.62, 130.27, 130.3, 127.55, 131.86, 157.77, 156.6, 161.43, 154.84, 152.27, 152.83, 141.39, 162.06, 134.86, 145.25, 157.31, 149.35, 169.05, 170.55, 179.82, 169.92, 159.64, 160.55, 164.84, 169.71], "costos": [71.84, 73.4, 74.43, 81.86, 79.42, 90.81, 88.12, 89.17, 87.42, 80.4, 92.3, 86.73, 87.87, 87.16, 87.05, 91.64, 112.36, 105.64, 112.4, 106.84, 104.99, 102.2, 93.32, 106.63, 89.66, 99.7, 109.36, 102.52, 113.1, 122.14, 127.74, 114.34, 105.92, 109.59, 116.27, 116.53], "margen": [32.5, 39.89, 36.42, 34.28, 39.95, 40.79, 37.72, 40.9, 46.54, 39.0, 36.04, 48.89, 42.41, 43.13, 40.51, 40.22, 45.41, 50.96, 49.04, 48.0, 47.28, 50.63, 48.06, 55.42, 45.2, 45.55, 47.95, 46.82, 55.95, 48.42, 52.08, 55.58, 53.71, 50.96, 48.57, 53.18], "flujo": [30.16, 35.48, 33.61, 33.5, 35.48, 37.01, 34.43, 37.39, 38.6, 31.44, 30.6, 44.41, 39.34, 37.68, 39.25, 35.91, 40.91, 45.37, 44.46, 44.89, 44.13, 43.29, 46.92, 46.85, 40.85, 40.37, 40.64, 41.97, 48.28, 43.75, 47.92, 54.11, 49.17, 44.31, 42.76, 48.23], "unidades": [855, 894, 897, 946, 959, 995, 1048, 1037, 993, 945, 980, 1026, 956, 1008, 974, 1007, 1100, 1108, 1153, 1140, 1092, 1064, 1045, 1128, 1002, 1062, 1092, 1088, 1183, 1234, 1249, 1206, 1138, 1117, 1107, 1179], "precio": [111.39, 109.25, 108.6, 112.96, 111.8, 112.71, 112.42, 112.07, 116.08, 114.32, 117.71, 117.25, 116.48, 116.13, 117.12, 117.12, 121.65, 119.91, 121.67, 119.34, 121.65, 123.41, 122.17, 124.38, 122.41, 122.65, 125.31, 124.97, 126.77, 124.2, 128.0, 130.83, 128.26, 128.9, 129.64, 127.77], "ac": [102542.0, 110789.0, 103143.0, 163641.0, 131436.0, 150857.0, 190757.0, 124929.0, 141038.0, 175555.0, 122880.0, 107698.0, 128975.0, 116122.0, 192970.0, 180812.0, 163340.0, 187146.0, 180367.0, 118657.0, 189256.0, 153934.0, 180744.0, 189609.0, 131800.0, 111005.0, 122794.0, 142711.0, 181801.0, 186073.0, 100695.0, 151075.0, 141741.0, 122211.0, 111987.0, 133762.0], "pc": [144291.0, 82320.0, 101879.0, 120302.0, 86363.0, 147178.0, 146245.0, 75178.0, 99725.0, 80088.0, 78484.0, 53689.0, 110956.0, 100268.0, 55148.0, 77865.0, 140827.0, 73956.0, 64489.0, 98945.0, 148565.0, 74206.0, 117214.0, 126162.0, 73764.0, 122822.0, 86778.0, 113231.0, 113353.0, 103577.0, 59029.0, 133530.0, 82078.0, 68652.0, 54078.0, 109089.0], "iat": [1.006, 1.047, 1.031, 1.022, 0.991, 0.991, 0.984, 1.041, 1.022, 1.03, 0.981, 1.048, 1.038, 0.995, 0.993, 0.993, 1.001, 1.017, 1.01, 1.0, 1.023, 0.99, 1.0, 1.006, 1.012, 1.035, 0.994, 1.016, 1.021, 0.983, 1.023, 0.992, 0.985, 1.046, 1.048, 1.037], "iae": ["Base", "Optimista", "Base", "Optimista", "Pesimista", "Pesimista", "Base", "Pesimista", "Pesimista", "Optimista", "Base", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Base", "Pesimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Optimista", "Pesimista", "Pesimista", "Optimista", "Pesimista", "Base", "Optimista", "Base", "Base", "Optimista", "Pesimista"], "iap": [1.033, 0.986, 0.978, 1.004, 0.964, 1.03, 0.957, 1.049, 1.027, 0.97, 0.951, 1.032, 1.021, 1.023, 1.027, 0.957, 0.986, 0.962, 1.036, 1.012, 0.983, 0.956, 0.981, 0.983, 1.023, 1.014, 1.039, 0.997, 0.962, 1.021, 1.026, 1.006, 1.027, 0.999, 1.002, 0.993]};
 
-/* ===== Helpers ===== */
-const N=DATA.meses.length;
+/* ===== Utilidades ===== */
 const MESN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const lab=m=>{const[y,mm]=m.split('-');return MESN[+mm-1]+'-'+y.slice(2);};
-const LABS=DATA.meses.map(lab);
 const sum=a=>a.reduce((x,y)=>x+y,0);
+const avg=a=>sum(a)/a.length;
+const variance=a=>{const m=avg(a);return avg(a.map(v=>(v-m)*(v-m)));};
 const f1=x=>x.toLocaleString('es-CO',{minimumFractionDigits:1,maximumFractionDigits:1});
 const f0=x=>Math.round(x).toLocaleString('es-CO');
-const pct=(x,d=1)=>x.toLocaleString('es-CO',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
-const yearSlice=(arr,y)=>arr.slice((y-2022)*12,(y-2022)*12+12);
-const V={2022:sum(yearSlice(DATA.ventas,2022)),2023:sum(yearSlice(DATA.ventas,2023)),2024:sum(yearSlice(DATA.ventas,2024))};
-const M_={2022:sum(yearSlice(DATA.margen,2022)),2023:sum(yearSlice(DATA.margen,2023)),2024:sum(yearSlice(DATA.margen,2024))};
-const C_={2023:sum(yearSlice(DATA.costos,2023)),2024:sum(yearSlice(DATA.costos,2024))};
-const FL={2024:sum(yearSlice(DATA.flujo,2024))};
-const mpct=y=>M_[y]/V[y]*100;
-const yoy24=(V[2024]/V[2023]-1)*100, yoy23=(V[2023]/V[2022]-1)*100;
-const conv24=FL[2024]/M_[2024]*100;
-const rcLast=DATA.rc[N-1], rc24=yearSlice(DATA.rc,2024).reduce((a,b)=>a+b,0)/12;
-const br24=DATA.bridge['2024']||DATA.bridge[2024], br23=DATA.bridge['2023']||DATA.bridge[2023];
-const mixVol=br24.efVol/(br24.efVol+br24.efPrecio)*100, mixVol23=br23.efVol/(br23.efVol+br23.efPrecio)*100;
-const K=DATA.kpi_ia, HW=DATA.hw;
-const q1_25=sum(HW.fc.slice(0,3)), q1_24=sum(DATA.ventas.slice(24,27));
-const costGrow=(C_[2024]/C_[2023]-1)*100;
+const pctS=x=>(x>=0?'+':'')+f1(x*100)+'%';
+const ppS=x=>(x>=0?'+':'')+f1(x)+' pp';
+function addM(ym,k){let[y,m]=ym.split('-').map(Number);m+=k;y+=Math.floor((m-1)/12);m=((m-1)%12)+1;return y+'-'+String(m).padStart(2,'0');}
+const ymIdx=ym=>{const[y,m]=ym.split('-').map(Number);return y*12+m;};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-/* Factores por escenario, calculados desde los datos embebidos */
-function factores(modo){
- if(modo==='rec'){const t=DATA.ia_tend.slice(-3),p=DATA.ia_prec.slice(-3);
-   return{Ft:sum(t)/3,Fp:sum(p)/3,n:3,txt:'media de los últimos 3 meses observados'};}
- const idx=DATA.ia_esc.map((e,i)=>e===modo?i:-1).filter(i=>i>=0);
- const Ft=sum(idx.map(i=>DATA.ia_tend[i]))/idx.length, Fp=sum(idx.map(i=>DATA.ia_prec[i]))/idx.length;
- return{Ft,Fp,n:idx.length,txt:'media histórica de los meses etiquetados “'+modo+'”'};
-}
+/* ===== Lectura de archivos ===== */
+function normH(h){return String(h).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+const COLMAP={
+ fecha:['fecha','date','periodo','period'],
+ anio:['anio','ano','year','anyo'],
+ mesn:['mes','month','nummes','mesnum'],
+ ventas:['ventasmillones','ventas','ingresos','ingresosmillones','revenue','sales','facturacion'],
+ costos:['costosmillones','costos','costes','costs','cogs','costo','costototal'],
+ margen:['margenmillones','margen','margenbruto','utilidadbruta','grossprofit','grossmargin'],
+ flujo:['flujocajamillones','flujocaja','flujodecaja','cashflow','flujo','fcl'],
+ unidades:['unidades','units','cantidad','cantidades','volumen'],
+ precio:['preciopromedio','precio','price','avgprice','preciomedio'],
+ ac:['activoscorrientes','activocorriente','currentassets','activos'],
+ pc:['pasivoscorrientes','pasivocorriente','currentliabilities','pasivos'],
+ iat:['iafactortendencia','factortendencia','iatendencia','factoria'],
+ iae:['iaescenario','escenario','scenario'],
+ iap:['iaprecioajustado','precioajustado','iaprecio']};
+function mapHeaders(headers){
+ const found={};
+ headers.forEach((h,i)=>{const n=normH(h);
+  for(const k in COLMAP) if(found[k]===undefined && COLMAP[k].includes(n)) found[k]=i;});
+ return found;}
+function parseYM(v){
+ if(v==null||v==='')return null;
+ if(typeof v==='number'&&v>20000&&v<70000){const d=new Date(Math.round((v-25569)*86400*1000));
+  return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');}
+ const s=String(v).trim();let m;
+ if(m=s.match(/^(\d{4})[-\/\.](\d{1,2})([-\/\.](\d{1,2}))?/)){const mm=+m[2];return mm>=1&&mm<=12?m[1]+'-'+String(mm).padStart(2,'0'):null;}
+ if(m=s.match(/^(\d{1,2})[-\/\.](\d{1,2})[-\/\.](\d{4})/)){let mm=+m[2],dd=+m[1];if(mm>12&&dd<=12){const t=mm;mm=dd;dd=t;}
+  return mm>=1&&mm<=12?m[3]+'-'+String(mm).padStart(2,'0'):null;}
+ if(m=s.match(/^(\d{1,2})[-\/\.](\d{4})$/)){const mm=+m[1];return mm>=1&&mm<=12?m[2]+'-'+String(mm).padStart(2,'0'):null;}
+ const d=new Date(s);return isNaN(d)?null:d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');}
+function toNum(v){
+ if(typeof v==='number')return isFinite(v)?v:null;
+ if(v==null)return null;
+ let s=String(v).trim().replace(/\s/g,'');if(s==='')return null;
+ const hc=s.includes(','),hd=s.includes('.');
+ if(hc&&hd){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'');}
+ else if(hc){const p=s.split(',');s=(p.length===2&&p[1].length!==3)?s.replace(',','.'):s.replace(/,/g,'');}
+ const x=parseFloat(s);return isFinite(x)?x:null;}
+function parseCSV(text){
+ text=text.replace(/^\uFEFF/,'');
+ const fl=text.slice(0,text.indexOf('\n')>=0?text.indexOf('\n'):text.length);
+ const sep=((fl.match(/;/g)||[]).length>(fl.match(/,/g)||[]).length)?';':',';
+ const rows=[];let cur=[''],q=false,ci=0;
+ for(let i=0;i<text.length;i++){const ch=text[i];
+  if(q){if(ch==='"'){if(text[i+1]==='"'){cur[ci]+='"';i++;}else q=false;}else cur[ci]+=ch;}
+  else{if(ch==='"')q=true;
+   else if(ch===sep){cur.push('');ci++;}
+   else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;
+    if(cur.length>1||cur[0].trim()!=='')rows.push(cur);cur=[''];ci=0;}
+   else cur[ci]+=ch;}}
+ if(cur.length>1||cur[0].trim()!=='')rows.push(cur);
+ return rows;}
+function buildDataset(rows,fileName){
+ const errors=[],warnings=[];
+ if(!rows||rows.length<2)return{ok:false,errors:['El archivo no tiene filas de datos.']};
+ const headers=rows[0],H=mapHeaders(headers);
+ const hasFecha=H.fecha!==undefined,hasAM=H.anio!==undefined&&H.mesn!==undefined;
+ if(!hasFecha&&!hasAM)errors.push('Falta la columna <b>Fecha</b> (AAAA-MM) o el par <b>Anio</b> + <b>Mes</b>.');
+ if(H.ventas===undefined)errors.push('Falta la columna <b>Ventas_Millones</b> (o Ventas/Ingresos/Revenue).');
+ if(H.costos===undefined&&H.margen===undefined)errors.push('Falta <b>Costos_Millones</b> o <b>Margen_Millones</b> (al menos una).');
+ if(errors.length)return{ok:false,errors};
+ const recs=[];
+ for(let r=1;r<rows.length;r++){const row=rows[r];
+  if(!row||row.every(c=>c==null||String(c).trim()===''))continue;
+  let ym=null;
+  if(hasFecha)ym=parseYM(row[H.fecha]);
+  if(!ym&&hasAM){const y=toNum(row[H.anio]),m=toNum(row[H.mesn]);
+   if(y&&m>=1&&m<=12)ym=Math.round(y)+'-'+String(Math.round(m)).padStart(2,'0');}
+  if(!ym){errors.push('Fila '+(r+1)+': fecha no interpretable («'+esc(String(row[H.fecha]??''))+'»). Usa AAAA-MM.');continue;}
+  const g=k=>H[k]===undefined?null:toNum(row[H[k]]);
+  const rec={ym,ventas:g('ventas'),costos:g('costos'),margen:g('margen'),flujo:g('flujo'),
+   unidades:g('unidades'),precio:g('precio'),ac:g('ac'),pc:g('pc'),iat:g('iat'),iap:g('iap'),
+   iae:H.iae===undefined?null:(row[H.iae]==null?null:String(row[H.iae]).trim())};
+  if(rec.ventas==null)errors.push('Fila '+(r+1)+' ('+ym+'): Ventas no numéricas.');
+  if(rec.costos==null&&rec.margen==null)errors.push('Fila '+(r+1)+' ('+ym+'): sin Costos ni Margen numéricos.');
+  recs.push(rec);}
+ if(errors.length)return{ok:false,errors:errors.slice(0,10)};
+ recs.sort((a,b)=>ymIdx(a.ym)-ymIdx(b.ym));
+ for(let i=1;i<recs.length;i++){const d=ymIdx(recs[i].ym)-ymIdx(recs[i-1].ym);
+  if(d===0)errors.push('Mes duplicado: '+recs[i].ym+'.');
+  else if(d>1){const miss=[];for(let k=1;k<d;k++)miss.push(addM(recs[i-1].ym,k));
+   errors.push('Serie no continua: faltan '+miss.slice(0,4).join(', ')+(miss.length>4?'…':'')+'.');}}
+ if(recs.length<12)errors.push('Se requieren al menos <b>12 meses</b>; el archivo trae '+recs.length+'.');
+ if(errors.length)return{ok:false,errors:errors.slice(0,10)};
+ const col=k=>recs.map(r=>r[k]);
+ const d={meses:col('ym'),ventas:col('ventas')};
+ const co=col('costos'),ma=col('margen');
+ if(co.every(v=>v!=null)){d.costos=co;d.margen=ma.every(v=>v!=null)?ma:d.ventas.map((v,i)=>+(v-co[i]).toFixed(4));}
+ else{d.margen=ma;d.costos=d.ventas.map((v,i)=>+(v-ma[i]).toFixed(4));warnings.push('Costos derivados como Ventas − Margen.');}
+ const opt=(k,name,pred)=>{const c=col(k);
+  if(c.every(v=>v==null))return;
+  if(c.some(v=>v==null)){warnings.push(name+': valores incompletos — capa desactivada.');return;}
+  d[k]=c;};
+ opt('flujo','FlujoCaja');opt('unidades','Unidades');opt('precio','Precio_Promedio');
+ const acC=col('ac'),pcC=col('pc');
+ if(acC.every(v=>v!=null)&&pcC.every(v=>v!=null)&&pcC.every(v=>v!==0)){d.ac=acC;d.pc=pcC;}
+ else if(acC.some(v=>v!=null)||pcC.some(v=>v!=null))warnings.push('Liquidez requiere Activos y Pasivos Corrientes completos — capa desactivada.');
+ const iatC=col('iat');
+ if(iatC.every(v=>v!=null)){d.iat=iatC;
+  const iapC=col('iap');if(iapC.every(v=>v!=null))d.iap=iapC;
+  const iaeC=col('iae');if(iaeC.every(v=>v!=null&&v!==''))d.iae=iaeC;}
+ else if(iatC.some(v=>v!=null))warnings.push('IA_Factor_Tendencia incompleto — KPIs Inteligentes desactivados.');
+ if(d.ventas.some(v=>v<=0))warnings.push('Hay meses con ventas ≤ 0: los porcentajes pueden ser inestables.');
+ return{ok:true,errors:[],warnings,data:d,name:fileName};}
 
-/* ===== Tema (redibuja gráficos con tokens de marca) ===== */
+/* ===== Modelos (JS, mismos algoritmos que la versión Python) ===== */
+function decompose(y,meses){
+ const n=y.length,trend=new Array(n).fill(null);
+ for(let t=6;t<=n-7;t++){let s=(y[t-6]+y[t+6])/2;for(let i=t-5;i<=t+5;i++)s+=y[i];trend[t]=s/12;}
+ const bym={};
+ for(let t=0;t<n;t++){if(trend[t]==null)continue;const m=+meses[t].split('-')[1];(bym[m]=bym[m]||[]).push(y[t]-trend[t]);}
+ const idx={};for(const m in bym)idx[m]=avg(bym[m]);
+ const mean=avg(Object.values(idx));for(const m in idx)idx[m]-=mean;
+ const seasonal=y.map((v,t)=>{const m=+meses[t].split('-')[1];return idx[m]!=null?+idx[m].toFixed(3):0;});
+ const resid=y.map((v,t)=>trend[t]==null?null:+(v-trend[t]-seasonal[t]).toFixed(3));
+ const rs=resid.filter(v=>v!=null),sr=resid.map((r,t)=>r==null?null:r+seasonal[t]).filter(v=>v!=null);
+ const fuerza=Math.max(0,Math.min(1,1-variance(rs)/variance(sr)));
+ return{trend:trend.map(v=>v==null?null:+v.toFixed(2)),seasonal,resid,fuerza};}
+function hwRun(y,m,a,b,g,h){
+ const n=y.length;let s1=0,s2=0;
+ for(let i=0;i<m;i++){s1+=y[i];s2+=y[i+m];}s1/=m;s2/=m;
+ let L=s1,T=(s2-s1)/m;const S=new Array(m);
+ for(let i=0;i<m;i++)S[i]=y[i]-s1;
+ const fitted=new Array(n);
+ for(let t=0;t<n;t++){const si=S[t%m];fitted[t]=L+T+si;
+  const Lp=L;L=a*(y[t]-si)+(1-a)*(L+T);T=b*(L-Lp)+(1-b)*T;S[t%m]=g*(y[t]-L)+(1-g)*si;}
+ let fc=null;if(h){fc=[];for(let k=1;k<=h;k++)fc.push(L+k*T+S[(n+k-1)%m]);}
+ return{fitted,fc};}
+function hwSSE(y,m,a,b,g){const r=hwRun(y,m,a,b,g,0);let s=0;
+ for(let t=m;t<y.length;t++){const e=y[t]-r.fitted[t];s+=e*e;}return s;}
+function fitHW(y,h){
+ const m=12;let best=null;
+ for(let a=.05;a<=.96;a+=.09)for(let b=.02;b<=.5;b+=.06)for(let g=.05;g<=.96;g+=.09){
+  const s=hwSSE(y,m,a,b,g);if(!best||s<best.s)best={s,a,b,g};}
+ const st=.02,cl=(x)=>Math.min(.99,Math.max(.01,x));
+ for(let a=cl(best.a-.08);a<=cl(best.a+.08);a+=st)for(let b=cl(best.b-.05);b<=cl(best.b+.05);b+=st)for(let g=cl(best.g-.08);g<=cl(best.g+.08);g+=st){
+  const s=hwSSE(y,m,a,b,g);if(s<best.s)best={s,a,b,g};}
+ const r=hwRun(y,m,best.a,best.b,best.g,h);
+ const res=[];for(let t=m;t<y.length;t++)res.push(y[t]-r.fitted[t]);
+ return{fitted:r.fitted.map(v=>+v.toFixed(2)),fc:r.fc?r.fc.map(v=>+v.toFixed(2)):null,
+  sd:+Math.sqrt(variance(res)).toFixed(3),params:{a:+best.a.toFixed(2),b:+best.b.toFixed(2),g:+best.g.toFixed(2)}};}
+function backtest(y,h){
+ const train=y.slice(0,y.length-h),test=y.slice(-h);
+ if(train.length<24)return null;
+ const f=fitHW(train,h);let ae=0,se=0,na=0;
+ for(let i=0;i<h;i++){ae+=Math.abs((test[i]-f.fc[i])/test[i]);se+=Math.pow(test[i]-f.fc[i],2);
+  na+=Math.abs((test[i]-y[y.length-h-12+i])/test[i]);}
+ return{pred:f.fc,h,mape:+(ae/h*100).toFixed(2),rmse:+Math.sqrt(se/h).toFixed(2),naive:+(na/h*100).toFixed(2)};}
+
+/* ===== Pipeline de cálculo (demo y datos del usuario, mismo camino) ===== */
+function computeAll(d){
+ const n=d.meses.length,S={d,n,labs:d.meses.map(lab)};
+ S.has={flujo:!!d.flujo,unidades:!!d.unidades,liq:!!(d.ac&&d.pc),ia:!!d.iat,iaPrec:!!d.iap,iaEsc:!!d.iae};
+ S.margen_pct=d.margen.map((m,i)=>+(m/d.ventas[i]*100).toFixed(2));
+ if(S.has.liq)S.rc=d.ac.map((a,i)=>+(a/d.pc[i]).toFixed(3));
+ const w=(arr,k)=>{const end=n-12*(k-1),st=end-12;return st<0?null:arr.slice(st,end);};
+ S.win={};['ventas','costos','margen','flujo'].forEach(c=>{if(d[c])S.win[c]=[1,2,3].map(k=>{const x=w(d[c],k);return x?sum(x):null;});});
+ if(d.unidades)S.win.unidades=[1,2,3].map(k=>{const x=w(d.unidades,k);return x?sum(x):null;});
+ const V=S.win.ventas,M=S.win.margen;
+ S.wl=k=>{const end=n-12*(k-1),st=end-12;if(st<0||end>n)return null;
+  const a=d.meses[st],b=d.meses[end-1];
+  return(a.slice(5)==='01'&&b.slice(5)==='12'&&a.slice(0,4)===b.slice(0,4))?a.slice(0,4):lab(a)+'–'+lab(b);};
+ S.g1=V[1]!=null?V[0]/V[1]-1:null;
+ S.g0=V[2]!=null?V[1]/V[2]-1:null;
+ S.m1=M[0]/V[0]*100;S.m0=V[1]!=null?M[1]/V[1]*100:null;S.m_1=V[2]!=null?M[2]/V[2]*100:null;
+ S.costG=S.win.costos[1]!=null?S.win.costos[0]/S.win.costos[1]-1:null;
+ if(S.has.flujo){S.conv1=S.win.flujo[0]/M[0]*100;S.conv0=S.win.flujo[1]!=null?S.win.flujo[1]/M[1]*100:null;}
+ if(S.has.liq){S.rcLast=S.rc[n-1];S.rc12=avg(S.rc.slice(-12));
+  S.rcBad=S.rc.filter(v=>v<1).length;S.rcMin=Math.min(...S.rc);}
+ if(S.has.unidades&&V[1]!=null){
+  S.bridges=[];
+  const mk=k=>{const V1=S.win.ventas[k-1],V0=S.win.ventas[k],U1=S.win.unidades[k-1],U0=S.win.unidades[k];
+   if(V0==null||U0==null||U0===0)return null;
+   const efVol=+((U1-U0)*(V0/U0)).toFixed(2),efP=+(V1-V0-efVol).toFixed(2);
+   return{prev:+V0.toFixed(2),act:+V1.toFixed(2),efVol,efPrecio:efP,l0:S.wl(k+1),l1:S.wl(k)};};
+  const b1=mk(1);if(b1)S.bridges.push(b1);
+  const b2=mk(2);if(b2)S.bridges.push(b2);
+  if(b1){const tot=b1.act-b1.prev;S.shareP=Math.abs(tot)>1e-6?b1.efPrecio/tot:null;}
+  if(b2){const tot=b2.act-b2.prev;S.sharePprev=Math.abs(tot)>1e-6?b2.efPrecio/tot:null;}}
+ if(n>=24){
+  S.dec=decompose(d.ventas,d.meses);
+  S.hw=fitHW(d.ventas,6);
+  S.hwM=fitHW(d.margen,3);
+  S.fcMeses=[1,2,3,4,5,6].map(k=>addM(d.meses[n-1],k));
+  S.q1=sum(S.hw.fc.slice(0,3));S.q1prev=sum(d.ventas.slice(n-12,n-9));
+  S.q1yoy=S.q1prev>0?S.q1/S.q1prev-1:null;
+  if(n>=36)S.bt=backtest(d.ventas,12);else if(n>=30)S.bt=backtest(d.ventas,6);}
+ if(S.has.ia){S.K={pmBase:sum(d.margen.slice(n-12,n-9)),
+   dlrBase:S.has.liq?avg(S.rc.slice(-3)):null,
+   roiHist:sum(d.margen.slice(-12))/sum(d.costos.slice(-12))*100};
+  S.escList=S.has.iaEsc?['Optimista','Base','Pesimista'].filter(e=>d.iae.includes(e))
+    .concat([...new Set(d.iae)].filter(e=>!['Optimista','Base','Pesimista'].includes(e))):[];}
+ /* ciclo anual: hasta los últimos 4 años calendario */
+ const byY={};d.meses.forEach((ym,i)=>{const y=ym.slice(0,4);(byY[y]=byY[y]||new Array(12).fill(null))[+ym.slice(5)-1]=d.ventas[i];});
+ S.cycle=Object.keys(byY).sort().slice(-4).map(y=>({y,vals:byY[y]}));
+ /* narrativa: alertas y recomendaciones */
+ buildNarrative(S);
+ return S;}
+
+function buildNarrative(S){
+ const A=[];const add=(c,t,rec)=>A.push({c,t,rec});
+ const mDir=S.m0!=null?S.m1-S.m0:null;
+ if(mDir!=null){
+  if(S.m1<30||mDir<-0.3)add(mDir<-0.3&&S.m1<30?'bad':'warn',
+   `<b>Margen bajo presión:</b> ${f1(S.m1)}% en los últimos 12m (${ppS(mDir)} vs los 12m previos)${S.m1<30?' — por debajo del piso de gobernanza (30%)':''}.`,
+   'Mesa de costos y pricing (causa raíz de la erosión del margen)');
+  else if(mDir>0.3)add('ok',`<b>El margen mejora:</b> ${f1(S.m1)}% (${ppS(mDir)} vs los 12m previos).`);
+  else add('ok',`<b>Margen estable:</b> ${f1(S.m1)}% (${ppS(mDir)}).`);}
+ if(S.costG!=null&&S.g1!=null&&S.costG>S.g1+0.005)
+  add('warn',`<b>Los costos crecen más rápido que las ventas:</b> ${pctS(S.costG)} vs ${pctS(S.g1)} en los últimos 12m.`,
+   'Auditoría de estructura de costos antes del próximo cierre');
+ if(S.shareP!=null&&S.g1!=null&&S.g1>0){
+  if(S.shareP<0.3)add('warn',`<b>La palanca de precio se debilita:</b> aporta solo ${f0(S.shareP*100)}% del crecimiento (antes ${S.sharePprev!=null?f0(S.sharePprev*100)+'%':'—'}).`,
+   'Estudio de elasticidad antes de la próxima decisión de precio');
+  else if(S.shareP>0.7)add('warn',`<b>Crecimiento dependiente del precio:</b> ${f0(S.shareP*100)}% del Δ ventas viene de precio, no de volumen — tiene techo (elasticidad).`,
+   'Plan de volumen: demanda, canales o portafolio');}
+ if(S.g1!=null&&S.g1<0)add('bad',`<b>Las ventas se contraen:</b> ${pctS(S.g1)} en los últimos 12 meses.`,
+  'Revisión del plan comercial y del pipeline de demanda');
+ if(S.has.liq){
+  if(S.rcLast<1)add('bad',`<b>Liquidez crítica:</b> razón corriente ${f1(S.rcLast)}× en el último mes (&lt;1×).`,
+   'Activar línea de crédito / renegociar pasivos de corto plazo');
+  else if(S.rcLast<1.2)add('warn',`<b>Liquidez en zona de alerta:</b> ${f1(S.rcLast)}× en el último mes (umbral 1.2×).`,
+   'Asegurar colchón de liquidez para los meses valle');
+  else if(S.rcBad>0)add('warn',`<b>Liquidez sana hoy (${f1(S.rcLast)}×) pero con ${S.rcBad} mes(es) &lt;1× en el histórico:</b> el promedio esconde el riesgo puntual.`,
+   'Colchón de liquidez para el valle estacional');
+  else add('ok',`<b>Liquidez sana:</b> razón corriente ${f1(S.rcLast)}×, sin meses críticos en el histórico.`);}
+ if(S.has.flujo){
+  if(S.conv1<85)add('warn',`<b>Conversión de caja débil:</b> ${f1(S.conv1)}% (umbral 85%) — la utilidad no se está volviendo efectivo.`,
+   'Auditoría de capital de trabajo (cartera e inventarios)');
+  else add('ok',`<b>La caja valida el margen:</b> conversión ${f1(S.conv1)}% en los últimos 12m.`);}
+ if(S.bt&&S.bt.mape>=S.bt.naive)add('bad',`<b>El modelo no supera al benchmark ingenuo</b> (MAPE ${S.bt.mape}% vs ${S.bt.naive}%): usa el pronóstico con cautela.`,
+  'Reentrenar o retirar el modelo del comité (regla de gobernanza)');
+ if(S.hw&&S.hwM&&S.has.ia){const pm=S.K.pmBase*fac(S,'rec').Ft*fac(S,'rec').Fp,hm=sum(S.hwM.fc);
+  if(Math.abs(hm-pm)/Math.max(Math.abs(pm),1e-9)>0.05)add('warn',
+   `<b>Divergencia de modelos (tarea de diagnóstico):</b> para el margen del próximo trimestre, Holt-Winters proyecta ${f1(hm)} y los factores IA ${f1(pm)}.`,
+   'Registrar en gobernanza qué modelo se usó y auditar cuál acertó');}
+ S.alerts=A.slice(0,6);
+ S.recs=[...new Set(A.filter(a=>a.rec).map(a=>a.rec))].slice(0,4);
+ if(!S.recs.length)S.recs=['Mantener el monitoreo mensual: sin alertas accionables en este cierre'];}
+
+function fac(S,mode){
+ const d=S.d;
+ if(mode==='rec'||!S.has.iaEsc){const t=d.iat.slice(-3),p=d.iap?d.iap.slice(-3):[1,1,1];
+  return{Ft:avg(t),Fp:avg(p),n:3,txt:'media de los últimos 3 meses observados'};}
+ const idx=d.iae.map((e,i)=>e===mode?i:-1).filter(i=>i>=0);
+ return{Ft:avg(idx.map(i=>d.iat[i])),Fp:d.iap?avg(idx.map(i=>d.iap[i])):1,n:idx.length,
+  txt:'media histórica de los meses etiquetados “'+esc(mode)+'”'};}
+
+/* ===== Frases condicionales ===== */
+function growthHead(S){
+ if(S.g1==null)return`<b>Lectura descriptiva de ${S.n} meses.</b> Con 24+ meses se activan las comparaciones anuales y la predicción.`;
+ if(S.g1<0)return`<b>Las ventas se contraen ${pctS(S.g1)}</b> en los últimos 12 meses${S.g0!=null?` (periodo previo: ${pctS(S.g0)})`:''}.`;
+ if(S.g0!=null&&S.g1<S.g0-0.02)return`<b>Crecemos, pero el ritmo se enfría:</b> ${pctS(S.g1)} vs ${pctS(S.g0)} del periodo previo.`;
+ if(S.g0!=null&&S.g1>S.g0+0.02)return`<b>El crecimiento se acelera:</b> ${pctS(S.g1)} vs ${pctS(S.g0)} del periodo previo.`;
+ return`<b>El crecimiento se sostiene en ${pctS(S.g1)}</b> anual.`;}
+function marginClause(S){
+ if(S.m0==null)return`El margen de los últimos 12m es ${f1(S.m1)}%.`;
+ const d=S.m1-S.m0;
+ if(d<-0.3)return`El margen se erosiona (${f1(S.m1)}%, ${ppS(d)})${S.costG!=null&&S.g1!=null&&S.costG>S.g1?` con costos creciendo por encima de las ventas (${pctS(S.costG)} vs ${pctS(S.g1)})`:''}.`;
+ if(d>0.3)return`El margen mejora a ${f1(S.m1)}% (${ppS(d)}).`;
+ return`El margen se mantiene en ${f1(S.m1)}% (${ppS(d)}).`;}
+
+/* ===== Estado global ===== */
+let CUR=null,S=null,puenteIdx=0,escMode='rec';
+
+/* ===== Tema ===== */
 function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
-function baseLayout(extra={}){
- return Object.assign({paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
-  font:{family:"'IgraSans',Aptos,Helvetica,Arial,sans-serif",color:css('--text'),size:11.5},
-  margin:{l:46,r:14,t:8,b:34},hovermode:'x unified',showlegend:true,
-  legend:{orientation:'h',y:1.12,x:0,font:{size:10.5}},
-  xaxis:{gridcolor:css('--grid'),zeroline:false},
-  yaxis:{gridcolor:css('--grid'),zeroline:false}},extra);}
+function baseLayout(extra={}){return Object.assign({paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+ font:{family:"'IgraSans',Aptos,Helvetica,Arial,sans-serif",color:css('--text'),size:11.5},
+ margin:{l:46,r:14,t:8,b:34},hovermode:'x unified',showlegend:true,
+ legend:{orientation:'h',y:1.12,x:0,font:{size:10.5}},
+ xaxis:{gridcolor:css('--grid'),zeroline:false},yaxis:{gridcolor:css('--grid'),zeroline:false}},extra);}
 const CFG={displayModeBar:false,responsive:true};
-function applyTheme(t){document.documentElement.setAttribute('data-theme',t);
- const b=document.getElementById('themeToggle');b.textContent=t==='dark'?'☀️':'🌙';b.setAttribute('aria-pressed',String(t==='dark'));
- drawAll();renderKpis();renderIK();}
+function colors(){return{pu:css('--purple'),pl:css('--purple-light'),db:css('--deep-blue'),vb:css('--vibrant-blue'),
+ mu:css('--muted'),ok:css('--ok'),warn:css('--warn'),bad:css('--bad'),grid:css('--grid')};}
 (function(){let t=safeStore.get('jf-theme');
- if(!t)t=(matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
- document.getElementById('themeToggle').addEventListener('click',()=>{
-   t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
-   safeStore.set('jf-theme',t);applyTheme(t);});
+ if(!t)t=(typeof matchMedia!=='undefined'&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
  document.documentElement.setAttribute('data-theme',t);
- const b=document.getElementById('themeToggle');b.textContent=t==='dark'?'☀️':'🌙';})();
+ const b=document.getElementById('themeToggle');b.textContent=t==='dark'?'☀️':'🌙';
+ b.addEventListener('click',()=>{t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  safeStore.set('jf-theme',t);document.documentElement.setAttribute('data-theme',t);
+  b.textContent=t==='dark'?'☀️':'🌙';b.setAttribute('aria-pressed',String(t==='dark'));
+  renderKpis();renderIK();drawAll();});})();
 
 /* ===== Tabs ===== */
-document.getElementById('tabs').addEventListener('click',e=>{
- const b=e.target.closest('.tab');if(!b)return;
- document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
- document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
- b.classList.add('active');document.getElementById('tab-'+b.dataset.t).classList.add('active');
- setTimeout(drawAll,30);});
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;goTab(b.dataset.t);});
+function goTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.t===t));
+ document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='tab-'+t));
+ setTimeout(drawAll,30);}
+document.getElementById('goData').addEventListener('click',()=>goTab('datos'));
 
-/* ===== Veredicto + KPI cards + alertas + historia ===== */
-function spark(vals,color,w=120,h=26){
- const mn=Math.min(...vals),mx=Math.max(...vals),rg=mx-mn||1;
- const pts=vals.map((v,i)=>`${(i/(vals.length-1)*w).toFixed(1)},${(h-2-(v-mn)/rg*(h-5)).toFixed(1)}`).join(' ');
- return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8"/></svg>`;}
-function chip(cls,txt){return `<span class="chip ${cls}">${txt}</span>`;}
+/* ===== Gating ===== */
+function gate(gid,nid,ok,msg){const g=document.getElementById(gid),n=document.getElementById(nid);
+ if(!g||!n)return;g.hidden=!ok;n.hidden=ok;if(!ok)n.innerHTML=msg;}
+function gateAll(){
+ gate('gPuente','naPuente',!!S.bridges,'Añade la columna <b>Unidades</b> (y ≥24 meses) para descomponer el crecimiento en efecto precio y efecto volumen.');
+ gate('gFlujo','naFlujo',S.has.flujo,'Añade la columna <b>FlujoCaja_Millones</b> para activar la capa de caja y conversión.');
+ gate('gRC','naRC',S.has.liq,'Añade <b>Activos_Corrientes</b> y <b>Pasivos_Corrientes</b> (completas) para activar la capa de liquidez.');
+ const okM=S.n>=24;
+ gate('gDec','naDec',!!S.dec,'La descomposición requiere al menos <b>24 meses</b> (2 ciclos anuales). Tu serie trae '+S.n+'.');
+ gate('gHW','naHW',!!S.hw,'La predicción Holt-Winters requiere al menos <b>24 meses</b>. Tu serie trae '+S.n+'.');
+ gate('gBT','naBT',!!S.bt,S.n>=24?'El backtest requiere al menos <b>30 meses</b> (24 para entrenar + 6 de validación). Tu serie trae '+S.n+': el pronóstico se muestra, pero sin validación independiente.':'Backtest no disponible con menos de 30 meses.');
+ gate('gIK','naIK',S.has.ia,'Añade la columna <b>IA_Factor_Tendencia</b> (y opcionalmente <b>IA_Escenario</b> e <b>IA_Precio_Ajustado</b>) para activar los KPIs Inteligentes: margen proyectado, liquidez dinámica y ROI ajustado, comparando Histórico vs IA Proyectado.');}
+
+/* ===== Render principal ===== */
+function renderSource(){
+ const el=document.getElementById('srcChip');
+ const rng=lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1]);
+ el.innerHTML=`<span class="chip ${CUR.src==='user'?'ok':'info'}">${CUR.src==='user'?'● Tus datos':'● Demo'}</span>
+  <span><b>${esc(CUR.name)}</b> · ${S.n} meses (${rng})${CUR.src==='user'?' · procesados solo en tu navegador':''}</span>
+  ${CUR.src==='user'?'<button class="seg" id="chipRestore" type="button">↺ volver al demo</button>':'<button class="seg" id="chipGo" type="button">⤒ usar mis datos</button>'}`;
+ const r=document.getElementById('chipRestore');if(r)r.addEventListener('click',restoreDemo);
+ const g=document.getElementById('chipGo');if(g)g.addEventListener('click',()=>goTab('datos'));}
+function renderVeredicto(){
+ const p=[growthHead(S),marginClause(S)];
+ if(S.shareP!=null&&S.g1>0)p.push(`El precio explica ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del crecimiento${S.sharePprev!=null?` (antes ${f0(Math.max(0,Math.min(100,S.sharePprev*100)))}%)`:''}.`);
+ if(S.has.flujo)p.push(`La conversión de caja es ${f1(S.conv1)}%${S.conv1>=85?' (sana)':' (bajo el umbral de 85%)'}.`);
+ if(S.has.liq)p.push(`La liquidez cierra en ${f1(S.rcLast)}×${S.rcLast<1?' — crítica':S.rcLast<1.2?' — zona de alerta':''}.`);
+ if(S.hw&&S.q1yoy!=null)p.push(`El modelo estadístico proyecta el próximo trimestre en <b>${f0(S.q1)}</b> (${pctS(S.q1yoy)} vs el mismo trimestre del año previo, con rango).`);
+ document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · con ${CUR.src==='user'?'tus datos':'datos del demo'} (últimos 12 meses vs 12 previos)</div><p>${p.join(' ')}</p>`;}
 function renderKpis(){
- const pu=css('--purple'), mu=css('--muted');
- const cards=[
-  {lbl:'Ventas 2024',val:f0(V[2024])+' <small>M</small>',cmp:`YoY <b>+${f1(yoy24)}%</b> · 2023 fue +${f1(yoy23)}%`,
-   ch:chip('warn','▼ ritmo a la mitad'),sp:spark(DATA.ventas,pu)},
-  {lbl:'Margen bruto',val:f1(mpct(2024))+'<small>%</small>',cmp:`2022: ${f1(mpct(2022))}% → 2023: ${f1(mpct(2023))}%`,
-   ch:chip('warn','▼ 3 años a la baja'),sp:spark(DATA.margen_pct,pu)},
-  {lbl:'Conversión de caja',val:f1(conv24)+'<small>%</small>',cmp:'Flujo/Margen 2024 · umbral 85%',
-   ch:chip('ok','✓ sobre umbral'),sp:spark(DATA.flujo,pu)},
-  {lbl:'Razón corriente',val:f1(rcLast)+'<small>×</small>',cmp:`Dic-24 · media 2024: ${f1(rc24)}× · 2 meses &lt;1 en el histórico`,
-   ch:rcLast<1?chip('bad','✗ crítico'):(rcLast<1.2?chip('warn','⚠ cerca del umbral'):chip('ok','✓ en zona sana')),sp:spark(DATA.rc,pu)},
-  {lbl:'Mix del crecimiento',val:f0(100-mixVol)+'<small>% precio</small>',cmp:`Aporte del precio: ${f0(100-mixVol23)}% (2023) → ${f0(100-mixVol)}% (2024)`,
-   ch:chip('bad','▼ palanca de precio agotándose'),sp:spark([100-mixVol23,100-mixVol].concat([100-mixVol]),mu)}];
- document.getElementById('kpiCards').innerHTML=cards.map(c=>
-  `<div class="kpi"><span class="lbl">${c.lbl}</span><span class="val">${c.val}</span>${c.ch}<span class="cmp">${c.cmp}</span>${c.sp}</div>`).join('');
-}
+ if(!S)return;const pu=css('--purple'),mu=css('--muted');const cards=[];
+ const spark=(vals,color)=>{const v=vals.filter(x=>x!=null);if(v.length<2)return'';
+  const w=120,h=26,mn=Math.min(...v),mx=Math.max(...v),rg=mx-mn||1;
+  const pts=v.map((x,i)=>`${(i/(v.length-1)*w).toFixed(1)},${(h-2-(x-mn)/rg*(h-5)).toFixed(1)}`).join(' ');
+  return`<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8"/></svg>`;};
+ const chip=(cls,txt)=>`<span class="chip ${cls}">${txt}</span>`;
+ cards.push({lbl:'Ventas últimos 12m',val:f0(S.win.ventas[0]),
+  cmp:S.g1!=null?`YoY <b>${pctS(S.g1)}</b>${S.g0!=null?` · previo ${pctS(S.g0)}`:''}`:'Se requieren 24m para comparar',
+  ch:S.g1==null?chip('info','12m'):S.g1<0?chip('bad','▼ contracción'):(S.g0!=null&&S.g1<S.g0-0.02?chip('warn','▼ desacelera'):chip('ok','▲ crece')),sp:spark(S.d.ventas,pu)});
+ const mD=S.m0!=null?S.m1-S.m0:null;
+ cards.push({lbl:'Margen bruto (12m)',val:f1(S.m1)+'<small>%</small>',
+  cmp:mD!=null?`${ppS(mD)} vs 12m previos`:'—',
+  ch:S.m1<30?chip('bad','✗ bajo el piso 30%'):(mD!=null&&mD<-0.3?chip('warn','▼ se erosiona'):chip('ok','✓')),sp:spark(S.margen_pct,pu)});
+ if(S.has.flujo)cards.push({lbl:'Conversión de caja',val:f1(S.conv1)+'<small>%</small>',
+  cmp:'Flujo/Margen 12m · umbral 85%',ch:S.conv1>=85?chip('ok','✓ sobre umbral'):chip('warn','⚠ bajo umbral'),sp:spark(S.d.flujo,pu)});
+ if(S.has.liq)cards.push({lbl:'Razón corriente',val:f1(S.rcLast)+'<small>×</small>',
+  cmp:`último mes · media 12m ${f1(S.rc12)}× · ${S.rcBad} mes(es) &lt;1× hist.`,
+  ch:S.rcLast<1?chip('bad','✗ crítico'):S.rcLast<1.2?chip('warn','⚠ alerta'):chip('ok','✓ sana'),sp:spark(S.rc,pu)});
+ if(S.shareP!=null)cards.push({lbl:'Mix del crecimiento',val:f0(Math.max(0,Math.min(100,S.shareP*100)))+'<small>% precio</small>',
+  cmp:S.sharePprev!=null?`aporte del precio: ${f0(Math.max(0,Math.min(100,S.sharePprev*100)))}% → ${f0(Math.max(0,Math.min(100,S.shareP*100)))}%`:'últimos 12m vs previos',
+  ch:S.shareP<0.3?chip('warn','▼ palanca débil'):S.shareP>0.7?chip('warn','⚠ depende del precio'):chip('ok','✓ equilibrado'),sp:spark([1,2].map(()=>1),mu)});
+ document.getElementById('kpiCards').innerHTML=cards.map(c=>`<div class="kpi"><span class="lbl">${c.lbl}</span><span class="val">${c.val}</span>${c.ch}<span class="cmp">${c.cmp}</span>${c.sp}</div>`).join('');}
 function renderStatic(){
- document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · cierre 2024</div>
-  <p><b>Crecemos, pero el motor perdió una palanca.</b> Las ventas suben +${f1(yoy24)}% (la mitad del ritmo de 2023) y el aporte del precio al crecimiento cayó de ${f0(100-mixVol23)}% a ${f0(100-mixVol)}%, mientras los costos crecieron +${f1(costGrow)}% — por eso el margen hila su tercer año a la baja (${f1(mpct(2024))}%). La caja es sana (${f1(conv24)}% de conversión) y la liquidez cierra en ${f1(rcLast)}×, cerca del umbral de alerta. El modelo estadístico proyecta Q1-2025 en <b>${f0(q1_25)} M</b> (+${f1((q1_25/q1_24-1)*100)}% YoY, con rango): la decisión pendiente no es de demanda, es de <b>costos y pricing</b>.</p>`;
- const alerts=[
-  {c:'warn',t:`<b>Margen en erosión estructural:</b> ${f1(mpct(2022))}% → ${f1(mpct(2023))}% → ${f1(mpct(2024))}%. Umbral de gobernanza: 30%. Dispara mesa de costos/pricing.`},
-  {c:'bad',t:`<b>La palanca de precio se agotó en 2024:</b> aportó ${f0(br24.efPrecio)} M del crecimiento (29%) vs ${f0(br23.efPrecio)} M (48%) en 2023, con costos creciendo +${f1(costGrow)}%.`},
-  {c:'warn',t:`<b>Liquidez con meses de estrés:</b> razón corriente &lt;1 en Ene-22 (0.71×) y Feb-24 (0.90×); Dic-24 cierra en ${f1(rcLast)}× — el promedio anual (${f1(rc24)}×) esconde el riesgo puntual.`},
-  {c:'ok',t:`<b>La caja valida el margen:</b> conversión estable ~90% los tres años. La utilidad contable sí se vuelve efectivo.`},
-  {c:'warn',t:`<b>Divergencia de modelos (tarea de diagnóstico):</b> para el margen de Q1-2025, Holt-Winters proyecta ${f1(sum(DATA.hw_margen.fc))} M y los factores IA ${f1(K.pm.proy)} M. La brecha se investiga, no se elige.`}];
- document.getElementById('alerts').innerHTML=alerts.map(a=>`<div class="alert ${a.c}"><span class="dot"></span><div>${a.t}</div></div>`).join('');
- const st=[['Situación',`Tres años de crecimiento (${f0(V[2022])} → ${f0(V[2024])} M) con caja sana.`],
-  ['Problema',`El ritmo cayó de +${f1(yoy23)}% a +${f1(yoy24)}% y el margen baja por tercer año.`],
-  ['Insight',`El crecimiento perdió su palanca de precio: su aporte pasó de 48% a 29% del Δ ventas.`],
-  ['Causa',`Costos +${f1(costGrow)}% vs ventas +${f1(yoy24)}% en 2024; el precio ya no compensa la presión de costos.`],
-  ['Impacto',`De continuar, margen &lt;31% en 2025 y estrés de liquidez en el valle estacional Ene–Abr.`],
-  ['Acción',`Mesa de costos antes de cerrar Q1-2025, simulación de pricing por escenario (capa 6) y colchón de liquidez para el valle.`]];
+ renderVeredicto();
+ document.getElementById('alerts').innerHTML=S.alerts.map(a=>`<div class="alert ${a.c}"><span class="dot"></span><div>${a.t}</div></div>`).join('')||'<div class="alert ok"><span class="dot"></span><div>Sin alertas: los indicadores disponibles están en zona sana.</div></div>';
+ const st=[['Situación',`Serie de ${S.n} meses (${lab(S.d.meses[0])}–${lab(S.d.meses[S.n-1])}); ventas de ${f0(S.win.ventas[0])} en los últimos 12m.`],
+  ['Problema',S.alerts.find(a=>a.c!=='ok')?S.alerts.find(a=>a.c!=='ok').t.replace(/<[^>]+>/g,''):'Sin problema dominante en este cierre.'],
+  ['Insight',S.shareP!=null?`El mix del crecimiento (precio ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% / volumen ${f0(Math.max(0,Math.min(100,(1-S.shareP)*100)))}%) revela la naturaleza del motor comercial.`:marginClause(S)],
+  ['Causa',S.costG!=null&&S.g1!=null?`Costos ${pctS(S.costG)} vs ventas ${pctS(S.g1)} en los últimos 12m.`:'Con Costos y 24+ meses el diagnóstico causa-efecto se completa.'],
+  ['Impacto',S.hw?`El modelo proyecta el próximo trimestre en ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} interanual) — el rango define el mejor y peor caso presupuestal.`:'Con 24+ meses el impacto se cuantifica con la proyección.'],
+  ['Acción',S.recs.join('; ')+'.']];
  document.getElementById('story').innerHTML=st.map(([k,v])=>`<p style="margin:6px 0;"><b style="color:var(--purple);">${k}.</b> ${v}</p>`).join('');
- document.getElementById('tVentas').textContent=`Las ventas crecen, pero el ritmo cayó a la mitad: +${f1(yoy23)}% → +${f1(yoy24)}%`;
- document.getElementById('tPuente').textContent=`En 2024 el precio solo aportó ${f0(100-mixVol)}% del crecimiento`;
- document.getElementById('tMargen').textContent=`El margen hila tres años a la baja: ${f1(mpct(2022))}% → ${f1(mpct(2024))}%`;
- document.getElementById('tCostos').textContent=`Los costos crecen más rápido que las ventas desde mediados de 2024`;
- document.getElementById('tRC').textContent=`Liquidez sana en promedio (${f1(rc24)}× en 2024), con 2 meses críticos en el histórico`;
- document.getElementById('tHW').textContent=`Holt-Winters proyecta Q1-2025 en ${f0(q1_25)} M (+${f1((q1_25/q1_24-1)*100)}% YoY)`;
- document.getElementById('fseas').textContent=(DATA.dec.fuerza*100).toFixed(0)+'%';
- document.getElementById('btNote').innerHTML=`Error medio (MAPE): <b>${HW.bt_mape}%</b> vs <b>${HW.bt_naive}%</b> del benchmark ingenuo (repetir el año anterior). El modelo aporta valor real, con error típico de ±${f1(HW.bt_rmse)} M/mes.`;
- document.getElementById('hwNote').innerHTML=`Decisión asociada: si el escenario bajo del rango se materializa dos meses seguidos, se revisa el plan comercial (regla en Gobernanza). Una predicción sin decisión es curiosidad estadística.`;
-}
-/* ===== Gráficos (Plotly, tokens de marca, se redibujan al cambiar tema) ===== */
-let puenteYear='2024';
-function colors(){return{pu:css('--purple'),pl:css('--purple-light'),db:getComputedStyle(document.documentElement).getPropertyValue('--deep-blue').trim(),
- vb:css('--vibrant-blue'),mu:css('--muted'),ok:css('--ok'),warn:css('--warn'),bad:css('--bad'),grid:css('--grid')};}
+ document.getElementById('tVentas').innerHTML=growthHead(S).replace(/<\/?b>/g,'');
+ document.getElementById('tMargen').textContent=marginClause(S).replace(/<[^>]+>/g,'');
+ if(S.costG!=null&&S.g1!=null)document.getElementById('tCostos').textContent=S.costG>S.g1?'Los costos crecen más rápido que las ventas: el margen se comprime':'Las ventas crecen por encima de los costos: el margen respira';
+ else document.getElementById('tCostos').textContent='Ventas y costos indexados (primer mes = 100)';
+ if(S.bridges&&S.bridges.length){const b=S.bridges[0];
+  document.getElementById('tPuente').textContent=S.shareP!=null?`El precio aporta ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del cambio en ventas (${b.l0} → ${b.l1})`:'Puente precio-volumen';}
+ if(S.has.liq)document.getElementById('tRC').textContent=`Liquidez: ${f1(S.rc12)}× promedio 12m, ${S.rcBad} mes(es) críticos en el histórico`;
+ if(S.has.flujo)document.getElementById('tFlujo').textContent=`La caja convierte ${f1(S.conv1)}% del margen en efectivo`;
+ if(S.hw){document.getElementById('tHW').textContent=`Holt-Winters proyecta el próximo trimestre en ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} interanual)`;
+  document.getElementById('hwNote').innerHTML=`Parámetros optimizados (α=${S.hw.params.a}, β=${S.hw.params.b}, γ=${S.hw.params.g}). Decisión asociada: si el borde bajo del rango se materializa dos meses seguidos, se revisa el plan comercial (regla en Gobernanza).`;}
+ if(S.dec)document.getElementById('fseas').textContent=f0(S.dec.fuerza*100)+'%';
+ if(S.bt)document.getElementById('btNote').innerHTML=`Horizonte de validación: ${S.bt.h} meses. MAPE <b>${S.bt.mape}%</b> vs <b>${S.bt.naive}%</b> del benchmark ingenuo (repetir el año anterior)${S.bt.mape<S.bt.naive?' — el modelo aporta valor real':' — <b>el modelo no supera al benchmark: úsalo con cautela</b>'}. Error típico ±${f1(S.bt.rmse)}/mes.`;
+ renderPuenteSel();}
+function renderPuenteSel(){
+ const el=document.getElementById('selPuente');if(!S.bridges){el.innerHTML='';return;}
+ el.innerHTML=S.bridges.map((b,i)=>`<button class="seg ${i===puenteIdx?'active':''}" data-i="${i}" type="button">${b.l1} vs ${b.l0}</button>`).join('');}
+document.getElementById('selPuente').addEventListener('click',e=>{const b=e.target.closest('.seg');if(!b)return;
+ puenteIdx=+b.dataset.i;renderPuenteSel();drawPuente();});
+
+/* ===== Gráficos ===== */
 function visible(id){const el=document.getElementById(id);return el&&el.offsetParent!==null;}
-
 function drawVentas(){if(!visible('chVentas'))return;const c=colors();
- Plotly.react('chVentas',[
-  {x:LABS,y:DATA.ventas,name:'Ventas (M)',mode:'lines+markers',line:{color:c.pu,width:2.2},marker:{size:4}},
-  {x:LABS,y:DATA.dec.trend,name:'Tendencia (descomposición)',mode:'lines',line:{color:c.mu,width:2,dash:'dot'},connectgaps:false}
- ],baseLayout({yaxis:{title:{text:'Millones',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
-
-function drawCiclo(){if(!visible('chCiclo'))return;const c=colors();const cols=[c.mu,c.vb,c.pu];
- Plotly.react('chCiclo',[2022,2023,2024].map((y,i)=>({x:MESN,y:yearSlice(DATA.ventas,y),name:String(y),
-  mode:'lines+markers',line:{color:cols[i],width:y===2024?2.6:1.6},marker:{size:4}})),
-  baseLayout({yaxis:{title:{text:'Ventas (M)',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
-
-function drawPuente(){if(!visible('chPuente'))return;const c=colors();
- const b=DATA.bridge[puenteYear];const y0=+puenteYear-1;
+ const tr=[{x:S.labs,y:S.d.ventas,name:'Ventas',mode:'lines+markers',line:{color:c.pu,width:2.2},marker:{size:4}}];
+ if(S.dec)tr.push({x:S.labs,y:S.dec.trend,name:'Tendencia (descomposición)',mode:'lines',line:{color:c.mu,width:2,dash:'dot'},connectgaps:false});
+ Plotly.react('chVentas',tr,baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
+function drawCiclo(){if(!visible('chCiclo'))return;const c=colors();const cols=[c.mu,c.vb,c.pl,c.pu];
+ Plotly.react('chCiclo',S.cycle.map((s,i)=>({x:MESN,y:s.vals,name:s.y,mode:'lines+markers',
+  line:{color:cols[i%4],width:i===S.cycle.length-1?2.6:1.6},marker:{size:4},connectgaps:false})),
+  baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
+function drawPuente(){if(!visible('chPuente')||!S.bridges)return;const c=colors();
+ const b=S.bridges[puenteIdx]||S.bridges[0];
+ const lo=Math.min(b.prev,b.act,b.prev+b.efVol),hi=Math.max(b.prev,b.act,b.prev+b.efVol);
  Plotly.react('chPuente',[{type:'waterfall',orientation:'v',
-  x:['Ventas '+y0,'Efecto volumen','Efecto precio','Ventas '+puenteYear],
+  x:['Ventas '+b.l0,'Efecto volumen','Efecto precio','Ventas '+b.l1],
   measure:['absolute','relative','relative','total'],
   y:[b.prev,b.efVol,b.efPrecio,b.act],
-  text:[f0(b.prev),'+'+f0(b.efVol),'+'+f0(b.efPrecio),f0(b.act)],textposition:'outside',
-  connector:{line:{color:c.grid}},increasing:{marker:{color:c.pu}},totals:{marker:{color:c.mu}}}],
-  baseLayout({showlegend:false,yaxis:{title:{text:'Millones',font:{size:10}},gridcolor:c.grid,zeroline:false,
-   range:[b.prev*0.92,b.act*1.08]},margin:{l:46,r:14,t:22,b:34}}),CFG);}
-
+  text:[f0(b.prev),(b.efVol>=0?'+':'')+f0(b.efVol),(b.efPrecio>=0?'+':'')+f0(b.efPrecio),f0(b.act)],
+  textposition:'outside',connector:{line:{color:c.grid}},
+  increasing:{marker:{color:c.pu}},decreasing:{marker:{color:c.bad}},totals:{marker:{color:c.mu}}}],
+  baseLayout({showlegend:false,margin:{l:46,r:14,t:22,b:34},
+   yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false,range:[lo*0.9,hi*1.09]}}),CFG);}
 function drawMargen(){if(!visible('chMargen'))return;const c=colors();
+ const lo=Math.min(29,...S.margen_pct)-2,hi=Math.max(31,...S.margen_pct)+2;
  Plotly.react('chMargen',[
-  {x:LABS,y:DATA.margen_pct,name:'Margen %',mode:'lines+markers',line:{color:c.pu,width:2.2},marker:{size:4}},
-  {x:LABS,y:Array(N).fill(30),name:'Piso gobernanza 30%',mode:'lines',line:{color:c.bad,width:1.6,dash:'dash'}}
- ],baseLayout({yaxis:{title:{text:'%',font:{size:10}},gridcolor:c.grid,zeroline:false,range:[26,38]}}),CFG);}
-
-function drawFlujo(){if(!visible('chFlujo'))return;const c=colors();
- const conv=DATA.flujo.map((f,i)=>+(f/DATA.margen[i]*100).toFixed(1));
+  {x:S.labs,y:S.margen_pct,name:'Margen %',mode:'lines+markers',line:{color:c.pu,width:2.2},marker:{size:4}},
+  {x:S.labs,y:Array(S.n).fill(30),name:'Piso gobernanza 30%',mode:'lines',line:{color:c.bad,width:1.6,dash:'dash'}}
+ ],baseLayout({yaxis:{title:{text:'%',font:{size:10}},gridcolor:c.grid,zeroline:false,range:[lo,hi]}}),CFG);}
+function drawFlujo(){if(!visible('chFlujo')||!S.has.flujo)return;const c=colors();
+ const conv=S.d.flujo.map((f,i)=>+(f/S.d.margen[i]*100).toFixed(1));
  Plotly.react('chFlujo',[
-  {x:LABS,y:DATA.flujo,name:'Flujo de caja (M)',type:'bar',marker:{color:c.pl,opacity:.85},yaxis:'y'},
-  {x:LABS,y:conv,name:'Conversión % (panel inf.)',mode:'lines',line:{color:c.db,width:2},yaxis:'y2'},
-  {x:LABS,y:Array(N).fill(85),name:'Umbral 85%',mode:'lines',line:{color:c.bad,width:1.3,dash:'dash'},yaxis:'y2',showlegend:false}
- ],baseLayout({yaxis:{domain:[0.55,1],title:{text:'M',font:{size:10}},gridcolor:c.grid,zeroline:false},
-   yaxis2:{domain:[0,0.42],title:{text:'%',font:{size:10}},gridcolor:c.grid,zeroline:false,range:[70,105]}}),CFG);}
-
+  {x:S.labs,y:S.d.flujo,name:'Flujo de caja',type:'bar',marker:{color:c.pl,opacity:.85},yaxis:'y'},
+  {x:S.labs,y:conv,name:'Conversión % (panel inf.)',mode:'lines',line:{color:c.db,width:2},yaxis:'y2'},
+  {x:S.labs,y:Array(S.n).fill(85),name:'Umbral 85%',mode:'lines',line:{color:c.bad,width:1.3,dash:'dash'},yaxis:'y2',showlegend:false}
+ ],baseLayout({yaxis:{domain:[0.55,1],gridcolor:c.grid,zeroline:false},
+  yaxis2:{domain:[0,0.42],title:{text:'%',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
 function drawIdx(){if(!visible('chIdx'))return;const c=colors();
- const iv=DATA.ventas.map(v=>+(v/DATA.ventas[0]*100).toFixed(1));
- const ic=DATA.costos.map(v=>+(v/DATA.costos[0]*100).toFixed(1));
+ const iv=S.d.ventas.map(v=>+(v/S.d.ventas[0]*100).toFixed(1)),ic=S.d.costos.map(v=>+(v/S.d.costos[0]*100).toFixed(1));
  Plotly.react('chIdx',[
-  {x:LABS,y:iv,name:'Ventas (índice 100)',mode:'lines',line:{color:c.pu,width:2.2}},
-  {x:LABS,y:ic,name:'Costos (índice 100)',mode:'lines',line:{color:c.bad,width:2}}
- ],baseLayout({yaxis:{title:{text:'Ene-22 = 100',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
-
-function drawRC(){if(!visible('chRC'))return;const c=colors();
- Plotly.react('chRC',[{x:LABS,y:DATA.rc,name:'Razón corriente',mode:'lines+markers',line:{color:c.pu,width:2.2},
-  marker:{size:6,color:DATA.rc.map(v=>v<1?c.bad:(v<1.2?c.warn:c.pu))}}],
-  baseLayout({showlegend:false,yaxis:{title:{text:'×',font:{size:10}},gridcolor:c.grid,zeroline:false,range:[0.4,3.7]},
-   shapes:[{type:'rect',xref:'paper',x0:0,x1:1,y0:0,y1:1,fillcolor:c.bad,opacity:.09,line:{width:0}},
-           {type:'rect',xref:'paper',x0:0,x1:1,y0:1,y1:1.2,fillcolor:c.warn,opacity:.10,line:{width:0}},
-           {type:'line',xref:'paper',x0:0,x1:1,y0:1,y1:1,line:{color:c.bad,width:1.4,dash:'dash'}},
-           {type:'line',xref:'paper',x0:0,x1:1,y0:1.2,y1:1.2,line:{color:c.warn,width:1.2,dash:'dot'}}]}),CFG);}
-
-function drawDec(){if(!visible('chDec'))return;const c=colors();
- const dm=[.79,.54,.29,.04], H=.17;
- const ax=(i)=>({domain:[dm[i],dm[i]+H],gridcolor:c.grid,zeroline:false});
+  {x:S.labs,y:iv,name:'Ventas (índice 100)',mode:'lines',line:{color:c.pu,width:2.2}},
+  {x:S.labs,y:ic,name:'Costos (índice 100)',mode:'lines',line:{color:c.bad,width:2}}
+ ],baseLayout({yaxis:{title:{text:'Primer mes = 100',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
+function drawRC(){if(!visible('chRC')||!S.has.liq)return;const c=colors();
+ const hi=Math.max(1.4,...S.rc)+0.3,lo=Math.min(0.5,S.rcMin-0.2);
+ Plotly.react('chRC',[{x:S.labs,y:S.rc,name:'Razón corriente',mode:'lines+markers',line:{color:c.pu,width:2.2},
+  marker:{size:6,color:S.rc.map(v=>v<1?c.bad:(v<1.2?c.warn:c.pu))}}],
+  baseLayout({showlegend:false,yaxis:{title:{text:'×',font:{size:10}},gridcolor:c.grid,zeroline:false,range:[lo,hi]},
+   shapes:[{type:'rect',xref:'paper',x0:0,x1:1,y0:lo,y1:1,fillcolor:c.bad,opacity:.09,line:{width:0}},
+    {type:'rect',xref:'paper',x0:0,x1:1,y0:1,y1:1.2,fillcolor:c.warn,opacity:.10,line:{width:0}},
+    {type:'line',xref:'paper',x0:0,x1:1,y0:1,y1:1,line:{color:c.bad,width:1.4,dash:'dash'}},
+    {type:'line',xref:'paper',x0:0,x1:1,y0:1.2,y1:1.2,line:{color:c.warn,width:1.2,dash:'dot'}}]}),CFG);}
+function drawDec(){if(!visible('chDec')||!S.dec)return;const c=colors();
+ const dm=[.79,.54,.29,.04],H=.17,ax=i=>({domain:[dm[i],dm[i]+H],gridcolor:c.grid,zeroline:false});
  Plotly.react('chDec',[
-  {x:LABS,y:DATA.ventas,name:'Observado',mode:'lines',line:{color:c.pu,width:1.8},xaxis:'x',yaxis:'y'},
-  {x:LABS,y:DATA.dec.trend,name:'Tendencia',mode:'lines',line:{color:c.db,width:2},connectgaps:false,xaxis:'x',yaxis:'y2'},
-  {x:LABS,y:DATA.dec.seasonal,name:'Estacionalidad',mode:'lines',line:{color:c.vb,width:1.8},xaxis:'x',yaxis:'y3'},
-  {x:LABS,y:DATA.dec.resid,name:'Residuo',mode:'markers',marker:{color:c.mu,size:4},xaxis:'x',yaxis:'y4'}
+  {x:S.labs,y:S.d.ventas,name:'Observado',mode:'lines',line:{color:c.pu,width:1.8},yaxis:'y'},
+  {x:S.labs,y:S.dec.trend,name:'Tendencia',mode:'lines',line:{color:c.db,width:2},connectgaps:false,yaxis:'y2'},
+  {x:S.labs,y:S.dec.seasonal,name:'Estacionalidad',mode:'lines',line:{color:c.vb,width:1.8},yaxis:'y3'},
+  {x:S.labs,y:S.dec.resid,name:'Residuo',mode:'markers',marker:{color:c.mu,size:4},yaxis:'y4'}
  ],baseLayout({showlegend:false,margin:{l:52,r:14,t:8,b:34},
   yaxis:Object.assign(ax(0),{title:{text:'Obs.',font:{size:9.5}}}),
   yaxis2:Object.assign(ax(1),{title:{text:'Tend.',font:{size:9.5}}}),
   yaxis3:Object.assign(ax(2),{title:{text:'Estac.',font:{size:9.5}}}),
   yaxis4:Object.assign(ax(3),{title:{text:'Resid.',font:{size:9.5}}}),
   xaxis:{gridcolor:c.grid,zeroline:false}}),CFG);}
-
-function drawBT(){if(!visible('chBT'))return;const c=colors();
- const l24=LABS.slice(24);
+function drawBT(){if(!visible('chBT')||!S.bt)return;const c=colors();
+ const l=S.labs.slice(-S.bt.h);
  Plotly.react('chBT',[
-  {x:l24,y:DATA.ventas.slice(24),name:'Real 2024',mode:'lines+markers',line:{color:c.pu,width:2.2},marker:{size:5}},
-  {x:l24,y:HW.bt_pred,name:'Predicho (entrenado 22–23)',mode:'lines+markers',line:{color:c.vb,width:2,dash:'dot'},marker:{size:5,symbol:'diamond'}}
- ],baseLayout({yaxis:{title:{text:'Ventas (M)',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
-
-function drawHW(){if(!visible('chHW'))return;const c=colors();
- const fl=HW.fc_meses.map(lab), z=1.2816, sd=HW.sd;
- const hi=HW.fc.map(v=>+(v+z*sd).toFixed(1)), lo=HW.fc.map(v=>+(v-z*sd).toFixed(1));
- const lastL=LABS[N-1], lastV=DATA.ventas[N-1];
+  {x:l,y:S.d.ventas.slice(-S.bt.h),name:'Real',mode:'lines+markers',line:{color:c.pu,width:2.2},marker:{size:5}},
+  {x:l,y:S.bt.pred,name:'Predicho a ciegas',mode:'lines+markers',line:{color:c.vb,width:2,dash:'dot'},marker:{size:5,symbol:'diamond'}}
+ ],baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
+function drawHW(){if(!visible('chHW')||!S.hw)return;const c=colors();
+ const fl=S.fcMeses.map(lab),z=1.2816,sd=S.hw.sd;
+ const hi=S.hw.fc.map(v=>+(v+z*sd).toFixed(1)),lo=S.hw.fc.map(v=>+(v-z*sd).toFixed(1));
+ const lastL=S.labs[S.n-1],lastV=S.d.ventas[S.n-1];
  Plotly.react('chHW',[
-  {x:LABS,y:DATA.ventas,name:'Histórico',mode:'lines',line:{color:c.pu,width:2}},
-  {x:[lastL].concat(fl),y:[lastV].concat(hi),name:'Banda 80%',mode:'lines',line:{width:0},showlegend:false,hoverinfo:'skip'},
+  {x:S.labs,y:S.d.ventas,name:'Histórico',mode:'lines',line:{color:c.pu,width:2}},
+  {x:[lastL].concat(fl),y:[lastV].concat(hi),mode:'lines',line:{width:0},showlegend:false,hoverinfo:'skip'},
   {x:[lastL].concat(fl),y:[lastV].concat(lo),name:'Banda ~80%',mode:'lines',line:{width:0},fill:'tonexty',fillcolor:'rgba(124,77,255,.18)'},
-  {x:[lastL].concat(fl),y:[lastV].concat(HW.fc),name:'Pronóstico HW',mode:'lines+markers',line:{color:c.vb,width:2.4,dash:'dash'},marker:{size:5}}
- ],baseLayout({yaxis:{title:{text:'Ventas (M)',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
-
-function drawAll(){drawVentas();drawCiclo();drawPuente();drawMargen();drawFlujo();drawIdx();drawRC();drawDec();drawBT();drawHW();}
-document.getElementById('selPuente').addEventListener('click',e=>{const b=e.target.closest('.seg');if(!b)return;
- puenteYear=b.dataset.y;document.querySelectorAll('#selPuente .seg').forEach(x=>x.classList.toggle('active',x===b));drawPuente();});
+  {x:[lastL].concat(fl),y:[lastV].concat(S.hw.fc),name:'Pronóstico HW',mode:'lines+markers',line:{color:c.vb,width:2.4,dash:'dash'},marker:{size:5}}
+ ],baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
+function drawAll(){if(!S)return;drawVentas();drawCiclo();drawPuente();drawMargen();drawFlujo();drawIdx();drawRC();drawDec();drawBT();drawHW();}
 window.addEventListener('resize',()=>{clearTimeout(window.__rz);window.__rz=setTimeout(drawAll,150);});
-/* ===== Capa 6 · KPIs Inteligentes (Histórico vs IA Proyectado) ===== */
-let escMode='rec';
-function cbRow(cls,lbl,val,maxV,fmt){const w=Math.max(4,Math.min(100,val/maxV*100));
+
+/* ===== KPIs Inteligentes ===== */
+function cbRow(cls,lbl,val,maxV,fmt){const w=Math.max(4,Math.min(100,Math.abs(val)/maxV*100));
  return `<div class="cb ${cls}"><span>${lbl}</span><div class="bar"><div class="fill" style="width:${w}%"></div></div><span class="v">${fmt(val)}</span></div>`;}
 function renderIK(){
- const F=factores(escMode);
- const pm=K.pm.base*F.Ft*F.Fp;
- const dlr=K.dlr.base*F.Ft;
- const roi=K.roi.hist*F.Ft;
- const hwM=sum(DATA.hw_margen.fc);
- document.getElementById('escNote').innerHTML=
-  `Factores aplicados (${F.txt}, n=${F.n}): <b>IA_Factor_Tendencia = ${F.Ft.toFixed(4)}</b> · <b>IA_Precio_Ajustado = ${F.Fp.toFixed(4)}</b>. `+
-  `Advertencia de gobernanza: en el histórico estos factores casi no discriminan entre escenarios (medias ≈ 1.01–1.02) y su correlación con la realidad es ≈ 0.06 — por eso se presentan como simulación declarada, no como predicción validada.`;
- const cards=[
-  {t:'Predictive Margin',s:'Margen proyectado · Q1-2025',
-   f:`Margen Q1-2024 × F_tendencia × F_precio = ${f1(K.pm.base)} × ${F.Ft.toFixed(3)} × ${F.Fp.toFixed(3)}`,
-   rows:[cbRow('hist','Histórico',K.pm.base,180,v=>f1(v)+' M'),cbRow('ia','IA Proyectado',pm,180,v=>f1(v)+' M'),
-         cbRow('hw','Estadístico (HW)',hwM,180,v=>f1(v)+' M')],
-   d:pm/K.pm.base-1,extra:`Base estacional: mismo trimestre del año anterior. HW como triangulación (±${f1(1.2816*DATA.hw_margen.sd*Math.sqrt(3))} M al 80%).`},
-  {t:'Dynamic Liquidity Ratio',s:'Liquidez ajustada por escenario · próximo trimestre',
-   f:`Razón corriente (media 3m) × F_tendencia = ${f1(K.dlr.base)} × ${F.Ft.toFixed(3)}`,
-   rows:[cbRow('hist','Histórico',K.dlr.base,2.2,v=>f1(v)+'×'),cbRow('ia','IA Proyectado',dlr,2.2,v=>f1(v)+'×')],
-   d:dlr/K.dlr.base-1,extra:`Umbrales de gobernanza: alerta &lt;1.2×, crítico &lt;1.0×. ${dlr<1.2?'⚠ El escenario proyecta zona de alerta.':'Se mantiene en zona sana en todos los escenarios — el riesgo real es la volatilidad mensual, no el promedio.'}`},
-  {t:'AI-Adjusted ROI',s:'Rentabilidad esperada · próximos 12m',
-   f:`ROI LTM (Margen/Costos) × F_tendencia = ${f1(K.roi.hist)}% × ${F.Ft.toFixed(3)}`,
-   rows:[cbRow('hist','Histórico',K.roi.hist,60,v=>f1(v)+'%'),cbRow('ia','IA Proyectado',roi,60,v=>f1(v)+'%')],
-   d:roi/K.roi.hist-1,extra:`Proxy declarado: el origen no trae base de inversión, se usa retorno sobre costos (Margen LTM / Costos LTM).`}];
+ if(!S||!S.has.ia)return;
+ const chip=(cls,txt)=>`<span class="chip ${cls}">${txt}</span>`;
+ const sel=document.getElementById('selEsc');
+ sel.innerHTML=[`<button class="seg ${escMode==='rec'?'active':''}" data-e="rec" type="button">Reciente (media 3m)</button>`]
+  .concat(S.escList.map(e=>`<button class="seg ${escMode===e?'active':''}" data-e="${esc(e)}" type="button">${esc(e)}</button>`)).join('');
+ const F=fac(S,escMode);
+ const pm=S.K.pmBase*F.Ft*F.Fp,roi=S.K.roiHist*F.Ft;
+ const hwM=S.hwM?sum(S.hwM.fc):null;
+ document.getElementById('escNote').innerHTML=`Factores aplicados (${F.txt}, n=${F.n}): <b>F_tendencia = ${F.Ft.toFixed(4)}</b> · <b>F_precio = ${F.Fp.toFixed(4)}</b>${!S.has.iaPrec?' (sin IA_Precio_Ajustado: F_precio = 1)':''}. Advertencia de gobernanza: los factores IA son insumos de simulación declarada; triangúlalos siempre contra el modelo estadístico.`;
+ const mx=Math.max(S.K.pmBase,pm,hwM||0)*1.15;
+ const cards=[];
+ cards.push({t:'Predictive Margin',s:'Margen proyectado · próximo trimestre',
+  f:`Margen mismo trimestre año previo × F_tend × F_precio = ${f1(S.K.pmBase)} × ${F.Ft.toFixed(3)} × ${F.Fp.toFixed(3)}`,
+  rows:[cbRow('hist','Histórico',S.K.pmBase,mx,v=>f1(v)),cbRow('ia','IA Proyectado',pm,mx,v=>f1(v))]
+   .concat(hwM!=null?[cbRow('hw','Estadístico (HW)',hwM,mx,v=>f1(v))]:[]),
+  d:pm/S.K.pmBase-1,
+  extra:hwM!=null?`Triangulación: HW proyecta ${f1(hwM)} (±${f1(1.2816*S.hwM.sd*Math.sqrt(3))} al 80%).`:'Con 24+ meses se añade la triangulación estadística.'});
+ if(S.K.dlrBase!=null){const dlr=S.K.dlrBase*F.Ft;
+  cards.push({t:'Dynamic Liquidity Ratio',s:'Liquidez ajustada por escenario · próximo trimestre',
+   f:`Razón corriente (media 3m) × F_tend = ${f1(S.K.dlrBase)} × ${F.Ft.toFixed(3)}`,
+   rows:[cbRow('hist','Histórico',S.K.dlrBase,Math.max(2.2,S.K.dlrBase*1.4),v=>f1(v)+'×'),cbRow('ia','IA Proyectado',dlr,Math.max(2.2,S.K.dlrBase*1.4),v=>f1(v)+'×')],
+   d:dlr/S.K.dlrBase-1,
+   extra:`Umbrales: alerta &lt;1.2×, crítico &lt;1.0×. ${dlr<1?'✗ El escenario proyecta zona crítica.':dlr<1.2?'⚠ El escenario proyecta zona de alerta.':'Se mantiene en zona sana bajo este escenario.'}`});}
+ else cards.push({t:'Dynamic Liquidity Ratio',s:'Requiere la capa de liquidez',f:'—',rows:[],d:0,
+  extra:'Añade Activos_Corrientes y Pasivos_Corrientes a tu archivo para habilitar este KPI.'});
+ cards.push({t:'AI-Adjusted ROI',s:'Rentabilidad esperada · próximos 12m',
+  f:`ROI 12m (Margen/Costos) × F_tend = ${f1(S.K.roiHist)}% × ${F.Ft.toFixed(3)}`,
+  rows:[cbRow('hist','Histórico',S.K.roiHist,Math.max(60,S.K.roiHist*1.4),v=>f1(v)+'%'),cbRow('ia','IA Proyectado',roi,Math.max(60,S.K.roiHist*1.4),v=>f1(v)+'%')],
+  d:roi/S.K.roiHist-1,extra:'Proxy declarado: retorno sobre costos (el archivo no trae base de inversión).'});
  document.getElementById('ikCards').innerHTML=cards.map(c=>{
-  const d=c.d*100, cls=d>0.5?'ok':(d<-0.5?'bad':'info');
+  const d=c.d*100,cls=d>0.5?'ok':(d<-0.5?'bad':'info');
   return `<div class="card ik"><h3>${c.t}</h3><div class="sub">${c.s}</div>
-   ${chip(cls,(d>=0?'▲ +':'▼ ')+f1(d)+'% vs histórico')}
-   <div class="formula">${c.f}</div><div class="cmpbar">${c.rows.join('')}</div>
-   <p class="hint">${c.extra}</p></div>`;}).join('');
- const gap=(hwM-pm), gp=(hwM/pm-1)*100;
- document.getElementById('ikInsight').innerHTML=
-  `<p style="margin:4px 0;">Para el margen de Q1-2025, la proyección estadística (<b>${f1(hwM)} M</b>) supera a la de factores IA (<b>${f1(pm)} M</b>) en <b>${f1(gap)} M (+${f1(gp)}%)</b>. Holt-Winters extrapola la inercia de tendencia y estacionalidad; los factores IA aplican multiplicadores exógenos sin memoria estacional. </p>
-   <p style="margin:8px 0 0;"><b>Decisión sugerida:</b> presupuestar con el rango estadístico, usar los factores IA solo para sensibilizar escenarios, y registrar en Gobernanza qué modelo se usó — para auditar en abril cuál acertó y que el círculo de decisión aprenda.</p>`;
-}
+   ${c.rows.length?chip(cls,(d>=0?'▲ +':'▼ ')+f1(d)+'% vs histórico'):''}
+   <div class="formula">${c.f}</div><div class="cmpbar">${c.rows.join('')}</div><p class="hint">${c.extra}</p></div>`;}).join('');
+ document.getElementById('ikInsight').innerHTML=hwM!=null?
+  `<p style="margin:4px 0;">Para el margen del próximo trimestre: factores IA <b>${f1(pm)}</b> vs estadístico <b>${f1(hwM)}</b> (brecha ${f1(hwM-pm)}). La brecha entre modelos se investiga, no se elige la cifra que más guste.</p>
+   <p style="margin:8px 0 0;"><b>Decisión sugerida:</b> presupuestar con el rango estadístico, usar los factores IA para sensibilizar escenarios, y registrar en Gobernanza qué modelo se usó para auditar cuál acertó.</p>`
+  :'<p>Con 24+ meses se activa la triangulación entre el modelo estadístico y los factores IA.</p>';}
 document.getElementById('selEsc').addEventListener('click',e=>{const b=e.target.closest('.seg');if(!b)return;
- escMode=b.dataset.e;document.querySelectorAll('#selEsc .seg').forEach(x=>x.classList.toggle('active',x===b));renderIK();});
+ escMode=b.dataset.e;renderIK();});
 
-/* ===== Capa 7 · Gobernanza ===== */
+/* ===== Gobernanza ===== */
 const GOV_DEF=[
- {k:'ventas',kpi:'Crecimiento de ventas YoY',umb:'< +8% dos meses seguidos',due:'',dec:'Revisar plan comercial y pipeline'},
- {k:'margen',kpi:'Margen bruto %',umb:'< 30% o 3 meses a la baja',due:'',dec:'Mesa de costos y pricing'},
- {k:'caja',kpi:'Conversión de caja (Flujo/Margen)',umb:'< 85%',due:'',dec:'Auditoría de capital de trabajo'},
- {k:'rc',kpi:'Razón corriente',umb:'< 1.2 alerta · < 1.0 crítico',due:'',dec:'Activar línea de crédito / renegociar pasivos'},
- {k:'mix',kpi:'Aporte del precio al crecimiento',umb:'< 30% del Δ ventas',due:'',dec:'Estudio de elasticidad antes de subir precio'},
- {k:'modelo',kpi:'Error del modelo (MAPE backtest)',umb:'> 10% o peor que naive',due:'',dec:'Reentrenar / retirar el modelo del comité'}];
+ {kpi:'Crecimiento de ventas (12m vs 12m)',umb:'< +8% dos cierres seguidos',due:'',dec:'Revisar plan comercial y pipeline'},
+ {kpi:'Margen bruto %',umb:'< 30% o 3 meses a la baja',due:'',dec:'Mesa de costos y pricing'},
+ {kpi:'Conversión de caja (Flujo/Margen)',umb:'< 85%',due:'',dec:'Auditoría de capital de trabajo'},
+ {kpi:'Razón corriente',umb:'< 1.2 alerta · < 1.0 crítico',due:'',dec:'Activar línea de crédito / renegociar pasivos'},
+ {kpi:'Aporte del precio al crecimiento',umb:'< 30% o > 70% del Δ ventas',due:'',dec:'Estudio de elasticidad / plan de volumen'},
+ {kpi:'Error del modelo (MAPE backtest)',umb:'> 10% o peor que naive',due:'',dec:'Reentrenar / retirar el modelo del comité'}];
 function loadGov(){try{const s=safeStore.get('jf-pf-gov');return s?JSON.parse(s):JSON.parse(JSON.stringify(GOV_DEF));}catch(e){return JSON.parse(JSON.stringify(GOV_DEF));}}
 let GOV=loadGov();
-function renderGov(){
- document.getElementById('govTable').innerHTML=
-  '<tr><th style="width:24%">KPI</th><th style="width:24%">Umbral</th><th style="width:20%">Dueño</th><th>Decisión que dispara</th></tr>'+
-  GOV.map((g,i)=>`<tr><td><b style="color:var(--deep-blue)">${g.kpi}</b></td>
-   <td><input class="inp" data-i="${i}" data-f="umb" value="${g.umb.replace(/"/g,'&quot;')}"/></td>
-   <td><input class="inp" data-i="${i}" data-f="due" value="${g.due.replace(/"/g,'&quot;')}" placeholder="por definir"/></td>
-   <td><input class="inp" data-i="${i}" data-f="dec" value="${g.dec.replace(/"/g,'&quot;')}"/></td></tr>`).join('');
-}
+function renderGov(){document.getElementById('govTable').innerHTML=
+ '<tr><th style="width:24%">KPI</th><th style="width:24%">Umbral</th><th style="width:20%">Dueño</th><th>Decisión que dispara</th></tr>'+
+ GOV.map((g,i)=>`<tr><td><b style="color:var(--deep-blue)">${esc(g.kpi)}</b></td>
+  <td><input class="inp" data-i="${i}" data-f="umb" value="${esc(g.umb)}"/></td>
+  <td><input class="inp" data-i="${i}" data-f="due" value="${esc(g.due)}" placeholder="por definir"/></td>
+  <td><input class="inp" data-i="${i}" data-f="dec" value="${esc(g.dec)}"/></td></tr>`).join('');}
 document.getElementById('govTable').addEventListener('input',e=>{const el=e.target;if(!el.dataset.f)return;
  GOV[+el.dataset.i][el.dataset.f]=el.value;safeStore.set('jf-pf-gov',JSON.stringify(GOV));});
-document.getElementById('btnGovExport').addEventListener('click',()=>{
- dl('gobernanza-pulso-financiero.json',JSON.stringify({actualizado:new Date().toISOString(),items:GOV},null,2),'application/json');});
-document.getElementById('btnGovReset').addEventListener('click',()=>{GOV=JSON.parse(JSON.stringify(GOV_DEF));safeStore.set('jf-pf-gov',JSON.stringify(GOV));renderGov();});
 function dl(name,content,type){const b=new Blob([content],{type});const a=document.createElement('a');
  a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800);}
+document.getElementById('btnGovExport').addEventListener('click',()=>dl('gobernanza-pulso-financiero.json',JSON.stringify({actualizado:new Date().toISOString(),items:GOV},null,2),'application/json'));
+document.getElementById('btnGovReset').addEventListener('click',()=>{GOV=JSON.parse(JSON.stringify(GOV_DEF));safeStore.set('jf-pf-gov',JSON.stringify(GOV));renderGov();});
 
-/* ===== Capa 8 · Q&A conversacional (reglas sobre datos embebidos) ===== */
+/* ===== Q&A ===== */
 const QA=[
- {q:'¿Cómo cierra 2024?',k:['cierra','cierre','2024','resumen','como va','cómo va'],
-  a:()=>`<b>Cierre 2024:</b> ventas ${f0(V[2024])} M (+${f1(yoy24)}% YoY, la mitad del ritmo de 2023), margen ${f1(mpct(2024))}% (tercer año a la baja), conversión de caja ${f1(conv24)}% y razón corriente ${f1(rcLast)}× en diciembre. Diagnóstico: la palanca de precio se agotó (29% del crecimiento) mientras los costos crecieron +${f1(costGrow)}%.`},
- {q:'¿Qué proyecta el modelo para Q1-2025?',k:['proyecta','pronóstico','pronostico','q1','2025','holt','prediccion','predicción','forecast'],
-  a:()=>`<b>Holt-Winters (validado con MAPE ${HW.bt_mape}%):</b> Q1-2025 en ${f0(q1_25)} M (+${f1((q1_25/q1_24-1)*100)}% vs Q1-2024), con Ene ${f1(HW.fc[0])}, Feb ${f1(HW.fc[1])} y Mar ${f1(HW.fc[2])} M y banda de ±${f1(1.2816*HW.sd)} M/mes (~80%). Regla asociada: dos meses en el borde bajo del rango → revisar plan comercial.`},
- {q:'¿Por qué cae el margen?',k:['margen','cae','erosion','erosión','por que','por qué','rentabilidad'],
-  a:()=>`<b>El margen cae ${f1(mpct(2022)-mpct(2024))} pp en dos años</b> (${f1(mpct(2022))}% → ${f1(mpct(2024))}%) porque en 2024 los costos crecieron +${f1(costGrow)}% frente a +${f1(yoy24)}% de las ventas, y el efecto precio ya no compensa: aportó ${f0(br24.efPrecio)} M al crecimiento vs ${f0(br23.efPrecio)} M el año anterior. Acción en gobernanza: mesa de costos y estudio de elasticidad.`},
- {q:'¿Hay riesgo de liquidez?',k:['liquidez','caja','corriente','pagar','riesgo','pasivos'],
-  a:()=>`<b>Riesgo puntual, no estructural.</b> La razón corriente promedia ${f1(rc24)}× en 2024, pero el histórico tiene 2 meses críticos (&lt;1×: Ene-22 y Feb-24) y diciembre cierra en ${f1(rcLast)}×, cerca del umbral de alerta (1.2×). La conversión de caja (~90%) es sana: el problema no es generar efectivo, es la volatilidad del capital de trabajo en el valle Ene–Abr.`},
+ {q:'¿Cómo cierran los últimos 12 meses?',k:['cierra','cierre','resumen','como va','cómo va','ultimos','últimos'],
+  a:()=>{let t=`<b>Últimos 12 meses:</b> ventas ${f0(S.win.ventas[0])}${S.g1!=null?` (${pctS(S.g1)} vs los 12m previos)`:''}, margen ${f1(S.m1)}%${S.m0!=null?` (${ppS(S.m1-S.m0)})`:''}.`;
+   if(S.has.flujo)t+=` Conversión de caja ${f1(S.conv1)}%.`;
+   if(S.has.liq)t+=` Razón corriente ${f1(S.rcLast)}× al cierre.`;
+   return t;}},
+ {q:'¿Qué proyecta el modelo?',k:['proyecta','pronóstico','pronostico','holt','prediccion','predicción','forecast','trimestre','2025'],
+  a:()=>S.hw?`<b>Holt-Winters${S.bt?` (validado: MAPE ${S.bt.mape}%)`:''}:</b> próximo trimestre en ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} vs el mismo trimestre del año previo): ${S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+f1(S.hw.fc[i])).join(', ')}, con banda de ±${f1(1.2816*S.hw.sd)}/mes (~80%).`
+   :'La predicción requiere al menos <b>24 meses</b> de historia; tu serie trae '+S.n+'.'},
+ {q:'¿Cómo va el margen?',k:['margen','erosion','erosión','rentabilidad','utilidad'],
+  a:()=>{let t='<b>'+marginClause(S)+'</b>';
+   if(S.costG!=null&&S.g1!=null)t+=` Costos ${pctS(S.costG)} vs ventas ${pctS(S.g1)} en los últimos 12m.`;
+   return t;}},
+ {q:'¿Hay riesgo de liquidez?',k:['liquidez','corriente','pagar','pasivos','solvencia'],
+  a:()=>S.has.liq?`Razón corriente: ${f1(S.rcLast)}× al cierre, ${f1(S.rc12)}× promedio 12m, mínimo histórico ${f1(S.rcMin)}× y ${S.rcBad} mes(es) &lt;1×. ${S.rcLast<1.2?'<b>Zona de alerta:</b> activa el colchón de liquidez definido en Gobernanza.':'Zona sana, pero vigila la volatilidad mensual: el promedio esconde el riesgo puntual.'}`
+   :'Tu archivo no trae <b>Activos_Corrientes</b> y <b>Pasivos_Corrientes</b>; añádelos para activar la capa de liquidez.'},
  {q:'¿Precio o volumen?',k:['precio','volumen','unidades','mix','motor','palanca'],
-  a:()=>`<b>El motor cambió.</b> En 2023 el crecimiento fue mitad y mitad (volumen ${f0(br23.efVol)} M · precio ${f0(br23.efPrecio)} M). En 2024 el volumen aportó ${f0(mixVol)}% y el precio solo ${f0(100-mixVol)}% (${f0(br24.efPrecio)} M). Señal estratégica: la capacidad de subir precio se está agotando; la siguiente subida requiere estudio de elasticidad (usa el simulador de la capa 6).`},
+  a:()=>S.bridges?`En la última ventana (${S.bridges[0].l0} → ${S.bridges[0].l1}): efecto volumen ${f0(S.bridges[0].efVol)} y efecto precio ${f0(S.bridges[0].efPrecio)}${S.shareP!=null?` (el precio explica ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del cambio)`:''}. ${S.shareP!=null&&S.shareP<0.3?'La palanca de precio está débil: estudia elasticidad antes de la próxima subida.':S.shareP!=null&&S.shareP>0.7?'El crecimiento depende del precio: tiene techo; refuerza el plan de volumen.':'Mix equilibrado entre precio y volumen.'}`
+   :'Añade la columna <b>Unidades</b> (con 24+ meses) para descomponer el crecimiento en precio y volumen.'},
  {q:'¿Qué tan confiable es la predicción?',k:['confiable','confianza','error','mape','backtest','validacion','validación','acierta'],
-  a:()=>`<b>Validación honesta:</b> entrenado solo con 2022–2023, el modelo predijo 2024 con MAPE ${HW.bt_mape}% (error típico ±${f1(HW.bt_rmse)} M/mes), mejor que el benchmark ingenuo (${HW.bt_naive}%). Limitación declarada: 36 puntos es el mínimo razonable y las bandas son aproximadas. Los factores IA del origen, en cambio, correlacionan ≈0.06 con la realidad: se usan solo como simulación declarada.`},
+  a:()=>S.bt?`<b>Validación honesta:</b> entrenado sin los últimos ${S.bt.h} meses, el modelo los predijo con MAPE ${S.bt.mape}% (error típico ±${f1(S.bt.rmse)}/mes), ${S.bt.mape<S.bt.naive?'mejor':'<b>peor</b>'} que el benchmark ingenuo (${S.bt.naive}%). ${S.bt.mape<S.bt.naive?'El modelo aporta valor real.':'Úsalo con cautela: no supera a repetir el año anterior.'} Las bandas son aproximadas (residuos del ajuste).`
+   :S.hw?'El pronóstico existe pero <b>sin validación independiente</b>: se requieren 30+ meses para el backtest. Trátalo como referencia, no como compromiso.':'Sin 24+ meses no hay modelo que validar.'},
  {q:'¿Qué decisión toca hoy?',k:['decision','decisión','accion','acción','hacer','recomienda','recomendacion','recomendación','toca'],
-  a:()=>`<b>Tres decisiones, en orden:</b> (1) Mesa de costos antes de cerrar Q1-2025 — es la causa raíz de la erosión del margen. (2) Estudio de elasticidad antes de otra subida de precio: la palanca aportó solo ${f0(100-mixVol)}% del crecimiento en 2024. (3) Colchón de liquidez para el valle estacional Ene–Abr (dos precedentes de razón corriente &lt;1×). Cada una tiene umbral y dueño por completar en la capa 7.`}];
-function qaAnswer(txt){
- const t=(txt||'').toLowerCase();
- let best=null,score=0;
- QA.forEach(item=>{const s=item.k.filter(k=>t.includes(k)).length;if(s>score){score=s;best=item;}});
- const html=best?best.a():`No tengo esa respuesta en los datos embebidos. Prueba con los botones rápidos: cierre 2024, pronóstico Q1, margen, liquidez, precio vs volumen, confiabilidad o decisiones.`;
- document.getElementById('qaOut').innerHTML=`<div class="qa-a">${html}<div class="hint" style="margin-top:6px;">Respuesta calculada sobre los datos del tablero · la decisión final es humana.</div></div>`;}
-document.getElementById('qaQuick').innerHTML=QA.map((x,i)=>`<button class="seg" data-q="${i}">${x.q}</button>`).join('');
+  a:()=>`<b>Decisiones priorizadas por las alertas de tus datos:</b> ${S.recs.map((r,i)=>`(${i+1}) ${r}`).join('. ')}. Cada una necesita umbral y dueño en la capa 7.`},
+ {q:'¿Cómo subo mis datos?',k:['subir','subo','datos','archivo','csv','excel','formato','plantilla','cargar'],
+  a:()=>'Ve a la pestaña <b>⤒ Mis datos</b>: ahí está el formato requerido (mínimo Fecha + Ventas + Costos o Margen, mensual, 12+ meses), la plantilla CSV descargable y la zona para arrastrar tu archivo. Todo se procesa en tu navegador: ningún dato sale de tu equipo.'}];
+function qaAnswer(txt){const t=(txt||'').toLowerCase();let best=null,score=0;
+ QA.forEach(it=>{const s=it.k.filter(k=>t.includes(k)).length;if(s>score){score=s;best=it;}});
+ const html=best?best.a():'No tengo esa respuesta en los datos cargados. Prueba los botones rápidos: cierre, pronóstico, margen, liquidez, precio vs volumen, confiabilidad, decisiones o cómo subir tus datos.';
+ document.getElementById('qaOut').innerHTML=`<div class="qa-a">${html}<div class="hint" style="margin-top:6px;">Respuesta calculada sobre ${CUR.src==='user'?'tus datos':'los datos del demo'} · la decisión final es humana.</div></div>`;}
+document.getElementById('qaQuick').innerHTML=QA.map((x,i)=>`<button class="seg" data-q="${i}" type="button">${x.q}</button>`).join('');
 document.getElementById('qaQuick').addEventListener('click',e=>{const b=e.target.closest('.seg');if(!b)return;
  document.getElementById('qaInput').value=QA[+b.dataset.q].q;qaAnswer(QA[+b.dataset.q].q);});
 document.getElementById('qaBtn').addEventListener('click',()=>qaAnswer(document.getElementById('qaInput').value));
 document.getElementById('qaInput').addEventListener('keydown',e=>{if(e.key==='Enter')qaAnswer(e.target.value);});
 
-/* ===== Brief exportable ===== */
+/* ===== Brief ===== */
 document.getElementById('btnBrief').addEventListener('click',()=>{
- const F=factores(escMode);const pm=K.pm.base*F.Ft*F.Fp;const hwM=sum(DATA.hw_margen.fc);
- const gov=GOV.map(g=>`- ${g.kpi} · umbral: ${g.umb} · dueño: ${g.due||'POR DEFINIR'} · decisión: ${g.dec}`).join('\n');
- const md=`# Brief ejecutivo · Pulso Financiero (cierre 2024)
-_Datos simulados · generado desde el dashboard · ${new Date().toLocaleDateString('es-CO')}_
+ const L=[];L.push('# Brief ejecutivo · Pulso Financiero');
+ L.push(`_Fuente: ${CUR.src==='user'?CUR.name+' (datos del usuario, procesados localmente)':'demo simulado'} · ${S.n} meses (${lab(S.d.meses[0])}–${lab(S.d.meses[S.n-1])}) · ${new Date().toLocaleDateString('es-CO')}_`);
+ L.push('','## Veredicto',document.getElementById('veredicto').textContent.replace(/\s+/g,' ').trim());
+ L.push('','## Alertas');S.alerts.forEach(a=>L.push('- ['+a.c.toUpperCase()+'] '+a.t.replace(/<[^>]+>/g,'')));
+ if(S.hw){L.push('','## Predicción (Holt-Winters'+(S.bt?`, backtest MAPE ${S.bt.mape}% vs naive ${S.bt.naive}%`:', sin backtest por historia corta')+')');
+  L.push(`Próximo trimestre: ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} interanual). Mensual: ${S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+f1(S.hw.fc[i])).join(' / ')}. Banda ~80%: ±${f1(1.2816*S.hw.sd)}/mes.`);}
+ if(S.has.ia){const F=fac(S,escMode);const pm=S.K.pmBase*F.Ft*F.Fp;
+  L.push('','## KPIs Inteligentes (escenario: '+(escMode==='rec'?'reciente 3m':escMode)+`, F_tend ${F.Ft.toFixed(4)}, F_precio ${F.Fp.toFixed(4)})`);
+  L.push(`- Predictive Margin: ${f1(pm)} vs historico ${f1(S.K.pmBase)}${S.hwM?` · triangulacion HW: ${f1(sum(S.hwM.fc))}`:''}.`);
+  if(S.K.dlrBase!=null)L.push(`- Dynamic Liquidity Ratio: ${f1(S.K.dlrBase*F.Ft)}x vs base ${f1(S.K.dlrBase)}x.`);
+  L.push(`- AI-Adjusted ROI: ${f1(S.K.roiHist*F.Ft)}% vs historico ${f1(S.K.roiHist)}% (proxy Margen/Costos 12m).`);
+  L.push('Advertencia: factores IA como simulacion declarada, no prediccion validada.');}
+ L.push('','## Decisiones propuestas');S.recs.forEach((r,i)=>L.push(`${i+1}. ${r}.`));
+ L.push('','## Gobernanza (umbral · dueño · decisión)');
+ GOV.forEach(g=>L.push(`- ${g.kpi} · umbral: ${g.umb} · dueño: ${g.due||'POR DEFINIR'} · decisión: ${g.dec}`));
+ L.push('','---','Javier Forero · javierforero.co · La IA es el músculo; el criterio humano es el cerebro.');
+ dl('brief-pulso-financiero.md',L.join('\n'),'text/markdown');});
 
-## Veredicto
-Crecemos, pero el motor perdió una palanca: ventas +${f1(yoy24)}% (2023: +${f1(yoy23)}%), el precio aportó solo ${f0(100-mixVol)}% del crecimiento (2023: ${f0(100-mixVol23)}%) y los costos crecieron +${f1(costGrow)}%. Margen ${f1(mpct(2024))}% (tercer año a la baja). Caja sana (conversión ${f1(conv24)}%). Liquidez Dic-24: ${f1(rcLast)}x.
+/* ===== Subida de archivos ===== */
+function report(ok,title,items){document.getElementById('valRep').innerHTML=
+ `<div class="vr ${ok?'ok':'err'}"><b>${title}</b>${items.length?'<ul>'+items.map(i=>'<li>'+i+'</li>').join('')+'</ul>':''}</div>`;}
+function layersSummary(S){
+ const on=['Crecimiento','Margen y costos'],off=[];
+ (S.has.flujo?on:off).push('Caja');(S.has.liq?on:off).push('Liquidez');
+ (S.bridges?on:off).push('Puente precio-volumen');(S.hw?on:off).push('Predicción');
+ (S.bt?on:off).push('Backtest');(S.has.ia?on:off).push('KPIs Inteligentes');
+ return{on,off};}
+function acceptDataset(ds,src){
+ CUR={name:ds.name,src};S=computeAll(ds.data);
+ renderSource();renderStatic();renderKpis();gateAll();renderIK();drawAll();
+ if(src==='user'){try{safeStore.set('jf-pf-userdata',JSON.stringify({name:ds.name,data:ds.data}));}catch(e){}}
+ const ls=layersSummary(S);
+ report(true,'✓ Archivo válido: el tablero ya está recalculado con tus datos.',
+  ['<b>'+esc(ds.name)+'</b> · '+S.n+' meses ('+lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1])+').',
+   'Capas activas: '+ls.on.join(', ')+'.']
+  .concat(ls.off.length?['Capas sin datos: '+ls.off.join(', ')+' (ver tabla de formato).']:[])
+  .concat(ds.warnings&&ds.warnings.length?ds.warnings.map(w=>'⚠ '+w):[]));}
+function handleFile(file){
+ const name=file.name||'archivo';
+ const isX=/\.(xlsx|xls)$/i.test(name);
+ const rd=new FileReader();
+ rd.onerror=()=>report(false,'No se pudo leer el archivo.',[]);
+ rd.onload=()=>{try{
+   let rows;
+   if(isX){if(typeof XLSX==='undefined'){report(false,'El lector de Excel no cargó (revisa tu conexión) — usa CSV mientras tanto.',[]);return;}
+    const wb=XLSX.read(rd.result,{type:'array'});
+    const sh=wb.SheetNames.includes('Datos')?'Datos':wb.SheetNames[0];
+    rows=XLSX.utils.sheet_to_json(wb.Sheets[sh],{header:1,raw:true,defval:null});}
+   else rows=parseCSV(String(rd.result));
+   const ds=buildDataset(rows,name);
+   if(!ds.ok){report(false,'El archivo no pasó la validación — corrige y vuelve a subirlo:',ds.errors);return;}
+   acceptDataset(ds,'user');
+  }catch(err){report(false,'Error procesando el archivo: '+esc(err.message||String(err)),[]);}};
+ if(isX)rd.readAsArrayBuffer(file);else rd.readAsText(file);}
+const drop=document.getElementById('drop'),fin=document.getElementById('fileIn');
+drop.addEventListener('click',()=>fin.click());
+drop.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')fin.click();});
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>{const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)handleFile(f);});
+fin.addEventListener('change',()=>{if(fin.files&&fin.files[0])handleFile(fin.files[0]);fin.value='';});
+function restoreDemo(){safeStore.del('jf-pf-userdata');
+ acceptDataset({name:'Demo simulado 2022–2024',data:RAW_DEMO,warnings:[]},'demo');
+ report(true,'↺ Tablero restaurado con los datos del demo.',[]);}
+document.getElementById('btnDemoRestore').addEventListener('click',restoreDemo);
 
-## Hallazgos
-1. Erosión estructural del margen: ${f1(mpct(2022))}% -> ${f1(mpct(2023))}% -> ${f1(mpct(2024))}%.
-2. Palanca de precio agotándose: efecto precio ${f0(br23.efPrecio)} M (2023) -> ${f0(br24.efPrecio)} M (2024).
-3. Liquidez con 2 meses críticos (<1x) en el histórico; el promedio esconde el riesgo puntual.
-4. Estacionalidad fuerte (${(DATA.dec.fuerza*100).toFixed(0)}%): valle Ene-Abr, picos May-Jul y Dic.
-
-## Predicción (Holt-Winters aditivo, backtest MAPE ${HW.bt_mape}% vs naive ${HW.bt_naive}%)
-Q1-2025: ${f0(q1_25)} M (+${f1((q1_25/q1_24-1)*100)}% YoY). Mensual: Ene ${f1(HW.fc[0])} / Feb ${f1(HW.fc[1])} / Mar ${f1(HW.fc[2])} M, banda ~80%: ±${f1(1.2816*HW.sd)} M/mes.
-
-## KPIs Inteligentes (escenario: ${escMode==='rec'?'reciente 3m':escMode} · F_tend ${F.Ft.toFixed(4)} · F_precio ${F.Fp.toFixed(4)})
-- Predictive Margin Q1-25: ${f1(pm)} M vs histórico ${f1(K.pm.base)} M · triangulación estadística (HW): ${f1(hwM)} M.
-- Dynamic Liquidity Ratio: ${f1(K.dlr.base*F.Ft)}x vs base ${f1(K.dlr.base)}x (umbral alerta 1.2x).
-- AI-Adjusted ROI: ${f1(K.roi.hist*F.Ft)}% vs histórico ${f1(K.roi.hist)}% (proxy Margen/Costos LTM).
-Advertencia: factores IA con correlacion ~0.06 con la realidad; se usan como simulacion declarada, no como prediccion validada.
-
-## Decisiones propuestas
-1. Mesa de costos antes de cerrar Q1-2025 (causa raíz de la erosión).
-2. Estudio de elasticidad antes de la próxima subida de precio.
-3. Colchón de liquidez para el valle estacional Ene-Abr.
-
-## Gobernanza (umbral · dueño · decisión)
-${gov}
-
----
-Javier Forero · javierforero.co · La IA es el músculo; el criterio humano es el cerebro.`;
- dl('brief-pulso-financiero.md',md,'text/markdown');});
+/* ===== Plantillas ===== */
+function toCSV(d){
+ const cols=[['Fecha',i=>d.meses[i]],['Ventas_Millones',i=>d.ventas[i]],['Costos_Millones',i=>d.costos[i]]];
+ if(d.unidades)cols.push(['Unidades',i=>d.unidades[i]]);
+ if(d.precio)cols.push(['Precio_Promedio',i=>d.precio[i]]);
+ if(d.flujo)cols.push(['FlujoCaja_Millones',i=>d.flujo[i]]);
+ if(d.ac)cols.push(['Activos_Corrientes',i=>d.ac[i]],['Pasivos_Corrientes',i=>d.pc[i]]);
+ if(d.iat)cols.push(['IA_Factor_Tendencia',i=>d.iat[i]]);
+ if(d.iae)cols.push(['IA_Escenario',i=>d.iae[i]]);
+ if(d.iap)cols.push(['IA_Precio_Ajustado',i=>d.iap[i]]);
+ const lines=[cols.map(c=>c[0]).join(',')];
+ for(let i=0;i<d.meses.length;i++)lines.push(cols.map(c=>c[1](i)).join(','));
+ return lines.join('\n');}
+document.getElementById('btnTpl').addEventListener('click',()=>{
+ dl('plantilla-pulso-financiero.csv',
+['Fecha,Ventas_Millones,Costos_Millones,Unidades,Precio_Promedio,FlujoCaja_Millones,Activos_Corrientes,Pasivos_Corrientes,IA_Factor_Tendencia,IA_Escenario,IA_Precio_Ajustado',
+ '2024-01,120.5,82.3,980,122.9,33.1,150000,110000,1.02,Base,1.01',
+ '2024-02,118.2,80.9,965,122.5,32.4,148500,112300,1.01,Pesimista,0.99',
+ '2024-03,131.7,88.4,1040,126.6,37.2,155200,109800,1.03,Optimista,1.02',
+ '# Borra esta fila. Minimo 12 meses consecutivos; las columnas opcionales pueden eliminarse (deja siempre Fecha, Ventas y Costos o Margen).'].join('\n'),'text/csv');});
+document.getElementById('btnDemoCsv').addEventListener('click',()=>dl('demo-pulso-financiero.csv',toCSV(RAW_DEMO),'text/csv'));
 
 /* ===== Init ===== */
-renderStatic();renderKpis();renderIK();renderGov();
-document.fonts&&document.fonts.ready.then(()=>drawAll());
+renderGov();
+(function(){try{const s=safeStore.get('jf-pf-userdata');
+  if(s){const u=JSON.parse(s);if(u&&u.data&&u.data.meses&&u.data.meses.length>=12){
+   acceptDataset({name:u.name,data:u.data,warnings:[]},'user');
+   report(true,'✓ Se restauraron tus datos guardados en este navegador ('+esc(u.name)+').',[]);return;}}}catch(e){}
+ CUR={name:'Demo simulado 2022–2024',src:'demo'};S=computeAll(RAW_DEMO);
+ renderSource();renderStatic();renderKpis();gateAll();renderIK();})();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>drawAll());
 drawAll();
 </script>
 </body>
