@@ -1,0 +1,34 @@
+[
+ {
+  "code": "M101",
+  "a": "España",
+  "b": "Francia",
+  "sc90": "1-0",
+  "et": "No",
+  "pens": "No",
+  "winner": "España",
+  "conf": 59,
+  "p90": {
+   "a": 43,
+   "e": 32,
+   "b": 25
+  },
+  "p_adv": 59
+ },
+ {
+  "code": "M102",
+  "a": "Inglaterra",
+  "b": "Argentina",
+  "sc90": "0-1",
+  "et": "No",
+  "pens": "No",
+  "winner": "Argentina",
+  "conf": 59,
+  "p90": {
+   "a": 30,
+   "e": 32,
+   "b": 38
+  },
+  "p_adv": 59
+ }
+]
