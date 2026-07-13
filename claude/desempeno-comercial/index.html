@@ -280,14 +280,23 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 .vr-ok{border-color:#12b76a55;background:#12b76a12;}
 .vr-err{border-color:#dc262655;background:#dc262612;}
 
-.kpirow{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;}
-@media(max-width:640px){.kpirow{grid-template-columns:repeat(2,1fr);}}
-/* ---- Comercial: variantes de KPI y apoyos Q&A ---- */
+/* ===== Tarjetas KPI (cards claras, con acento lateral por estado) ===== */
+.kpirow{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:8px 0 12px;}
+@media(max-width:660px){.kpirow{grid-template-columns:repeat(2,1fr);gap:12px;}}
+@media(max-width:420px){.kpirow{grid-template-columns:1fr;}}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:20px 22px 18px 26px;position:relative;overflow:hidden;}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--purple);}
+.kpi.green::before{background:#12b76a;} .kpi.red::before{background:#dc2626;} .kpi.yellow::before{background:#f79009;} .kpi.plain::before{background:var(--deep-blue);}
+.kpi .kpi-label{font-size:.75rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;line-height:1.2;}
+.kpi .kpi-value{font-size:clamp(1.7rem,4.2vw,2.35rem);font-weight:800;line-height:1.04;margin:11px 0 6px;color:var(--deep-blue);}
+.kpi .kpi-sub{font-size:.8rem;color:var(--muted);line-height:1.35;}
 .kpi.green .kpi-value{color:#0d6b41;} .kpi.red .kpi-value{color:#b91c1c;} .kpi.yellow .kpi-value{color:#b45309;} .kpi.plain .kpi-value{color:var(--deep-blue);}
-[data-theme="dark"] .kpi.green .kpi-value{color:#34d399;} [data-theme="dark"] .kpi.red .kpi-value{color:#f87171;} [data-theme="dark"] .kpi.yellow .kpi-value{color:#fbbf24;}
+[data-theme="dark"] .kpi.green .kpi-value{color:#34d399;} [data-theme="dark"] .kpi.red .kpi-value{color:#f87171;} [data-theme="dark"] .kpi.yellow .kpi-value{color:#fbbf24;} [data-theme="dark"] .kpi.plain .kpi-value{color:#c7d2fe;}
+/* ===== Tabla: píldoras numéricas ===== */
 .pill-num{display:inline-block;border-radius:8px;padding:2px 8px;font-weight:800;font-size:.9em;}
 .pill-num.green{background:#12b76a1a;color:#0d6b41;} .pill-num.yellow{background:#f790091a;color:#b45309;} .pill-num.red{background:#dc26261a;color:#b91c1c;}
 [data-theme="dark"] .pill-num.green{color:#34d399;} [data-theme="dark"] .pill-num.yellow{color:#fbbf24;} [data-theme="dark"] .pill-num.red{color:#f87171;}
+/* ===== Apoyos Q&A + gobernanza ===== */
 .qa-support{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
 .qa-did{background:var(--soft-lilac);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:.82rem;color:var(--text);}
 .qa-did b{color:var(--purple);}
@@ -336,14 +345,14 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
   </nav>
 
   <!-- filtros -->
-  <div class="filters-card">
+  <div class="filters-card" id="filtersCard">
     <div class="filters">
-      <div class="field"><label class="lbl" for="fRegion">Región</label><select class="inp" id="fRegion"></select></div>
-      <div class="field"><label class="lbl" for="fDesde">Desde</label><select class="inp" id="fDesde"></select></div>
-      <div class="field"><label class="lbl" for="fHasta">Hasta</label><select class="inp" id="fHasta"></select></div>
+      <div class="field" id="fldRegion"><label class="lbl" for="fRegion">Región</label><select class="inp" id="fRegion"></select></div>
+      <div class="field" id="fldDesde"><label class="lbl" for="fDesde">Desde</label><select class="inp" id="fDesde"></select></div>
+      <div class="field" id="fldHasta"><label class="lbl" for="fHasta">Hasta</label><select class="inp" id="fHasta"></select></div>
       <button class="btn-reset" id="btnReset" type="button">↺ Reiniciar</button>
     </div>
-    <div class="filters-hint">Los filtros afectan ventas, cumplimiento, pipeline y predicción. El embudo usa la serie mensual agregada.</div>
+    <div class="filters-hint" id="filtersHint"></div>
   </div>
 
   <!-- ============ RESUMEN ============ -->
@@ -368,11 +377,11 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 
   <!-- ============ EMBUDO ============ -->
   <section class="panel" id="tab-embudo">
-    <div class="sect-title">Embudo comercial · mes más reciente</div>
-    <div class="sect-desc">Oportunidades por etapa y porcentaje que llega desde el tope del embudo.</div>
+    <div class="sect-title">Embudo comercial · <span id="funnelMonthLbl">—</span></div>
+    <div class="sect-desc">Oportunidades por etapa y porcentaje que llega desde el tope del embudo, en el último mes del rango seleccionado.</div>
     <div class="plot" id="plotFunnel"></div>
-    <div class="sect-title">Conversión por etapa · primeros vs. últimos 6 meses</div>
-    <div class="sect-desc">Rojo señala las etapas que se deterioran (caída &gt; 2 pp).</div>
+    <div class="sect-title">Conversión por etapa · primera vs. segunda mitad del periodo</div>
+    <div class="sect-desc">Rojo señala las etapas que se deterioran (caída &gt; 2 pp) entre la primera y la segunda mitad del rango.</div>
     <div class="plot" id="plotConv"></div>
     <div class="sect-title">Diagnóstico del embudo</div>
     <div id="funnelNarr"></div>
@@ -494,6 +503,24 @@ FWD["Prospección"]=(CONV["Prospección"]||0)*FWD["Calificación"];
 /* ==================== ESTADO (filtros) ==================== */
 const state={region:"Todas", desde:MESES[0], hasta:LM};
 
+/* Mes de referencia = último mes de ventas dentro del rango (hace que el filtro de fechas sea significativo) */
+function refMonth(){ const ms=MESES.filter(m=>m>=state.desde && m<=state.hasta); return ms.length?ms[ms.length-1]:LM; }
+function prevMonthOf(m){ const i=MESES.indexOf(m); return i>0?MESES[i-1]:null; }
+/* Meses del embudo dentro del rango (el embudo tiene 'mes' pero NO región) */
+const FMESES=[...new Set(FD.map(r=>r.m))].sort();
+function funnelMonths(){ const ms=FMESES.filter(m=>m>=state.desde && m<=state.hasta); return ms.length?ms:FMESES; }
+
+/* Qué filtros soporta cada pestaña, según las dimensiones reales de sus datos */
+const TAB_FILTERS={
+  "tab-resumen":   {region:true,  dates:true,  hint:"Región y fechas afectan ventas, cumplimiento y tendencia. El pipeline es una foto del estado actual (solo región)."},
+  "tab-ventas":    {region:true,  dates:true,  hint:"Región y rango de meses filtran las ventas por región y el ranking de vendedores."},
+  "tab-embudo":    {region:false, dates:true,  hint:"El embudo se mide sobre la serie mensual agregada, que no tiene dimensión de región: aquí solo aplica el rango de meses."},
+  "tab-pipeline":  {region:true,  dates:false, hint:"El pipeline es una foto del estado actual de las oportunidades abiertas: aplica región, no un rango de fechas."},
+  "tab-prediccion":{region:true,  dates:true,  hint:"El modelo se entrena con las ventas de la región y el rango seleccionados."},
+  "tab-gob":       {region:true,  dates:true,  hint:"La decisión refleja la región y el periodo seleccionados."},
+  "tab-qa":        {region:true,  dates:true,  hint:"Las respuestas reflejan la región y el periodo seleccionados."}
+};
+
 /* ==================== MÉTRICAS ==================== */
 function vRows(){ return VD.filter(r=>(state.region==="Todas"||r.r===state.region) && r.m>=state.desde && r.m<=state.hasta); }
 function monthTotals(m, reg){
@@ -503,15 +530,17 @@ function monthTotals(m, reg){
 const cumpl=(v,m)=>m>0?v/m*100:null;
 
 function kpis(){
-  const lm=monthTotals(LM,state.region), pm=monthTotals(PM,state.region);
+  const RM=refMonth(), PMx=prevMonthOf(RM);
+  const lm=monthTotals(RM,state.region), pm=PMx?monthTotals(PMx,state.region):null;
   const abiertas=PD.filter(r=>r.st==="Abierta" && (state.region==="Todas"||r.r===state.region));
   const pipeAb=sum(abiertas.map(r=>r.val));
   const pond=sum(abiertas.map(r=>r.val*(FWD[r.e]||0)));
   const won=PD.filter(r=>r.st==="Ganada" && (state.region==="Todas"||r.r===state.region)).length;
   const lost=PD.filter(r=>r.st==="Perdida" && (state.region==="Todas"||r.r===state.region)).length;
   return {
+    rm:RM, pmx:PMx,
     ventas:lm.ventas, meta:lm.meta, cumpl:cumpl(lm.ventas,lm.meta),
-    mom:pm.ventas>0?(lm.ventas/pm.ventas-1)*100:null,
+    mom:(pm&&pm.ventas>0)?(lm.ventas/pm.ventas-1)*100:null,
     brechaK:(lm.ventas-lm.meta)/1000, brechaPP:cumpl(lm.ventas,lm.meta)-100,
     pipeAb, pipeAbN:abiertas.length, pond,
     pipeXmeta:lm.meta>0?pipeAb/lm.meta:null, pondXmeta:lm.meta>0?pond/lm.meta:null,
@@ -521,11 +550,11 @@ function kpis(){
 
 /* ==================== ALERTAS ==================== */
 function renderAlerts(){
-  const k=kpis(), a=[];
-  if(k.cumpl!=null && k.cumpl<90) a.push({t:"alert",x:`Cumplimiento de ${fPct(k.cumpl)} en ${mAb(LM)} — ${fPP(k.brechaPP)} bajo meta (${fK(k.brechaK*1000)}).`});
-  const ge90=VD.filter(r=>r.m===LM && (state.region==="Todas"||r.r===state.region) && r.c>=90).length;
-  const tot=VD.filter(r=>r.m===LM && (state.region==="Todas"||r.r===state.region)).length;
-  if(ge90===0 && tot>0) a.push({t:"warn",x:`Ningún vendedor alcanzó el 90% de su meta en ${mAb(LM)} (0/${tot}).`});
+  const k=kpis(), a=[], RM=k.rm;
+  if(k.cumpl!=null && k.cumpl<90) a.push({t:"alert",x:`Cumplimiento de ${fPct(k.cumpl)} en ${mAb(RM)} — ${fPP(k.brechaPP)} bajo meta (${fK(k.brechaK*1000)}).`});
+  const ge90=VD.filter(r=>r.m===RM && (state.region==="Todas"||r.r===state.region) && r.c>=90).length;
+  const tot=VD.filter(r=>r.m===RM && (state.region==="Todas"||r.r===state.region)).length;
+  if(ge90===0 && tot>0) a.push({t:"warn",x:`Ningún vendedor alcanzó el 90% de su meta en ${mAb(RM)} (0/${tot}).`});
   if(k.pondXmeta!=null && k.pondXmeta<1) a.push({t:"warn",x:`El pipeline ponderado (${fK(k.pond)}) cubre ${k.pondXmeta.toFixed(1)}× una meta mensual: el embudo abierto no basta para cerrar la brecha.`});
   const el=$("alertStack");
   el.innerHTML=a.length?a.map(x=>`<div class="alert ${x.t}">${x.x}</div>`).join(""):"";
@@ -535,7 +564,7 @@ function renderAlerts(){
 function renderKPIs(){
   const k=kpis();
   const cards=[
-    {lb:`Ventas · ${mAb(LM)}`, v:fK(k.ventas), sub:k.mom!=null?`${fPctD(k.mom)} vs ${mAb(PM)}`:"", cls:k.mom!=null&&k.mom<0?"red":"green"},
+    {lb:`Ventas · ${mAb(k.rm)}`, v:fK(k.ventas), sub:k.mom!=null?`${fPctD(k.mom)} vs ${mAb(k.pmx)}`:"primer mes del rango", cls:k.mom!=null&&k.mom<0?"red":"green"},
     {lb:"Cumplimiento de meta", v:fPct(k.cumpl), sub:`${fPP(k.brechaPP)} · meta ${fK(k.meta)}`, cls:k.cumpl>=100?"green":k.cumpl>=90?"yellow":"red"},
     {lb:"Pipeline abierto", v:fM(k.pipeAb), sub:`${k.pipeAbN} opp · ${k.pipeXmeta.toFixed(1)}× meta mensual`, cls:"plain"},
     {lb:"Pipeline ponderado", v:fK(k.pond), sub:`${k.pondXmeta.toFixed(1)}× meta · prob. del embudo`, cls:k.pondXmeta>=1?"green":"yellow"},
@@ -547,7 +576,8 @@ function renderKPIs(){
 /* ==================== TENDENCIA VENTAS vs META ==================== */
 function plotTrend(){
   const reg=state.region;
-  const ms=MESES, v=ms.map(m=>monthTotals(m,reg).ventas), mt=ms.map(m=>monthTotals(m,reg).meta);
+  const ms=MESES.filter(m=>m>=state.desde && m<=state.hasta);
+  const v=ms.map(m=>monthTotals(m,reg).ventas), mt=ms.map(m=>monthTotals(m,reg).meta);
   const t=tc();
   const barV={type:"bar",x:ms.map(mAb),y:v,name:"Ventas",marker:{color:ms.map(m=>{const c=cumpl(monthTotals(m,reg).ventas,monthTotals(m,reg).meta);return c>=100?COL.ok:c>=90?COL.purple:COL.alert;})},hovertemplate:"<b>%{x}</b><br>Ventas: %{y:$,.0f}<extra></extra>"};
   const lineM={type:"scatter",mode:"lines+markers",x:ms.map(mAb),y:mt,name:"Meta",line:{color:t.deep,width:2,dash:"dot"},marker:{size:5,color:t.deep},hovertemplate:"Meta %{x}: %{y:$,.0f}<extra></extra>"};
@@ -556,17 +586,19 @@ function plotTrend(){
 
 /* ==================== NARRATIVA EJECUTIVA ==================== */
 function renderNarrative(){
-  const k=kpis();
-  // tendencia últimos 6 vs previos
-  const last6=MESES.slice(-6), prev6=MESES.slice(-12,-6);
+  const k=kpis(), RM=k.rm;
+  const idx=MESES.indexOf(RM);
+  const last6=MESES.slice(Math.max(0,idx-5),idx+1), prev6=MESES.slice(Math.max(0,idx-11),Math.max(0,idx-5));
   const cL=cumpl(sum(last6.map(m=>monthTotals(m,state.region).ventas)),sum(last6.map(m=>monthTotals(m,state.region).meta)));
-  const cP=cumpl(sum(prev6.map(m=>monthTotals(m,state.region).ventas)),sum(prev6.map(m=>monthTotals(m,state.region).meta)));
+  const cP=prev6.length?cumpl(sum(prev6.map(m=>monthTotals(m,state.region).ventas)),sum(prev6.map(m=>monthTotals(m,state.region).meta))):null;
   const dir=k.mom!=null&&k.mom<0?"a la baja":"al alza";
   const scope=state.region==="Todas"?"el portafolio comercial":"la región "+state.region;
+  const trendTxt=cP!=null?`el cumplimiento agregado pasó de ${fPct(cP)} (semestre previo) a ${fPct(cL)} (últimos 6 meses), con la tendencia ${dir}`:`el cumplimiento de los últimos meses promedia ${fPct(cL)}`;
+  const momTxt=k.mom!=null?`un <b>${fPctD(k.mom)}</b> frente a ${mAb(k.pmx)} y `:"";
   $("narrExec").innerHTML=`
     <div class="narr-block">
-      <p><b>Situación.</b> En ${mLong(LM)}, ${scope} facturó <b>${fK(k.ventas)}</b>, un <b>${fPctD(k.mom)}</b> frente a ${mAb(PM)} y <b>${fPP(k.brechaPP)}</b> por debajo de la meta del mes (${fK(k.brechaK*1000)} de brecha). Es el cumplimiento más bajo del histórico y <b>ningún vendedor</b> llegó al 90% de su cuota.</p>
-      <p><b>Señal, no ruido.</b> No es un tropiezo aislado: el cumplimiento agregado pasó de ${fPct(cP)} (semestre previo) a ${fPct(cL)} (últimos 6 meses), con la tendencia ${dir}. El pipeline abierto luce holgado (<b>${fM(k.pipeAb)}</b>, ${k.pipeXmeta.toFixed(1)}× la meta), pero al ponderarlo por la probabilidad real de cierre de cada etapa apenas cubre <b>${k.pondXmeta.toFixed(1)}×</b> una meta mensual.</p>
+      <p><b>Situación.</b> En ${mLong(RM)}, ${scope} facturó <b>${fK(k.ventas)}</b>, ${momTxt}<b>${fPP(k.brechaPP)}</b> respecto de la meta del mes (${fK(k.brechaK*1000)} de brecha)${k.cumpl<90?" — y <b>ningún vendedor</b> llegó al 90% de su cuota":""}.</p>
+      <p><b>Señal, no ruido.</b> No es un tropiezo aislado: ${trendTxt}. El pipeline abierto luce holgado (<b>${fM(k.pipeAb)}</b>, ${k.pipeXmeta.toFixed(1)}× la meta), pero al ponderarlo por la probabilidad real de cierre de cada etapa apenas cubre <b>${k.pondXmeta.toFixed(1)}×</b> una meta mensual.</p>
       <p><b>Causa probable.</b> El problema no es de volumen de leads sino de <b>conversión</b>: la etapa <b>Propuesta</b> es la única que se deteriora en el embudo. Agregar más prospectos sin corregir ese punto solo ensancha la boca del embudo sin mover el cierre.</p>
     </div>`;
 }
@@ -586,16 +618,17 @@ function plotRegion(){
   Plotly.react("plotRegion",[bars,tgt],baseLayout({height:Math.max(200,reg.length*54+70),margin:{l:78,r:20,t:10,b:36},xaxis:{gridcolor:t.grid,zeroline:false,title:"Cumplimiento (%)",range:[Math.min(80,Math.min(...reg.map(d=>d.c))-5),Math.max(110,Math.max(...reg.map(d=>d.c))+3)]},yaxis:{automargin:true,gridcolor:"rgba(0,0,0,0)"}}),PCFG);
 }
 function renderVendTable(){
+  const RM=refMonth();
   const rows=VEND.map(v=>{
     const r=VD.filter(x=>x.v===v && x.m>=state.desde && x.m<=state.hasta && (state.region==="Todas"||x.r===state.region));
     if(!r.length) return null;
     const vt=sum(r.map(x=>x.vt)), mt=sum(r.map(x=>x.mt)), g=sum(r.map(x=>x.g));
-    const lm=VD.filter(x=>x.v===v && x.m===LM)[0];
+    const lm=VD.filter(x=>x.v===v && x.m===RM)[0];
     return {v, region:r[0].r, vt, mt, c:cumpl(vt,mt), g, clm:lm?lm.c:null};
   }).filter(Boolean).sort((a,b)=>b.c-a.c);
   const cCol=c=>c>=100?"green":c>=90?"yellow":"red";
   $("vendTable").innerHTML=`<div class="tbl-wrap"><table>
-    <thead><tr><th>Vendedor</th><th>Región</th><th>Ventas periodo</th><th>Meta</th><th>Cumpl. periodo</th><th>Cumpl. ${mAb(LM)}</th><th># ganadas</th></tr></thead>
+    <thead><tr><th>Vendedor</th><th>Región</th><th>Ventas periodo</th><th>Meta</th><th>Cumpl. periodo</th><th>Cumpl. ${mAb(RM)}</th><th># ganadas</th></tr></thead>
     <tbody>${rows.map(d=>`<tr>
       <td><b>${esc(d.v)}</b></td><td>${esc(d.region)}</td>
       <td>${fK(d.vt)}</td><td>${fK(d.mt)}</td>
@@ -606,8 +639,8 @@ function renderVendTable(){
 
 /* ==================== EMBUDO ==================== */
 function plotFunnel(){
-  const reg=null; // embudo es del dataset mensual agregado (no filtrable por región)
-  const lastMF=[...new Set(FD.map(r=>r.m))].sort().pop();
+  const fm=funnelMonths();
+  const lastMF=fm[fm.length-1];
   const stg=ETAPAS.filter(e=>FD.some(r=>r.e===e));
   const opp=stg.map(e=>{const r=FD.filter(x=>x.e===e && x.m===lastMF)[0];return r?r.o:0;});
   const t=tc();
@@ -615,26 +648,29 @@ function plotFunnel(){
     marker:{color:[COL.deep,COL.blue,COL.purple,COL.light,COL.ok]},
     hovertemplate:"<b>%{y}</b><br>Oportunidades: %{x}<extra></extra>"};
   Plotly.react("plotFunnel",[tr],baseLayout({height:340,margin:{l:96,r:20,t:12,b:20}}),PCFG);
+  const lbl=$("funnelMonthLbl"); if(lbl) lbl.textContent=mAb(lastMF);
 }
 function plotConv(){
   const stg=ETAPAS.filter(e=>e!=="Cierre" && FD.some(r=>r.e===e));
-  const f6=[...new Set(FD.map(r=>r.m))].sort().slice(0,6), l6=[...new Set(FD.map(r=>r.m))].sort().slice(-6);
+  const fm=funnelMonths(); const half=Math.max(1,Math.floor(fm.length/2));
+  const f6=fm.slice(0,half), l6=fm.slice(-half);
   const gA=stg.map(e=>avg(FD.filter(r=>r.e===e && f6.includes(r.m)).map(r=>r.t)));
   const gB=stg.map(e=>avg(FD.filter(r=>r.e===e && l6.includes(r.m)).map(r=>r.t)));
   const t=tc();
-  const b1={type:"bar",name:"Primeros 6m",x:stg,y:gA,marker:{color:t.border},hovertemplate:"%{x} (inicio): %{y:.1f}%<extra></extra>"};
-  const b2={type:"bar",name:"Últimos 6m",x:stg,y:gB,marker:{color:stg.map((e,i)=>gB[i]<gA[i]-2?COL.alert:COL.purple)},hovertemplate:"%{x} (reciente): %{y:.1f}%<extra></extra>"};
+  const b1={type:"bar",name:"Primera mitad",x:stg,y:gA,marker:{color:t.border},hovertemplate:"%{x} (inicio): %{y:.1f}%<extra></extra>"};
+  const b2={type:"bar",name:"Segunda mitad",x:stg,y:gB,marker:{color:stg.map((e,i)=>gB[i]<gA[i]-2?COL.alert:COL.purple)},hovertemplate:"%{x} (reciente): %{y:.1f}%<extra></extra>"};
   Plotly.react("plotConv",[b1,b2],baseLayout({height:300,barmode:"group",margin:{l:52,r:16,t:10,b:40},showlegend:true,legend:{orientation:"h",y:1.14,x:0},yaxis:{gridcolor:t.grid,zeroline:false,title:"Conversión (%)",ticksuffix:"%"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
 }
 function renderFunnelNarr(){
   const stg=ETAPAS.filter(e=>e!=="Cierre");
-  const f6=[...new Set(FD.map(r=>r.m))].sort().slice(0,6), l6=[...new Set(FD.map(r=>r.m))].sort().slice(-6);
+  const fm=funnelMonths(); const half=Math.max(1,Math.floor(fm.length/2));
+  const f6=fm.slice(0,half), l6=fm.slice(-half);
   const deltas=stg.map(e=>({e, d:avg(FD.filter(r=>r.e===e&&l6.includes(r.m)).map(r=>r.t))-avg(FD.filter(r=>r.e===e&&f6.includes(r.m)).map(r=>r.t))})).sort((a,b)=>a.d-b.d);
   const worst=deltas[0];
   const e2e=(CONV["Prospección"]*CONV["Calificación"]*CONV["Propuesta"]*CONV["Negociación"]*CONV["Cierre"]*100);
   $("funnelNarr").innerHTML=`
     <div class="narr-block">
-      <p><b>El cuello de botella es ${worst.e}.</b> De las cinco etapas, <b>${worst.e}</b> es la única que se deteriora de forma material: <b>${fPP(worst.d)}</b> entre el primer y el último semestre. Las demás se mantienen estables o mejoran levemente. El problema del embudo está localizado, no es generalizado.</p>
+      <p><b>El cuello de botella es ${worst.e}.</b> De las cinco etapas, <b>${worst.e}</b> es la que más se deteriora: <b>${fPP(worst.d)}</b> entre la primera y la segunda mitad del periodo. Las demás se mantienen estables o mejoran levemente. El problema del embudo está localizado, no es generalizado.</p>
       <p><b>Coherencia entre embudo y CRM.</b> Encadenando las tasas promedio (${(CONV["Prospección"]*100).toFixed(0)}% × ${(CONV["Calificación"]*100).toFixed(0)}% × ${(CONV["Propuesta"]*100).toFixed(0)}% × ${(CONV["Negociación"]*100).toFixed(0)}%), la conversión de punta a punta es de <b>${e2e.toFixed(1)}%</b> — que coincide con el win rate observado en el CRM. Los dos sistemas cuentan la misma historia: de cada 100 prospectos, ~${Math.round(e2e)} cierran.</p>
       <p><b>Implicación.</b> Recuperar 5 pp en ${worst.e} multiplica directamente el cierre sin tocar el tope del embudo. Es la palanca de mayor retorno.</p>
     </div>`;
@@ -722,17 +758,20 @@ function fitForecast(y, h){
   const sd=Math.sqrt(avg(res.slice(1).map(r=>r*r))||0);
   return {proj, mape:best.mape, naiveMape, a:best.a, b:best.b, band:1.5*sd, hold};
 }
-function nextMonths(k){
-  const out=[]; let [y,mo]=[+LM.slice(0,4),+LM.slice(5,7)];
+function nextMonths(k, start){
+  const base=start||refMonth();
+  const out=[]; let [y,mo]=[+base.slice(0,4),+base.slice(5,7)];
   for(let i=0;i<k;i++){ mo++; if(mo>12){mo=1;y++;} out.push(y+"-"+String(mo).padStart(2,"0")); }
   return out;
 }
 function plotForecast(){
-  const y=MESES.map(m=>monthTotals(m,state.region).ventas);
+  const ms=MESES.filter(m=>m>=state.desde && m<=state.hasta);
+  const y=ms.map(m=>monthTotals(m,state.region).ventas);
+  if(y.length<4){ $("plotForecast").innerHTML='<p class="na" style="padding:24px;text-align:center;">El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo.</p>'; $("fcNarr").innerHTML=""; return; }
   const f=fitForecast(y,3);
   const fm=nextMonths(3);
   const t=tc();
-  const hist={type:"scatter",mode:"lines+markers",x:MESES.map(mAb),y,name:"Ventas reales",line:{color:COL.purple,width:2},marker:{size:5},hovertemplate:"%{x}: %{y:$,.0f}<extra></extra>"};
+  const hist={type:"scatter",mode:"lines+markers",x:ms.map(mAb),y,name:"Ventas reales",line:{color:COL.purple,width:2},marker:{size:5},hovertemplate:"%{x}: %{y:$,.0f}<extra></extra>"};
   const proj={type:"scatter",mode:"lines+markers",x:fm.map(mAb),y:f.proj,name:"Proyección",line:{color:COL.blue,width:2,dash:"dash"},marker:{size:6,symbol:"diamond"},hovertemplate:"%{x} (proy): %{y:$,.0f}<extra></extra>"};
   const up={type:"scatter",mode:"lines",x:fm.map(mAb),y:f.proj.map(v=>v+f.band),line:{width:0},showlegend:false,hoverinfo:"skip"};
   const lo={type:"scatter",mode:"lines",x:fm.map(mAb),y:f.proj.map(v=>v-f.band),fill:"tonexty",fillcolor:"rgba(0,72,255,0.12)",line:{width:0},showlegend:false,hoverinfo:"skip"};
@@ -749,7 +788,7 @@ function plotForecast(){
 
 /* ==================== GOBERNANZA ==================== */
 function renderGob(){
-  const k=kpis();
+  const k=kpis(); const RM=k.rm;
   $("govBody").innerHTML=`
     <div class="verdict">
       <div class="gov-head">Decisión propuesta al comité comercial</div>
@@ -763,7 +802,7 @@ function renderGob(){
     <div class="card" style="margin-top:14px;background:var(--soft-lilac);border-left:5px solid var(--purple);">
       <div class="kpi-label">Filtro de rigor · qué validar antes del comité</div>
       <ul class="val-list">
-        <li><b>Correctitud:</b> confirmar que la caída de ${mAb(LM)} no incluye negocios postergados que cerrarán en el mes siguiente (efecto calendario).</li>
+        <li><b>Correctitud:</b> confirmar que la caída de ${mAb(RM)} no incluye negocios postergados que cerrarán en el mes siguiente (efecto calendario).</li>
         <li><b>Contexto:</b> el win rate de ${fPct(k.winRate)} y el volumen de "Perdida" sugieren datos de demostración; validar contra la definición real de "oportunidad" del CRM antes de extrapolar.</li>
         <li><b>Consecuencias:</b> el plan por cuenta consume tiempo de los mejores vendedores; medir que no degrade la prospección de nuevas cuentas de calidad.</li>
       </ul>
@@ -773,28 +812,29 @@ function renderGob(){
 /* ==================== Q&A DETERMINISTA ==================== */
 function answer(q){
   const n=q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-  const k=kpis();
+  const k=kpis(); const RM=k.rm;
   // vendedor peor/mejor
-  const vendCump=VEND.map(v=>{const r=VD.filter(x=>x.v===v&&x.m===LM)[0];return r?{v,c:r.c,vt:r.vt,mt:r.mt}:null;}).filter(Boolean);
+  const vendCump=VEND.map(v=>{const r=VD.filter(x=>x.v===v&&x.m===RM&&(state.region==="Todas"||x.r===state.region))[0];return r?{v,c:r.c,vt:r.vt,mt:r.mt}:null;}).filter(Boolean);
   if(/(peor|mas bajo|menor).*(vendedor|ejecutivo)|vendedor.*(peor|mas bajo)/.test(n)){
-    const w=vendCump.sort((a,b)=>a.c-b.c)[0];
-    return {text:`En ${mLong(LM)}, el menor cumplimiento fue <b>${esc(w.v)}</b> con <b>${w.c.toFixed(1)}%</b> (${fK(w.vt)} de ${fK(w.mt)}).`,sup:vendCump.slice(0,3).map(d=>[d.v,d.c.toFixed(1)+"%"])};
+    const w=vendCump.slice().sort((a,b)=>a.c-b.c)[0];
+    return {text:`En ${mLong(RM)}, el menor cumplimiento fue <b>${esc(w.v)}</b> con <b>${w.c.toFixed(1)}%</b> (${fK(w.vt)} de ${fK(w.mt)}).`,sup:vendCump.slice().sort((a,b)=>a.c-b.c).slice(0,3).map(d=>[d.v,d.c.toFixed(1)+"%"])};
   }
   if(/(mejor|top|mas alto|mayor).*(vendedor|ejecutivo)/.test(n)){
-    const b=vendCump.sort((a,b)=>b.c-a.c)[0];
-    return {text:`En ${mLong(LM)}, el mejor cumplimiento fue <b>${esc(b.v)}</b> con <b>${b.c.toFixed(1)}%</b> — aun así por debajo de meta.`,sup:vendCump.slice(-3).reverse().map(d=>[d.v,d.c.toFixed(1)+"%"])};
+    const b=vendCump.slice().sort((a,b)=>b.c-a.c)[0];
+    return {text:`En ${mLong(RM)}, el mejor cumplimiento fue <b>${esc(b.v)}</b> con <b>${b.c.toFixed(1)}%</b>.`,sup:vendCump.slice().sort((a,b)=>b.c-a.c).slice(0,3).map(d=>[d.v,d.c.toFixed(1)+"%"])};
   }
   // región
   if(/(peor|mejor).*(region|zona)|region.*(peor|mejor)/.test(n)){
-    const reg=REGS.map(rg=>{const rows=VD.filter(r=>r.r===rg&&r.m===LM);return {rg,c:cumpl(sum(rows.map(r=>r.vt)),sum(rows.map(r=>r.mt)))};}).sort((a,b)=>a.c-b.c);
+    const reg=REGS.map(rg=>{const rows=VD.filter(r=>r.r===rg&&r.m===RM);return {rg,c:cumpl(sum(rows.map(r=>r.vt)),sum(rows.map(r=>r.mt)))};}).sort((a,b)=>a.c-b.c);
     const worst=/mejor/.test(n)?reg[reg.length-1]:reg[0];
-    return {text:`En ${mLong(LM)}, la región ${/mejor/.test(n)?"de mayor":"de menor"} cumplimiento fue <b>${worst.rg}</b> (${worst.c.toFixed(1)}%).`,sup:reg.map(d=>[d.rg,d.c.toFixed(1)+"%"])};
+    return {text:`En ${mLong(RM)}, la región ${/mejor/.test(n)?"de mayor":"de menor"} cumplimiento fue <b>${worst.rg}</b> (${worst.c.toFixed(1)}%).`,sup:reg.map(d=>[d.rg,d.c.toFixed(1)+"%"])};
   }
   // embudo / cuello de botella / propuesta
   if(/(cuello|embudo|etapa|conversion|propuesta|donde se pierde)/.test(n)){
-    const f6=[...new Set(FD.map(r=>r.m))].sort().slice(0,6), l6=[...new Set(FD.map(r=>r.m))].sort().slice(-6);
+    const fm=funnelMonths(); const half=Math.max(1,Math.floor(fm.length/2));
+    const f6=fm.slice(0,half), l6=fm.slice(-half);
     const d=ETAPAS.filter(e=>e!=="Cierre").map(e=>({e,d:avg(FD.filter(r=>r.e===e&&l6.includes(r.m)).map(r=>r.t))-avg(FD.filter(r=>r.e===e&&f6.includes(r.m)).map(r=>r.t))})).sort((a,b)=>a.d-b.d);
-    return {text:`El cuello de botella es <b>${d[0].e}</b>: cae <b>${fPP(d[0].d)}</b> entre el primer y el último semestre, la única etapa que se deteriora. Recuperar 5 pp ahí multiplica el cierre sin tocar el tope del embudo.`,sup:d.map(x=>[x.e,fPP(x.d)])};
+    return {text:`El cuello de botella es <b>${d[0].e}</b>: cae <b>${fPP(d[0].d)}</b> entre la primera y la segunda mitad del periodo, la etapa que más se deteriora. Recuperar 5 pp ahí multiplica el cierre sin tocar el tope del embudo.`,sup:d.map(x=>[x.e,fPP(x.d)])};
   }
   // pipeline
   if(/(pipeline|ponderado|cuanto vale|abierto|cierre esperado)/.test(n)){
@@ -807,12 +847,15 @@ function answer(q){
   }
   // predicción
   if(/(prediccion|proyeccion|pronostico|proximo mes|futuro|siguiente mes)/.test(n)){
-    const y=MESES.map(m=>monthTotals(m,state.region).ventas); const f=fitForecast(y,3); const fm=nextMonths(3);
-    return {text:`La proyección de ventas (Holt, nivel+tendencia) para los próximos 3 meses es <b>${fK(f.proj[0])} → ${fK(f.proj[1])} → ${fK(f.proj[2])}</b> (±${fK(f.band)}). MAPE backtest ${f.mape.toFixed(1)}% vs ${f.naiveMape!=null?f.naiveMape.toFixed(1)+"%":"N/D"} naïve. Sin estacionalidad modelada (serie de 18m).`,sup:fm.map((m,i)=>[mAb(m),fK(f.proj[i])])};
+    const ms=MESES.filter(m=>m>=state.desde && m<=state.hasta);
+    const y=ms.map(m=>monthTotals(m,state.region).ventas);
+    if(y.length<4) return {text:`El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo en los filtros.`,sup:[]};
+    const f=fitForecast(y,3); const fm=nextMonths(3);
+    return {text:`La proyección de ventas (Holt, nivel+tendencia) para los próximos 3 meses es <b>${fK(f.proj[0])} → ${fK(f.proj[1])} → ${fK(f.proj[2])}</b> (±${fK(f.band)}). MAPE backtest ${f.mape.toFixed(1)}% vs ${f.naiveMape!=null?f.naiveMape.toFixed(1)+"%":"N/D"} naïve. Sin estacionalidad modelada.`,sup:fm.map((m,i)=>[mAb(m),fK(f.proj[i])])};
   }
   // cumplimiento / ventas del mes / estado general
   if(/(cumplimiento|ventas|como vamos|estado|resumen|situacion|ultimo mes)/.test(n)){
-    return {text:`En ${mLong(LM)} las ventas fueron <b>${fK(k.ventas)}</b>, <b>${fPct(k.cumpl)}</b> de la meta (${fPP(k.brechaPP)}, ${fPctD(k.mom)} vs mes anterior). Es el peor cumplimiento del histórico y ningún vendedor llegó al 90%.`,sup:[["Ventas",fK(k.ventas)],["Cumplimiento",fPct(k.cumpl)],["vs mes previo",fPctD(k.mom)]]};
+    return {text:`En ${mLong(RM)} las ventas fueron <b>${fK(k.ventas)}</b>, <b>${fPct(k.cumpl)}</b> de la meta (${fPP(k.brechaPP)}${k.mom!=null?", "+fPctD(k.mom)+" vs mes anterior":""}).`,sup:[["Ventas",fK(k.ventas)],["Cumplimiento",fPct(k.cumpl)],["vs mes previo",k.mom!=null?fPctD(k.mom):"N/D"]]};
   }
   return {text:`No tengo una respuesta determinista para esa pregunta. Prueba con: cumplimiento del mes, peor/mejor vendedor o región, cuello de botella del embudo, valor del pipeline, win rate por canal, o la proyección de ventas.`,sup:[]};
 }
@@ -861,13 +904,25 @@ function renderAll(){
   }
 }
 
-/* ==================== TABS ==================== */
+/* ==================== TABS + FILTROS CONTEXTUALES ==================== */
+let ACTIVE_TAB="tab-resumen";
+function syncFilters(tabId){
+  const cfg=TAB_FILTERS[tabId]||{region:true,dates:true,hint:""};
+  const show=(id,on)=>{const e=$(id);if(e)e.style.display=on?"":"none";};
+  show("fldRegion",cfg.region);
+  show("fldDesde",cfg.dates);
+  show("fldHasta",cfg.dates);
+  const anyFilter=cfg.region||cfg.dates;
+  const card=$("filtersCard"); if(card) card.style.display=anyFilter?"":"none";
+  const h=$("filtersHint"); if(h) h.textContent=cfg.hint||"";
+}
 function initTabs(){
   document.querySelectorAll(".tab").forEach(t=>{
     t.onclick=()=>{
       document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
       document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
       t.classList.add("active"); $(t.dataset.tab).classList.add("active");
+      ACTIVE_TAB=t.dataset.tab; syncFilters(ACTIVE_TAB);
       if(typeof Plotly!=="undefined") setTimeout(()=>{window.dispatchEvent(new Event("resize"));},30);
     };
   });
@@ -890,7 +945,7 @@ function ensurePlotly(cb){
 
 /* ==================== INIT ==================== */
 function init(){
-  initTheme(); initTabs(); buildFilters(); buildQAChips();
+  initTheme(); initTabs(); buildFilters(); buildQAChips(); syncFilters(ACTIVE_TAB);
   $("qaSend").onclick=()=>askQA($("qaInput").value);
   $("qaInput").addEventListener("keydown",e=>{if(e.key==="Enter")askQA($("qaInput").value);});
   $("themeToggle").onclick=function(){const c=document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light";const nn=c==="dark"?"light":"dark";applyTheme(nn);safeStore.set("jf-theme",nn);if(typeof Plotly!=="undefined")renderAll();};
