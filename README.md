@@ -10,6 +10,7 @@ Dos portafolios de **dashboards de decisión** construidos con IA bajo una misma
 /claude/                  → hub del portafolio construido con Claude
 /claude/sla-operaciones/  → Cumplimiento de SLA · Operaciones B2B
 /claude/pulso-financiero/ → Pulso Financiero · Finanzas Corporativas
+/claude/desempeno-comercial/ → Desempeño Comercial · Dirección B2B
 ```
 El portafolio de **ChatGPT Work** vive en un sitio externo: `https://javier-dashboards.jforero.chatgpt.site/`.
 
@@ -20,6 +21,7 @@ El portafolio de **ChatGPT Work** vive en un sitio externo: `https://javier-dash
 |---|---|---|
 | **Cumplimiento de SLA · Operaciones B2B** | 8 capas, alertas, diagnóstico del quiebre, gobernanza, Q&A conversacional y brief exportable. **v2: sube tu propio SLA (CSV/XLSX)** — detección automática del quiebre, validación de continuidad mensual y recálculo completo en el navegador. | [`/claude/sla-operaciones/`](./claude/sla-operaciones/) |
 | **Pulso Financiero · Finanzas Corporativas** | Crecimiento, margen, caja y liquidez; puente precio-volumen, descomposición + Holt-Winters con backtest, KPIs Inteligentes (Histórico vs IA Proyectado), gobernanza y brief exportable. **v2: sube tus propios datos (CSV/XLSX)** — validación de formato, recálculo completo de modelos e interpretación en el navegador, sin enviar nada a ningún servidor. | [`/claude/pulso-financiero/`](./claude/pulso-financiero/) |
+| **Desempeño Comercial · Dirección B2B** | Ventas vs. meta por vendedor y región, diagnóstico del embudo que aísla el cuello de botella en Propuesta, pipeline ponderado por probabilidad empírica de cierre, predicción con backtest (Holt) y Q&A conversacional determinista, con gobernanza de la decisión. Datos de demostración (ventas, embudo y CRM). | [`/claude/desempeno-comercial/`](./claude/desempeno-comercial/) |
 
 ## Cómo agregar un dashboard nuevo (portafolio Claude)
 1. Crea una carpeta hermana dentro de `claude/` (p. ej. `claude/inventario/`) con su propio `index.html`.
