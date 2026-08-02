@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Aceleración del Cómputo en IA · 1958–2026 · Javier Forero</title>
+<meta name="description" content="68 años de cómputo de entrenamiento en IA, de la neurona artificial de Rosenblatt (1958) a los modelos frontera de 2026. Datos de Epoch AI con nivel de evidencia por modelo. Visualización bilingüe de Javier Forero.">
+<meta name="author" content="Javier Forero">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://dashboards.javierforero.co/ia-compute/">
+<meta name="theme-color" content="#4e00ff">
+
+<!-- ============ Open Graph / Twitter ============ -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Javier Forero">
+<meta property="og:locale" content="es_CO">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:url" content="https://dashboards.javierforero.co/ia-compute/">
+<meta property="og:title" content="Cómo la IA rompió la Ley de Moore · 1958–2026">
+<meta property="og:description" content="Lo que antes tardaba dos años en duplicarse, hoy se multiplica por cinco cada doce meses. 72 modelos, con su nivel de evidencia declarado.">
+<meta property="og:image" content="https://dashboards.javierforero.co/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cómo la IA rompió la Ley de Moore · 1958–2026">
+<meta name="twitter:description" content="72 modelos de IA, 68 años de cómputo, y el nivel de evidencia de cada cifra. Datos: Epoch AI.">
+<meta name="twitter:image" content="https://dashboards.javierforero.co/og-image.png">
+
+<!-- ============ Iconos ============ -->
+<!-- Favicon auto-contenido (data URI). No depende de que exista
+     un favicon SVG ni un icono de iOS bajo /assets/ en el repo:
+     cero peticiones, cero 404. Si algún día se unifica un favicon de
+     sitio, basta sustituir esta línea por <link rel="icon" href="/favicon.svg">. -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234e00ff'/%3E%3Ctext x='32' y='44' font-family='system-ui,-apple-system,sans-serif' font-size='29' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EJF%3C/text%3E%3C/svg%3E">
+
+<!-- La tipografía de marca se resuelve por cascada en @font-face (ver el
+     bloque de estilos). Se retira la precarga rel=preload: apuntar a un archivo que puede no
+     existir produce un 404 visible en consola y una petición desperdiciada,
+     y el preload no admite lista de alternativas. -->
+
+<!-- ============ Google Analytics 4 (G-MQ3K8EVKV0) ============ -->
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ3K8EVKV0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // Subdominio de javierforero.co: la misma propiedad mide ambos sin cambiar el ID.
+  // content_group permite separar esta pieza del resto de dashboards en los informes.
+  gtag('config', 'G-MQ3K8EVKV0', {
+    content_group: 'ia-compute',
+    page_title: 'Aceleración del cómputo en IA · 1958-2026'
+  });
+
+  // Helper de eventos: no falla si GA está bloqueado por un ad-blocker.
+  function track(name, params){
+    try{ if(typeof gtag==='function') gtag('event', name, params||{}); }catch(e){}
+  }
+</script>
+
+<!-- ============ Datos estructurados (Schema.org) ============ -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Dataset",
+  "name":"Cómputo de entrenamiento de modelos de IA, 1958–2026",
+  "description":"Serie de 72 modelos de IA con su cómputo de entrenamiento en FLOP, conteo de parámetros y nivel de evidencia declarado.",
+  "url":"https://dashboards.javierforero.co/ia-compute/",
+  "license":"https://creativecommons.org/licenses/by/4.0/",
+  "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
+  "isBasedOn":"https://epoch.ai/data/ai-models",
+  "temporalCoverage":"1958/2026",
+  "inLanguage":["es","en"]
+}
+</script>
+<style>
+  /* ══════════════════════════════════════════════════
+     TIPOGRAFÍA DE MARCA · Igra Sans (Sergey Godovalov)
+     Fuente única de la identidad Javier Forero.
+     Se declara en 400 y se mapea a todo el rango de
+     pesos; el navegador sintetiza los grados altos.
+  ══════════════════════════════════════════════════ */
+  /* Verificado en el repo: la única fuente disponible es IgraSans.otf, y está
+     duplicada en /assets/fonts/ y /fonts/. Se declaran las cuatro rutas —relativa
+     primero, para que el archivo también funcione abierto en local— y el navegador
+     descarta en silencio las que no resuelvan. Si ninguna carga, cae a la pila del
+     sistema declarada en --font-display sin romper el layout. */
+  @font-face{
+    font-family:'Igra Sans';
+    src:url('../assets/fonts/IgraSans.otf') format('opentype'),
+        url('/assets/fonts/IgraSans.otf')   format('opentype'),
+        url('../fonts/IgraSans.otf')        format('opentype'),
+        url('/fonts/IgraSans.otf')          format('opentype');
+    font-weight:100 900;font-style:normal;font-display:swap;
+  }
+
+  :root{
+    /* ── PALETA PRIMARIA DE MARCA ── */
+    --jf-primary:#4e00ff;      /* violeta señal — acento principal */
+    --jf-primary-lt:#7c4dff;   /* violeta claro — acento secundario */
+    --jf-secondary:#041c59;    /* azul profundo — fondos oscuros y topbar */
+    --jf-tertiary:#0048ff;     /* azul eléctrico — apoyo */
+
+    /* ── ESCALA DE ERAS (derivada de la paleta) ── */
+    --jf-era1:#041c59;  /* = secundario */
+    --jf-era2:#0048ff;  /* = terciario  */
+    --jf-era3:#7c4dff;  /* = primario claro */
+    --jf-era4:#4e00ff;  /* = primario  */
+    --jf-era5:#8f00e0;  /* extensión: rotación de matiz del primario */
+    --jf-era6:#c9007a;  /* extensión: magenta terminal de la rampa */
+
+    /* ── NEUTROS (tintes del primario, no grises puros) ── */
+    --jf-bg:#f5f4ff;--jf-bg2:#edeaff;--jf-surface:#fff;--jf-border:#ddd6ff;
+    --jf-text:#0d0a1e;--jf-text-soft:#4a4568;--jf-text-muted:#8b82b0;
+    --jf-grid:#eceaf7;--jf-grid-soft:#f4f2fd;
+
+    /* ── ESCALA SEMÁNTICA DE EVIDENCIA ──
+       Deliberadamente FUERA de la paleta de marca: codifica un
+       juicio sobre el dato, no la identidad. La única excepción
+       es «tendencia», en violeta desaturado, porque esa
+       inferencia sí es propia de la casa. ── */
+    --cf-pub:#0e8a5f;--cf-conf:#0f7d8c;--cf-lik:#c07816;--cf-spec:#d12a55;--cf-trend:#7a6ca8;
+    --jf-warn-bg:#fffbeb;--jf-warn-bd:#fde68a;--jf-warn-tx:#78350f;
+
+    --r:12px;--r-lg:20px;
+    --font-display:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --font-body:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --font-micro:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--jf-bg);background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(78,0,255,.10) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 100% 80%,rgba(0,72,255,.06) 0%,transparent 60%);color:var(--jf-text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 60px;}
+
+  .jf-topbar{width:100%;background:var(--jf-secondary);padding:10px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;gap:12px;flex-wrap:wrap;}
+  .jf-topbar-logo{font-family:var(--font-display);font-size:1.02rem;color:#fff;letter-spacing:.03em;text-decoration:none;font-weight:600;}
+  .jf-topbar-logo span{color:var(--jf-primary-lt);}
+  .jf-topbar-back{font-family:var(--font-display);font-size:.72rem;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.72);text-decoration:none;border:1px solid rgba(255,255,255,.22);border-radius:100px;padding:5px 13px;transition:background .25s,color .25s;white-space:nowrap;}
+  .jf-topbar-back:hover{background:rgba(255,255,255,.12);color:#fff;}
+  .jf-topbar-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .jf-topbar-right{display:flex;align-items:center;gap:16px;}
+  .jf-topbar-tag{font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);}
+  .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:3px;gap:2px;cursor:pointer;user-select:none;}
+  .lang-opt{display:flex;align-items:center;gap:5px;padding:5px 13px;border-radius:100px;font-size:.65rem;font-weight:700;letter-spacing:.06em;transition:background .25s,color .25s;color:rgba(255,255,255,.55);white-space:nowrap;}
+  .lang-opt .flag{font-size:.85rem;line-height:1;}
+  .lang-opt.active{background:var(--jf-primary);color:#fff;box-shadow:0 2px 10px rgba(78,0,255,.45);}
+
+  .header{max-width:1200px;width:100%;padding:0 24px;text-align:center;margin-bottom:16px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--jf-primary);background:rgba(78,0,255,.08);border:1px solid rgba(78,0,255,.2);padding:5px 16px;border-radius:100px;margin-bottom:18px;}
+  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--jf-primary);display:inline-block;animation:pd 2s infinite;}
+  @keyframes pd{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+  h1{font-family:var(--font-display);font-size:clamp(1.7rem,4.5vw,2.9rem);font-weight:700;line-height:1.14;margin-bottom:14px;letter-spacing:-.005em;}
+  h1 .gradient{background:linear-gradient(120deg,var(--jf-primary) 0%,var(--jf-primary-lt) 50%,var(--jf-tertiary) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .deck{font-size:.9rem;color:var(--jf-text-soft);max-width:700px;margin:0 auto;line-height:1.7;font-weight:400;}
+  .byline{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;color:var(--jf-text-muted);margin-top:14px;padding:6px 14px;background:var(--jf-bg2);border-radius:100px;border:1px solid var(--jf-border);}
+  .byline::before{content:'✦';color:var(--jf-primary-lt);font-size:.6rem;}
+  .freshness{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font-size:.62rem;font-weight:600;color:var(--cf-pub);background:rgba(14,138,95,.08);border:1px solid rgba(14,138,95,.25);padding:4px 13px;border-radius:100px;}
+  .freshness::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cf-pub);animation:pd 2s infinite;}
+
+  /* ── TABS ── */
+  .tabs-wrap{max-width:1200px;width:100%;padding:0 16px;margin-top:26px;margin-bottom:6px;}
+  .tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;background:var(--jf-surface);border:1px solid var(--jf-border);border-radius:100px;padding:6px;margin:0 auto;width:fit-content;max-width:100%;box-shadow:0 4px 20px rgba(78,0,255,.07);}
+  .tab{font-family:var(--font-display);display:inline-flex;align-items:center;gap:8px;padding:9px 22px;border-radius:100px;font-size:.76rem;font-weight:600;color:var(--jf-text-soft);cursor:pointer;user-select:none;transition:all .25s cubic-bezier(.22,.68,0,1.2);white-space:nowrap;border:none;background:none;letter-spacing:.01em;}
+  .tab:hover{background:var(--jf-bg2);color:var(--jf-primary);}
+  .tab.active{background:linear-gradient(135deg,var(--jf-primary),var(--jf-primary-lt));color:#fff;box-shadow:0 4px 16px rgba(78,0,255,.35);}
+  .tab .tnum{font-size:.6rem;font-weight:700;opacity:.5;font-family:var(--font-mono);}
+  .tab.active .tnum{opacity:.75;}
+  .tab-panel{display:none;width:100%;flex-direction:column;align-items:center;animation:fadeUp .35s cubic-bezier(.22,.68,0,1.2);}
+  .tab-panel.active{display:flex;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .filter-zone{max-width:1200px;width:100%;padding:0 16px;margin-top:22px;}
+  .filter-label{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--jf-text-muted);text-align:center;margin-bottom:11px;}
+  .lab-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+  .chip{font-family:var(--font-display);display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:.69rem;font-weight:600;border:1.5px solid var(--jf-border);background:var(--jf-surface);color:var(--jf-text-soft);cursor:pointer;user-select:none;transition:all .2s cubic-bezier(.22,.68,0,1.2);white-space:nowrap;}
+  .chip:hover{transform:translateY(-2px);border-color:var(--jf-primary-lt);box-shadow:0 4px 12px rgba(78,0,255,.12);}
+  .chip .cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .chip .ccount{font-size:.58rem;font-weight:700;opacity:.55;font-family:var(--font-mono);}
+  .chip.active{color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(4,28,89,.22);}
+  .chip.active .cdot{background:rgba(255,255,255,.9)!important;}
+
+  .lab-stats{max-width:1200px;width:100%;padding:0 16px;margin-top:16px;display:none;}
+  .lab-stats.show{display:block;animation:fadeUp .3s cubic-bezier(.22,.68,0,1.2);}
+  .lab-stats-inner{background:var(--jf-surface);border-radius:var(--r-lg);border:1px solid var(--jf-border);padding:18px 24px;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;border-left:5px solid var(--jf-primary);box-shadow:0 4px 20px rgba(78,0,255,.07);}
+  .ls-title{font-family:var(--font-display);font-size:1.06rem;font-weight:700;min-width:148px;line-height:1.25;}
+  .ls-title small{display:block;font-size:.62rem;font-weight:400;color:var(--jf-text-muted);margin-top:3px;}
+  .ls-metrics{display:flex;gap:11px;flex-wrap:wrap;flex:1;}
+  .ls-metric{background:var(--jf-bg);border:1px solid var(--jf-border);border-radius:10px;padding:9px 14px;min-width:88px;text-align:center;}
+  .ls-val{font-family:var(--font-display);font-size:1rem;font-weight:700;line-height:1.15;}
+  .ls-lab{font-size:.54rem;color:var(--jf-text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+  .ls-conf{width:100%;display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding-top:10px;margin-top:4px;border-top:1px dashed var(--jf-border);}
+  .ls-conf-title{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--jf-text-muted);margin-right:2px;}
+  .conf-pill{display:inline-flex;align-items:center;gap:5px;font-size:.58rem;font-weight:600;padding:3px 10px;border-radius:100px;color:#fff;}
+  .ls-note{font-size:.62rem;color:var(--jf-text-muted);font-style:italic;width:100%;line-height:1.5;}
+
+  .era-badges{display:flex;gap:10px;justify-content:center;margin:22px 0 14px;flex-wrap:wrap;padding:0 16px;}
+  .badge{padding:6px 16px;border-radius:100px;font-size:.61rem;font-weight:600;border:1px solid;}
+  .b1{background:rgba(4,28,89,.07);color:var(--jf-era1);border-color:rgba(4,28,89,.2);}
+  .b2{background:rgba(0,72,255,.07);color:var(--jf-era2);border-color:rgba(0,72,255,.22);}
+  .b3{background:rgba(78,0,255,.08);color:var(--jf-era4);border-color:rgba(78,0,255,.22);}
+
+  .charts-container{display:flex;gap:16px;width:100%;max-width:1210px;align-items:flex-start;flex-wrap:wrap;justify-content:center;padding:0 12px;}
+  .main-chart-wrap{position:relative;flex:1 1 600px;max-width:625px;}
+  .zoom-chart-wrap{position:relative;flex:1 1 540px;max-width:565px;}
+  .panel-title{font-family:var(--font-display);font-size:.66rem;font-weight:600;color:var(--jf-primary);text-align:center;margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase;min-height:1.1em;}
+  .panel-title.main{color:var(--jf-text-soft);}
+  canvas{width:100%!important;border-radius:var(--r);background:var(--jf-surface);border:1px solid var(--jf-border);box-shadow:0 4px 32px rgba(78,0,255,.08);cursor:crosshair;display:block;}
+
+  .tooltip{position:fixed;background:var(--jf-surface);border:1.5px solid var(--jf-border);border-left-width:3px;border-radius:10px;padding:10px 13px;font-size:.68rem;font-family:var(--font-body);pointer-events:none;display:none;z-index:999;width:234px;line-height:1.7;box-shadow:0 6px 26px rgba(78,0,255,.16);}
+  .tooltip .t-name{font-family:var(--font-display);font-size:.8rem;font-weight:700;color:var(--jf-text);display:block;margin-bottom:5px;line-height:1.2;}
+  .tooltip .t-row{display:flex;align-items:baseline;gap:5px;font-size:.63rem;color:var(--jf-text-soft);}
+  .tooltip .t-row .t-icon{font-size:.68rem;flex-shrink:0;width:12px;}
+  .tooltip .t-row .t-val{font-weight:600;color:var(--jf-text);}
+  .tooltip .t-param{background:var(--jf-bg2);border-radius:6px;padding:5px 9px;margin-top:5px;font-size:.62rem;color:var(--jf-text-soft);line-height:1.5;}
+  .tooltip .t-param b{color:var(--jf-primary);font-weight:700;}
+  .tooltip .t-param i{font-style:normal;font-size:.55rem;color:var(--jf-text-muted);}
+  .tooltip .t-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
+  .tooltip .t-tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.53rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;}
+  .tooltip .t-src{display:block;margin-top:6px;font-size:.55rem;color:var(--jf-text-muted);line-height:1.45;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;margin-top:14px;font-size:.63rem;color:var(--jf-text-soft);font-weight:500;padding:0 16px;}
+  .legend-item{display:flex;align-items:center;gap:6px;}
+  .ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .lring{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2.5px solid var(--jf-text-soft);background:#fff;}
+  .zoom-hint{font-size:.59rem;color:var(--jf-primary-lt);text-align:center;margin-top:6px;font-style:italic;min-height:1em;}
+
+  .conf-legend{max-width:1200px;width:100%;padding:0 16px;margin-top:20px;}
+  .conf-legend-inner{background:var(--jf-surface);border:1px solid var(--jf-border);border-radius:var(--r);padding:14px 20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;}
+  .conf-legend-title{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--jf-text-muted);width:100%;text-align:center;margin-bottom:4px;}
+  .conf-chip{display:inline-flex;align-items:center;gap:7px;font-size:.64rem;color:var(--jf-text-soft);background:var(--jf-bg);border:1px solid var(--jf-border);padding:5px 12px;border-radius:100px;}
+  .conf-chip b{font-weight:700;color:var(--jf-text);}
+  .conf-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+  .section-head{text-align:center;margin:28px 0 26px;max-width:1200px;padding:0 16px;}
+  .section-head h2{font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin-bottom:8px;letter-spacing:-.005em;}
+  .section-head p{font-size:.86rem;color:var(--jf-text-soft);max-width:620px;margin:0 auto;line-height:1.65;font-weight:400;}
+  .era-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;max-width:1200px;width:100%;padding:0 16px;}
+  .era-card{background:var(--jf-surface);border-radius:var(--r-lg);border:1px solid var(--jf-border);overflow:hidden;transition:transform .28s cubic-bezier(.22,.68,0,1.2),box-shadow .28s;box-shadow:0 2px 16px rgba(78,0,255,.05);}
+  .era-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(78,0,255,.13);}
+  .era-card-header{padding:22px 24px 16px;color:#fff;position:relative;overflow:hidden;}
+  .era-card-header::before{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.2) 0%,transparent 70%);}
+  .era-1 .era-card-header{background:linear-gradient(145deg,var(--jf-secondary),#0a2a7a);}
+  .era-2 .era-card-header{background:linear-gradient(145deg,var(--jf-tertiary),#0030cc);}
+  .era-3 .era-card-header{background:linear-gradient(145deg,var(--jf-primary),var(--jf-primary-lt));}
+  .era-number{font-family:var(--font-display);font-size:3.5rem;line-height:1;opacity:.14;position:absolute;right:18px;top:8px;color:#fff;font-weight:700;}
+  .era-period{font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;opacity:.75;margin-bottom:6px;position:relative;z-index:1;}
+  .era-title{font-family:var(--font-display);font-size:1.36rem;font-weight:700;margin-bottom:10px;position:relative;z-index:1;line-height:1.2;}
+  .era-rate{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);padding:4px 14px;border-radius:100px;font-size:.71rem;font-weight:600;position:relative;z-index:1;}
+  .era-card-body{padding:20px 24px 24px;}
+  .era-section-label{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--jf-text-muted);margin-bottom:6px;margin-top:16px;}
+  .era-section-label:first-child{margin-top:0;}
+  .era-section-content{font-size:.83rem;color:var(--jf-text-soft);line-height:1.7;font-weight:400;}
+  .era-section-content strong{color:var(--jf-text);font-weight:600;}
+  .key-papers{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+  .paper{background:var(--jf-bg);padding:10px 13px;border-radius:8px;font-size:.74rem;color:var(--jf-text-soft);border-left:3px solid;line-height:1.55;font-weight:400;}
+  .era-1 .paper{border-left-color:var(--jf-era1);}
+  .era-2 .paper{border-left-color:var(--jf-era2);}
+  .era-3 .paper{border-left-color:var(--jf-era4);}
+  .paper .pauthor{font-weight:700;color:var(--jf-text);}
+  .paper .ptitle{font-style:italic;}
+  .paper .pyear{color:var(--jf-text-muted);font-size:.68rem;}
+  .paper-link{color:inherit;text-decoration:none;border-bottom:1px solid var(--jf-border);}
+  .paper-link:hover{border-bottom-color:var(--jf-primary);color:var(--jf-primary);}
+  .formula{background:var(--jf-bg2);border:1px dashed var(--jf-border);padding:11px 16px;border-radius:8px;font-family:var(--font-mono);font-size:.8rem;margin-top:8px;text-align:center;}
+  .formula em{color:var(--jf-primary);font-style:normal;font-weight:600;}
+  .stat-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .stat{flex:1;min-width:90px;background:var(--jf-bg);padding:10px 12px;border-radius:10px;text-align:center;border:1px solid var(--jf-border);}
+  .stat-value{font-family:var(--font-display);font-size:1.06rem;font-weight:700;}
+  .era-1 .stat-value{color:var(--jf-era1);}
+  .era-2 .stat-value{color:var(--jf-era2);}
+  .era-3 .stat-value{color:var(--jf-era4);}
+  .stat-label{font-size:.56rem;color:var(--jf-text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+
+  .insight{margin-top:34px;max-width:1200px;width:100%;padding:0 16px;}
+  .insight-inner{background:linear-gradient(135deg,var(--jf-secondary),#0a1a4d);border-radius:var(--r-lg);padding:28px 36px;position:relative;overflow:hidden;}
+  .insight-inner::after{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--jf-primary-lt),var(--jf-tertiary));}
+  .insight-label{font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--jf-primary-lt);margin-bottom:10px;}
+  .insight-text{font-family:var(--font-display);font-size:clamp(1rem,2.2vw,1.28rem);font-weight:600;color:#fff;line-height:1.5;margin-bottom:12px;}
+  .insight-detail{font-size:.81rem;color:rgba(255,255,255,.62);line-height:1.7;font-weight:400;}
+  .insight-detail strong{color:rgba(255,255,255,.92);font-weight:600;}
+
+  .src-block{max-width:1200px;width:100%;padding:0 16px;margin-bottom:18px;}
+  .src-card{padding:20px 26px;background:var(--jf-surface);border-radius:var(--r-lg);border:1px solid var(--jf-border);font-size:.72rem;color:var(--jf-text-soft);line-height:1.7;font-weight:400;box-shadow:0 2px 16px rgba(78,0,255,.05);}
+  .src-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media(max-width:780px){.src-grid{grid-template-columns:1fr;}}
+  .src-group-label{font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--jf-primary);margin-bottom:12px;}
+  .src-item{display:flex;gap:8px;margin-bottom:11px;font-size:.73rem;line-height:1.6;}
+  .src-num{flex-shrink:0;font-family:var(--font-mono);font-size:.62rem;color:var(--jf-text-muted);min-width:26px;}
+  .src-item strong{color:var(--jf-text);font-weight:600;}
+  .src-item a{color:var(--jf-primary);text-decoration:none;font-size:.69rem;}
+  .src-item a:hover{text-decoration:underline;}
+  .src-note{font-size:.71rem;color:var(--jf-text-muted);line-height:1.75;}
+  .src-note strong{color:var(--jf-text-soft);}
+  .methodology{padding:16px 20px;background:var(--jf-warn-bg);border:1px solid var(--jf-warn-bd);border-radius:var(--r);font-size:.73rem;color:var(--jf-warn-tx);line-height:1.75;}
+  .methodology strong{color:#451a03;font-weight:700;}
+  .paramnote{padding:16px 20px;background:var(--jf-bg2);border:1px solid var(--jf-border);border-left:4px solid var(--jf-primary);border-radius:var(--r);font-size:.73rem;color:var(--jf-secondary);line-height:1.75;}
+  .paramnote strong{color:var(--jf-primary);font-weight:700;}
+
+  /* ── SISTEMA DE MARCA (tab 3) ── */
+  .brandgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px;}
+  .brandcol h5{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--jf-text-muted);margin-bottom:9px;}
+  .swatches{display:flex;flex-wrap:wrap;gap:6px;}
+  .sw{width:74px;border-radius:8px;overflow:hidden;border:1px solid var(--jf-border);}
+  .sw-c{height:34px;}
+  .sw-t{font-family:var(--font-mono);font-size:.53rem;padding:3px 4px;text-align:center;color:var(--jf-text-soft);background:var(--jf-bg);}
+  .typespec{background:var(--jf-bg);border:1px solid var(--jf-border);border-radius:10px;padding:12px 14px;font-size:.7rem;line-height:1.65;}
+  .typespec .big{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.1;color:var(--jf-primary);}
+  .typespec .small{font-family:var(--font-display);font-size:.72rem;color:var(--jf-text-soft);margin-top:5px;letter-spacing:.02em;}
+
+  .jf-footer{margin-top:44px;max-width:1200px;width:100%;padding:20px 16px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--jf-border);}
+  .jf-footer-logo{font-family:var(--font-display);font-size:.87rem;font-weight:700;color:var(--jf-primary);text-decoration:none;}
+  .jf-footer-copy{font-size:.63rem;color:var(--jf-text-muted);font-weight:400;}
+
+  @media(max-width:980px){
+    .charts-container{flex-direction:column;align-items:center;}
+    .main-chart-wrap,.zoom-chart-wrap{flex:1 1 100%;max-width:100%;width:100%;}
+    .jf-topbar{padding:10px 16px;}
+    .lab-stats-inner{flex-direction:column;align-items:flex-start;}
+    .tab{padding:8px 14px;font-size:.68rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="jf-topbar">
+  <div class="jf-topbar-left">
+    <a class="jf-topbar-logo" href="https://javierforero.co">Javier<span>Forero</span>.co</a>
+    <!-- Retorno al hub que enlaza esta pieza. Etiqueta neutra ES/EN. -->
+    <a class="jf-topbar-back" href="https://dashboards.javierforero.co/claude/">&larr; Dashboards</a>
+  </div>
+  <div class="jf-topbar-right">
+    <span class="jf-topbar-tag" data-i18n="topbar_tag">Divulgación · datos públicos verificables</span>
+    <div class="lang-toggle" id="langToggle">
+      <div class="lang-opt active" data-lang="es"><span class="flag">🇨🇴</span> ES</div>
+      <div class="lang-opt" data-lang="en"><span class="flag">🇺🇸</span> EN</div>
+    </div>
+  </div>
+</nav>
+
+<div class="header">
+  <span class="eyebrow" data-i18n="eyebrow">Visualización de datos · IA &amp; cómputo</span>
+  <h1 data-i18n="h1">De una neurona artificial a los modelos frontera de 2026:<br><span class="gradient">cómo la IA rompió la Ley de Moore</span></h1>
+  <p class="deck" data-i18n="deck">68 años de carrera computacional en una sola gráfica. Lo que antes tardaba dos años en duplicarse, hoy se multiplica por cinco cada doce meses.</p>
+  <br><div class="byline" data-i18n="byline">Javier Forero · Estadístico con alma de narrador</div>
+  <br><span class="freshness" data-i18n="freshness">Datos actualizados: 1 de agosto de 2026 · Epoch AI (31-jul-2026)</span>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="viz"><span class="tnum">01</span><span data-i18n="tab_viz">Visualización</span></button>
+    <button class="tab" data-tab="sci"><span class="tnum">02</span><span data-i18n="tab_sci">Soporte científico</span></button>
+    <button class="tab" data-tab="src"><span class="tnum">03</span><span data-i18n="tab_src">Referencias y datos</span></button>
+  </div>
+</div>
+
+<!-- ══════ TAB 1 ══════ -->
+<div class="tab-panel active" id="panel-viz">
+  <div class="filter-zone">
+    <div class="filter-label" data-i18n="filter_label">Filtrar trayectoria por laboratorio · el eje se autoajusta al período del laboratorio</div>
+    <div class="lab-chips" id="labChips"></div>
+  </div>
+  <div class="lab-stats" id="labStats"><div class="lab-stats-inner" id="labStatsInner"></div></div>
+  <div class="era-badges">
+    <span class="badge b1" data-i18n="badge1">2× cada 2 años · Era Moore (1958–2012)</span>
+    <span class="badge b2" data-i18n="badge2">~10× por año · Era Deep Learning (2012–2019)</span>
+    <span class="badge b3" data-i18n="badge3">4–5× por año · Era Frontier LLMs (2020–2026)</span>
+  </div>
+  <div class="charts-container">
+    <div class="main-chart-wrap">
+      <p class="panel-title main" id="titleMain">Vista completa · 1958 – 2026</p>
+      <canvas id="mainC"></canvas>
+    </div>
+    <div class="zoom-chart-wrap">
+      <p class="panel-title" id="titleZoom">🔍 Zoom: era frontera (2023 – 2026)</p>
+      <canvas id="zoomC"></canvas>
+      <p class="zoom-hint" id="hintZoom">Vista ampliada de la zona sombreada del gráfico principal</p>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="ldot" style="background:var(--jf-era1)"></div><span data-i18n="leg1">Clásicos (pre-DL)</span></div>
+    <div class="legend-item"><div class="ldot" style="background:var(--jf-era2)"></div><span data-i18n="leg2">Deep Learning</span></div>
+    <div class="legend-item"><div class="ldot" style="background:var(--jf-era3)"></div><span data-i18n="leg3">Transformers (2020–22)</span></div>
+    <div class="legend-item"><div class="ldot" style="background:var(--jf-era4)"></div><span data-i18n="leg4">Frontera (2023–24)</span></div>
+    <div class="legend-item"><div class="ldot" style="background:var(--jf-era5)"></div><span data-i18n="leg5">2025</span></div>
+    <div class="legend-item"><div class="ldot" style="background:var(--jf-era6)"></div><span data-i18n="leg6">2026</span></div>
+    <div class="legend-item"><div class="lring"></div><span data-i18n="leg7">Pesos abiertos</span></div>
+  </div>
+  <div class="conf-legend"><div class="conf-legend-inner" id="confLegend"></div></div>
+  <div class="insight">
+    <div class="insight-inner">
+      <div class="insight-label" data-i18n="insight_label">Lectura clave</div>
+      <div class="insight-text" data-i18n="insight_text">"Entrenar un modelo frontera de 2026 consume más cómputo que toda la investigación en IA acumulada antes de 2020."</div>
+      <div class="insight-detail" data-i18n="insight_detail">El acelerador no fue una sola tecnología, sino la conjunción de cuatro factores: <strong>(1)</strong> hardware especializado (GPUs, luego TPUs y ahora Blackwell/Ironwood), <strong>(2)</strong> una arquitectura escalable (Transformer, 2017), <strong>(3)</strong> capital privado masivo, y desde 2024 <strong>(4)</strong> el <em>reinforcement learning</em> aplicado al razonamiento, que abre un segundo eje de escalamiento. El <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> se vuelve más relevante con cada orden de magnitud.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TAB 2 ══════ -->
+<div class="tab-panel" id="panel-sci">
+  <div class="section-head">
+    <h2 data-i18n="sci_h2">El soporte científico de las tres eras</h2>
+    <p data-i18n="sci_p">No son etiquetas arbitrarias. Cada era tiene un punto de inflexión documentado, una arquitectura dominante y una ley de escalamiento que la define.</p>
+  </div>
+  <div class="era-grid">
+    <div class="era-card era-1">
+      <div class="era-card-header">
+        <div class="era-number">I</div>
+        <div class="era-period" data-i18n="e1_period">Era I · 1958 – 2012</div>
+        <h3 class="era-title" data-i18n="e1_title">La Era Moore</h3>
+        <span class="era-rate" data-i18n="e1_rate">2× cada 2 años</span>
+      </div>
+      <div class="era-card-body">
+        <div class="era-section-label" data-i18n="e1_lbl1">¿Qué impulsa el crecimiento?</div>
+        <div class="era-section-content" data-i18n="e1_body1">El cómputo en IA sigue la <strong>Ley de Moore clásica</strong>: el número de transistores en un chip se duplica cada ~24 meses. La IA se beneficia pasivamente de mejoras del hardware general, sin demanda especializada propia.</div>
+        <div class="era-section-label" data-i18n="e1_lbl2">Formulación matemática</div>
+        <div class="formula">C(t) = C₀ · <em>2</em><sup>(t-t₀)/2</sup></div>
+        <div class="era-section-label" data-i18n="e1_lbl3">Hitos científicos clave</div>
+        <div class="key-papers">
+          <div class="paper"><span class="pauthor">Rosenblatt, F.</span> <span class="pyear">(1958)</span><br><a href="https://psycnet.apa.org/record/1959-09865-001" target="_blank" class="paper-link"><span class="ptitle">"The Perceptron: A Probabilistic Model..."</span></a> — <em>Psychological Review</em></div>
+          <div class="paper"><span class="pauthor">Moore, G. E.</span> <span class="pyear">(1965)</span><br><a href="https://www.cs.utexas.edu/~fussell/courses/cs352h/papers/moore.pdf" target="_blank" class="paper-link"><span class="ptitle">"Cramming More Components onto Integrated Circuits"</span></a></div>
+          <div class="paper"><span class="pauthor">Rumelhart, Hinton &amp; Williams</span> <span class="pyear">(1986)</span><br><a href="https://www.nature.com/articles/323533a0" target="_blank" class="paper-link"><span class="ptitle">"Learning representations by back-propagating errors"</span></a> — <em>Nature</em></div>
+          <div class="paper"><span class="pauthor">LeCun et al.</span> <span class="pyear">(1998)</span><br><a href="https://ieeexplore.ieee.org/document/726791" target="_blank" class="paper-link"><span class="ptitle">"Gradient-Based Learning Applied to Document Recognition"</span></a></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-value">~54 <span data-i18n="years_unit">años</span></div><div class="stat-label" data-i18n="stat_dur">Duración</div></div>
+          <div class="stat"><div class="stat-value">~10¹²×</div><div class="stat-label" data-i18n="stat_growth">Crecimiento</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="era-card era-2">
+      <div class="era-card-header">
+        <div class="era-number">II</div>
+        <div class="era-period" data-i18n="e2_period">Era II · 2012 – 2019</div>
+        <h3 class="era-title" data-i18n="e2_title">El Salto del Deep Learning</h3>
+        <span class="era-rate" data-i18n="e2_rate">~10× por año</span>
+      </div>
+      <div class="era-card-body">
+        <div class="era-section-label" data-i18n="e2_lbl1">El punto de inflexión</div>
+        <div class="era-section-content" data-i18n="e2_body1"><strong>AlexNet (2012)</strong> gana ImageNet con un margen abismal usando 2 GPUs NVIDIA. La comunidad descubre que las GPUs aceleran CNNs 10–50×. OpenAI documenta el cambio en <strong>"AI and Compute" (2018)</strong>: entre AlexNet y AlphaGo Zero el cómputo creció <strong>~10× por año</strong>, cinco veces más rápido que Moore.</div>
+        <div class="era-section-label" data-i18n="e2_lbl2">Formulación matemática</div>
+        <div class="formula">C(t) = C₀ · <em>10</em><sup>(t-t₀)</sup></div>
+        <div class="era-section-label" data-i18n="e2_lbl3">Hitos científicos clave</div>
+        <div class="key-papers">
+          <div class="paper"><span class="pauthor">Krizhevsky, Sutskever &amp; Hinton</span> <span class="pyear">(2012)</span><br><a href="https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf" target="_blank" class="paper-link"><span class="ptitle">"ImageNet Classification with Deep CNNs"</span></a> — NeurIPS</div>
+          <div class="paper"><span class="pauthor">He et al.</span> <span class="pyear">(2015)</span><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" class="paper-link"><span class="ptitle">"Deep Residual Learning for Image Recognition"</span></a></div>
+          <div class="paper"><span class="pauthor">Vaswani et al.</span> <span class="pyear">(2017)</span><br><a href="https://arxiv.org/abs/1706.03762" target="_blank" class="paper-link"><span class="ptitle">"Attention Is All You Need"</span></a></div>
+          <div class="paper"><span class="pauthor">Amodei &amp; Hernandez (OpenAI)</span> <span class="pyear">(2018)</span><br><a href="https://openai.com/index/ai-and-compute/" target="_blank" class="paper-link"><span class="ptitle">"AI and Compute"</span></a></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-value">~7 <span data-i18n="years_unit">años</span></div><div class="stat-label" data-i18n="stat_dur">Duración</div></div>
+          <div class="stat"><div class="stat-value">~10⁵×</div><div class="stat-label" data-i18n="stat_growth">Crecimiento</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="era-card era-3">
+      <div class="era-card-header">
+        <div class="era-number">III</div>
+        <div class="era-period" data-i18n="e3_period">Era III · 2020 – 2026</div>
+        <h3 class="era-title" data-i18n="e3_title">Frontier LLMs &amp; Razonamiento</h3>
+        <span class="era-rate" data-i18n="e3_rate">4–5× por año</span>
+      </div>
+      <div class="era-card-body">
+        <div class="era-section-label" data-i18n="e3_lbl1">¿Qué cambió desde 2020?</div>
+        <div class="era-section-content" data-i18n="e3_body1">GPT-3 marca el inicio. Las <strong>scaling laws</strong> de Kaplan (2020) y Chinchilla (2022) demuestran que el rendimiento es una función predecible de cómputo, parámetros y datos. Desde 2024 el post-entrenamiento por <strong>refuerzo (RL) para razonamiento</strong> absorbe una fracción creciente del presupuesto, y las arquitecturas <strong>MoE</strong> rompen el vínculo directo entre parámetros totales y cómputo. Epoch AI estima el crecimiento frontera en <strong>~5× anual</strong> desde 2020.</div>
+        <div class="era-section-label" data-i18n="e3_lbl2">Las leyes de escalamiento (Chinchilla)</div>
+        <div class="formula">L(N,D) = <em>A</em>/N<sup>α</sup> + <em>B</em>/D<sup>β</sup> + L<sub>∞</sub></div>
+        <div class="era-section-content" style="font-size:.73rem;margin-top:4px;color:var(--jf-text-muted);" data-i18n="e3_formula_note">N = parámetros, D = tokens, L = pérdida. Para presupuesto óptimo, N y D crecen proporcionalmente (~20 tokens por parámetro).</div>
+        <div class="era-section-label" data-i18n="e3_lbl3">Hitos científicos clave</div>
+        <div class="key-papers">
+          <div class="paper"><span class="pauthor">Brown et al. (OpenAI)</span> <span class="pyear">(2020)</span><br><a href="https://arxiv.org/abs/2005.14165" target="_blank" class="paper-link"><span class="ptitle">"Language Models are Few-Shot Learners"</span></a></div>
+          <div class="paper"><span class="pauthor">Kaplan et al.</span> <span class="pyear">(2020)</span><br><a href="https://arxiv.org/abs/2001.08361" target="_blank" class="paper-link"><span class="ptitle">"Scaling Laws for Neural Language Models"</span></a></div>
+          <div class="paper"><span class="pauthor">Hoffmann et al. (DeepMind)</span> <span class="pyear">(2022)</span><br><a href="https://arxiv.org/abs/2203.15556" target="_blank" class="paper-link"><span class="ptitle">"Training Compute-Optimal LLMs" (Chinchilla)</span></a></div>
+          <div class="paper"><span class="pauthor">Dubey et al. (Meta AI)</span> <span class="pyear">(2024)</span><br><a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" class="paper-link"><span class="ptitle">"The Llama 3 Herd of Models"</span></a> — 405B, cifra publicada</div>
+          <div class="paper"><span class="pauthor">Epoch AI</span> <span class="pyear">(2026)</span><br><a href="https://epoch.ai/trends" target="_blank" class="paper-link"><span class="ptitle">"Trends in Artificial Intelligence" — dashboard</span></a></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-value">~6 <span data-i18n="years_unit">años</span></div><div class="stat-label" data-i18n="stat_dur">Duración</div></div>
+          <div class="stat"><div class="stat-value">~8,000×</div><div class="stat-label" data-i18n="stat_growth">Crecimiento</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TAB 3 ══════ -->
+<div class="tab-panel" id="panel-src">
+  <div class="section-head">
+    <h2 data-i18n="src_h2">Referencias y fuentes de datos</h2>
+    <p data-i18n="src_p">Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo, la nota metodológica sobre lo que aún no se puede verificar, y el sistema de marca aplicado.</p>
+  </div>
+
+  <div class="src-block"><div class="src-card">
+    <div class="src-grid">
+      <div>
+        <div class="src-group-label" data-i18n="src_db_label">📊 Bases de datos de referencia</div>
+        <div class="src-item"><span class="src-num">[1]</span><div><strong>Epoch AI</strong> — <em>Frontier / Notable AI Models</em> (CSV, act. 31-jul-2026). Fuente primaria de las cifras de cómputo, de los conteos de parámetros y de las etiquetas de confianza.<br><a href="https://epoch.ai/data/ai-models" target="_blank">epoch.ai/data/ai-models</a></div></div>
+        <div class="src-item"><span class="src-num">[2]</span><div><strong>Epoch AI</strong> — <em>Trends in Artificial Intelligence</em> (dashboard, act. feb-2026). Tasa frontera de ~5× anual desde 2020.<br><a href="https://epoch.ai/trends" target="_blank">epoch.ai/trends</a></div></div>
+        <div class="src-item"><span class="src-num">[3]</span><div><strong>Our World in Data</strong> — <em>AI Training Computation</em> (reproduce los datos de Epoch AI bajo licencia CC-BY)<br><a href="https://ourworldindata.org/grapher/ai-training-computation" target="_blank">ourworldindata.org</a></div></div>
+        <div class="src-item"><span class="src-num">[4]</span><div><strong>Stanford HAI</strong> — <em>AI Index Report</em> (su capítulo de cómputo también se apoya en Epoch AI)<br><a href="https://aiindex.stanford.edu/report/" target="_blank">aiindex.stanford.edu</a></div></div>
+        <div class="src-item"><span class="src-num">[5]</span><div><strong>AI Release Tracker</strong> — cronología de lanzamientos 2022–2026, usada para fechar los modelos de 2026<br><a href="https://aireleasetracker.com/" target="_blank">aireleasetracker.com</a></div></div>
+      </div>
+      <div>
+        <div class="src-group-label" data-i18n="src_papers_label">🔑 Cifras publicadas por los laboratorios</div>
+        <div class="src-item"><span class="src-num">[6]</span><div><strong>Brown et al.</strong> (2020) — GPT-3: 175B parámetros, 3.14e23 FLOP <em>reportados en el paper</em><br><a href="https://arxiv.org/abs/2005.14165" target="_blank">arXiv:2005.14165</a></div></div>
+        <div class="src-item"><span class="src-num">[7]</span><div><strong>Hoffmann et al.</strong> (2022) — Chinchilla: 70B, 5.76e23 FLOP<br><a href="https://arxiv.org/abs/2203.15556" target="_blank">arXiv:2203.15556</a></div></div>
+        <div class="src-item"><span class="src-num">[8]</span><div><strong>Almazrouei et al.</strong> (2023) — Falcon-180B: <em>43,500 petaFLOP-días reportados en la Tabla 1</em>, la unidad exacta de este gráfico<br><a href="https://arxiv.org/abs/2311.16867" target="_blank">arXiv:2311.16867</a></div></div>
+        <div class="src-item"><span class="src-num">[9]</span><div><strong>Dubey et al.</strong> (2024) — Llama 3.1 405B: 3.8e25 FLOP, 15.6T tokens<br><a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank">Meta AI</a></div></div>
+        <div class="src-item"><span class="src-num">[10]</span><div><strong>Amodei &amp; Hernandez</strong> (2018) — <em>AI and Compute</em>, base de las cifras previas a 2020<br><a href="https://openai.com/index/ai-and-compute/" target="_blank">openai.com</a></div></div>
+        <div class="src-item"><span class="src-num">[11]</span><div><strong>Sevilla &amp; Roldán</strong> (Epoch, 2024) — <em>Frontier compute grows 4–5×/year</em><br><a href="https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year" target="_blank">epoch.ai/blog</a></div></div>
+      </div>
+    </div>
+  </div></div>
+
+  <div class="src-block"><div class="methodology" data-i18n="methodology"><strong>⚠️ Nota metodológica sobre el cómputo —</strong> Cada modelo lleva una <strong>etiqueta de confianza tomada del campo <em>Confidence</em> de la base de Epoch AI</strong>, la misma que usan Our World in Data y el AI Index de Stanford. Los laboratorios frontera dejaron de publicar cifras de cómputo después de GPT-4, así que los modelos recientes se apoyan en triangulación (hardware-tiempo, parámetros × tokens, presupuestos Chinchilla-óptimos) o en imputación por benchmarks. <strong>Los modelos de 2026 aún no tienen estimación de cómputo publicada por Epoch</strong>: se ubican sobre la tendencia de 4–5× anual dentro de la ventana documentada de 10²⁶–10²⁷ FLOP y están marcados como «Tendencia». Las tasas por laboratorio se calculan por MCO sobre log₁₀(FLOP) ~ año y heredan esa incertidumbre.</div></div>
+
+  <div class="src-block"><div class="paramnote" data-i18n="paramnote"><strong>🧩 Nota sobre los parámetros —</strong> El conteo de parámetros aparece en el tooltip <strong>solo cuando existe una fuente pública</strong>; los modelos cerrados recientes (Claude, Gemini, GPT-5) no lo revelan y el campo simplemente se omite. Para arquitecturas <strong>Mixture-of-Experts</strong> se muestran dos cifras: <em>parámetros totales</em> y <em>parámetros activos</em> por token — esta última es la que gobierna el cómputo de entrenamiento vía la heurística <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. Confundirlas es el error más común al comparar modelos: DeepSeek-V3 tiene 671B totales pero activa solo 37B, así que su cómputo se parece más al de un modelo de 37B que al de uno de 671B. Las cifras marcadas como <em>rumor</em> (GPT-4, Grok) provienen de filtraciones recogidas por Epoch AI y no de los laboratorios.</div></div>
+
+  <!-- ── SISTEMA DE MARCA ── -->
+  <div class="src-block"><div class="src-card">
+    <div class="src-group-label" data-i18n="brand_label">🎨 Sistema de marca aplicado</div>
+    <div id="brandBox"></div>
+  </div></div>
+
+  <div class="src-block"><div class="src-card"><div class="src-note" data-i18n="src_note"><strong>Unidad:</strong> 1 PetaFLOP/s-día = 8.64 × 10¹⁹ FLOP (un procesador sosteniendo 10¹⁵ operaciones por segundo durante 24 horas). &nbsp;|&nbsp; <strong>Eje Y:</strong> escala logarítmica base 10 — cada línea de la cuadrícula es un factor de diez. &nbsp;|&nbsp; <strong>Marcadores:</strong> puntos rellenos = modelos cerrados; anillos = modelos de pesos abiertos; la marca vertical de color junto a cada etiqueta indica el nivel de evidencia. &nbsp;|&nbsp; <strong>Umbral regulatorio:</strong> la línea ámbar de 10²⁶ FLOP marca el nivel a partir del cual la EU AI Act clasifica un sistema como de riesgo sistémico. &nbsp;|&nbsp; <strong>Licencia de datos:</strong> los datos de Epoch AI se distribuyen bajo Creative Commons BY.</div></div></div>
+</div>
+
+<div class="tooltip" id="sharedTip"></div>
+
+<div class="jf-footer">
+  <a class="jf-footer-logo" href="https://javierforero.co">javierforero.co</a>
+  <span class="jf-footer-copy" data-i18n="footer_copy">© 2026 · Javier Forero · Estadístico con alma de narrador</span>
+</div>
+
+<script>
+/* ═══════════ TOKENS DE MARCA (espejo del CSS) ═══════════ */
+const BRAND={primary:"#4e00ff",primaryLt:"#7c4dff",secondary:"#041c59",tertiary:"#0048ff",
+  bg:"#f5f4ff",bg2:"#edeaff",border:"#ddd6ff",surface:"#ffffff",
+  text:"#0d0a1e",textSoft:"#4a4568",textMuted:"#8b82b0",grid:"#eceaf7",gridSoft:"#f4f2fd",
+  warn:"#c07816"};
+const FD="'Igra Sans','IgraSans',system-ui,sans-serif";      /* display de marca */
+const FM="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"; /* micro-etiquetas */
+const FMono="ui-monospace,SFMono-Regular,Menlo,monospace";
+
+/* escala de eras — derivada de la paleta */
+const colors={classic:"#041c59",deeplearn:"#0048ff",transformer:"#7c4dff",frontier:"#4e00ff",y2025:"#8f00e0",y2026:"#c9007a"};
+/* escala semántica de evidencia — fuera de paleta a propósito */
+const CONF={pub:"#0e8a5f",conf:"#0f7d8c",lik:"#c07816",spec:"#d12a55",trend:"#7a6ca8"};
+const CONF_ORDER=["pub","conf","lik","spec","trend"];
+
+const LABS={
+  all:{name:"Todos",color:"#4e00ff"},
+  openai:{name:"OpenAI",color:"#0f9d76"},
+  anthropic:{name:"Anthropic",color:"#d4794f"},
+  google:{name:"Google DeepMind",color:"#3b7ddd"},
+  xai:{name:"xAI / Grok",color:"#1f2937"},
+  meta:{name:"Meta AI",color:"#0064e0"},
+  deepseek:{name:"DeepSeek",color:"#4d6bfe"},
+  moonshot:{name:"Moonshot / Kimi",color:"#8b5cf6"},
+  alibaba:{name:"Alibaba / Qwen",color:"#e8590c"},
+  zai:{name:"Z.ai / GLM",color:"#0d9488"},
+  microsoft:{name:"Microsoft",color:"#0891b2"},
+  nvidia:{name:"NVIDIA",color:"#76b900"},
+  academia:{name:"Academia / otros",color:"#64748b"},
+};
+
+/* ═══════════ i18n ═══════════ */
+const i18n={
+ es:{
+  topbar_tag:"Divulgación · datos públicos verificables",eyebrow:"Visualización de datos · IA &amp; cómputo",
+  h1:`De una neurona artificial a los modelos frontera de 2026:<br><span class="gradient">cómo la IA rompió la Ley de Moore</span>`,
+  deck:"68 años de carrera computacional en una sola gráfica. Lo que antes tardaba dos años en duplicarse, hoy se multiplica por cinco cada doce meses.",
+  byline:"Javier Forero · Estadístico con alma de narrador",
+  freshness:"Datos actualizados: 1 de agosto de 2026 · Epoch AI (31-jul-2026)",
+  tab_viz:"Visualización",tab_sci:"Soporte científico",tab_src:"Referencias y datos",
+  filter_label:"Filtrar trayectoria por laboratorio · el eje se autoajusta al período del laboratorio",
+  badge1:"2× cada 2 años · Era Moore (1958–2012)",badge2:"~10× por año · Era Deep Learning (2012–2019)",badge3:"4–5× por año · Era Frontier LLMs (2020–2026)",
+  leg1:"Clásicos (pre-DL)",leg2:"Deep Learning",leg3:"Transformers (2020–22)",leg4:"Frontera (2023–24)",leg5:"2025",leg6:"2026",leg7:"Pesos abiertos",
+  sci_h2:"El soporte científico de las tres eras",sci_p:"No son etiquetas arbitrarias. Cada era tiene un punto de inflexión documentado, una arquitectura dominante y una ley de escalamiento que la define.",
+  e1_period:"Era I · 1958 – 2012",e1_title:"La Era Moore",e1_rate:"2× cada 2 años",e1_lbl1:"¿Qué impulsa el crecimiento?",
+  e1_body1:`El cómputo en IA sigue la <strong>Ley de Moore clásica</strong>: el número de transistores en un chip se duplica cada ~24 meses. La IA se beneficia pasivamente de mejoras del hardware general, sin demanda especializada propia.`,
+  e1_lbl2:"Formulación matemática",e1_lbl3:"Hitos científicos clave",
+  e2_period:"Era II · 2012 – 2019",e2_title:"El Salto del Deep Learning",e2_rate:"~10× por año",e2_lbl1:"El punto de inflexión",
+  e2_body1:`<strong>AlexNet (2012)</strong> gana ImageNet con un margen abismal usando 2 GPUs NVIDIA. La comunidad descubre que las GPUs aceleran CNNs 10–50×. OpenAI documenta el cambio en <strong>"AI and Compute" (2018)</strong>: entre AlexNet y AlphaGo Zero el cómputo creció <strong>~10× por año</strong>, cinco veces más rápido que Moore.`,
+  e2_lbl2:"Formulación matemática",e2_lbl3:"Hitos científicos clave",
+  e3_period:"Era III · 2020 – 2026",e3_title:"Frontier LLMs &amp; Razonamiento",e3_rate:"4–5× por año",e3_lbl1:"¿Qué cambió desde 2020?",
+  e3_body1:`GPT-3 marca el inicio. Las <strong>scaling laws</strong> de Kaplan (2020) y Chinchilla (2022) demuestran que el rendimiento es una función predecible de cómputo, parámetros y datos. Desde 2024 el post-entrenamiento por <strong>refuerzo (RL) para razonamiento</strong> absorbe una fracción creciente del presupuesto, y las arquitecturas <strong>MoE</strong> rompen el vínculo directo entre parámetros totales y cómputo. Epoch AI estima el crecimiento frontera en <strong>~5× anual</strong> desde 2020.`,
+  e3_lbl2:"Las leyes de escalamiento (Chinchilla)",
+  e3_formula_note:"N = parámetros, D = tokens, L = pérdida. Para presupuesto óptimo, N y D crecen proporcionalmente (~20 tokens por parámetro).",
+  e3_lbl3:"Hitos científicos clave",
+  years_unit:"años",stat_dur:"Duración",stat_growth:"Crecimiento",
+  insight_label:"Lectura clave",
+  insight_text:`"Entrenar un modelo frontera de 2026 consume más cómputo que toda la investigación en IA acumulada antes de 2020."`,
+  insight_detail:`El acelerador no fue una sola tecnología, sino la conjunción de cuatro factores: <strong>(1)</strong> hardware especializado (GPUs, luego TPUs y ahora Blackwell/Ironwood), <strong>(2)</strong> una arquitectura escalable (Transformer, 2017), <strong>(3)</strong> capital privado masivo, y desde 2024 <strong>(4)</strong> el <em>reinforcement learning</em> aplicado al razonamiento, que abre un segundo eje de escalamiento. El <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> se vuelve más relevante con cada orden de magnitud.`,
+  src_h2:"Referencias y fuentes de datos",
+  src_p:"Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo, la nota metodológica sobre lo que aún no se puede verificar, y el sistema de marca aplicado.",
+  src_db_label:"📊 Bases de datos de referencia",src_papers_label:"🔑 Cifras publicadas por los laboratorios",
+  brand_label:"🎨 Sistema de marca aplicado",
+  src_note:`<strong>Unidad:</strong> 1 PetaFLOP/s-día = 8.64 × 10¹⁹ FLOP (un procesador sosteniendo 10¹⁵ operaciones por segundo durante 24 horas). &nbsp;|&nbsp; <strong>Eje Y:</strong> escala logarítmica base 10 — cada línea de la cuadrícula es un factor de diez. &nbsp;|&nbsp; <strong>Marcadores:</strong> puntos rellenos = modelos cerrados; anillos = modelos de pesos abiertos; la marca vertical de color junto a cada etiqueta indica el nivel de evidencia. &nbsp;|&nbsp; <strong>Umbral regulatorio:</strong> la línea ámbar de 10²⁶ FLOP marca el nivel a partir del cual la EU AI Act clasifica un sistema como de riesgo sistémico. &nbsp;|&nbsp; <strong>Licencia de datos:</strong> los datos de Epoch AI se distribuyen bajo Creative Commons BY.`,
+  methodology:`<strong>⚠️ Nota metodológica sobre el cómputo —</strong> Cada modelo lleva una <strong>etiqueta de confianza tomada del campo <em>Confidence</em> de la base de Epoch AI</strong>, la misma que usan Our World in Data y el AI Index de Stanford. Los laboratorios frontera dejaron de publicar cifras de cómputo después de GPT-4, así que los modelos recientes se apoyan en triangulación (hardware-tiempo, parámetros × tokens, presupuestos Chinchilla-óptimos) o en imputación por benchmarks. <strong>Los modelos de 2026 aún no tienen estimación de cómputo publicada por Epoch</strong>: se ubican sobre la tendencia de 4–5× anual dentro de la ventana documentada de 10²⁶–10²⁷ FLOP y están marcados como «Tendencia». Las tasas por laboratorio se calculan por MCO sobre log₁₀(FLOP) ~ año y heredan esa incertidumbre.`,
+  paramnote:`<strong>🧩 Nota sobre los parámetros —</strong> El conteo de parámetros aparece en el tooltip <strong>solo cuando existe una fuente pública</strong>; los modelos cerrados recientes (Claude, Gemini, GPT-5) no lo revelan y el campo simplemente se omite. Para arquitecturas <strong>Mixture-of-Experts</strong> se muestran dos cifras: <em>parámetros totales</em> y <em>parámetros activos</em> por token — esta última es la que gobierna el cómputo de entrenamiento vía la heurística <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. Confundirlas es el error más común al comparar modelos: DeepSeek-V3 tiene 671B totales pero activa solo 37B, así que su cómputo se parece más al de un modelo de 37B que al de uno de 671B. Las cifras marcadas como <em>rumor</em> (GPT-4, Grok) provienen de filtraciones recogidas por Epoch AI y no de los laboratorios.`,
+  brand_type_t:"Tipografía",brand_pal_t:"Paleta primaria",brand_era_t:"Escala de eras (derivada)",brand_cf_t:"Escala semántica (fuera de paleta)",
+  brand_type_d:"<strong>Igra Sans</strong> en toda la interfaz: titulares, pestañas, chips, cifras y etiquetas de panel. Se carga por <span style='font-family:var(--font-mono)'>@font-face</span> con respaldo a la pila del sistema. Las micro-etiquetas de los ejes (8–9 px) usan la pila neutra del sistema: Igra Sans es una grotesca ancha de un solo peso y a ese tamaño pierde legibilidad.",
+  brand_era_d:"Las cuatro primeras eras <em>son</em> los cuatro colores de marca. 2025 y 2026 extienden la rampa rotando el matiz del primario hacia el magenta, para que la secuencia lea como intensidad creciente sin salirse del ADN violeta.",
+  brand_cf_d:"Verde–turquesa–ámbar–rojo señalan un juicio sobre el dato, no la identidad. Van deliberadamente fuera de la paleta para que nadie los confunda con un color de marca. La excepción es «Tendencia», en violeta desaturado: esa inferencia sí es de la casa.",
+  brand_lab_note:"Los colores de los chips de laboratorio son las identidades de terceros (OpenAI, Anthropic, Google…), no de la marca; aparecen solo en el filtro y en la línea de trayectoria.",
+  ls_models:"Modelos",ls_span:"Período",ls_total:"Crecimiento",ls_last:"Último",
+  ls_peryear:"× por año",ls_r2:"R² del ajuste",
+  ls_note_few:"Con menos de 3 modelos la tasa no es estadísticamente significativa; se muestra solo el crecimiento punta a punta.",
+  ls_note:"Tasa por regresión log-lineal (MCO) sobre log₁₀(FLOP) ~ año.",
+  ls_conf_title:"Evidencia:",ls_zoom_empty:"Sin modelos en la ventana frontera.",
+  footer_copy:"© 2026 · Javier Forero · Estadístico con alma de narrador",
+  chart_xaxis:"Año",chart_yaxis:"Cómputo de entrenamiento (PetaFLOP/s-días)",zoom_today:"▲ HOY",
+  t_full:"Vista completa · 1958 – 2026",t_zoomfix:"🔍 Zoom: era frontera (2023 – 2026)",
+  hint_all:"Vista ampliada de la zona sombreada del gráfico principal",
+  hint_lab:"El laboratorio en contexto: sus modelos frente a los de la competencia",
+  t_traj:"Trayectoria",t_ctx:"En contexto frontera",
+  lab_all:"Todos",lab_academia:"Academia / otros",
+  conf_title:"Nivel de evidencia de cada cifra de cómputo",
+  cf:{pub:"Publicado por el laboratorio",conf:"Epoch: alta confianza",lik:"Epoch: probable",spec:"Epoch: especulativo",trend:"Ubicado sobre tendencia"},
+  cf_s:{pub:"Publicado",conf:"Alta",lik:"Probable",spec:"Especulativo",trend:"Tendencia"},
+  p_total:"totales",p_active:"activos/token",p_rumor:"filtrado, no confirmado",p_moe:"MoE",p_label:"Parámetros",
+  months:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+ },
+ en:{
+  topbar_tag:"Explainer · verifiable public data",eyebrow:"Data Visualization · AI &amp; Compute",
+  h1:`From a single artificial neuron to the 2026 frontier models:<br><span class="gradient">how AI broke Moore's Law</span>`,
+  deck:"68 years of computational progress in a single chart. What once took two years to double now multiplies fivefold every twelve months.",
+  byline:"Javier Forero · Statistician with a storyteller's soul",
+  freshness:"Data updated: August 1, 2026 · Epoch AI (Jul 31, 2026)",
+  tab_viz:"Visualization",tab_sci:"Scientific basis",tab_src:"References & data",
+  filter_label:"Filter trajectory by lab · the axis auto-fits to that lab's span",
+  badge1:"2× every 2 years · Moore Era (1958–2012)",badge2:"~10× per year · Deep Learning Era (2012–2019)",badge3:"4–5× per year · Frontier LLMs Era (2020–2026)",
+  leg1:"Classics (pre-DL)",leg2:"Deep Learning",leg3:"Transformers (2020–22)",leg4:"Frontier (2023–24)",leg5:"2025",leg6:"2026",leg7:"Open weights",
+  sci_h2:"The scientific foundation of the three eras",sci_p:"These are not arbitrary labels. Each era has a documented inflection point, a dominant architecture, and a scaling law that defines it.",
+  e1_period:"Era I · 1958 – 2012",e1_title:"The Moore Era",e1_rate:"2× every 2 years",e1_lbl1:"What drives the growth?",
+  e1_body1:`AI compute follows <strong>classic Moore's Law</strong>: transistor count doubles every ~24 months. AI passively benefits from general hardware improvements, with no specialized demand of its own.`,
+  e1_lbl2:"Mathematical formulation",e1_lbl3:"Key scientific milestones",
+  e2_period:"Era II · 2012 – 2019",e2_title:"The Deep Learning Leap",e2_rate:"~10× per year",e2_lbl1:"The inflection point",
+  e2_body1:`<strong>AlexNet (2012)</strong> wins ImageNet by a huge margin using just 2 NVIDIA GPUs. The community realizes GPUs accelerate CNNs 10–50×. OpenAI documents the shift in <strong>"AI and Compute" (2018)</strong>: between AlexNet and AlphaGo Zero, compute grew <strong>~10× per year</strong> — five times faster than Moore's Law.`,
+  e2_lbl2:"Mathematical formulation",e2_lbl3:"Key scientific milestones",
+  e3_period:"Era III · 2020 – 2026",e3_title:"Frontier LLMs &amp; Reasoning",e3_rate:"4–5× per year",e3_lbl1:"What changed after 2020?",
+  e3_body1:`GPT-3 marks the beginning. <strong>Scaling laws</strong> by Kaplan (2020) and Chinchilla (2022) show performance is a predictable function of compute, parameters, and data. Since 2024, <strong>reinforcement learning post-training for reasoning</strong> absorbs a growing share of the budget, and <strong>MoE</strong> architectures break the direct link between total parameters and compute. Epoch AI estimates frontier growth at <strong>~5× per year</strong> since 2020.`,
+  e3_lbl2:"Scaling laws (Chinchilla)",
+  e3_formula_note:"N = parameters, D = tokens, L = loss. For an optimal budget, N and D scale proportionally (~20 tokens per parameter).",
+  e3_lbl3:"Key scientific milestones",
+  years_unit:"years",stat_dur:"Duration",stat_growth:"Growth",
+  insight_label:"Key takeaway",
+  insight_text:`"Training a single 2026 frontier model consumes more compute than all AI research accumulated before 2020."`,
+  insight_detail:`The accelerator was not a single technology, but the convergence of four factors: <strong>(1)</strong> specialized hardware (GPUs, then TPUs, now Blackwell/Ironwood), <strong>(2)</strong> a scalable architecture (Transformer, 2017), <strong>(3)</strong> massive private capital, and since 2024 <strong>(4)</strong> <em>reinforcement learning</em> applied to reasoning, opening a second scaling axis. <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> becomes more relevant with every order of magnitude.`,
+  src_h2:"References and data sources",
+  src_p:"Every compute and parameter figure in this visualization traces back to a public source. Here is the full trail, the methodological note on what still cannot be verified, and the brand system applied.",
+  src_db_label:"📊 Reference databases",src_papers_label:"🔑 Lab-published figures",
+  brand_label:"🎨 Brand system applied",
+  src_note:`<strong>Unit:</strong> 1 PetaFLOP/s-day = 8.64 × 10¹⁹ FLOP (a processor sustaining 10¹⁵ operations per second for 24 hours). &nbsp;|&nbsp; <strong>Y-axis:</strong> base-10 logarithmic scale — each gridline is a factor of ten. &nbsp;|&nbsp; <strong>Markers:</strong> filled dots = closed models; rings = open-weight models; the coloured vertical tick beside each label indicates the evidence level. &nbsp;|&nbsp; <strong>Regulatory threshold:</strong> the amber 10²⁶ FLOP line marks where the EU AI Act classifies a system as posing systemic risk. &nbsp;|&nbsp; <strong>Data licence:</strong> Epoch AI data is distributed under Creative Commons BY.`,
+  methodology:`<strong>⚠️ Methodological note on compute —</strong> Every model carries a <strong>confidence label taken from the <em>Confidence</em> field of the Epoch AI database</strong> — the same source used by Our World in Data and Stanford's AI Index. Frontier labs stopped publishing compute figures after GPT-4, so recent models rely on triangulation (hardware-time, parameters × tokens, Chinchilla-optimal budgets) or benchmark imputation. <strong>2026 models have no published Epoch compute estimate yet</strong>: they are placed along the 4–5×/year trend within the documented 10²⁶–10²⁷ FLOP window and flagged as "Trend". Per-lab rates use OLS on log₁₀(FLOP) ~ year and inherit that uncertainty.`,
+  paramnote:`<strong>🧩 Note on parameters —</strong> Parameter counts appear in the tooltip <strong>only where a public source exists</strong>; recent closed models (Claude, Gemini, GPT-5) do not disclose them and the field is simply omitted. For <strong>Mixture-of-Experts</strong> architectures two figures are shown: <em>total parameters</em> and <em>active parameters</em> per token — the latter governs training compute via the <span style="font-family:var(--font-mono)">C ≈ 6ND</span> heuristic. Confusing them is the most common error when comparing models: DeepSeek-V3 has 671B total but activates only 37B, so its compute resembles a 37B model far more than a 671B one. Figures marked <em>rumoured</em> (GPT-4, Grok) come from leaks collected by Epoch AI, not from the labs.`,
+  brand_type_t:"Typography",brand_pal_t:"Primary palette",brand_era_t:"Era scale (derived)",brand_cf_t:"Semantic scale (off-palette)",
+  brand_type_d:"<strong>Igra Sans</strong> throughout the interface: headlines, tabs, chips, figures and panel titles. Loaded via <span style='font-family:var(--font-mono)'>@font-face</span> with a system fallback stack. Axis micro-labels (8–9 px) use the neutral system stack: Igra Sans is a wide single-weight grotesque and loses legibility at that size.",
+  brand_era_d:"The first four eras <em>are</em> the four brand colours. 2025 and 2026 extend the ramp by rotating the primary's hue toward magenta, so the sequence reads as rising intensity without leaving the violet DNA.",
+  brand_cf_d:"Green–teal–amber–red signal a judgement about the data, not the identity. They sit deliberately outside the palette so nobody mistakes them for a brand colour. The exception is \"Trend\", in desaturated violet: that inference is the studio's own.",
+  brand_lab_note:"Lab chip colours are third-party identities (OpenAI, Anthropic, Google…), not brand colours; they appear only in the filter and the trajectory line.",
+  ls_models:"Models",ls_span:"Span",ls_total:"Growth",ls_last:"Latest",
+  ls_peryear:"× per year",ls_r2:"Fit R²",
+  ls_note_few:"With fewer than 3 models the rate is not statistically meaningful; only end-to-end growth is shown.",
+  ls_note:"Rate by log-linear (OLS) regression on log₁₀(FLOP) ~ year.",
+  ls_conf_title:"Evidence:",ls_zoom_empty:"No models in the frontier window.",
+  footer_copy:"© 2026 · Javier Forero · Statistician with a storyteller's soul",
+  chart_xaxis:"Year",chart_yaxis:"Training compute (PetaFLOP/s-days)",zoom_today:"▲ TODAY",
+  t_full:"Full view · 1958 – 2026",t_zoomfix:"🔍 Zoom: frontier era (2023 – 2026)",
+  hint_all:"Expanded view of the shaded region in the main chart",
+  hint_lab:"The lab in context: its models against the competition",
+  t_traj:"Trajectory",t_ctx:"In frontier context",
+  lab_all:"All",lab_academia:"Academia / other",
+  conf_title:"Evidence level behind each compute figure",
+  cf:{pub:"Published by the lab",conf:"Epoch: high confidence",lik:"Epoch: likely",spec:"Epoch: speculative",trend:"Placed on trend"},
+  cf_s:{pub:"Published",conf:"High",lik:"Likely",spec:"Speculative",trend:"Trend"},
+  p_total:"total",p_active:"active/token",p_rumor:"leaked, unconfirmed",p_moe:"MoE",p_label:"Parameters",
+  months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+ }
+};
+let lang='es';
+
+/* ═══════════ DATA ═══════════ */
+const PFD=8.64e19;
+const raw=[
+ {n:"Perceptron",       y:1958,   d:"1958",     f:8.6e5,  c:"classic",   l:"academia", cf:"lik", o:"Cornell (Rosenblatt)",   p:5.12e2, s:"OpenAI · AI and Compute"},
+ {n:"NETtalk",          y:1987,   d:"1987",     f:4.3e10, c:"classic",   l:"academia", cf:"lik", o:"Johns Hopkins / UCSD",   p:1.8e4,  s:"OpenAI · AI and Compute"},
+ {n:"ALVINN",           y:1989,   d:"1989",     f:1.0e9,  c:"classic",   l:"academia", cf:"lik", o:"Carnegie Mellon",        p:5.0e3,  s:"OpenAI · AI and Compute"},
+ {n:"TD-Gammon 2.1",    y:1992,   d:"1992",     f:2.6e13, c:"classic",   l:"academia", cf:"lik", o:"IBM Research",           p:1.6e4,  s:"OpenAI · AI and Compute"},
+ {n:"RNN for Speech",   y:1994,   d:"1994",     f:1.7e10, c:"classic",   l:"academia", cf:"lik", o:"Academia",                         s:"OpenAI · AI and Compute"},
+ {n:"LeNet-5",          y:1998,   d:"1998",     f:3.5e12, c:"classic",   l:"academia", cf:"lik", o:"AT&T Bell Labs (LeCun)", p:6.0e4,  s:"OpenAI · AI and Compute"},
+ {n:"Deep Belief Nets", y:2006,   d:"2006",     f:5.2e15, c:"classic",   l:"academia", cf:"lik", o:"U. Toronto (Hinton)",    p:1.6e6,  s:"OpenAI · AI and Compute"},
+ {n:"AlexNet",          y:2012.6, d:"2012",     f:4.7e17, c:"deeplearn", l:"academia", cf:"conf",o:"U. Toronto",             p:6.0e7,  s:"Epoch AI · conteo de operaciones"},
+ {n:"DQN (Atari)",      y:2013.9, d:"2013",     f:8.6e14, c:"deeplearn", l:"google",   cf:"lik", o:"DeepMind",               p:1.7e6,  s:"OpenAI · AI and Compute"},
+ {n:"BiLSTM Speech",    y:2014.2, d:"2014",     f:3.5e12, c:"deeplearn", l:"academia", cf:"lik", o:"Baidu Research",                   s:"OpenAI · AI and Compute"},
+ {n:"VGG-16",           y:2014.7, d:"2014",     f:1.4e18, c:"deeplearn", l:"academia", cf:"conf",o:"University of Oxford",   p:1.38e8, s:"Epoch AI · conteo de operaciones"},
+ {n:"ResNet-152",       y:2015.9, d:"2015",     f:3.5e19, c:"deeplearn", l:"microsoft",cf:"conf",o:"Microsoft Research",     p:6.0e7,  s:"Epoch AI · conteo de operaciones"},
+ {n:"Neural MT (GNMT)", y:2016.7, d:"2016",     f:8.6e20, c:"deeplearn", l:"google",   cf:"lik", o:"Google Brain",           p:2.78e8, s:"OpenAI · AI and Compute"},
+ {n:"TI7 Dota 1v1",     y:2017.6, d:"2017",     f:1.0e22, c:"deeplearn", l:"openai",   cf:"lik", o:"OpenAI",                           s:"OpenAI · AI and Compute"},
+ {n:"AlphaGo Zero",     y:2017.8, d:"2017",     f:1.6e23, c:"deeplearn", l:"google",   cf:"pub", o:"DeepMind",               p:4.6e7,  s:"Nature (2017) · horas de TPU reportadas"},
+ {n:"BERT-Large",       y:2018.8, d:"2018",     f:5.5e20, c:"deeplearn", l:"google",   cf:"conf",o:"Google AI Language",     p:3.4e8,  s:"Epoch AI · conteo de operaciones"},
+ {n:"GPT-2",            y:2019.2, d:"2019",     f:1.5e21, c:"deeplearn", l:"openai",   cf:"conf",o:"OpenAI",                 p:1.5e9,  s:"Epoch AI · conteo de operaciones"},
+ {n:"Tesla Autopilot",  y:2019.4, d:"2019",     f:7.8e22, c:"deeplearn", l:"academia", cf:"spec",o:"Tesla AI",                         s:"OpenAI · AI and Compute"},
+ {n:"GPT-3 (175B)",     y:2020.4, d:"May 2020", f:3.14e23,c:"transformer",l:"openai",  cf:"pub", o:"OpenAI",                 p:1.75e11,s:"Brown et al. (2020) · Tabla D.1"},
+ {n:"Megatron-Turing",  y:2021.8, d:"Oct 2021", f:1.4e24, c:"transformer",l:"microsoft",cf:"conf",o:"Microsoft & NVIDIA",    p:5.3e11, s:"Paper MT-NLG · horas de GPU"},
+ {n:"Chinchilla (70B)", y:2022.2, d:"Mar 2022", f:5.76e23,c:"transformer",l:"google",  cf:"pub", o:"DeepMind",               p:7.0e10, s:"Hoffmann et al. (2022) · reportado"},
+ {n:"PaLM (540B)",      y:2022.3, d:"Apr 2022", f:2.53e24,c:"transformer",l:"google",  cf:"pub", o:"Google Research",        p:5.4e11, s:"Paper PaLM · horas de TPU v4"},
+ {n:"U-PaLM (540B)",    y:2022.8, d:"Oct 2022", f:2.53e24,c:"transformer",l:"google",  cf:"conf",o:"Google Research",        p:5.4e11, s:"Epoch AI · Confident"},
+ {n:"GPT-4",            y:2023.2, d:"Mar 2023", f:2.1e25, c:"frontier",  l:"openai",   cf:"lik", o:"OpenAI",  p:1.8e12,pa:2.8e11,pr:1, s:"Epoch AI · Likely (IC 90%: 8.2e24–4.4e25)"},
+ {n:"PaLM 2",           y:2023.4, d:"May 2023", f:7.34e24,c:"frontier",  l:"google",   cf:"lik", o:"Google",  p:3.4e11,pr:1,          s:"Epoch AI · 6ND (340B × 3.6T tokens)"},
+ {n:"Claude 2",         y:2023.53,d:"Jul 2023", f:3.87e24,c:"frontier",  l:"anthropic",cf:"spec",o:"Anthropic",                       s:"Epoch AI · Speculative"},
+ {n:"LLaMA-2 70B",      y:2023.55,d:"Jul 2023", f:8.4e23, c:"frontier",  l:"meta",     cf:"pub", o:"Meta AI",  p:7.0e10, ow:1,        s:"Paper Llama 2 · 1.7M horas-GPU A100"},
+ {n:"Falcon-180B",      y:2023.68,d:"Sep 2023", f:3.76e24,c:"frontier",  l:"academia", cf:"pub", o:"TII (Abu Dhabi)", p:1.8e11, ow:1, s:"Paper Falcon · 43,500 petaFLOP-días (Tabla 1)"},
+ {n:"Inflection-2",     y:2023.89,d:"Nov 2023", f:1.0e25, c:"frontier",  l:"academia", cf:"pub", o:"Inflection AI",                   s:"Inflection · «~10²⁵ FLOPs» en 5,000 H100"},
+ {n:"Gemini 1.0 Ultra", y:2023.93,d:"Dec 2023", f:5.0e25, c:"frontier",  l:"google",   cf:"spec",o:"Google DeepMind",                 s:"Epoch AI · Speculative (TPU v4)"},
+ {n:"Gemini 1.5 Pro",   y:2024.12,d:"Feb 2024", f:1.58e25,c:"frontier",  l:"google",   cf:"spec",o:"Google DeepMind",                 s:"Epoch AI · imputación por benchmarks · arq. MoE"},
+ {n:"Claude 3 Opus",    y:2024.18,d:"Mar 2024", f:1.64e25,c:"frontier",  l:"anthropic",cf:"spec",o:"Anthropic",                       s:"Epoch AI · imputación por benchmarks"},
+ {n:"GPT-4o",           y:2024.36,d:"May 2024", f:3.8e25, c:"frontier",  l:"openai",   cf:"spec",o:"OpenAI",                          s:"Epoch AI · imputación por benchmarks"},
+ {n:"Nemotron-4 340B",  y:2024.45,d:"Jun 2024", f:1.8e25, c:"frontier",  l:"nvidia",   cf:"conf",o:"NVIDIA",   p:3.4e11, ow:1,        s:"Epoch AI · Confident (6ND, 9T tokens)"},
+ {n:"Claude 3.5 Sonnet",y:2024.47,d:"Jun 2024", f:2.7e25, c:"frontier",  l:"anthropic",cf:"spec",o:"Anthropic",                       s:"Epoch AI · a partir del costo citado por D. Amodei"},
+ {n:"LLaMA-3.1 405B",   y:2024.56,d:"Jul 2024", f:3.8e25, c:"frontier",  l:"meta",     cf:"pub", o:"Meta AI",  p:4.05e11,ow:1,        s:"Dubey et al. (2024) · reportado en el paper"},
+ {n:"Grok-2",           y:2024.62,d:"Aug 2024", f:2.96e25,c:"frontier",  l:"xai",      cf:"conf",o:"xAI",                             s:"Epoch AI · Confident"},
+ {n:"OpenAI o1",        y:2024.72,d:"Sep 2024", f:3.0e25, c:"frontier",  l:"openai",   cf:"spec",o:"OpenAI",                          s:"Epoch AI · Speculative (razonamiento/RL)"},
+ {n:"DeepSeek-V3",      y:2024.98,d:"Dec 2024", f:3.4e24, c:"frontier",  l:"deepseek", cf:"pub", o:"DeepSeek AI", p:6.71e11,pa:3.7e10,ow:1, s:"Paper V3 · 2.788M horas-GPU H800"},
+ {n:"DeepSeek-R1",      y:2025.06,d:"Jan 2025", f:5.5e24, c:"y2025",     l:"deepseek", cf:"spec",o:"DeepSeek AI", p:6.71e11,pa:3.7e10,ow:1, s:"Epoch AI · V3 + RL, no desglosado"},
+ {n:"Grok 3",           y:2025.13,d:"Feb 2025", f:3.5e26, c:"y2025",     l:"xai",      cf:"lik", o:"xAI",      p:3.0e12,pr:1,         s:"Epoch AI · 80,000 H100 × ~3 meses"},
+ {n:"GPT-4.5",          y:2025.16,d:"Feb 2025", f:3.8e26, c:"y2025",     l:"openai",   cf:"lik", o:"OpenAI",                          s:"Epoch AI · ~187M horas-H100 (mediana)"},
+ {n:"Nemotron Ultra",   y:2025.21,d:"Mar 2025", f:3.91e25,c:"y2025",     l:"nvidia",   cf:"conf",o:"NVIDIA",   p:2.53e11,ow:1,        s:"Epoch AI · Confident (base + finetune)"},
+ {n:"Gemini 2.5 Pro",   y:2025.24,d:"Mar 2025", f:3.0e26, c:"y2025",     l:"google",   cf:"spec",o:"Google DeepMind",                 s:"Epoch AI · Speculative"},
+ {n:"Llama 4 Behemoth", y:2025.26,d:"Apr 2025", f:5.18e25,c:"y2025",     l:"meta",     cf:"lik", o:"Meta AI",  p:2.0e12,pa:2.88e11,   s:"Epoch AI · 6ND (288B act. × 30T tokens)"},
+ {n:"Claude Opus 4",    y:2025.39,d:"May 2025", f:3.5e26, c:"y2025",     l:"anthropic",cf:"spec",o:"Anthropic",                       s:"Epoch AI · Speculative"},
+ {n:"Grok 4",           y:2025.52,d:"Jul 2025", f:5.0e26, c:"y2025",     l:"xai",      cf:"spec",o:"xAI",      p:3.0e12,pr:1,         s:"Epoch AI · pre-entreno Grok 3 + RL a escala"},
+ {n:"Kimi K2",          y:2025.53,d:"Jul 2025", f:3.0e24, c:"y2025",     l:"moonshot", cf:"lik", o:"Moonshot AI",p:1.0e12,pa:3.2e10,ow:1, s:"6ND (32B act. × 15.5T tokens)"},
+ {n:"GPT-5",            y:2025.60,d:"Aug 2025", f:5.0e26, c:"y2025",     l:"openai",   cf:"spec",o:"OpenAI",                          s:"Epoch AI · Speculative"},
+ {n:"Claude Opus 4.5",  y:2025.90,d:"Nov 2025", f:5.5e26, c:"y2025",     l:"anthropic",cf:"spec",o:"Anthropic",                       s:"Epoch AI · Speculative"},
+ {n:"GPT-5.2",          y:2025.94,d:"Dec 2025", f:6.0e26, c:"y2025",     l:"openai",   cf:"spec",o:"OpenAI",                          s:"Epoch AI · Speculative"},
+ {n:"Gemini 3 Pro",     y:2025.96,d:"Dec 2025", f:8.0e26, c:"y2025",     l:"google",   cf:"spec",o:"Google DeepMind",                 s:"Epoch AI · Speculative"},
+ {n:"Claude Opus 4.6",  y:2026.10,d:"Feb 2026", f:8.0e26, c:"y2026",     l:"anthropic",cf:"trend",o:"Anthropic",                      s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Grok 4.20",        y:2026.13,d:"Feb 2026", f:7.0e26, c:"y2026",     l:"xai",      cf:"trend",o:"xAI",                            s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Gemini 3.1 Pro",   y:2026.14,d:"Feb 2026", f:1.1e27, c:"y2026",     l:"google",   cf:"trend",o:"Google DeepMind",                s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"GPT-5.4",          y:2026.21,d:"Mar 2026", f:9.0e26, c:"y2026",     l:"openai",   cf:"trend",o:"OpenAI",                         s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"GLM-5.1",          y:2026.27,d:"Apr 2026", f:7.0e25, c:"y2026",     l:"zai",      cf:"trend",o:"Z.ai (Zhipu)",   ow:1,           s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Muse Spark",       y:2026.28,d:"Apr 2026", f:5.0e26, c:"y2026",     l:"meta",     cf:"trend",o:"Meta AI",                        s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Grok 4.3 Beta",    y:2026.30,d:"Apr 2026", f:9.0e26, c:"y2026",     l:"xai",      cf:"trend",o:"xAI",                            s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"DeepSeek-V4-Pro",  y:2026.32,d:"Apr 2026", f:1.0e26, c:"y2026",     l:"deepseek", cf:"trend",o:"DeepSeek AI",    ow:1,           s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Claude Opus 4.7",  y:2026.35,d:"May 2026", f:1.2e27, c:"y2026",     l:"anthropic",cf:"trend",o:"Anthropic",                      s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Qwen3.7-Max",      y:2026.38,d:"May 2026", f:2.0e26, c:"y2026",     l:"alibaba",  cf:"trend",o:"Alibaba",                        s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Claude Opus 4.8",  y:2026.42,d:"Jun 2026", f:1.4e27, c:"y2026",     l:"anthropic",cf:"trend",o:"Anthropic",                      s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Claude Fable 5",   y:2026.44,d:"Jun 2026", f:2.0e27, c:"y2026",     l:"anthropic",cf:"trend",o:"Anthropic",                      s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Kimi K2.7 Code",   y:2026.45,d:"Jun 2026", f:1.2e26, c:"y2026",     l:"moonshot", cf:"trend",o:"Moonshot AI",    ow:1,           s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Claude Sonnet 5",  y:2026.50,d:"Jun 2026", f:5.0e26, c:"y2026",     l:"anthropic",cf:"trend",o:"Anthropic",                      s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Muse Spark 1.1",   y:2026.51,d:"Jul 2026", f:8.0e26, c:"y2026",     l:"meta",     cf:"trend",o:"Meta AI",                        s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Grok 4.5",         y:2026.52,d:"Jul 2026", f:1.8e27, c:"y2026",     l:"xai",      cf:"trend",o:"xAI",                            s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"GPT-5.6 Sol",      y:2026.53,d:"Jul 2026", f:2.2e27, c:"y2026",     l:"openai",   cf:"trend",o:"OpenAI",                         s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Claude Opus 5",    y:2026.56,d:"Jul 2026", f:2.5e27, c:"y2026",     l:"anthropic",cf:"trend",o:"Anthropic",                      s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"Kimi K3",          y:2026.57,d:"Jul 2026", f:1.5e26, c:"y2026",     l:"moonshot", cf:"trend",o:"Moonshot AI",    ow:1,           s:"Sin estimación publicada · ubicado sobre tendencia"},
+ {n:"DeepSeek-V4-Flash",y:2026.58,d:"Jul 2026", f:5.0e25, c:"y2026",     l:"deepseek", cf:"trend",o:"DeepSeek AI",    ow:1,           s:"Sin estimación publicada · ubicado sobre tendencia"},
+];
+const models=raw.map(m=>({...m,pf:m.f/PFD}));
+let activeLab='all';
+
+/* ═══════════ HELPERS ═══════════ */
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+const sup=n=>String(n).split("").map(c=>SUP[c]||c).join("");
+function labName(k){
+  if(k==='all')return i18n[lang].lab_all;
+  if(k==='academia')return i18n[lang].lab_academia;
+  return LABS[k].name;
+}
+function fmtParams(v){
+  if(v>=1e12)return (v/1e12).toFixed(v/1e12>=10?0:1).replace(/\.0$/,'')+" T";
+  if(v>=1e9) return (v/1e9 ).toFixed(v/1e9 >=10?0:1).replace(/\.0$/,'')+" B";
+  if(v>=1e6) return (v/1e6 ).toFixed(v/1e6 >=10?0:1).replace(/\.0$/,'')+" M";
+  if(v>=1e3) return (v/1e3 ).toFixed(v/1e3 >=10?0:1).replace(/\.0$/,'')+" K";
+  return String(v);
+}
+function yearLabel(v,withMonth){
+  const yr=Math.floor(v+1e-6);
+  if(!withMonth)return String(yr);
+  let mi=Math.round((v-yr)*12);mi=Math.max(0,Math.min(11,mi));
+  return i18n[lang].months[mi]+" "+String(yr).slice(2);
+}
+function ticks(a,b,cands,target){
+  const range=b-a;let step=cands[cands.length-1];
+  for(const c of cands){if(range/c<=target){step=c;break;}}
+  const out=[],start=Math.ceil(a/step-1e-9)*step;
+  for(let v=start;v<=b+1e-9;v+=step)out.push(+v.toFixed(4));
+  return out;
+}
+function olsRate(set){
+  const n=set.length;if(n<2)return null;
+  const xs=set.map(m=>m.y),ys=set.map(m=>Math.log10(m.f));
+  const mx=xs.reduce((a,b)=>a+b)/n,my=ys.reduce((a,b)=>a+b)/n;
+  let sxy=0,sxx=0,syy=0;
+  for(let i=0;i<n;i++){sxy+=(xs[i]-mx)*(ys[i]-my);sxx+=(xs[i]-mx)**2;syy+=(ys[i]-my)**2;}
+  if(sxx===0)return null;
+  const slope=sxy/sxx;
+  return {slope,inter:my-slope*mx,perYear:10**slope,r2:syy===0?1:(sxy*sxy)/(sxx*syy)};
+}
+function fmtX(v){
+  if(v>=1e6)return v.toExponential(1).replace('e+','×10^');
+  if(v>=1000)return Math.round(v).toLocaleString('es-CO');
+  return v.toFixed(v<10?1:0);
+}
+function dot(ctx,x,y,col,r,ow){
+  ctx.beginPath();ctx.arc(x,y,r+1.2,0,7);ctx.fillStyle=BRAND.surface;ctx.fill();
+  if(ow){ctx.beginPath();ctx.arc(x,y,r-.6,0,7);ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.stroke();}
+  else{ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=col;ctx.fill();}
+}
+function deconflict(pts,minGap,topB,botB){
+  for(let it=0;it<180;it++){
+    let moved=false;pts.sort((a,b)=>a.ly-b.ly);
+    for(let i=0;i<pts.length-1;i++){
+      const a=pts[i],b=pts[i+1];if(a.side!==b.side)continue;
+      const gap=b.ly-a.ly;
+      if(gap<minGap){const p=(minGap-gap)/2+.4;a.ly-=p;b.ly+=p;moved=true;}
+    }
+    pts.forEach(p=>{p.ly=Math.max(topB,Math.min(botB,p.ly));});
+    if(!moved)break;
+  }
+}
+
+/* ═══════════ TABS ═══════════ */
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+b.dataset.tab));
+  hideTip();
+  if(b.dataset.tab==='viz')requestAnimationFrame(drawAll);
+  if(typeof track==='function')track('tab_view',{tab_id:b.dataset.tab});
+});
+
+/* ═══════════ UI ═══════════ */
+function buildChips(){
+  const box=document.getElementById('labChips');box.innerHTML='';
+  Object.keys(LABS).forEach(k=>{
+    const cnt=k==='all'?models.length:models.filter(m=>m.l===k).length;
+    if(cnt===0)return;
+    const c=document.createElement('div');
+    c.className='chip'+(k===activeLab?' active':'');
+    if(k===activeLab)c.style.background=LABS[k].color;
+    c.innerHTML=`<span class="cdot" style="background:${LABS[k].color}"></span>${labName(k)}<span class="ccount">${cnt}</span>`;
+    c.onclick=()=>{
+      activeLab=(activeLab===k&&k!=='all')?'all':k;
+      buildChips();renderStats();drawAll();
+      if(typeof track==='function')track('lab_filter',{lab_id:activeLab,lab_name:labName(activeLab)});
+    };
+    box.appendChild(c);
+  });
+}
+function buildConfLegend(){
+  const t=i18n[lang];let h=`<div class="conf-legend-title">${t.conf_title}</div>`;
+  CONF_ORDER.forEach(k=>{
+    const n=models.filter(m=>m.cf===k).length;
+    h+=`<span class="conf-chip"><span class="conf-sq" style="background:${CONF[k]}"></span>${t.cf[k]} <b>${n}</b></span>`;
+  });
+  document.getElementById('confLegend').innerHTML=h;
+}
+function swatch(c,label){return `<div class="sw"><div class="sw-c" style="background:${c}"></div><div class="sw-t">${label}</div></div>`;}
+function buildBrandBox(){
+  const t=i18n[lang];
+  const pal=[[BRAND.primary,"#4e00ff"],[BRAND.primaryLt,"#7c4dff"],[BRAND.secondary,"#041c59"],[BRAND.tertiary,"#0048ff"]];
+  const era=[[colors.classic,"era 1"],[colors.deeplearn,"era 2"],[colors.transformer,"era 3"],[colors.frontier,"era 4"],[colors.y2025,"2025"],[colors.y2026,"2026"]];
+  document.getElementById('brandBox').innerHTML=`
+    <div class="brandgrid">
+      <div class="brandcol"><h5>${t.brand_type_t}</h5>
+        <div class="typespec"><div class="big">Igra Sans</div>
+          <div class="small">ABCDEFG · abcdefg · 0123456789</div>
+          <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_type_d}</div>
+        </div></div>
+      <div class="brandcol"><h5>${t.brand_pal_t}</h5>
+        <div class="swatches">${pal.map(p=>swatch(p[0],p[1])).join('')}</div></div>
+      <div class="brandcol"><h5>${t.brand_era_t}</h5>
+        <div class="swatches">${era.map(p=>swatch(p[0],p[1])).join('')}</div>
+        <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_era_d}</div></div>
+      <div class="brandcol"><h5>${t.brand_cf_t}</h5>
+        <div class="swatches">${CONF_ORDER.map(k=>swatch(CONF[k],t.cf_s[k])).join('')}</div>
+        <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_cf_d}<br><br><em>${t.brand_lab_note}</em></div></div>
+    </div>`;
+}
+function renderStats(){
+  const box=document.getElementById('labStats'),inner=document.getElementById('labStatsInner'),t=i18n[lang];
+  if(activeLab==='all'){box.classList.remove('show');return;}
+  const set=models.filter(m=>m.l===activeLab).sort((a,b)=>a.y-b.y);
+  const col=LABS[activeLab].color,first=set[0],last=set[set.length-1];
+  const total=last.f/first.f,ols=set.length>=3?olsRate(set):null;
+  box.querySelector('.lab-stats-inner').style.borderLeftColor=col;
+  let confHtml=`<span class="ls-conf-title">${t.ls_conf_title}</span>`;
+  CONF_ORDER.forEach(k=>{
+    const n=set.filter(m=>m.cf===k).length;
+    if(n)confHtml+=`<span class="conf-pill" style="background:${CONF[k]}">${t.cf_s[k]} · ${n}</span>`;
+  });
+  const withP=set.filter(m=>m.p).length;
+  inner.innerHTML=`
+    <div class="ls-title" style="color:${col}">${labName(activeLab)}
+      <small>${first.d} → ${last.d}</small></div>
+    <div class="ls-metrics">
+      <div class="ls-metric"><div class="ls-val" style="color:${col}">${set.length}</div><div class="ls-lab">${t.ls_models}</div></div>
+      <div class="ls-metric"><div class="ls-val">${(last.y-first.y).toFixed(1)}</div><div class="ls-lab">${t.ls_span} (${t.years_unit})</div></div>
+      ${ols?`<div class="ls-metric"><div class="ls-val" style="color:${col}">${ols.perYear>=10?ols.perYear.toFixed(0):ols.perYear.toFixed(1)}×</div><div class="ls-lab">${t.ls_peryear}</div></div>
+      <div class="ls-metric"><div class="ls-val">${ols.r2.toFixed(2)}</div><div class="ls-lab">${t.ls_r2}</div></div>`:''}
+      <div class="ls-metric"><div class="ls-val">${fmtX(total)}×</div><div class="ls-lab">${t.ls_total}</div></div>
+      <div class="ls-metric"><div class="ls-val">${withP}/${set.length}</div><div class="ls-lab">${t.p_label}</div></div>
+      <div class="ls-metric" style="min-width:124px"><div class="ls-val" style="font-size:.78rem">${last.n}</div><div class="ls-lab">${t.ls_last}</div></div>
+    </div>
+    <div class="ls-conf">${confHtml}</div>
+    <div class="ls-note">${ols?t.ls_note:t.ls_note_few}</div>`;
+  box.classList.add('show');
+}
+
+/* ═══════════ MAIN CHART ═══════════ */
+const mainC=document.getElementById('mainC'),mCtx=mainC.getContext('2d');
+const MW=625,MH=560;mainC.width=MW;mainC.height=MH;
+const MP={top:38,right:120,bottom:52,left:76};
+const mPW=MW-MP.left-MP.right,mPH=MH-MP.top-MP.bottom;
+const ZY1=2022.8,ZY2=2027,ZL1=5,ZL2=7.7;
+let D={x0:1955,x1:2028,l0:-15,l1:8};
+function computeDomain(){
+  if(activeLab==='all')return {x0:1955,x1:2028,l0:-15,l1:8};
+  const s=models.filter(m=>m.l===activeLab);
+  const ys=s.map(m=>m.y),ls=s.map(m=>Math.log10(m.pf));
+  let x0=Math.min(...ys),x1=Math.max(...ys);
+  const xp=Math.max((x1-x0)*0.10,0.45);x0-=xp;x1+=xp;
+  let l0=Math.min(...ls),l1=Math.max(...ls);
+  if(l1-l0<2){const c=(l0+l1)/2;l0=c-1;l1=c+1;}
+  else{const lp=(l1-l0)*0.12;l0-=lp;l1+=lp;}
+  return {x0,x1,l0,l1};
+}
+const mXp=y=>MP.left+(y-D.x0)/(D.x1-D.x0)*mPW;
+const mYp=v=>MP.top+mPH-(Math.log10(v)-D.l0)/(D.l1-D.l0)*mPH;
+
+function drawMain(){
+  const t=i18n[lang],filt=activeLab!=='all';
+  D=computeDomain();
+  mCtx.clearRect(0,0,MW,MH);mCtx.fillStyle=BRAND.surface;mCtx.fillRect(0,0,MW,MH);
+  if(!filt){
+    [{a:1955,b:2012,c:"#f0eeff"},{a:2012,b:2019.6,c:"#e9f0ff"},{a:2019.6,b:2028,c:"#ece7ff"}]
+     .forEach(e=>{mCtx.fillStyle=e.c;mCtx.fillRect(mXp(e.a),MP.top,mXp(e.b)-mXp(e.a),mPH);});
+    const zx=mXp(ZY1),zw=mXp(ZY2)-mXp(ZY1),zy=mYp(10**ZL2),zh=mYp(10**ZL1)-mYp(10**ZL2);
+    mCtx.fillStyle="rgba(78,0,255,.12)";mCtx.fillRect(zx,zy,zw,zh);
+    mCtx.save();mCtx.strokeStyle=BRAND.primary;mCtx.lineWidth=2;mCtx.setLineDash([6,3]);
+    mCtx.strokeRect(zx,zy,zw,zh);mCtx.restore();
+    mCtx.fillStyle=BRAND.primary;mCtx.font=`600 9px ${FD}`;mCtx.textAlign="left";
+    mCtx.fillText("🔍 ZOOM →",zx+3,zy-4);
+  }else{
+    mCtx.fillStyle=LABS[activeLab].color+"09";mCtx.fillRect(MP.left,MP.top,mPW,mPH);
+  }
+  ticks(D.l0,D.l1,[1,2,3,5,10],8).forEach(l=>{
+    const y=mYp(10**l);
+    mCtx.beginPath();mCtx.strokeStyle=BRAND.grid;mCtx.lineWidth=1;
+    mCtx.moveTo(MP.left,y);mCtx.lineTo(MW-MP.right,y);mCtx.stroke();
+    mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9px ${FM}`;mCtx.textAlign="right";
+    mCtx.fillText("10"+sup(l),MP.left-7,y+3.5);
+  });
+  const showMonth=(D.x1-D.x0)<6;
+  ticks(D.x0,D.x1,showMonth?[0.25,0.5,1]:[1,2,5,10,20,50],7).forEach(v=>{
+    const x=mXp(v);
+    mCtx.beginPath();mCtx.setLineDash([3,4]);mCtx.strokeStyle=BRAND.border;mCtx.lineWidth=1;
+    mCtx.moveTo(x,MP.top);mCtx.lineTo(x,MP.top+mPH);mCtx.stroke();mCtx.setLineDash([]);
+    mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9.3px ${FM}`;mCtx.textAlign="center";
+    mCtx.fillText(yearLabel(v,showMonth),x,MP.top+mPH+15);
+  });
+  mCtx.strokeStyle=BRAND.textMuted;mCtx.lineWidth=1.4;
+  mCtx.beginPath();mCtx.moveTo(MP.left,MP.top);mCtx.lineTo(MP.left,MP.top+mPH);mCtx.lineTo(MW-MP.right,MP.top+mPH);mCtx.stroke();
+  mCtx.save();mCtx.translate(13,MP.top+mPH/2);mCtx.rotate(-Math.PI/2);
+  mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9px ${FD}`;mCtx.textAlign="center";
+  mCtx.fillText(t.chart_yaxis,0,0);mCtx.restore();
+  mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9.5px ${FD}`;mCtx.textAlign="center";
+  mCtx.fillText(t.chart_xaxis,MP.left+mPW/2,MH-8);
+  if(!filt){
+    [[1958,8.6e5/PFD,2012.6,4.7e17/PFD,colors.classic],
+     [2012.6,4.7e17/PFD,2017.8,1.6e23/PFD,colors.deeplearn],
+     [2020.4,3.14e23/PFD,2026.56,2.5e27/PFD,colors.frontier]].forEach(tr=>{
+      mCtx.beginPath();mCtx.setLineDash([8,5]);mCtx.strokeStyle=tr[4]+"88";mCtx.lineWidth=1.8;
+      mCtx.moveTo(mXp(tr[0]),mYp(tr[1]));mCtx.lineTo(mXp(tr[2]),mYp(tr[3]));mCtx.stroke();mCtx.setLineDash([]);
+    });
+  }
+  const set=filt?models.filter(m=>m.l===activeLab):models;
+  const inZoom=m=>!filt&&m.y>=ZY1&&Math.log10(m.pf)>=ZL1;
+  if(filt&&set.length>=3){
+    const o=olsRate(set);
+    if(o){
+      const f=x=>10**(o.inter+o.slope*x)/PFD;
+      mCtx.beginPath();mCtx.setLineDash([7,5]);
+      mCtx.moveTo(mXp(D.x0),mYp(f(D.x0)));mCtx.lineTo(mXp(D.x1),mYp(f(D.x1)));
+      mCtx.strokeStyle=LABS[activeLab].color+"70";mCtx.lineWidth=1.6;mCtx.stroke();mCtx.setLineDash([]);
+      mCtx.fillStyle=LABS[activeLab].color;mCtx.font=`700 9.5px ${FD}`;mCtx.textAlign="left";
+      mCtx.fillText(`MCO: ${o.perYear>=10?o.perYear.toFixed(0):o.perYear.toFixed(1)}× / ${t.years_unit.slice(0,3)}  ·  R²=${o.r2.toFixed(2)}`,MP.left+8,MP.top+14);
+    }
+  }
+  if(filt&&set.length>1){
+    const tr=[...set].sort((a,b)=>a.y-b.y);
+    mCtx.beginPath();
+    tr.forEach((m,i)=>{const x=mXp(m.y),y=mYp(m.pf);i?mCtx.lineTo(x,y):mCtx.moveTo(x,y);});
+    mCtx.strokeStyle=LABS[activeLab].color;mCtx.lineWidth=2.2;
+    mCtx.lineJoin="round";mCtx.lineCap="round";mCtx.stroke();
+  }
+  const labelled=filt?set:set.filter(m=>!inZoom(m));
+  const pts=labelled.map(m=>{
+    const x=mXp(m.y),y=mYp(m.pf);
+    const side=x>MP.left+mPW*0.70?'l':'r';
+    return {m,x,y,lx:side==='l'?x-8:x+8,ly:y+3,side};
+  });
+  deconflict(pts,filt?10.4:9.6,MP.top+8,MP.top+mPH-2);
+  set.forEach(m=>{
+    const x=mXp(m.y),y=mYp(m.pf);
+    if(filt){mCtx.beginPath();mCtx.arc(x,y,10,0,7);mCtx.fillStyle=CONF[m.cf]+"20";mCtx.fill();}
+    dot(mCtx,x,y,colors[m.c],filt?5.5:(inZoom(m)?3.2:5),m.ow);
+  });
+  pts.forEach(p=>{
+    const col=colors[p.m.c];
+    mCtx.beginPath();mCtx.moveTo(p.side==='l'?p.x-6:p.x+6,p.y);mCtx.lineTo(p.lx,p.ly-2.5);
+    mCtx.strokeStyle=col+"55";mCtx.lineWidth=.7;mCtx.stroke();
+    mCtx.fillStyle=col;mCtx.font=`${filt?'600 ':''}8.4px ${FM}`;
+    mCtx.textAlign=p.side==='l'?'right':'left';mCtx.fillText(p.m.n,p.lx,p.ly);
+    mCtx.fillStyle=CONF[p.m.cf];
+    mCtx.fillRect(p.side==='l'?p.lx+2.5:p.lx-4.5,p.ly-6,2,6);
+  });
+}
+
+/* ═══════════ ZOOM CHART ═══════════ */
+const zoomC=document.getElementById('zoomC'),zCtx=zoomC.getContext('2d');
+const ZW=565,ZH=560;zoomC.width=ZW;zoomC.height=ZH;
+const ZP={top:30,right:112,bottom:52,left:96};
+const zPW=ZW-ZP.left-ZP.right,zPH=ZH-ZP.top-ZP.bottom;
+const zXp=y=>ZP.left+(y-ZY1)/(ZY2-ZY1)*zPW;
+const zYp=v=>ZP.top+zPH-(Math.log10(v)-ZL1)/(ZL2-ZL1)*zPH;
+const zoomAll=models.filter(m=>m.y>=ZY1&&Math.log10(m.pf)>=ZL1);
+const zoomSet=()=>activeLab==='all'?zoomAll:zoomAll.filter(m=>m.l===activeLab);
+
+function drawZoom(){
+  const t=i18n[lang],filt=activeLab!=='all';
+  zCtx.clearRect(0,0,ZW,ZH);zCtx.fillStyle=BRAND.surface;zCtx.fillRect(0,0,ZW,ZH);
+  zCtx.fillStyle="#f4f0ff";zCtx.fillRect(ZP.left,ZP.top,zPW,zPH);
+  zCtx.strokeStyle=BRAND.primary;zCtx.lineWidth=2;zCtx.strokeRect(ZP.left,ZP.top,zPW,zPH);
+  for(let l=ZL1;l<=ZL2;l+=.5){
+    const y=zYp(10**l);if(y<ZP.top-1||y>ZP.top+zPH+1)continue;
+    zCtx.beginPath();zCtx.strokeStyle=Number.isInteger(l)?BRAND.border:BRAND.gridSoft;zCtx.lineWidth=1;
+    zCtx.moveTo(ZP.left,y);zCtx.lineTo(ZW-ZP.right,y);zCtx.stroke();
+    if(Number.isInteger(l)){
+      zCtx.fillStyle=BRAND.textMuted;zCtx.font=`9px ${FM}`;zCtx.textAlign="right";
+      zCtx.fillText("10"+sup(l),ZP.left-30,y+3.5);
+      zCtx.fillStyle=BRAND.primaryLt;zCtx.font=`7.5px ${FMono}`;
+      zCtx.fillText("10"+sup(Math.round(l+Math.log10(PFD))),ZP.left-4,y+3.5);
+    }
+  }
+  for(let yr=2023;yr<=2027;yr++){
+    const x=zXp(yr);if(x<ZP.left||x>ZP.left+zPW)continue;
+    zCtx.beginPath();zCtx.setLineDash([3,4]);zCtx.strokeStyle=BRAND.border;zCtx.lineWidth=1;
+    zCtx.moveTo(x,ZP.top);zCtx.lineTo(x,ZP.top+zPH);zCtx.stroke();zCtx.setLineDash([]);
+    zCtx.fillStyle=BRAND.textMuted;zCtx.font=`9.5px ${FM}`;zCtx.textAlign="center";
+    zCtx.fillText(yr,x,ZP.top+zPH+15);
+  }
+  zCtx.strokeStyle=BRAND.primary;zCtx.lineWidth=1.4;
+  zCtx.beginPath();zCtx.moveTo(ZP.left,ZP.top);zCtx.lineTo(ZP.left,ZP.top+zPH);zCtx.lineTo(ZW-ZP.right,ZP.top+zPH);zCtx.stroke();
+  zCtx.save();zCtx.translate(13,ZP.top+zPH/2);zCtx.rotate(-Math.PI/2);
+  zCtx.fillStyle=BRAND.primary;zCtx.font=`8.5px ${FD}`;zCtx.textAlign="center";
+  zCtx.fillText("PF/s-días  ·  FLOP",0,0);zCtx.restore();
+  const xT=zXp(2026.58);
+  zCtx.beginPath();zCtx.setLineDash([5,4]);zCtx.strokeStyle=BRAND.primary+"99";zCtx.lineWidth=1.5;
+  zCtx.moveTo(xT,ZP.top);zCtx.lineTo(xT,ZP.top+zPH);zCtx.stroke();zCtx.setLineDash([]);
+  zCtx.fillStyle=BRAND.primary;zCtx.font=`700 9px ${FD}`;zCtx.textAlign="center";
+  zCtx.fillText(t.zoom_today,xT,ZP.top+zPH+28);
+  const y26=zYp(1e26/PFD);
+  zCtx.beginPath();zCtx.setLineDash([2,3]);zCtx.strokeStyle=BRAND.warn;zCtx.lineWidth=1.4;
+  zCtx.moveTo(ZP.left,y26);zCtx.lineTo(ZW-ZP.right,y26);zCtx.stroke();zCtx.setLineDash([]);
+  zCtx.fillStyle=BRAND.warn;zCtx.font=`700 7.6px ${FM}`;zCtx.textAlign="left";
+  zCtx.fillText("10²⁶ FLOP · EU AI Act",ZP.left+4,y26-4);
+  zCtx.beginPath();zCtx.setLineDash([8,5]);zCtx.strokeStyle=BRAND.primary+(filt?"25":"55");zCtx.lineWidth=1.6;
+  zCtx.moveTo(zXp(2023),zYp(6e24/PFD));zCtx.lineTo(zXp(2026.6),zYp(2.5e27/PFD));zCtx.stroke();zCtx.setLineDash([]);
+  const set=zoomSet();
+  if(filt){
+    zoomAll.filter(m=>m.l!==activeLab).forEach(m=>{
+      zCtx.globalAlpha=.12;dot(zCtx,zXp(m.y),zYp(m.pf),colors[m.c],4.5,m.ow);zCtx.globalAlpha=1;
+    });
+    if(!set.length){
+      zCtx.fillStyle=BRAND.textMuted;zCtx.font=`italic 10.5px ${FD}`;zCtx.textAlign="center";
+      zCtx.fillText(t.ls_zoom_empty,ZP.left+zPW/2,ZP.top+zPH/2);
+    }
+    const tr=[...set].sort((a,b)=>a.y-b.y);
+    if(tr.length>1){
+      zCtx.beginPath();
+      tr.forEach((m,i)=>{const x=zXp(m.y),y=zYp(m.pf);i?zCtx.lineTo(x,y):zCtx.moveTo(x,y);});
+      zCtx.strokeStyle=LABS[activeLab].color;zCtx.lineWidth=2.4;
+      zCtx.lineJoin="round";zCtx.lineCap="round";zCtx.stroke();
+    }
+  }
+  const pts=set.map(m=>{
+    const x=zXp(m.y),y=zYp(m.pf);
+    const side=x>ZP.left+zPW*0.62?'l':'r';
+    return {m,x,y,lx:side==='l'?x-9:x+9,ly:y+3,side};
+  });
+  deconflict(pts,10.6,ZP.top+7,ZP.top+zPH-2);
+  set.forEach(m=>{
+    const x=zXp(m.y),y=zYp(m.pf);
+    zCtx.beginPath();zCtx.arc(x,y,12,0,7);zCtx.fillStyle=CONF[m.cf]+"1c";zCtx.fill();
+    dot(zCtx,x,y,colors[m.c],5.5,m.ow);
+  });
+  pts.forEach(p=>{
+    const col=colors[p.m.c];
+    zCtx.beginPath();zCtx.moveTo(p.side==='l'?p.x-7:p.x+7,p.y);zCtx.lineTo(p.lx,p.ly-2.5);
+    zCtx.strokeStyle=col+"66";zCtx.lineWidth=.8;zCtx.stroke();
+    zCtx.fillStyle=col;
+    zCtx.font=`${(p.m.c==='y2026'||filt)?'600 ':''}9.2px ${FM}`;
+    zCtx.textAlign=p.side==='l'?'right':'left';zCtx.fillText(p.m.n,p.lx,p.ly);
+    zCtx.fillStyle=CONF[p.m.cf];
+    zCtx.fillRect(p.side==='l'?p.lx+2.5:p.lx-4.5,p.ly-6,2,6);
+  });
+}
+
+/* ═══════════ TITLES ═══════════ */
+function updateTitles(){
+  const t=i18n[lang];
+  const tm=document.getElementById('titleMain'),tz=document.getElementById('titleZoom'),hz=document.getElementById('hintZoom');
+  if(activeLab==='all'){
+    tm.textContent=t.t_full;tz.textContent=t.t_zoomfix;hz.textContent=t.hint_all;
+    tm.style.color='';tz.style.color='';
+  }else{
+    const s=models.filter(m=>m.l===activeLab).sort((a,b)=>a.y-b.y);
+    tm.textContent=`${t.t_traj} · ${labName(activeLab)} · ${s[0].d} – ${s[s.length-1].d}`;
+    tm.style.color=LABS[activeLab].color;
+    tz.textContent=`${labName(activeLab)} · ${t.t_ctx}`;
+    tz.style.color=LABS[activeLab].color;
+    hz.textContent=t.hint_lab;
+  }
+}
+
+/* ═══════════ TOOLTIP ═══════════ */
+const tip=document.getElementById('sharedTip');
+function showTip(m,cx,cy){
+  const t=i18n[lang],col=colors[m.c];
+  const pfv=m.pf>=1?m.pf.toLocaleString('es-CO',{maximumSignificantDigits:3}):m.pf.toExponential(2);
+  const fl=m.f.toExponential(1).replace('e+',' × 10^');
+  let paramHtml='';
+  if(m.p){
+    paramHtml=m.pa
+      ?`<div class="t-param">🧩 <b>${fmtParams(m.p)}</b> ${t.p_total} · <b>${fmtParams(m.pa)}</b> ${t.p_active}<br><i>${t.p_moe}${m.pr?' · '+t.p_rumor:''}</i></div>`
+      :`<div class="t-param">🧩 <b>${fmtParams(m.p)}</b> ${t.p_label.toLowerCase()}${m.pr?`<br><i>${t.p_rumor}</i>`:''}</div>`;
+  }
+  tip.style.borderLeftColor=CONF[m.cf];
+  tip.innerHTML=`<span class="t-name">${m.n}</span>
+    <div class="t-row"><span class="t-icon">🏢</span><span>${m.o}</span></div>
+    <div class="t-row"><span class="t-icon">📅</span><span class="t-val">${m.d}</span></div>
+    <div class="t-row"><span class="t-icon">⚡</span><span class="t-val">${pfv}</span>&nbsp;PF/s-d</div>
+    <div class="t-row"><span class="t-icon">Σ</span><span>${fl} FLOP</span></div>
+    ${paramHtml}
+    <div class="t-tags">
+      <span class="t-tag" style="background:${col}">${labName(m.l)}</span>
+      <span class="t-tag" style="background:${CONF[m.cf]}">${t.cf_s[m.cf]}</span>
+      ${m.ow?`<span class="t-tag" style="background:#64748b">OW</span>`:''}
+    </div>
+    <span class="t-src">${m.s}</span>`;
+  const TW=246,TH=m.p?228:192,vw=innerWidth,vh=innerHeight;
+  let tx=cx+18,ty=cy-TH/2;
+  if(tx+TW>vw-8)tx=cx-TW-14;
+  if(tx<8)tx=8;
+  ty=Math.max(8,Math.min(ty,vh-TH-8));
+  tip.style.left=tx+'px';tip.style.top=ty+'px';tip.style.display='block';
+}
+function hideTip(){tip.style.display='none';}
+function addHover(cv,getSet,xf,yf,cw,ch){
+  cv.addEventListener('mousemove',e=>{
+    const r=cv.getBoundingClientRect(),sx=cw/r.width,sy=ch/r.height;
+    const mx=(e.clientX-r.left)*sx,my=(e.clientY-r.top)*sy;
+    let found=null,best=16;
+    getSet().forEach(m=>{const d=Math.hypot(mx-xf(m.y),my-yf(m.pf));if(d<best){best=d;found=m;}});
+    if(found){cv.style.cursor='pointer';showTip(found,e.clientX,e.clientY);}
+    else{cv.style.cursor='crosshair';hideTip();}
+  });
+  cv.addEventListener('mouseleave',()=>{hideTip();cv.style.cursor='crosshair';});
+}
+addHover(mainC,()=>activeLab==='all'?models:models.filter(m=>m.l===activeLab),mXp,mYp,MW,MH);
+addHover(zoomC,zoomSet,zXp,zYp,ZW,ZH);
+
+/* ═══════════ LANG ═══════════ */
+function applyLang(l){
+  lang=l;const t=i18n[l];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.innerHTML=t[k];});
+  document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('active',o.dataset.lang===l));
+  document.documentElement.lang=l;
+  buildChips();buildConfLegend();buildBrandBox();renderStats();drawAll();
+}
+document.getElementById('langToggle').addEventListener('click',e=>{const o=e.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang);});
+
+function drawAll(){drawMain();drawZoom();updateTitles();}
+buildChips();buildConfLegend();buildBrandBox();drawAll();
+/* redibuja cuando Igra Sans termina de cargar, para que los
+   textos de canvas no queden con la métrica del fallback */
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>drawAll());
+</script>
+</body>
+</html>
