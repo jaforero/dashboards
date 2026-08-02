@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Dashboards con IA · Javier Forero</title>
 <meta name="description" content="Dos portafolios de dashboards de decisión construidos con IA — uno con Claude, otro con ChatGPT Work — bajo la dirección analítica de Javier Forero."/>
+<link rel="canonical" href="https://dashboards.javierforero.co/"/>
+<meta name="theme-color" content="#4e00ff"/>
+<meta name="robots" content="index, follow"/>
+
+<!-- ============ Open Graph / Twitter ============ -->
+<!-- La home no tenía metas sociales: al compartirla en LinkedIn o WhatsApp
+     no se generaba tarjeta. og-image.png ya existe en la raíz del repo. -->
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Javier Forero"/>
+<meta property="og:locale" content="es_CO"/>
+<meta property="og:url" content="https://dashboards.javierforero.co/"/>
+<meta property="og:title" content="Dashboards con IA · Javier Forero"/>
+<meta property="og:description" content="Dos portafolios de dashboards de decisión construidos con IA bajo una misma dirección analítica. Y una pieza abierta: 68 años de cómputo de entrenamiento en IA."/>
+<meta property="og:image" content="https://dashboards.javierforero.co/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Dashboards con IA · Javier Forero"/>
+<meta name="twitter:description" content="Dos portafolios de dashboards de decisión, y una pieza abierta sobre la aceleración del cómputo en IA."/>
+<meta name="twitter:image" content="https://dashboards.javierforero.co/og-image.png"/>
+
+<!-- Favicon auto-contenido (data URI): el repo no tiene favicon compartido. -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234e00ff'/%3E%3Ctext x='32' y='44' font-family='system-ui,-apple-system,sans-serif' font-size='29' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EJF%3C/text%3E%3C/svg%3E"/>
 <!-- ============ Google Analytics 4 (G-MQ3K8EVKV0) ============ -->
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ3K8EVKV0"></script>
@@ -109,6 +132,25 @@ a{text-decoration:none;color:var(--vibrant-blue);}
 .ai .host code{background:var(--soft-lilac);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:.92em;}
 .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px;}
 .meta-chip{background:var(--white);border:1px solid var(--border);color:var(--deep-blue);border-radius:999px;padding:7px 14px;font-size:.78rem;font-weight:700;}
+/* ===== Pieza de divulgación =====
+   Deliberadamente distinta de las tarjetas .ai: banda vertical azul en vez de
+   franja superior de color de laboratorio, ancho completo en vez de columna,
+   y sin elevación al hover. El visitante debe percibir que NO es un tercer
+   portafolio antes de leer una sola palabra. */
+.stitle.pub{border-left-color:var(--vibrant-blue);}
+.pieza{display:grid;grid-template-columns:auto 1fr;background:var(--white);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;margin:20px 0 8px;transition:border-color .16s ease,box-shadow .16s ease;}
+.pieza:hover{border-color:var(--vibrant-blue);box-shadow:0 20px 44px rgba(0,72,255,.14);}
+.pieza .rail{width:7px;background:linear-gradient(180deg,#041c59,#0048ff 55%,#7c4dff);}
+@media(max-width:820px){.pieza{grid-template-columns:1fr;}.pieza .rail{width:100%;height:7px;background:linear-gradient(90deg,#041c59,#0048ff 55%,#7c4dff);}}
+.pieza .body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:12px;}
+.pieza .badge{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:999px;color:#0b3fa8;background:#e8f0ff;border:1px solid #c9dcff;}
+[data-theme="dark"] .pieza .badge{color:#9dbaff;background:#0c1836;border-color:#1e3566;}
+.pieza h2{margin:0;color:var(--deep-blue);font-size:1.3rem;font-weight:800;line-height:1.15;}
+.pieza .lede{margin:0;color:var(--muted);font-size:.9rem;max-width:74ch;}
+.pieza .cta{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;color:#fff;border-radius:999px;padding:10px 20px;font-weight:800;font-size:.88rem;margin-top:2px;background:linear-gradient(90deg,#041c59,#0048ff);transition:filter .15s ease;}
+.pieza .cta:hover{filter:brightness(1.1);color:#fff;}
+.pieza .host{font-size:.74rem;color:var(--muted);}
+.pieza .host code{background:var(--soft-lilac);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:.92em;}
 .note{color:var(--muted);font-size:.82rem;margin:26px 0 8px;padding:14px 16px;background:var(--soft-lilac);border:1px solid var(--border);border-radius:14px;}
 .foot{margin:34px 0 12px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:.8rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 </style>
@@ -180,6 +222,28 @@ a{text-decoration:none;color:var(--vibrant-blue);}
   </div>
 
   <div class="note"><b>¿Por qué dos?</b> No es una competencia de herramientas: es una demostración de que el valor está en el criterio —la pregunta de negocio, la evidencia que merece confianza y la decisión que habilita—, y de que distintas IAs pueden materializar ese criterio en productos analíticos funcionales.</div>
+
+  <div class="stitle pub">Divulgación · datos públicos</div>
+  <div class="sdesc">Datos reales de fuentes citadas, con el nivel de evidencia declarado cifra por cifra. No es una demo de consultoría: es una pieza abierta, hecha para circular.</div>
+
+  <div class="pieza">
+    <div class="rail"></div>
+    <div class="body">
+      <span class="badge">◆ Divulgación · datos reales</span>
+      <h2>La aceleración del cómputo en IA · 1958–2026</h2>
+      <p class="lede">68 años de cómputo de entrenamiento en una sola gráfica: de la neurona artificial de Rosenblatt a los modelos frontera de 2026. 72 modelos con datos de <b>Epoch AI</b>, y cada cifra con su nivel de evidencia declarado —publicado, confirmado, probable, especulativo o tendencia— para que se distinga qué se sabe de qué se infiere.</p>
+      <div class="tags">
+        <span class="tag">Datos reales</span>
+        <span class="tag">Epoch AI · CC BY</span>
+        <span class="tag">Nivel de evidencia</span>
+        <span class="tag">Escala logarítmica</span>
+        <span class="tag">EU AI Act · 10²⁶ FLOP</span>
+        <span class="tag">ES / EN</span>
+      </div>
+      <a class="cta" href="./ia-compute/">Ver la pieza →</a>
+      <div class="host">En este dominio · <code>dashboards.javierforero.co/ia-compute/</code></div>
+    </div>
+  </div>
 
   <div class="foot">
     <span>© <span id="yr"></span> Javier Forero · Dashboards para decisiones · Bogotá, Colombia</span>
