@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>La Aceleración del Cómputo en IA · 1958–2026 · Javier Forero</title>
 <meta name="description" content="68 años de cómputo de entrenamiento en IA, de la neurona artificial de Rosenblatt (1958) a los modelos frontera de 2026. Datos de Epoch AI con nivel de evidencia por modelo. Visualización bilingüe de Javier Forero.">
 <meta name="author" content="Javier Forero">
@@ -28,17 +28,7 @@
 <meta name="twitter:image" content="https://dashboards.javierforero.co/ia-compute/assets/og-image.png?v=2">
 <meta name="twitter:image:alt" content="Curva logarítmica del cómputo de entrenamiento en IA, 1958-2026.">
 
-<!-- ============ Iconos ============ -->
-<!-- Favicon auto-contenido (data URI). No depende de que exista
-     un favicon SVG ni un icono de iOS bajo /assets/ en el repo:
-     cero peticiones, cero 404. Si algún día se unifica un favicon de
-     sitio, basta sustituir esta línea por <link rel="icon" href="/favicon.svg">. -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234e00ff'/%3E%3Ctext x='32' y='44' font-family='system-ui,-apple-system,sans-serif' font-size='29' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EJF%3C/text%3E%3C/svg%3E">
-
-<!-- La tipografía de marca se resuelve por cascada en @font-face (ver el
-     bloque de estilos). Se retira la precarga rel=preload: apuntar a un archivo que puede no
-     existir produce un 404 visible en consola y una petición desperdiciada,
-     y el preload no admite lista de alternativas. -->
 
 <!-- ============ Google Analytics 4 (G-MQ3K8EVKV0) ============ -->
 <link rel="preconnect" href="https://www.googletagmanager.com">
@@ -47,20 +37,15 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  // Subdominio de javierforero.co: la misma propiedad mide ambos sin cambiar el ID.
-  // content_group permite separar esta pieza del resto de dashboards en los informes.
   gtag('config', 'G-MQ3K8EVKV0', {
     content_group: 'ia-compute',
     page_title: 'Aceleración del cómputo en IA · 1958-2026'
   });
-
-  // Helper de eventos: no falla si GA está bloqueado por un ad-blocker.
   function track(name, params){
     try{ if(typeof gtag==='function') gtag('event', name, params||{}); }catch(e){}
   }
 </script>
 
-<!-- ============ Datos estructurados (Schema.org) ============ -->
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -72,21 +57,11 @@
   "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
   "isBasedOn":"https://epoch.ai/data/ai-models",
   "temporalCoverage":"1958/2026",
-  "inLanguage":["es","en"]
+  "inLanguage":["es","en"],
+  "distribution":{"@type":"DataDownload","encodingFormat":"text/csv"}
 }
 </script>
 <style>
-  /* ══════════════════════════════════════════════════
-     TIPOGRAFÍA DE MARCA · Igra Sans (Sergey Godovalov)
-     Fuente única de la identidad Javier Forero.
-     Se declara en 400 y se mapea a todo el rango de
-     pesos; el navegador sintetiza los grados altos.
-  ══════════════════════════════════════════════════ */
-  /* Verificado en el repo: la única fuente disponible es IgraSans.otf, y está
-     duplicada en /assets/fonts/ y /fonts/. Se declaran las cuatro rutas —relativa
-     primero, para que el archivo también funcione abierto en local— y el navegador
-     descarta en silencio las que no resuelvan. Si ninguna carga, cae a la pila del
-     sistema declarada en --font-display sin romper el layout. */
   @font-face{
     font-family:'Igra Sans';
     src:url('../assets/fonts/IgraSans.otf') format('opentype'),
@@ -97,33 +72,13 @@
   }
 
   :root{
-    /* ── PALETA PRIMARIA DE MARCA ── */
-    --jf-primary:#4e00ff;      /* violeta señal — acento principal */
-    --jf-primary-lt:#7c4dff;   /* violeta claro — acento secundario */
-    --jf-secondary:#041c59;    /* azul profundo — fondos oscuros y topbar */
-    --jf-tertiary:#0048ff;     /* azul eléctrico — apoyo */
-
-    /* ── ESCALA DE ERAS (derivada de la paleta) ── */
-    --jf-era1:#041c59;  /* = secundario */
-    --jf-era2:#0048ff;  /* = terciario  */
-    --jf-era3:#7c4dff;  /* = primario claro */
-    --jf-era4:#4e00ff;  /* = primario  */
-    --jf-era5:#8f00e0;  /* extensión: rotación de matiz del primario */
-    --jf-era6:#c9007a;  /* extensión: magenta terminal de la rampa */
-
-    /* ── NEUTROS (tintes del primario, no grises puros) ── */
+    --jf-primary:#4e00ff;--jf-primary-lt:#7c4dff;--jf-secondary:#041c59;--jf-tertiary:#0048ff;
+    --jf-era1:#041c59;--jf-era2:#0048ff;--jf-era3:#7c4dff;--jf-era4:#4e00ff;--jf-era5:#8f00e0;--jf-era6:#c9007a;
     --jf-bg:#f5f4ff;--jf-bg2:#edeaff;--jf-surface:#fff;--jf-border:#ddd6ff;
     --jf-text:#0d0a1e;--jf-text-soft:#4a4568;--jf-text-muted:#8b82b0;
     --jf-grid:#eceaf7;--jf-grid-soft:#f4f2fd;
-
-    /* ── ESCALA SEMÁNTICA DE EVIDENCIA ──
-       Deliberadamente FUERA de la paleta de marca: codifica un
-       juicio sobre el dato, no la identidad. La única excepción
-       es «tendencia», en violeta desaturado, porque esa
-       inferencia sí es propia de la casa. ── */
     --cf-pub:#0e8a5f;--cf-conf:#0f7d8c;--cf-lik:#c07816;--cf-spec:#d12a55;--cf-trend:#7a6ca8;
     --jf-warn-bg:#fffbeb;--jf-warn-bd:#fde68a;--jf-warn-tx:#78350f;
-
     --r:12px;--r-lg:20px;
     --font-display:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',sans-serif;
     --font-body:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -131,9 +86,17 @@
     --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--jf-bg);background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(78,0,255,.10) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 100% 80%,rgba(0,72,255,.06) 0%,transparent 60%);color:var(--jf-text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 60px;}
+  body{background:var(--jf-bg);background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(78,0,255,.10) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 100% 80%,rgba(0,72,255,.06) 0%,transparent 60%);color:var(--jf-text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 60px;-webkit-text-size-adjust:100%;}
 
-  .jf-topbar{width:100%;background:var(--jf-secondary);padding:10px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;gap:12px;flex-wrap:wrap;}
+  /* ── A11Y: foco visible en todos los controles ── */
+  .chip:focus-visible,.tab:focus-visible,.lang-opt:focus-visible,.tb-btn:focus-visible,
+  a:focus-visible,canvas:focus-visible{outline:3px solid var(--jf-primary-lt);outline-offset:2px;border-radius:8px;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
+  }
+
+  .jf-topbar{width:100%;background:var(--jf-secondary);padding:10px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:12px;flex-wrap:wrap;}
   .jf-topbar-logo{font-family:var(--font-display);font-size:1.02rem;color:#fff;letter-spacing:.03em;text-decoration:none;font-weight:600;}
   .jf-topbar-logo span{color:var(--jf-primary-lt);}
   .jf-topbar-back{font-family:var(--font-display);font-size:.72rem;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.72);text-decoration:none;border:1px solid rgba(255,255,255,.22);border-radius:100px;padding:5px 13px;transition:background .25s,color .25s;white-space:nowrap;}
@@ -141,31 +104,31 @@
   .jf-topbar-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
   .jf-topbar-right{display:flex;align-items:center;gap:16px;}
   .jf-topbar-tag{font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);}
-  .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:3px;gap:2px;cursor:pointer;user-select:none;}
-  .lang-opt{display:flex;align-items:center;gap:5px;padding:5px 13px;border-radius:100px;font-size:.65rem;font-weight:700;letter-spacing:.06em;transition:background .25s,color .25s;color:rgba(255,255,255,.55);white-space:nowrap;}
+  .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:3px;gap:2px;user-select:none;}
+  .lang-opt{font-family:var(--font-display);display:flex;align-items:center;gap:5px;padding:6px 13px;border:none;background:none;border-radius:100px;font-size:.65rem;font-weight:700;letter-spacing:.06em;transition:background .25s,color .25s;color:rgba(255,255,255,.55);white-space:nowrap;cursor:pointer;}
   .lang-opt .flag{font-size:.85rem;line-height:1;}
-  .lang-opt.active{background:var(--jf-primary);color:#fff;box-shadow:0 2px 10px rgba(78,0,255,.45);}
+  .lang-opt[aria-pressed="true"]{background:var(--jf-primary);color:#fff;box-shadow:0 2px 10px rgba(78,0,255,.45);}
 
-  .header{max-width:1200px;width:100%;padding:0 24px;text-align:center;margin-bottom:16px;}
-  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--jf-primary);background:rgba(78,0,255,.08);border:1px solid rgba(78,0,255,.2);padding:5px 16px;border-radius:100px;margin-bottom:18px;}
-  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--jf-primary);display:inline-block;animation:pd 2s infinite;}
+  .header{max-width:1200px;width:100%;padding:0 24px;text-align:center;margin-bottom:4px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.57rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--jf-primary);background:rgba(78,0,255,.08);border:1px solid rgba(78,0,255,.2);padding:4px 14px;border-radius:100px;margin-bottom:11px;}
+  .eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--jf-primary);display:inline-block;animation:pd 2s infinite;}
   @keyframes pd{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
-  h1{font-family:var(--font-display);font-size:clamp(1.7rem,4.5vw,2.9rem);font-weight:700;line-height:1.14;margin-bottom:14px;letter-spacing:-.005em;}
+  h1{font-family:var(--font-display);font-size:clamp(1.32rem,3vw,2.1rem);font-weight:700;line-height:1.2;margin:0 auto 9px;letter-spacing:-.012em;max-width:900px;}
   h1 .gradient{background:linear-gradient(120deg,var(--jf-primary) 0%,var(--jf-primary-lt) 50%,var(--jf-tertiary) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .deck{font-size:.9rem;color:var(--jf-text-soft);max-width:700px;margin:0 auto;line-height:1.7;font-weight:400;}
-  .byline{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;color:var(--jf-text-muted);margin-top:14px;padding:6px 14px;background:var(--jf-bg2);border-radius:100px;border:1px solid var(--jf-border);}
-  .byline::before{content:'✦';color:var(--jf-primary-lt);font-size:.6rem;}
-  .freshness{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font-size:.62rem;font-weight:600;color:var(--cf-pub);background:rgba(14,138,95,.08);border:1px solid rgba(14,138,95,.25);padding:4px 13px;border-radius:100px;}
-  .freshness::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cf-pub);animation:pd 2s infinite;}
+  .deck{font-size:.82rem;color:var(--jf-text-soft);max-width:640px;margin:0 auto;line-height:1.6;font-weight:400;}
+  .meta-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:11px;}
+  .byline{display:inline-flex;align-items:center;gap:7px;font-size:.63rem;color:var(--jf-text-muted);padding:4px 12px;background:var(--jf-bg2);border-radius:100px;border:1px solid var(--jf-border);}
+  .byline::before{content:'✦';color:var(--jf-primary-lt);font-size:.56rem;}
+  .freshness{display:inline-flex;align-items:center;gap:6px;font-size:.6rem;font-weight:600;color:var(--cf-pub);background:rgba(14,138,95,.08);border:1px solid rgba(14,138,95,.25);padding:4px 12px;border-radius:100px;}
+  .freshness::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--cf-pub);animation:pd 2s infinite;}
 
-  /* ── TABS ── */
-  .tabs-wrap{max-width:1200px;width:100%;padding:0 16px;margin-top:26px;margin-bottom:6px;}
+  .tabs-wrap{max-width:1200px;width:100%;padding:0 16px;margin-top:18px;margin-bottom:4px;}
   .tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;background:var(--jf-surface);border:1px solid var(--jf-border);border-radius:100px;padding:6px;margin:0 auto;width:fit-content;max-width:100%;box-shadow:0 4px 20px rgba(78,0,255,.07);}
   .tab{font-family:var(--font-display);display:inline-flex;align-items:center;gap:8px;padding:9px 22px;border-radius:100px;font-size:.76rem;font-weight:600;color:var(--jf-text-soft);cursor:pointer;user-select:none;transition:all .25s cubic-bezier(.22,.68,0,1.2);white-space:nowrap;border:none;background:none;letter-spacing:.01em;}
   .tab:hover{background:var(--jf-bg2);color:var(--jf-primary);}
-  .tab.active{background:linear-gradient(135deg,var(--jf-primary),var(--jf-primary-lt));color:#fff;box-shadow:0 4px 16px rgba(78,0,255,.35);}
+  .tab[aria-selected="true"]{background:linear-gradient(135deg,var(--jf-primary),var(--jf-primary-lt));color:#fff;box-shadow:0 4px 16px rgba(78,0,255,.35);}
   .tab .tnum{font-size:.6rem;font-weight:700;opacity:.5;font-family:var(--font-mono);}
-  .tab.active .tnum{opacity:.75;}
+  .tab[aria-selected="true"] .tnum{opacity:.75;}
   .tab-panel{display:none;width:100%;flex-direction:column;align-items:center;animation:fadeUp .35s cubic-bezier(.22,.68,0,1.2);}
   .tab-panel.active{display:flex;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
@@ -173,12 +136,12 @@
   .filter-zone{max-width:1200px;width:100%;padding:0 16px;margin-top:22px;}
   .filter-label{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--jf-text-muted);text-align:center;margin-bottom:11px;}
   .lab-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
-  .chip{font-family:var(--font-display);display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:.69rem;font-weight:600;border:1.5px solid var(--jf-border);background:var(--jf-surface);color:var(--jf-text-soft);cursor:pointer;user-select:none;transition:all .2s cubic-bezier(.22,.68,0,1.2);white-space:nowrap;}
+  .chip{font-family:var(--font-display);display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;font-size:.69rem;font-weight:600;border:1.5px solid var(--jf-border);background:var(--jf-surface);color:var(--jf-text-soft);cursor:pointer;user-select:none;transition:all .2s cubic-bezier(.22,.68,0,1.2);white-space:nowrap;}
   .chip:hover{transform:translateY(-2px);border-color:var(--jf-primary-lt);box-shadow:0 4px 12px rgba(78,0,255,.12);}
   .chip .cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
   .chip .ccount{font-size:.58rem;font-weight:700;opacity:.55;font-family:var(--font-mono);}
-  .chip.active{color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(4,28,89,.22);}
-  .chip.active .cdot{background:rgba(255,255,255,.9)!important;}
+  .chip[aria-pressed="true"]{color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(4,28,89,.22);}
+  .chip[aria-pressed="true"] .cdot{background:rgba(255,255,255,.9)!important;}
 
   .lab-stats{max-width:1200px;width:100%;padding:0 16px;margin-top:16px;display:none;}
   .lab-stats.show{display:block;animation:fadeUp .3s cubic-bezier(.22,.68,0,1.2);}
@@ -201,23 +164,29 @@
   .b3{background:rgba(78,0,255,.08);color:var(--jf-era4);border-color:rgba(78,0,255,.22);}
 
   .charts-container{display:flex;gap:16px;width:100%;max-width:1210px;align-items:flex-start;flex-wrap:wrap;justify-content:center;padding:0 12px;}
-  .main-chart-wrap{position:relative;flex:1 1 600px;max-width:625px;}
-  .zoom-chart-wrap{position:relative;flex:1 1 540px;max-width:565px;}
+  .main-chart-wrap{position:relative;flex:1 1 600px;max-width:625px;min-width:0;}
+  .zoom-chart-wrap{position:relative;flex:1 1 540px;max-width:565px;min-width:0;}
   .panel-title{font-family:var(--font-display);font-size:.66rem;font-weight:600;color:var(--jf-primary);text-align:center;margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase;min-height:1.1em;}
   .panel-title.main{color:var(--jf-text-soft);}
-  canvas{width:100%!important;border-radius:var(--r);background:var(--jf-surface);border:1px solid var(--jf-border);box-shadow:0 4px 32px rgba(78,0,255,.08);cursor:crosshair;display:block;}
+  canvas{width:100%;border-radius:var(--r);background:var(--jf-surface);border:1px solid var(--jf-border);box-shadow:0 4px 32px rgba(78,0,255,.08);cursor:crosshair;display:block;touch-action:pan-y;}
 
   .tooltip{position:fixed;background:var(--jf-surface);border:1.5px solid var(--jf-border);border-left-width:3px;border-radius:10px;padding:10px 13px;font-size:.68rem;font-family:var(--font-body);pointer-events:none;display:none;z-index:999;width:234px;line-height:1.7;box-shadow:0 6px 26px rgba(78,0,255,.16);}
+  .tooltip.m{width:auto;left:10px!important;right:10px!important;border-left-width:1.5px;border-top-width:4px;font-size:.75rem;padding:12px 15px;box-shadow:0 -6px 32px rgba(4,28,89,.2);}
   .tooltip .t-name{font-family:var(--font-display);font-size:.8rem;font-weight:700;color:var(--jf-text);display:block;margin-bottom:5px;line-height:1.2;}
+  .tooltip.m .t-name{font-size:.92rem;}
   .tooltip .t-row{display:flex;align-items:baseline;gap:5px;font-size:.63rem;color:var(--jf-text-soft);}
+  .tooltip.m .t-row{font-size:.71rem;}
   .tooltip .t-row .t-icon{font-size:.68rem;flex-shrink:0;width:12px;}
   .tooltip .t-row .t-val{font-weight:600;color:var(--jf-text);}
   .tooltip .t-param{background:var(--jf-bg2);border-radius:6px;padding:5px 9px;margin-top:5px;font-size:.62rem;color:var(--jf-text-soft);line-height:1.5;}
+  .tooltip.m .t-param{font-size:.7rem;}
   .tooltip .t-param b{color:var(--jf-primary);font-weight:700;}
   .tooltip .t-param i{font-style:normal;font-size:.55rem;color:var(--jf-text-muted);}
   .tooltip .t-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
   .tooltip .t-tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.53rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;}
+  .tooltip.m .t-tag{font-size:.6rem;padding:3px 10px;}
   .tooltip .t-src{display:block;margin-top:6px;font-size:.55rem;color:var(--jf-text-muted);line-height:1.45;}
+  .tooltip.m .t-src{font-size:.62rem;}
 
   .legend{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;margin-top:14px;font-size:.63rem;color:var(--jf-text-soft);font-weight:500;padding:0 16px;}
   .legend-item{display:flex;align-items:center;gap:6px;}
@@ -231,6 +200,35 @@
   .conf-chip{display:inline-flex;align-items:center;gap:7px;font-size:.64rem;color:var(--jf-text-soft);background:var(--jf-bg);border:1px solid var(--jf-border);padding:5px 12px;border-radius:100px;}
   .conf-chip b{font-weight:700;color:var(--jf-text);}
   .conf-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+  /* ── BARRA DE ACCIONES ── */
+  .toolbar{max-width:1200px;width:100%;padding:0 16px;margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .tb-btn{font-family:var(--font-display);display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:100px;font-size:.7rem;font-weight:600;border:1.5px solid var(--jf-border);background:var(--jf-surface);color:var(--jf-text-soft);cursor:pointer;transition:all .2s cubic-bezier(.22,.68,0,1.2);white-space:nowrap;}
+  .tb-btn:hover{transform:translateY(-2px);border-color:var(--jf-primary);color:var(--jf-primary);box-shadow:0 4px 14px rgba(78,0,255,.14);}
+  .tb-btn.done{background:var(--cf-pub);border-color:var(--cf-pub);color:#fff;}
+  .tb-ico{font-size:.85rem;line-height:1;}
+
+  .era-compare{max-width:1200px;width:100%;padding:0 16px;margin-bottom:24px;}
+  .ec-card{background:var(--jf-surface);border:1px solid var(--jf-border);border-radius:var(--r-lg);padding:20px 26px;box-shadow:0 2px 16px rgba(78,0,255,.05);}
+  .ec-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:5px;}
+  .ec-sub{font-size:.74rem;color:var(--jf-text-soft);line-height:1.65;margin-bottom:16px;}
+  .ec-row{display:grid;grid-template-columns:158px 1fr 96px 96px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--jf-border);}
+  .ec-row:last-of-type{border-bottom:none;}
+  .ec-head{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--jf-text-muted);border-bottom:1px solid var(--jf-border);padding-bottom:8px;}
+  .ec-head div:nth-child(3),.ec-head div:nth-child(4){text-align:center;}
+  .ec-name{font-family:var(--font-display);font-size:.81rem;font-weight:700;line-height:1.25;}
+  .ec-name small{display:block;font-size:.6rem;font-weight:400;color:var(--jf-text-muted);margin-top:2px;letter-spacing:.02em;}
+  .ec-barwrap{position:relative;height:24px;background:var(--jf-bg);border:1px solid var(--jf-border);border-radius:100px;overflow:hidden;}
+  .ec-bar{height:100%;border-radius:100px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-family:var(--font-display);font-size:.69rem;font-weight:700;min-width:56px;transition:width .7s cubic-bezier(.22,.68,0,1.2);}
+  .ec-num{font-family:var(--font-display);font-size:.88rem;font-weight:700;text-align:center;line-height:1.15;}
+  .ec-num small{display:block;font-size:.52rem;font-weight:400;color:var(--jf-text-muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+  .ec-foot{margin-top:14px;padding-top:12px;border-top:1px solid var(--jf-border);font-size:.67rem;color:var(--jf-text-muted);line-height:1.7;}
+  @media(max-width:720px){
+    .ec-row{grid-template-columns:1fr 1fr;gap:8px;}
+    .ec-row .ec-barwrap{grid-column:1/-1;}
+    .ec-head{display:none;}
+  }
+  .era-card .stat{min-width:104px;}
 
   .section-head{text-align:center;margin:28px 0 26px;max-width:1200px;padding:0 16px;}
   .section-head h2{font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin-bottom:8px;letter-spacing:-.005em;}
@@ -297,7 +295,6 @@
   .paramnote{padding:16px 20px;background:var(--jf-bg2);border:1px solid var(--jf-border);border-left:4px solid var(--jf-primary);border-radius:var(--r);font-size:.73rem;color:var(--jf-secondary);line-height:1.75;}
   .paramnote strong{color:var(--jf-primary);font-weight:700;}
 
-  /* ── SISTEMA DE MARCA (tab 3) ── */
   .brandgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px;}
   .brandcol h5{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--jf-text-muted);margin-bottom:9px;}
   .swatches{display:flex;flex-wrap:wrap;gap:6px;}
@@ -313,11 +310,23 @@
   .jf-footer-copy{font-size:.63rem;color:var(--jf-text-muted);font-weight:400;}
 
   @media(max-width:980px){
-    .charts-container{flex-direction:column;align-items:center;}
+    .charts-container{flex-direction:column;align-items:center;gap:22px;}
     .main-chart-wrap,.zoom-chart-wrap{flex:1 1 100%;max-width:100%;width:100%;}
     .jf-topbar{padding:10px 16px;}
     .lab-stats-inner{flex-direction:column;align-items:flex-start;}
     .tab{padding:8px 14px;font-size:.68rem;}
+  }
+  @media(max-width:560px){
+    .jf-topbar-tag{display:none;}
+    .charts-container{padding:0 8px;}
+    .era-badges{gap:6px;margin:16px 0 12px;}
+    .badge{font-size:.56rem;padding:5px 12px;}
+    .chip{padding:8px 13px;font-size:.68rem;}
+    .tb-btn{flex:1 1 auto;justify-content:center;padding:11px 14px;}
+    .insight-inner{padding:22px 20px;}
+    .src-card,.methodology,.paramnote,.ec-card{padding:16px 18px;}
+    .era-card-body{padding:18px 18px 20px;}
+    .era-grid{padding:0 10px;}
   }
 </style>
 </head>
@@ -326,14 +335,13 @@
 <nav class="jf-topbar">
   <div class="jf-topbar-left">
     <a class="jf-topbar-logo" href="https://javierforero.co">Javier<span>Forero</span>.co</a>
-    <!-- Retorno al hub que enlaza esta pieza. Etiqueta neutra ES/EN. -->
     <a class="jf-topbar-back" href="https://dashboards.javierforero.co/claude/">&larr; Dashboards</a>
   </div>
   <div class="jf-topbar-right">
     <span class="jf-topbar-tag" data-i18n="topbar_tag">Divulgación · datos públicos verificables</span>
-    <div class="lang-toggle" id="langToggle">
-      <div class="lang-opt active" data-lang="es"><span class="flag">🇨🇴</span> ES</div>
-      <div class="lang-opt" data-lang="en"><span class="flag">🇺🇸</span> EN</div>
+    <div class="lang-toggle" id="langToggle" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-opt" data-lang="es" aria-pressed="true"><span class="flag" aria-hidden="true">🇨🇴</span> ES</button>
+      <button type="button" class="lang-opt" data-lang="en" aria-pressed="false"><span class="flag" aria-hidden="true">🇺🇸</span> EN</button>
     </div>
   </div>
 </nav>
@@ -342,25 +350,27 @@
   <span class="eyebrow" data-i18n="eyebrow">Visualización de datos · IA &amp; cómputo</span>
   <h1 data-i18n="h1">De una neurona artificial a los modelos frontera de 2026:<br><span class="gradient">cómo la IA rompió la Ley de Moore</span></h1>
   <p class="deck" data-i18n="deck">68 años de carrera computacional en una sola gráfica. Lo que antes tardaba dos años en duplicarse, hoy se multiplica por cinco cada doce meses.</p>
-  <br><div class="byline" data-i18n="byline">Javier Forero · Estadístico con alma de narrador</div>
-  <br><span class="freshness" data-i18n="freshness">Datos actualizados: 1 de agosto de 2026 · Epoch AI (31-jul-2026)</span>
+  <div class="meta-row">
+    <span class="byline" data-i18n="byline">Javier Forero · Estadístico con alma de narrador</span>
+    <span class="freshness" data-i18n="freshness">Datos actualizados: 1 de agosto de 2026 · Epoch AI (31-jul-2026)</span>
+  </div>
 </div>
 
 <div class="tabs-wrap">
-  <div class="tabs" id="tabs">
-    <button class="tab active" data-tab="viz"><span class="tnum">01</span><span data-i18n="tab_viz">Visualización</span></button>
-    <button class="tab" data-tab="sci"><span class="tnum">02</span><span data-i18n="tab_sci">Soporte científico</span></button>
-    <button class="tab" data-tab="src"><span class="tnum">03</span><span data-i18n="tab_src">Referencias y datos</span></button>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Secciones">
+    <button class="tab" role="tab" id="tab-viz" aria-controls="panel-viz" aria-selected="true" data-tab="viz"><span class="tnum" aria-hidden="true">01</span><span data-i18n="tab_viz">Visualización</span></button>
+    <button class="tab" role="tab" id="tab-sci" aria-controls="panel-sci" aria-selected="false" tabindex="-1" data-tab="sci"><span class="tnum" aria-hidden="true">02</span><span data-i18n="tab_sci">Soporte científico</span></button>
+    <button class="tab" role="tab" id="tab-src" aria-controls="panel-src" aria-selected="false" tabindex="-1" data-tab="src"><span class="tnum" aria-hidden="true">03</span><span data-i18n="tab_src">Referencias y datos</span></button>
   </div>
 </div>
 
 <!-- ══════ TAB 1 ══════ -->
-<div class="tab-panel active" id="panel-viz">
+<div class="tab-panel active" id="panel-viz" role="tabpanel" aria-labelledby="tab-viz" tabindex="0">
   <div class="filter-zone">
-    <div class="filter-label" data-i18n="filter_label">Filtrar trayectoria por laboratorio · el eje se autoajusta al período del laboratorio</div>
-    <div class="lab-chips" id="labChips"></div>
+    <div class="filter-label" id="filterLabel" data-i18n="filter_label">Filtrar trayectoria por laboratorio · el eje se autoajusta al período del laboratorio</div>
+    <div class="lab-chips" id="labChips" role="group" aria-labelledby="filterLabel"></div>
   </div>
-  <div class="lab-stats" id="labStats"><div class="lab-stats-inner" id="labStatsInner"></div></div>
+  <div class="lab-stats" id="labStats" aria-live="polite"><div class="lab-stats-inner" id="labStatsInner"></div></div>
   <div class="era-badges">
     <span class="badge b1" data-i18n="badge1">2× cada 2 años · Era Moore (1958–2012)</span>
     <span class="badge b2" data-i18n="badge2">~10× por año · Era Deep Learning (2012–2019)</span>
@@ -369,11 +379,11 @@
   <div class="charts-container">
     <div class="main-chart-wrap">
       <p class="panel-title main" id="titleMain">Vista completa · 1958 – 2026</p>
-      <canvas id="mainC"></canvas>
+      <canvas id="mainC" tabindex="0" role="img" aria-label="Gráfico de cómputo de entrenamiento de modelos de IA entre 1958 y 2026, escala logarítmica."></canvas>
     </div>
     <div class="zoom-chart-wrap">
       <p class="panel-title" id="titleZoom">🔍 Zoom: era frontera (2023 – 2026)</p>
-      <canvas id="zoomC"></canvas>
+      <canvas id="zoomC" tabindex="0" role="img" aria-label="Detalle de la era frontera entre 2023 y 2026."></canvas>
       <p class="zoom-hint" id="hintZoom">Vista ampliada de la zona sombreada del gráfico principal</p>
     </div>
   </div>
@@ -387,6 +397,7 @@
     <div class="legend-item"><div class="lring"></div><span data-i18n="leg7">Pesos abiertos</span></div>
   </div>
   <div class="conf-legend"><div class="conf-legend-inner" id="confLegend"></div></div>
+  <div class="toolbar" id="toolbar"></div>
   <div class="insight">
     <div class="insight-inner">
       <div class="insight-label" data-i18n="insight_label">Lectura clave</div>
@@ -397,15 +408,16 @@
 </div>
 
 <!-- ══════ TAB 2 ══════ -->
-<div class="tab-panel" id="panel-sci">
+<div class="tab-panel" id="panel-sci" role="tabpanel" aria-labelledby="tab-sci" tabindex="0">
   <div class="section-head">
     <h2 data-i18n="sci_h2">El soporte científico de las tres eras</h2>
     <p data-i18n="sci_p">No son etiquetas arbitrarias. Cada era tiene un punto de inflexión documentado, una arquitectura dominante y una ley de escalamiento que la define.</p>
   </div>
+  <div class="era-compare" id="eraCompare"></div>
   <div class="era-grid">
     <div class="era-card era-1">
       <div class="era-card-header">
-        <div class="era-number">I</div>
+        <div class="era-number" aria-hidden="true">I</div>
         <div class="era-period" data-i18n="e1_period">Era I · 1958 – 2012</div>
         <h3 class="era-title" data-i18n="e1_title">La Era Moore</h3>
         <span class="era-rate" data-i18n="e1_rate">2× cada 2 años</span>
@@ -417,21 +429,18 @@
         <div class="formula">C(t) = C₀ · <em>2</em><sup>(t-t₀)/2</sup></div>
         <div class="era-section-label" data-i18n="e1_lbl3">Hitos científicos clave</div>
         <div class="key-papers">
-          <div class="paper"><span class="pauthor">Rosenblatt, F.</span> <span class="pyear">(1958)</span><br><a href="https://psycnet.apa.org/record/1959-09865-001" target="_blank" class="paper-link"><span class="ptitle">"The Perceptron: A Probabilistic Model..."</span></a> — <em>Psychological Review</em></div>
-          <div class="paper"><span class="pauthor">Moore, G. E.</span> <span class="pyear">(1965)</span><br><a href="https://www.cs.utexas.edu/~fussell/courses/cs352h/papers/moore.pdf" target="_blank" class="paper-link"><span class="ptitle">"Cramming More Components onto Integrated Circuits"</span></a></div>
-          <div class="paper"><span class="pauthor">Rumelhart, Hinton &amp; Williams</span> <span class="pyear">(1986)</span><br><a href="https://www.nature.com/articles/323533a0" target="_blank" class="paper-link"><span class="ptitle">"Learning representations by back-propagating errors"</span></a> — <em>Nature</em></div>
-          <div class="paper"><span class="pauthor">LeCun et al.</span> <span class="pyear">(1998)</span><br><a href="https://ieeexplore.ieee.org/document/726791" target="_blank" class="paper-link"><span class="ptitle">"Gradient-Based Learning Applied to Document Recognition"</span></a></div>
+          <div class="paper"><span class="pauthor">Rosenblatt, F.</span> <span class="pyear">(1958)</span><br><a href="https://psycnet.apa.org/record/1959-09865-001" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"The Perceptron: A Probabilistic Model..."</span></a> — <em>Psychological Review</em></div>
+          <div class="paper"><span class="pauthor">Moore, G. E.</span> <span class="pyear">(1965)</span><br><a href="https://www.cs.utexas.edu/~fussell/courses/cs352h/papers/moore.pdf" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Cramming More Components onto Integrated Circuits"</span></a></div>
+          <div class="paper"><span class="pauthor">Rumelhart, Hinton &amp; Williams</span> <span class="pyear">(1986)</span><br><a href="https://www.nature.com/articles/323533a0" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Learning representations by back-propagating errors"</span></a> — <em>Nature</em></div>
+          <div class="paper"><span class="pauthor">LeCun et al.</span> <span class="pyear">(1998)</span><br><a href="https://ieeexplore.ieee.org/document/726791" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Gradient-Based Learning Applied to Document Recognition"</span></a></div>
         </div>
-        <div class="stat-row">
-          <div class="stat"><div class="stat-value">~54 <span data-i18n="years_unit">años</span></div><div class="stat-label" data-i18n="stat_dur">Duración</div></div>
-          <div class="stat"><div class="stat-value">~10¹²×</div><div class="stat-label" data-i18n="stat_growth">Crecimiento</div></div>
-        </div>
+        <div class="stat-row"></div>
       </div>
     </div>
 
     <div class="era-card era-2">
       <div class="era-card-header">
-        <div class="era-number">II</div>
+        <div class="era-number" aria-hidden="true">II</div>
         <div class="era-period" data-i18n="e2_period">Era II · 2012 – 2019</div>
         <h3 class="era-title" data-i18n="e2_title">El Salto del Deep Learning</h3>
         <span class="era-rate" data-i18n="e2_rate">~10× por año</span>
@@ -443,21 +452,18 @@
         <div class="formula">C(t) = C₀ · <em>10</em><sup>(t-t₀)</sup></div>
         <div class="era-section-label" data-i18n="e2_lbl3">Hitos científicos clave</div>
         <div class="key-papers">
-          <div class="paper"><span class="pauthor">Krizhevsky, Sutskever &amp; Hinton</span> <span class="pyear">(2012)</span><br><a href="https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf" target="_blank" class="paper-link"><span class="ptitle">"ImageNet Classification with Deep CNNs"</span></a> — NeurIPS</div>
-          <div class="paper"><span class="pauthor">He et al.</span> <span class="pyear">(2015)</span><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" class="paper-link"><span class="ptitle">"Deep Residual Learning for Image Recognition"</span></a></div>
-          <div class="paper"><span class="pauthor">Vaswani et al.</span> <span class="pyear">(2017)</span><br><a href="https://arxiv.org/abs/1706.03762" target="_blank" class="paper-link"><span class="ptitle">"Attention Is All You Need"</span></a></div>
-          <div class="paper"><span class="pauthor">Amodei &amp; Hernandez (OpenAI)</span> <span class="pyear">(2018)</span><br><a href="https://openai.com/index/ai-and-compute/" target="_blank" class="paper-link"><span class="ptitle">"AI and Compute"</span></a></div>
+          <div class="paper"><span class="pauthor">Krizhevsky, Sutskever &amp; Hinton</span> <span class="pyear">(2012)</span><br><a href="https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"ImageNet Classification with Deep CNNs"</span></a> — NeurIPS</div>
+          <div class="paper"><span class="pauthor">He et al.</span> <span class="pyear">(2015)</span><br><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Deep Residual Learning for Image Recognition"</span></a></div>
+          <div class="paper"><span class="pauthor">Vaswani et al.</span> <span class="pyear">(2017)</span><br><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Attention Is All You Need"</span></a></div>
+          <div class="paper"><span class="pauthor">Amodei &amp; Hernandez (OpenAI)</span> <span class="pyear">(2018)</span><br><a href="https://openai.com/index/ai-and-compute/" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"AI and Compute"</span></a></div>
         </div>
-        <div class="stat-row">
-          <div class="stat"><div class="stat-value">~7 <span data-i18n="years_unit">años</span></div><div class="stat-label" data-i18n="stat_dur">Duración</div></div>
-          <div class="stat"><div class="stat-value">~10⁵×</div><div class="stat-label" data-i18n="stat_growth">Crecimiento</div></div>
-        </div>
+        <div class="stat-row"></div>
       </div>
     </div>
 
     <div class="era-card era-3">
       <div class="era-card-header">
-        <div class="era-number">III</div>
+        <div class="era-number" aria-hidden="true">III</div>
         <div class="era-period" data-i18n="e3_period">Era III · 2020 – 2026</div>
         <h3 class="era-title" data-i18n="e3_title">Frontier LLMs &amp; Razonamiento</h3>
         <span class="era-rate" data-i18n="e3_rate">4–5× por año</span>
@@ -470,23 +476,20 @@
         <div class="era-section-content" style="font-size:.73rem;margin-top:4px;color:var(--jf-text-muted);" data-i18n="e3_formula_note">N = parámetros, D = tokens, L = pérdida. Para presupuesto óptimo, N y D crecen proporcionalmente (~20 tokens por parámetro).</div>
         <div class="era-section-label" data-i18n="e3_lbl3">Hitos científicos clave</div>
         <div class="key-papers">
-          <div class="paper"><span class="pauthor">Brown et al. (OpenAI)</span> <span class="pyear">(2020)</span><br><a href="https://arxiv.org/abs/2005.14165" target="_blank" class="paper-link"><span class="ptitle">"Language Models are Few-Shot Learners"</span></a></div>
-          <div class="paper"><span class="pauthor">Kaplan et al.</span> <span class="pyear">(2020)</span><br><a href="https://arxiv.org/abs/2001.08361" target="_blank" class="paper-link"><span class="ptitle">"Scaling Laws for Neural Language Models"</span></a></div>
-          <div class="paper"><span class="pauthor">Hoffmann et al. (DeepMind)</span> <span class="pyear">(2022)</span><br><a href="https://arxiv.org/abs/2203.15556" target="_blank" class="paper-link"><span class="ptitle">"Training Compute-Optimal LLMs" (Chinchilla)</span></a></div>
-          <div class="paper"><span class="pauthor">Dubey et al. (Meta AI)</span> <span class="pyear">(2024)</span><br><a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" class="paper-link"><span class="ptitle">"The Llama 3 Herd of Models"</span></a> — 405B, cifra publicada</div>
-          <div class="paper"><span class="pauthor">Epoch AI</span> <span class="pyear">(2026)</span><br><a href="https://epoch.ai/trends" target="_blank" class="paper-link"><span class="ptitle">"Trends in Artificial Intelligence" — dashboard</span></a></div>
+          <div class="paper"><span class="pauthor">Brown et al. (OpenAI)</span> <span class="pyear">(2020)</span><br><a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Language Models are Few-Shot Learners"</span></a></div>
+          <div class="paper"><span class="pauthor">Kaplan et al.</span> <span class="pyear">(2020)</span><br><a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Scaling Laws for Neural Language Models"</span></a></div>
+          <div class="paper"><span class="pauthor">Hoffmann et al. (DeepMind)</span> <span class="pyear">(2022)</span><br><a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Training Compute-Optimal LLMs" (Chinchilla)</span></a></div>
+          <div class="paper"><span class="pauthor">Dubey et al. (Meta AI)</span> <span class="pyear">(2024)</span><br><a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"The Llama 3 Herd of Models"</span></a> — 405B, cifra publicada</div>
+          <div class="paper"><span class="pauthor">Epoch AI</span> <span class="pyear">(2026)</span><br><a href="https://epoch.ai/trends" target="_blank" rel="noopener" class="paper-link"><span class="ptitle">"Trends in Artificial Intelligence" — dashboard</span></a></div>
         </div>
-        <div class="stat-row">
-          <div class="stat"><div class="stat-value">~6 <span data-i18n="years_unit">años</span></div><div class="stat-label" data-i18n="stat_dur">Duración</div></div>
-          <div class="stat"><div class="stat-value">~8,000×</div><div class="stat-label" data-i18n="stat_growth">Crecimiento</div></div>
-        </div>
+        <div class="stat-row"></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ══════ TAB 3 ══════ -->
-<div class="tab-panel" id="panel-src">
+<div class="tab-panel" id="panel-src" role="tabpanel" aria-labelledby="tab-src" tabindex="0">
   <div class="section-head">
     <h2 data-i18n="src_h2">Referencias y fuentes de datos</h2>
     <p data-i18n="src_p">Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo, la nota metodológica sobre lo que aún no se puede verificar, y el sistema de marca aplicado.</p>
@@ -496,20 +499,20 @@
     <div class="src-grid">
       <div>
         <div class="src-group-label" data-i18n="src_db_label">📊 Bases de datos de referencia</div>
-        <div class="src-item"><span class="src-num">[1]</span><div><strong>Epoch AI</strong> — <em>Frontier / Notable AI Models</em> (CSV, act. 31-jul-2026). Fuente primaria de las cifras de cómputo, de los conteos de parámetros y de las etiquetas de confianza.<br><a href="https://epoch.ai/data/ai-models" target="_blank">epoch.ai/data/ai-models</a></div></div>
-        <div class="src-item"><span class="src-num">[2]</span><div><strong>Epoch AI</strong> — <em>Trends in Artificial Intelligence</em> (dashboard, act. feb-2026). Tasa frontera de ~5× anual desde 2020.<br><a href="https://epoch.ai/trends" target="_blank">epoch.ai/trends</a></div></div>
-        <div class="src-item"><span class="src-num">[3]</span><div><strong>Our World in Data</strong> — <em>AI Training Computation</em> (reproduce los datos de Epoch AI bajo licencia CC-BY)<br><a href="https://ourworldindata.org/grapher/ai-training-computation" target="_blank">ourworldindata.org</a></div></div>
-        <div class="src-item"><span class="src-num">[4]</span><div><strong>Stanford HAI</strong> — <em>AI Index Report</em> (su capítulo de cómputo también se apoya en Epoch AI)<br><a href="https://aiindex.stanford.edu/report/" target="_blank">aiindex.stanford.edu</a></div></div>
-        <div class="src-item"><span class="src-num">[5]</span><div><strong>AI Release Tracker</strong> — cronología de lanzamientos 2022–2026, usada para fechar los modelos de 2026<br><a href="https://aireleasetracker.com/" target="_blank">aireleasetracker.com</a></div></div>
+        <div class="src-item"><span class="src-num">[1]</span><div><strong>Epoch AI</strong> — <em>Frontier / Notable AI Models</em> (CSV, act. 31-jul-2026). Fuente primaria de las cifras de cómputo, de los conteos de parámetros y de las etiquetas de confianza.<br><a href="https://epoch.ai/data/ai-models" target="_blank" rel="noopener">epoch.ai/data/ai-models</a></div></div>
+        <div class="src-item"><span class="src-num">[2]</span><div><strong>Epoch AI</strong> — <em>Trends in Artificial Intelligence</em> (dashboard, act. feb-2026). Tasa frontera de ~5× anual desde 2020.<br><a href="https://epoch.ai/trends" target="_blank" rel="noopener">epoch.ai/trends</a></div></div>
+        <div class="src-item"><span class="src-num">[3]</span><div><strong>Our World in Data</strong> — <em>AI Training Computation</em> (reproduce los datos de Epoch AI bajo licencia CC-BY)<br><a href="https://ourworldindata.org/grapher/ai-training-computation" target="_blank" rel="noopener">ourworldindata.org</a></div></div>
+        <div class="src-item"><span class="src-num">[4]</span><div><strong>Stanford HAI</strong> — <em>AI Index Report</em> (su capítulo de cómputo también se apoya en Epoch AI)<br><a href="https://aiindex.stanford.edu/report/" target="_blank" rel="noopener">aiindex.stanford.edu</a></div></div>
+        <div class="src-item"><span class="src-num">[5]</span><div><strong>AI Release Tracker</strong> — cronología de lanzamientos 2022–2026, usada para fechar los modelos de 2026<br><a href="https://aireleasetracker.com/" target="_blank" rel="noopener">aireleasetracker.com</a></div></div>
       </div>
       <div>
         <div class="src-group-label" data-i18n="src_papers_label">🔑 Cifras publicadas por los laboratorios</div>
-        <div class="src-item"><span class="src-num">[6]</span><div><strong>Brown et al.</strong> (2020) — GPT-3: 175B parámetros, 3.14e23 FLOP <em>reportados en el paper</em><br><a href="https://arxiv.org/abs/2005.14165" target="_blank">arXiv:2005.14165</a></div></div>
-        <div class="src-item"><span class="src-num">[7]</span><div><strong>Hoffmann et al.</strong> (2022) — Chinchilla: 70B, 5.76e23 FLOP<br><a href="https://arxiv.org/abs/2203.15556" target="_blank">arXiv:2203.15556</a></div></div>
-        <div class="src-item"><span class="src-num">[8]</span><div><strong>Almazrouei et al.</strong> (2023) — Falcon-180B: <em>43,500 petaFLOP-días reportados en la Tabla 1</em>, la unidad exacta de este gráfico<br><a href="https://arxiv.org/abs/2311.16867" target="_blank">arXiv:2311.16867</a></div></div>
-        <div class="src-item"><span class="src-num">[9]</span><div><strong>Dubey et al.</strong> (2024) — Llama 3.1 405B: 3.8e25 FLOP, 15.6T tokens<br><a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank">Meta AI</a></div></div>
-        <div class="src-item"><span class="src-num">[10]</span><div><strong>Amodei &amp; Hernandez</strong> (2018) — <em>AI and Compute</em>, base de las cifras previas a 2020<br><a href="https://openai.com/index/ai-and-compute/" target="_blank">openai.com</a></div></div>
-        <div class="src-item"><span class="src-num">[11]</span><div><strong>Sevilla &amp; Roldán</strong> (Epoch, 2024) — <em>Frontier compute grows 4–5×/year</em><br><a href="https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year" target="_blank">epoch.ai/blog</a></div></div>
+        <div class="src-item"><span class="src-num">[6]</span><div><strong>Brown et al.</strong> (2020) — GPT-3: 175B parámetros, 3.14e23 FLOP <em>reportados en el paper</em><br><a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">arXiv:2005.14165</a></div></div>
+        <div class="src-item"><span class="src-num">[7]</span><div><strong>Hoffmann et al.</strong> (2022) — Chinchilla: 70B, 5.76e23 FLOP<br><a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">arXiv:2203.15556</a></div></div>
+        <div class="src-item"><span class="src-num">[8]</span><div><strong>Almazrouei et al.</strong> (2023) — Falcon-180B: <em>43,500 petaFLOP-días reportados en la Tabla 1</em>, la unidad exacta de este gráfico<br><a href="https://arxiv.org/abs/2311.16867" target="_blank" rel="noopener">arXiv:2311.16867</a></div></div>
+        <div class="src-item"><span class="src-num">[9]</span><div><strong>Dubey et al.</strong> (2024) — Llama 3.1 405B: 3.8e25 FLOP, 15.6T tokens<br><a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" rel="noopener">Meta AI</a></div></div>
+        <div class="src-item"><span class="src-num">[10]</span><div><strong>Amodei &amp; Hernandez</strong> (2018) — <em>AI and Compute</em>, base de las cifras previas a 2020<br><a href="https://openai.com/index/ai-and-compute/" target="_blank" rel="noopener">openai.com</a></div></div>
+        <div class="src-item"><span class="src-num">[11]</span><div><strong>Sevilla &amp; Roldán</strong> (Epoch, 2024) — <em>Frontier compute grows 4–5×/year</em><br><a href="https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year" target="_blank" rel="noopener">epoch.ai/blog</a></div></div>
       </div>
     </div>
   </div></div>
@@ -518,7 +521,6 @@
 
   <div class="src-block"><div class="paramnote" data-i18n="paramnote"><strong>🧩 Nota sobre los parámetros —</strong> El conteo de parámetros aparece en el tooltip <strong>solo cuando existe una fuente pública</strong>; los modelos cerrados recientes (Claude, Gemini, GPT-5) no lo revelan y el campo simplemente se omite. Para arquitecturas <strong>Mixture-of-Experts</strong> se muestran dos cifras: <em>parámetros totales</em> y <em>parámetros activos</em> por token — esta última es la que gobierna el cómputo de entrenamiento vía la heurística <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. Confundirlas es el error más común al comparar modelos: DeepSeek-V3 tiene 671B totales pero activa solo 37B, así que su cómputo se parece más al de un modelo de 37B que al de uno de 671B. Las cifras marcadas como <em>rumor</em> (GPT-4, Grok) provienen de filtraciones recogidas por Epoch AI y no de los laboratorios.</div></div>
 
-  <!-- ── SISTEMA DE MARCA ── -->
   <div class="src-block"><div class="src-card">
     <div class="src-group-label" data-i18n="brand_label">🎨 Sistema de marca aplicado</div>
     <div id="brandBox"></div>
@@ -527,7 +529,7 @@
   <div class="src-block"><div class="src-card"><div class="src-note" data-i18n="src_note"><strong>Unidad:</strong> 1 PetaFLOP/s-día = 8.64 × 10¹⁹ FLOP (un procesador sosteniendo 10¹⁵ operaciones por segundo durante 24 horas). &nbsp;|&nbsp; <strong>Eje Y:</strong> escala logarítmica base 10 — cada línea de la cuadrícula es un factor de diez. &nbsp;|&nbsp; <strong>Marcadores:</strong> puntos rellenos = modelos cerrados; anillos = modelos de pesos abiertos; la marca vertical de color junto a cada etiqueta indica el nivel de evidencia. &nbsp;|&nbsp; <strong>Umbral regulatorio:</strong> la línea ámbar de 10²⁶ FLOP marca el nivel a partir del cual la EU AI Act clasifica un sistema como de riesgo sistémico. &nbsp;|&nbsp; <strong>Licencia de datos:</strong> los datos de Epoch AI se distribuyen bajo Creative Commons BY.</div></div></div>
 </div>
 
-<div class="tooltip" id="sharedTip"></div>
+<div class="tooltip" id="sharedTip" role="status" aria-live="polite"></div>
 
 <div class="jf-footer">
   <a class="jf-footer-logo" href="https://javierforero.co">javierforero.co</a>
@@ -535,34 +537,24 @@
 </div>
 
 <script>
-/* ═══════════ TOKENS DE MARCA (espejo del CSS) ═══════════ */
+/* ═══════════ TOKENS DE MARCA ═══════════ */
 const BRAND={primary:"#4e00ff",primaryLt:"#7c4dff",secondary:"#041c59",tertiary:"#0048ff",
   bg:"#f5f4ff",bg2:"#edeaff",border:"#ddd6ff",surface:"#ffffff",
-  text:"#0d0a1e",textSoft:"#4a4568",textMuted:"#8b82b0",grid:"#eceaf7",gridSoft:"#f4f2fd",
-  warn:"#c07816"};
-const FD="'Igra Sans','IgraSans',system-ui,sans-serif";      /* display de marca */
-const FM="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"; /* micro-etiquetas */
+  text:"#0d0a1e",textSoft:"#4a4568",textMuted:"#8b82b0",grid:"#eceaf7",gridSoft:"#f4f2fd",warn:"#c07816"};
+const FD="'Igra Sans','IgraSans',system-ui,sans-serif";
+const FM="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
 const FMono="ui-monospace,SFMono-Regular,Menlo,monospace";
-
-/* escala de eras — derivada de la paleta */
 const colors={classic:"#041c59",deeplearn:"#0048ff",transformer:"#7c4dff",frontier:"#4e00ff",y2025:"#8f00e0",y2026:"#c9007a"};
-/* escala semántica de evidencia — fuera de paleta a propósito */
 const CONF={pub:"#0e8a5f",conf:"#0f7d8c",lik:"#c07816",spec:"#d12a55",trend:"#7a6ca8"};
 const CONF_ORDER=["pub","conf","lik","spec","trend"];
-
+const SITE="https://dashboards.javierforero.co/ia-compute/";
 const LABS={
-  all:{name:"Todos",color:"#4e00ff"},
-  openai:{name:"OpenAI",color:"#0f9d76"},
-  anthropic:{name:"Anthropic",color:"#d4794f"},
-  google:{name:"Google DeepMind",color:"#3b7ddd"},
-  xai:{name:"xAI / Grok",color:"#1f2937"},
-  meta:{name:"Meta AI",color:"#0064e0"},
-  deepseek:{name:"DeepSeek",color:"#4d6bfe"},
-  moonshot:{name:"Moonshot / Kimi",color:"#8b5cf6"},
-  alibaba:{name:"Alibaba / Qwen",color:"#e8590c"},
-  zai:{name:"Z.ai / GLM",color:"#0d9488"},
-  microsoft:{name:"Microsoft",color:"#0891b2"},
-  nvidia:{name:"NVIDIA",color:"#76b900"},
+  all:{name:"Todos",color:"#4e00ff"},openai:{name:"OpenAI",color:"#0f9d76"},
+  anthropic:{name:"Anthropic",color:"#d4794f"},google:{name:"Google DeepMind",color:"#3b7ddd"},
+  xai:{name:"xAI / Grok",color:"#1f2937"},meta:{name:"Meta AI",color:"#0064e0"},
+  deepseek:{name:"DeepSeek",color:"#4d6bfe"},moonshot:{name:"Moonshot / Kimi",color:"#8b5cf6"},
+  alibaba:{name:"Alibaba / Qwen",color:"#e8590c"},zai:{name:"Z.ai / GLM",color:"#0d9488"},
+  microsoft:{name:"Microsoft",color:"#0891b2"},nvidia:{name:"NVIDIA",color:"#76b900"},
   academia:{name:"Academia / otros",color:"#64748b"},
 };
 
@@ -590,7 +582,6 @@ const i18n={
   e3_lbl2:"Las leyes de escalamiento (Chinchilla)",
   e3_formula_note:"N = parámetros, D = tokens, L = pérdida. Para presupuesto óptimo, N y D crecen proporcionalmente (~20 tokens por parámetro).",
   e3_lbl3:"Hitos científicos clave",
-  years_unit:"años",stat_dur:"Duración",stat_growth:"Crecimiento",
   insight_label:"Lectura clave",
   insight_text:`"Entrenar un modelo frontera de 2026 consume más cómputo que toda la investigación en IA acumulada antes de 2020."`,
   insight_detail:`El acelerador no fue una sola tecnología, sino la conjunción de cuatro factores: <strong>(1)</strong> hardware especializado (GPUs, luego TPUs y ahora Blackwell/Ironwood), <strong>(2)</strong> una arquitectura escalable (Transformer, 2017), <strong>(3)</strong> capital privado masivo, y desde 2024 <strong>(4)</strong> el <em>reinforcement learning</em> aplicado al razonamiento, que abre un segundo eje de escalamiento. El <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> se vuelve más relevante con cada orden de magnitud.`,
@@ -602,7 +593,7 @@ const i18n={
   methodology:`<strong>⚠️ Nota metodológica sobre el cómputo —</strong> Cada modelo lleva una <strong>etiqueta de confianza tomada del campo <em>Confidence</em> de la base de Epoch AI</strong>, la misma que usan Our World in Data y el AI Index de Stanford. Los laboratorios frontera dejaron de publicar cifras de cómputo después de GPT-4, así que los modelos recientes se apoyan en triangulación (hardware-tiempo, parámetros × tokens, presupuestos Chinchilla-óptimos) o en imputación por benchmarks. <strong>Los modelos de 2026 aún no tienen estimación de cómputo publicada por Epoch</strong>: se ubican sobre la tendencia de 4–5× anual dentro de la ventana documentada de 10²⁶–10²⁷ FLOP y están marcados como «Tendencia». Las tasas por laboratorio se calculan por MCO sobre log₁₀(FLOP) ~ año y heredan esa incertidumbre.`,
   paramnote:`<strong>🧩 Nota sobre los parámetros —</strong> El conteo de parámetros aparece en el tooltip <strong>solo cuando existe una fuente pública</strong>; los modelos cerrados recientes (Claude, Gemini, GPT-5) no lo revelan y el campo simplemente se omite. Para arquitecturas <strong>Mixture-of-Experts</strong> se muestran dos cifras: <em>parámetros totales</em> y <em>parámetros activos</em> por token — esta última es la que gobierna el cómputo de entrenamiento vía la heurística <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. Confundirlas es el error más común al comparar modelos: DeepSeek-V3 tiene 671B totales pero activa solo 37B, así que su cómputo se parece más al de un modelo de 37B que al de uno de 671B. Las cifras marcadas como <em>rumor</em> (GPT-4, Grok) provienen de filtraciones recogidas por Epoch AI y no de los laboratorios.`,
   brand_type_t:"Tipografía",brand_pal_t:"Paleta primaria",brand_era_t:"Escala de eras (derivada)",brand_cf_t:"Escala semántica (fuera de paleta)",
-  brand_type_d:"<strong>Igra Sans</strong> en toda la interfaz: titulares, pestañas, chips, cifras y etiquetas de panel. Se carga por <span style='font-family:var(--font-mono)'>@font-face</span> con respaldo a la pila del sistema. Las micro-etiquetas de los ejes (8–9 px) usan la pila neutra del sistema: Igra Sans es una grotesca ancha de un solo peso y a ese tamaño pierde legibilidad.",
+  brand_type_d:"<strong>Igra Sans</strong> en toda la interfaz: titulares, pestañas, chips, cifras y etiquetas de panel. Se carga por <span style='font-family:var(--font-mono)'>@font-face</span> con respaldo a la pila del sistema. Las micro-etiquetas de los ejes usan la pila neutra del sistema: Igra Sans es una grotesca ancha de un solo peso y a ese tamaño pierde legibilidad.",
   brand_era_d:"Las cuatro primeras eras <em>son</em> los cuatro colores de marca. 2025 y 2026 extienden la rampa rotando el matiz del primario hacia el magenta, para que la secuencia lea como intensidad creciente sin salirse del ADN violeta.",
   brand_cf_d:"Verde–turquesa–ámbar–rojo señalan un juicio sobre el dato, no la identidad. Van deliberadamente fuera de la paleta para que nadie los confunda con un color de marca. La excepción es «Tendencia», en violeta desaturado: esa inferencia sí es de la casa.",
   brand_lab_note:"Los colores de los chips de laboratorio son las identidades de terceros (OpenAI, Anthropic, Google…), no de la marca; aparecen solo en el filtro y en la línea de trayectoria.",
@@ -612,10 +603,11 @@ const i18n={
   ls_note:"Tasa por regresión log-lineal (MCO) sobre log₁₀(FLOP) ~ año.",
   ls_conf_title:"Evidencia:",ls_zoom_empty:"Sin modelos en la ventana frontera.",
   footer_copy:"© 2026 · Javier Forero · Estadístico con alma de narrador",
-  chart_xaxis:"Año",chart_yaxis:"Cómputo de entrenamiento (PetaFLOP/s-días)",zoom_today:"▲ HOY",
+  chart_xaxis:"Año",chart_yaxis:"Cómputo de entrenamiento (PetaFLOP/s-días)",chart_yaxis_s:"PF/s-días",zoom_today:"▲ HOY",
   t_full:"Vista completa · 1958 – 2026",t_zoomfix:"🔍 Zoom: era frontera (2023 – 2026)",
   hint_all:"Vista ampliada de la zona sombreada del gráfico principal",
   hint_lab:"El laboratorio en contexto: sus modelos frente a los de la competencia",
+  hint_touch:"👆 Toca cualquier punto para ver su ficha completa",
   t_traj:"Trayectoria",t_ctx:"En contexto frontera",
   lab_all:"Todos",lab_academia:"Academia / otros",
   conf_title:"Nivel de evidencia de cada cifra de cómputo",
@@ -623,6 +615,11 @@ const i18n={
   cf_s:{pub:"Publicado",conf:"Alta",lik:"Probable",spec:"Especulativo",trend:"Tendencia"},
   p_total:"totales",p_active:"activos/token",p_rumor:"filtrado, no confirmado",p_moe:"MoE",p_label:"Parámetros",
   months:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+  tb_png:"Descargar gráfico",tb_csv:"Descargar datos (CSV)",tb_link:"Copiar enlace de esta vista",
+  tb_copied:"¡Enlace copiado!",tb_done:"Listo",
+  png_title:"Cómo la IA rompió la Ley de Moore · 1958–2026",
+  png_sub:"Cómputo de entrenamiento de 72 modelos · escala logarítmica",
+  png_src:"Datos: Epoch AI (CC BY) · OpenAI AI and Compute",
  },
  en:{
   topbar_tag:"Explainer · verifiable public data",eyebrow:"Data Visualization · AI &amp; Compute",
@@ -646,7 +643,6 @@ const i18n={
   e3_lbl2:"Scaling laws (Chinchilla)",
   e3_formula_note:"N = parameters, D = tokens, L = loss. For an optimal budget, N and D scale proportionally (~20 tokens per parameter).",
   e3_lbl3:"Key scientific milestones",
-  years_unit:"years",stat_dur:"Duration",stat_growth:"Growth",
   insight_label:"Key takeaway",
   insight_text:`"Training a single 2026 frontier model consumes more compute than all AI research accumulated before 2020."`,
   insight_detail:`The accelerator was not a single technology, but the convergence of four factors: <strong>(1)</strong> specialized hardware (GPUs, then TPUs, now Blackwell/Ironwood), <strong>(2)</strong> a scalable architecture (Transformer, 2017), <strong>(3)</strong> massive private capital, and since 2024 <strong>(4)</strong> <em>reinforcement learning</em> applied to reasoning, opening a second scaling axis. <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> becomes more relevant with every order of magnitude.`,
@@ -658,7 +654,7 @@ const i18n={
   methodology:`<strong>⚠️ Methodological note on compute —</strong> Every model carries a <strong>confidence label taken from the <em>Confidence</em> field of the Epoch AI database</strong> — the same source used by Our World in Data and Stanford's AI Index. Frontier labs stopped publishing compute figures after GPT-4, so recent models rely on triangulation (hardware-time, parameters × tokens, Chinchilla-optimal budgets) or benchmark imputation. <strong>2026 models have no published Epoch compute estimate yet</strong>: they are placed along the 4–5×/year trend within the documented 10²⁶–10²⁷ FLOP window and flagged as "Trend". Per-lab rates use OLS on log₁₀(FLOP) ~ year and inherit that uncertainty.`,
   paramnote:`<strong>🧩 Note on parameters —</strong> Parameter counts appear in the tooltip <strong>only where a public source exists</strong>; recent closed models (Claude, Gemini, GPT-5) do not disclose them and the field is simply omitted. For <strong>Mixture-of-Experts</strong> architectures two figures are shown: <em>total parameters</em> and <em>active parameters</em> per token — the latter governs training compute via the <span style="font-family:var(--font-mono)">C ≈ 6ND</span> heuristic. Confusing them is the most common error when comparing models: DeepSeek-V3 has 671B total but activates only 37B, so its compute resembles a 37B model far more than a 671B one. Figures marked <em>rumoured</em> (GPT-4, Grok) come from leaks collected by Epoch AI, not from the labs.`,
   brand_type_t:"Typography",brand_pal_t:"Primary palette",brand_era_t:"Era scale (derived)",brand_cf_t:"Semantic scale (off-palette)",
-  brand_type_d:"<strong>Igra Sans</strong> throughout the interface: headlines, tabs, chips, figures and panel titles. Loaded via <span style='font-family:var(--font-mono)'>@font-face</span> with a system fallback stack. Axis micro-labels (8–9 px) use the neutral system stack: Igra Sans is a wide single-weight grotesque and loses legibility at that size.",
+  brand_type_d:"<strong>Igra Sans</strong> throughout the interface: headlines, tabs, chips, figures and panel titles. Loaded via <span style='font-family:var(--font-mono)'>@font-face</span> with a system fallback stack. Axis micro-labels use the neutral system stack: Igra Sans is a wide single-weight grotesque and loses legibility at that size.",
   brand_era_d:"The first four eras <em>are</em> the four brand colours. 2025 and 2026 extend the ramp by rotating the primary's hue toward magenta, so the sequence reads as rising intensity without leaving the violet DNA.",
   brand_cf_d:"Green–teal–amber–red signal a judgement about the data, not the identity. They sit deliberately outside the palette so nobody mistakes them for a brand colour. The exception is \"Trend\", in desaturated violet: that inference is the studio's own.",
   brand_lab_note:"Lab chip colours are third-party identities (OpenAI, Anthropic, Google…), not brand colours; they appear only in the filter and the trajectory line.",
@@ -668,10 +664,11 @@ const i18n={
   ls_note:"Rate by log-linear (OLS) regression on log₁₀(FLOP) ~ year.",
   ls_conf_title:"Evidence:",ls_zoom_empty:"No models in the frontier window.",
   footer_copy:"© 2026 · Javier Forero · Statistician with a storyteller's soul",
-  chart_xaxis:"Year",chart_yaxis:"Training compute (PetaFLOP/s-days)",zoom_today:"▲ TODAY",
+  chart_xaxis:"Year",chart_yaxis:"Training compute (PetaFLOP/s-days)",chart_yaxis_s:"PF/s-days",zoom_today:"▲ TODAY",
   t_full:"Full view · 1958 – 2026",t_zoomfix:"🔍 Zoom: frontier era (2023 – 2026)",
   hint_all:"Expanded view of the shaded region in the main chart",
   hint_lab:"The lab in context: its models against the competition",
+  hint_touch:"👆 Tap any point to see its full record",
   t_traj:"Trajectory",t_ctx:"In frontier context",
   lab_all:"All",lab_academia:"Academia / other",
   conf_title:"Evidence level behind each compute figure",
@@ -679,9 +676,15 @@ const i18n={
   cf_s:{pub:"Published",conf:"High",lik:"Likely",spec:"Speculative",trend:"Trend"},
   p_total:"total",p_active:"active/token",p_rumor:"leaked, unconfirmed",p_moe:"MoE",p_label:"Parameters",
   months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+  tb_png:"Download chart",tb_csv:"Download data (CSV)",tb_link:"Copy link to this view",
+  tb_copied:"Link copied!",tb_done:"Done",
+  png_title:"How AI broke Moore's Law · 1958–2026",
+  png_sub:"Training compute of 72 models · logarithmic scale",
+  png_src:"Data: Epoch AI (CC BY) · OpenAI AI and Compute",
  }
 };
-let lang='es';
+i18n.es.years_unit="años";i18n.es.stat_dur="Duración";i18n.es.stat_growth="Crecimiento";
+i18n.en.years_unit="years";i18n.en.stat_dur="Duration";i18n.en.stat_growth="Growth";
 
 /* ═══════════ DATA ═══════════ */
 const PFD=8.64e19;
@@ -760,7 +763,48 @@ const raw=[
  {n:"DeepSeek-V4-Flash",y:2026.58,d:"Jul 2026", f:5.0e25, c:"y2026",     l:"deepseek", cf:"trend",o:"DeepSeek AI",    ow:1,           s:"Sin estimación publicada · ubicado sobre tendencia"},
 ];
 const models=raw.map(m=>({...m,pf:m.f/PFD}));
-let activeLab='all';
+
+/* ═══════════ ESTADO + DEEP LINKING ═══════════ */
+let lang='es', activeLab='all', currentTab='viz';
+const VALID_TABS=['viz','sci','src'];
+function readState(){
+  let fromURL=false;
+  try{
+    const p=new URLSearchParams(location.search);
+    const l=p.get('lang'); if(l==='en'||l==='es'){lang=l;fromURL=true;}
+    const lb=p.get('lab'); if(lb&&LABS[lb])activeLab=lb;
+    const tb=p.get('tab'); if(VALID_TABS.includes(tb))currentTab=tb;
+  }catch(e){}
+  if(!fromURL){
+    let saved=null;
+    try{saved=localStorage.getItem('iac_lang');}catch(e){}
+    if(saved==='en'||saved==='es')lang=saved;
+    else{
+      const nav=((navigator.languages&&navigator.languages[0])||navigator.language||'es').slice(0,2).toLowerCase();
+      lang = nav==='es' ? 'es' : 'en';   // español por defecto solo para hispanohablantes
+      if(nav!=='es'&&nav!=='en')lang='es'; // el resto vuelve al idioma de la casa
+    }
+  }
+}
+function stateURL(){
+  const p=new URLSearchParams();
+  if(lang!=='es')p.set('lang',lang);
+  if(activeLab!=='all')p.set('lab',activeLab);
+  if(currentTab!=='viz')p.set('tab',currentTab);
+  const q=p.toString();
+  return SITE+(q?('?'+q):'');
+}
+function syncURL(){
+  try{
+    const p=new URLSearchParams();
+    if(lang!=='es')p.set('lang',lang);
+    if(activeLab!=='all')p.set('lab',activeLab);
+    if(currentTab!=='viz')p.set('tab',currentTab);
+    const q=p.toString();
+    history.replaceState(null,'',q?('?'+q):location.pathname);
+  }catch(e){}
+  try{localStorage.setItem('iac_lang',lang);}catch(e){}
+}
 
 /* ═══════════ HELPERS ═══════════ */
 const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
@@ -823,15 +867,284 @@ function deconflict(pts,minGap,topB,botB){
   }
 }
 
-/* ═══════════ TABS ═══════════ */
-document.getElementById('tabs').addEventListener('click',e=>{
-  const b=e.target.closest('.tab');if(!b)return;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+b.dataset.tab));
-  hideTip();
-  if(b.dataset.tab==='viz')requestAnimationFrame(drawAll);
-  if(typeof track==='function')track('tab_view',{tab_id:b.dataset.tab});
+/* ═══════════ ERAS NORMALIZADAS ═══════════ */
+const ERAS=[
+  {k:1,y0:1958,   f0:8.6e5,   y1:2012.6, f1:4.7e17,  col:colors.classic},
+  {k:2,y0:2012.6, f0:4.7e17,  y1:2017.8, f1:1.6e23,  col:colors.deeplearn},
+  {k:3,y0:2020.4, f0:3.14e23, y1:2026.56,f1:2.5e27,  col:colors.frontier},
+].map(e=>{
+  const oom=Math.log10(e.f1/e.f0), yrs=e.y1-e.y0, oomY=oom/yrs;
+  return {...e,oom,yrs,oomY,perYear:Math.pow(10,oomY),dblMonths:12*0.30102999566/oomY};
 });
+const ERA_T={
+ es:{h:"Las tres eras en la misma escala",
+   sub:"El crecimiento total no se puede comparar directamente: la Era I duró 55 años y la III lleva 6. Lo comparable es el <strong>ritmo</strong>. La barra mide cuántas veces se multiplica el cómputo cada año, y el tiempo de duplicación traduce ese ritmo a meses.",
+   cEra:"Era",cRate:"Multiplicador anual",cDbl:"Duplicación",cTot:"Crecimiento total",
+   names:["I · Era Moore","II · Deep Learning","III · Frontier LLMs"],
+   mo:"meses",yr:"años",times:"veces",perYear:"× por año",dur:"Duración",dbl:"Duplicación",tot:"Crecimiento",
+   foot:"<strong>Cómo leerlo:</strong> el Deep Learning fue la era más veloz de la historia — duplicaba el cómputo cada 3 meses — pero solo se sostuvo 5 años. La era actual va a menos de la mitad de ese ritmo y aun así duplica cada medio año, algo que la Era Moore tardaba más de un año en lograr.<br><br><em>Estas cifras se calculan desde los extremos de la serie de este gráfico. Las etiquetas de cada tarjeta citan la tasa canónica publicada (Moore: 2× cada 2 años · OpenAI: ~10×/año · Epoch AI: 4–5×/año); los valores medidos aquí difieren ligeramente porque dependen de qué modelos delimitan cada era.</em>"},
+ en:{h:"The three eras on the same scale",
+   sub:"Total growth cannot be compared directly: Era I lasted 55 years, Era III is 6 years old. What is comparable is the <strong>pace</strong>. The bar measures how many times compute multiplies each year, and the doubling time translates that pace into months.",
+   cEra:"Era",cRate:"Annual multiplier",cDbl:"Doubling",cTot:"Total growth",
+   names:["I · Moore Era","II · Deep Learning","III · Frontier LLMs"],
+   mo:"months",yr:"years",times:"fold",perYear:"× per year",dur:"Duration",dbl:"Doubling",tot:"Growth",
+   foot:"<strong>How to read it:</strong> Deep Learning was the fastest era in history — doubling compute every 3 months — but it only held for 5 years. The current era runs at less than half that pace and still doubles every six months, something the Moore Era took over a year to achieve.<br><br><em>These figures are computed from the endpoints of this chart's series. Each card's badge cites the canonical published rate (Moore: 2× every 2 years · OpenAI: ~10×/year · Epoch AI: 4–5×/year); the measured values differ slightly because they depend on which models bound each era.</em>"}
+};
+const fmtRate=v=>v.toFixed(1);
+function fmtOom(oom){const e=Math.floor(oom),m=Math.pow(10,oom-e);return (m<1.5?"":m.toFixed(0)+"×")+"10"+sup(e);}
+function fmtDbl(mo,T){return mo<12?`${mo.toFixed(1)} ${T.mo}`:`${(mo/12).toFixed(1)} ${T.yr}`;}
+function buildEraBlocks(){
+  const T=ERA_T[lang],maxOY=Math.max(...ERAS.map(e=>e.oomY));
+  let h=`<div class="ec-card"><div class="ec-title">${T.h}</div><div class="ec-sub">${T.sub}</div>
+    <div class="ec-row ec-head"><div>${T.cEra}</div><div>${T.cRate}</div><div>${T.cDbl}</div><div>${T.cTot}</div></div>`;
+  ERAS.forEach(e=>{
+    const dbl=fmtDbl(e.dblMonths,T).split(' ');
+    h+=`<div class="ec-row">
+      <div class="ec-name" style="color:${e.col}">${T.names[e.k-1]}<small>${Math.round(e.y0)} – ${Math.round(e.y1)} · ${e.yrs.toFixed(0)} ${T.yr}</small></div>
+      <div class="ec-barwrap"><div class="ec-bar" style="width:${(e.oomY/maxOY*100).toFixed(1)}%;background:${e.col}">${fmtRate(e.perYear)}×</div></div>
+      <div class="ec-num">${dbl[0]}<small>${dbl[1]}</small></div>
+      <div class="ec-num" style="color:${e.col}">${fmtOom(e.oom)}<small>${T.times}</small></div>
+    </div>`;
+  });
+  h+=`<div class="ec-foot">${T.foot}</div></div>`;
+  document.getElementById('eraCompare').innerHTML=h;
+  document.querySelectorAll('.era-card .stat-row').forEach((row,i)=>{
+    const e=ERAS[i];if(!e)return;
+    row.innerHTML=`
+      <div class="stat"><div class="stat-value">${e.yrs.toFixed(0)} ${T.yr}</div><div class="stat-label">${T.dur}</div></div>
+      <div class="stat"><div class="stat-value">${fmtRate(e.perYear)}×</div><div class="stat-label">${T.perYear}</div></div>
+      <div class="stat"><div class="stat-value">${fmtDbl(e.dblMonths,T)}</div><div class="stat-label">${T.dbl}</div></div>
+      <div class="stat"><div class="stat-value">${fmtOom(e.oom)}×</div><div class="stat-label">${T.tot}</div></div>`;
+  });
+}
+
+/* ═══════════ CANVAS: HiDPI + RESPONSIVO ═══════════ */
+const mainC=document.getElementById('mainC'), zoomC=document.getElementById('zoomC');
+let mCtx=mainC.getContext('2d'), zCtx=zoomC.getContext('2d');
+let MAIN={w:625,h:560}, ZOOM={w:565,h:560}, narrow=false;
+let MP={top:38,right:120,bottom:52,left:76}, ZP={top:30,right:112,bottom:52,left:96};
+let mPW=0,mPH=0,zPW=0,zPH=0;
+const ZY1=2022.8,ZY2=2027,ZL1=5,ZL2=7.7;
+let D={x0:1955,x1:2028,l0:-15,l1:8};
+
+function dpr(){return Math.min(window.devicePixelRatio||1,2.5);}
+function prep(cv,w,h){
+  const d=dpr();
+  cv.style.height=h+'px';
+  cv.width=Math.round(w*d); cv.height=Math.round(h*d);
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(d,0,0,d,0,0);
+  return ctx;
+}
+function layout(){
+  const mw=Math.max(260,mainC.parentElement.clientWidth||625);
+  const zw=Math.max(260,zoomC.parentElement.clientWidth||565);
+  narrow = mw<560;
+  MAIN={w:mw,h:narrow?420:560};
+  ZOOM={w:zw,h:narrow?440:560};
+  MP = narrow?{top:30,right:18,bottom:44,left:46}:{top:38,right:120,bottom:52,left:76};
+  ZP = narrow?{top:26,right:18,bottom:44,left:50}:{top:30,right:112,bottom:52,left:96};
+  mPW=MAIN.w-MP.left-MP.right; mPH=MAIN.h-MP.top-MP.bottom;
+  zPW=ZOOM.w-ZP.left-ZP.right; zPH=ZOOM.h-ZP.top-ZP.bottom;
+  mCtx=prep(mainC,MAIN.w,MAIN.h);
+  zCtx=prep(zoomC,ZOOM.w,ZOOM.h);
+}
+const FS=k=>narrow?+(k*1.28).toFixed(1):k;
+
+function computeDomain(){
+  if(activeLab==='all')return {x0:1955,x1:2028,l0:-15,l1:8};
+  const s=models.filter(m=>m.l===activeLab);
+  const ys=s.map(m=>m.y),ls=s.map(m=>Math.log10(m.pf));
+  let x0=Math.min(...ys),x1=Math.max(...ys);
+  const xp=Math.max((x1-x0)*0.10,0.45);x0-=xp;x1+=xp;
+  let l0=Math.min(...ls),l1=Math.max(...ls);
+  if(l1-l0<2){const c=(l0+l1)/2;l0=c-1;l1=c+1;}
+  else{const lp=(l1-l0)*0.12;l0-=lp;l1+=lp;}
+  return {x0,x1,l0,l1};
+}
+const mXp=y=>MP.left+(y-D.x0)/(D.x1-D.x0)*mPW;
+const mYp=v=>MP.top+mPH-(Math.log10(v)-D.l0)/(D.l1-D.l0)*mPH;
+const zXp=y=>ZP.left+(y-ZY1)/(ZY2-ZY1)*zPW;
+const zYp=v=>ZP.top+zPH-(Math.log10(v)-ZL1)/(ZL2-ZL1)*zPH;
+const zoomAll=models.filter(m=>m.y>=ZY1&&Math.log10(m.pf)>=ZL1);
+const zoomSet=()=>activeLab==='all'?zoomAll:zoomAll.filter(m=>m.l===activeLab);
+
+/* ═══════════ MAIN CHART ═══════════ */
+function drawMain(){
+  const t=i18n[lang],filt=activeLab!=='all';
+  D=computeDomain();
+  const W=MAIN.w,H=MAIN.h;
+  mCtx.clearRect(0,0,W,H);mCtx.fillStyle=BRAND.surface;mCtx.fillRect(0,0,W,H);
+  if(!filt){
+    [{a:1955,b:2012,c:"#f0eeff"},{a:2012,b:2019.6,c:"#e9f0ff"},{a:2019.6,b:2028,c:"#ece7ff"}]
+     .forEach(e=>{mCtx.fillStyle=e.c;mCtx.fillRect(mXp(e.a),MP.top,mXp(e.b)-mXp(e.a),mPH);});
+    const zx=mXp(ZY1),zw=mXp(ZY2)-mXp(ZY1),zy=mYp(10**ZL2),zh=mYp(10**ZL1)-mYp(10**ZL2);
+    mCtx.fillStyle="rgba(78,0,255,.12)";mCtx.fillRect(zx,zy,zw,zh);
+    mCtx.save();mCtx.strokeStyle=BRAND.primary;mCtx.lineWidth=2;mCtx.setLineDash([6,3]);
+    mCtx.strokeRect(zx,zy,zw,zh);mCtx.restore();
+    mCtx.fillStyle=BRAND.primary;mCtx.font=`600 ${FS(9)}px ${FD}`;mCtx.textAlign="left";
+    mCtx.fillText("🔍 ZOOM",zx+3,zy-4);
+  }else{
+    mCtx.fillStyle=LABS[activeLab].color+"09";mCtx.fillRect(MP.left,MP.top,mPW,mPH);
+  }
+  ticks(D.l0,D.l1,[1,2,3,5,10],narrow?5:8).forEach(l=>{
+    const y=mYp(10**l);
+    mCtx.beginPath();mCtx.strokeStyle=BRAND.grid;mCtx.lineWidth=1;
+    mCtx.moveTo(MP.left,y);mCtx.lineTo(W-MP.right,y);mCtx.stroke();
+    mCtx.fillStyle=BRAND.textMuted;mCtx.font=`${FS(9)}px ${FM}`;mCtx.textAlign="right";
+    mCtx.fillText("10"+sup(l),MP.left-6,y+3.5);
+  });
+  const showMonth=(D.x1-D.x0)<6;
+  ticks(D.x0,D.x1,showMonth?[0.25,0.5,1]:[1,2,5,10,20,50],narrow?4:7).forEach(v=>{
+    const x=mXp(v);
+    mCtx.beginPath();mCtx.setLineDash([3,4]);mCtx.strokeStyle=BRAND.border;mCtx.lineWidth=1;
+    mCtx.moveTo(x,MP.top);mCtx.lineTo(x,MP.top+mPH);mCtx.stroke();mCtx.setLineDash([]);
+    mCtx.fillStyle=BRAND.textMuted;mCtx.font=`${FS(9.3)}px ${FM}`;mCtx.textAlign="center";
+    mCtx.fillText(yearLabel(v,showMonth),x,MP.top+mPH+15);
+  });
+  mCtx.strokeStyle=BRAND.textMuted;mCtx.lineWidth=1.4;
+  mCtx.beginPath();mCtx.moveTo(MP.left,MP.top);mCtx.lineTo(MP.left,MP.top+mPH);mCtx.lineTo(W-MP.right,MP.top+mPH);mCtx.stroke();
+  mCtx.save();mCtx.translate(narrow?11:13,MP.top+mPH/2);mCtx.rotate(-Math.PI/2);
+  mCtx.fillStyle=BRAND.textMuted;mCtx.font=`${FS(9)}px ${FD}`;mCtx.textAlign="center";
+  mCtx.fillText(narrow?t.chart_yaxis_s:t.chart_yaxis,0,0);mCtx.restore();
+  mCtx.fillStyle=BRAND.textMuted;mCtx.font=`${FS(9.5)}px ${FD}`;mCtx.textAlign="center";
+  mCtx.fillText(t.chart_xaxis,MP.left+mPW/2,H-8);
+  if(!filt){
+    [[1958,8.6e5/PFD,2012.6,4.7e17/PFD,colors.classic],
+     [2012.6,4.7e17/PFD,2017.8,1.6e23/PFD,colors.deeplearn],
+     [2020.4,3.14e23/PFD,2026.56,2.5e27/PFD,colors.frontier]].forEach(tr=>{
+      mCtx.beginPath();mCtx.setLineDash([8,5]);mCtx.strokeStyle=tr[4]+"88";mCtx.lineWidth=1.8;
+      mCtx.moveTo(mXp(tr[0]),mYp(tr[1]));mCtx.lineTo(mXp(tr[2]),mYp(tr[3]));mCtx.stroke();mCtx.setLineDash([]);
+    });
+  }
+  const set=filt?models.filter(m=>m.l===activeLab):models;
+  const inZoom=m=>!filt&&m.y>=ZY1&&Math.log10(m.pf)>=ZL1;
+  if(filt&&set.length>=3){
+    const o=olsRate(set);
+    if(o){
+      const f=x=>10**(o.inter+o.slope*x)/PFD;
+      mCtx.beginPath();mCtx.setLineDash([7,5]);
+      mCtx.moveTo(mXp(D.x0),mYp(f(D.x0)));mCtx.lineTo(mXp(D.x1),mYp(f(D.x1)));
+      mCtx.strokeStyle=LABS[activeLab].color+"70";mCtx.lineWidth=1.6;mCtx.stroke();mCtx.setLineDash([]);
+      mCtx.fillStyle=LABS[activeLab].color;mCtx.font=`700 ${FS(9.5)}px ${FD}`;mCtx.textAlign="left";
+      mCtx.fillText(`MCO: ${o.perYear>=10?o.perYear.toFixed(0):o.perYear.toFixed(1)}×/${i18n[lang].years_unit.slice(0,3)} · R²=${o.r2.toFixed(2)}`,MP.left+6,MP.top+13);
+    }
+  }
+  if(filt&&set.length>1){
+    const tr=[...set].sort((a,b)=>a.y-b.y);
+    mCtx.beginPath();
+    tr.forEach((m,i)=>{const x=mXp(m.y),y=mYp(m.pf);i?mCtx.lineTo(x,y):mCtx.moveTo(x,y);});
+    mCtx.strokeStyle=LABS[activeLab].color;mCtx.lineWidth=2.2;
+    mCtx.lineJoin="round";mCtx.lineCap="round";mCtx.stroke();
+  }
+  set.forEach(m=>{
+    const x=mXp(m.y),y=mYp(m.pf);
+    if(filt){mCtx.beginPath();mCtx.arc(x,y,narrow?12:10,0,7);mCtx.fillStyle=CONF[m.cf]+"20";mCtx.fill();}
+    dot(mCtx,x,y,colors[m.c],narrow?(filt?6.5:5.2):(filt?5.5:(inZoom(m)?3.2:5)),m.ow);
+  });
+  if(narrow)return;                      // en móvil las etiquetas no caben: tooltip por toque
+  const labelled=filt?set:set.filter(m=>!inZoom(m));
+  const pts=labelled.map(m=>{
+    const x=mXp(m.y),y=mYp(m.pf);
+    const side=x>MP.left+mPW*0.70?'l':'r';
+    return {m,x,y,lx:side==='l'?x-8:x+8,ly:y+3,side};
+  });
+  deconflict(pts,filt?10.4:9.6,MP.top+8,MP.top+mPH-2);
+  pts.forEach(p=>{
+    const col=colors[p.m.c];
+    mCtx.beginPath();mCtx.moveTo(p.side==='l'?p.x-6:p.x+6,p.y);mCtx.lineTo(p.lx,p.ly-2.5);
+    mCtx.strokeStyle=col+"55";mCtx.lineWidth=.7;mCtx.stroke();
+    mCtx.fillStyle=col;mCtx.font=`${filt?'600 ':''}8.4px ${FM}`;
+    mCtx.textAlign=p.side==='l'?'right':'left';mCtx.fillText(p.m.n,p.lx,p.ly);
+    mCtx.fillStyle=CONF[p.m.cf];
+    mCtx.fillRect(p.side==='l'?p.lx+2.5:p.lx-4.5,p.ly-6,2,6);
+  });
+}
+
+/* ═══════════ ZOOM CHART ═══════════ */
+function drawZoom(){
+  const t=i18n[lang],filt=activeLab!=='all';
+  const W=ZOOM.w,H=ZOOM.h;
+  zCtx.clearRect(0,0,W,H);zCtx.fillStyle=BRAND.surface;zCtx.fillRect(0,0,W,H);
+  zCtx.fillStyle="#f4f0ff";zCtx.fillRect(ZP.left,ZP.top,zPW,zPH);
+  zCtx.strokeStyle=BRAND.primary;zCtx.lineWidth=2;zCtx.strokeRect(ZP.left,ZP.top,zPW,zPH);
+  for(let l=ZL1;l<=ZL2;l+=.5){
+    const y=zYp(10**l);if(y<ZP.top-1||y>ZP.top+zPH+1)continue;
+    zCtx.beginPath();zCtx.strokeStyle=Number.isInteger(l)?BRAND.border:BRAND.gridSoft;zCtx.lineWidth=1;
+    zCtx.moveTo(ZP.left,y);zCtx.lineTo(W-ZP.right,y);zCtx.stroke();
+    if(Number.isInteger(l)){
+      zCtx.fillStyle=BRAND.textMuted;zCtx.font=`${FS(9)}px ${FM}`;zCtx.textAlign="right";
+      zCtx.fillText("10"+sup(l),ZP.left-(narrow?5:30),y+3.5);
+      if(!narrow){
+        zCtx.fillStyle=BRAND.primaryLt;zCtx.font=`7.5px ${FMono}`;
+        zCtx.fillText("10"+sup(Math.round(l+Math.log10(PFD))),ZP.left-4,y+3.5);
+      }
+    }
+  }
+  for(let yr=2023;yr<=2027;yr++){
+    const x=zXp(yr);if(x<ZP.left||x>ZP.left+zPW)continue;
+    zCtx.beginPath();zCtx.setLineDash([3,4]);zCtx.strokeStyle=BRAND.border;zCtx.lineWidth=1;
+    zCtx.moveTo(x,ZP.top);zCtx.lineTo(x,ZP.top+zPH);zCtx.stroke();zCtx.setLineDash([]);
+    zCtx.fillStyle=BRAND.textMuted;zCtx.font=`${FS(9.5)}px ${FM}`;zCtx.textAlign="center";
+    zCtx.fillText(yr,x,ZP.top+zPH+15);
+  }
+  zCtx.strokeStyle=BRAND.primary;zCtx.lineWidth=1.4;
+  zCtx.beginPath();zCtx.moveTo(ZP.left,ZP.top);zCtx.lineTo(ZP.left,ZP.top+zPH);zCtx.lineTo(W-ZP.right,ZP.top+zPH);zCtx.stroke();
+  zCtx.save();zCtx.translate(narrow?11:13,ZP.top+zPH/2);zCtx.rotate(-Math.PI/2);
+  zCtx.fillStyle=BRAND.primary;zCtx.font=`${FS(8.5)}px ${FD}`;zCtx.textAlign="center";
+  zCtx.fillText(narrow?t.chart_yaxis_s:"PF/s-días  ·  FLOP",0,0);zCtx.restore();
+  const xT=zXp(2026.58);
+  zCtx.beginPath();zCtx.setLineDash([5,4]);zCtx.strokeStyle=BRAND.primary+"99";zCtx.lineWidth=1.5;
+  zCtx.moveTo(xT,ZP.top);zCtx.lineTo(xT,ZP.top+zPH);zCtx.stroke();zCtx.setLineDash([]);
+  zCtx.fillStyle=BRAND.primary;zCtx.font=`700 ${FS(9)}px ${FD}`;zCtx.textAlign="center";
+  zCtx.fillText(t.zoom_today,xT,ZP.top+zPH+28);
+  const y26=zYp(1e26/PFD);
+  zCtx.beginPath();zCtx.setLineDash([2,3]);zCtx.strokeStyle=BRAND.warn;zCtx.lineWidth=1.4;
+  zCtx.moveTo(ZP.left,y26);zCtx.lineTo(W-ZP.right,y26);zCtx.stroke();zCtx.setLineDash([]);
+  zCtx.fillStyle=BRAND.warn;zCtx.font=`700 ${FS(7.6)}px ${FM}`;zCtx.textAlign="left";
+  zCtx.fillText(narrow?"10²⁶ FLOP":"10²⁶ FLOP · EU AI Act",ZP.left+4,y26-4);
+  zCtx.beginPath();zCtx.setLineDash([8,5]);zCtx.strokeStyle=BRAND.primary+(filt?"25":"55");zCtx.lineWidth=1.6;
+  zCtx.moveTo(zXp(2023),zYp(6e24/PFD));zCtx.lineTo(zXp(2026.6),zYp(2.5e27/PFD));zCtx.stroke();zCtx.setLineDash([]);
+  const set=zoomSet();
+  if(filt){
+    zoomAll.filter(m=>m.l!==activeLab).forEach(m=>{
+      zCtx.globalAlpha=.12;dot(zCtx,zXp(m.y),zYp(m.pf),colors[m.c],4.5,m.ow);zCtx.globalAlpha=1;
+    });
+    if(!set.length){
+      zCtx.fillStyle=BRAND.textMuted;zCtx.font=`italic ${FS(10.5)}px ${FD}`;zCtx.textAlign="center";
+      zCtx.fillText(t.ls_zoom_empty,ZP.left+zPW/2,ZP.top+zPH/2);
+    }
+    const tr=[...set].sort((a,b)=>a.y-b.y);
+    if(tr.length>1){
+      zCtx.beginPath();
+      tr.forEach((m,i)=>{const x=zXp(m.y),y=zYp(m.pf);i?zCtx.lineTo(x,y):zCtx.moveTo(x,y);});
+      zCtx.strokeStyle=LABS[activeLab].color;zCtx.lineWidth=2.4;
+      zCtx.lineJoin="round";zCtx.lineCap="round";zCtx.stroke();
+    }
+  }
+  set.forEach(m=>{
+    const x=zXp(m.y),y=zYp(m.pf);
+    zCtx.beginPath();zCtx.arc(x,y,narrow?13:12,0,7);zCtx.fillStyle=CONF[m.cf]+"1c";zCtx.fill();
+    dot(zCtx,x,y,colors[m.c],narrow?6.5:5.5,m.ow);
+  });
+  if(narrow)return;
+  const pts=set.map(m=>{
+    const x=zXp(m.y),y=zYp(m.pf);
+    const side=x>ZP.left+zPW*0.62?'l':'r';
+    return {m,x,y,lx:side==='l'?x-9:x+9,ly:y+3,side};
+  });
+  deconflict(pts,10.6,ZP.top+7,ZP.top+zPH-2);
+  pts.forEach(p=>{
+    const col=colors[p.m.c];
+    zCtx.beginPath();zCtx.moveTo(p.side==='l'?p.x-7:p.x+7,p.y);zCtx.lineTo(p.lx,p.ly-2.5);
+    zCtx.strokeStyle=col+"66";zCtx.lineWidth=.8;zCtx.stroke();
+    zCtx.fillStyle=col;
+    zCtx.font=`${(p.m.c==='y2026'||filt)?'600 ':''}9.2px ${FM}`;
+    zCtx.textAlign=p.side==='l'?'right':'left';zCtx.fillText(p.m.n,p.lx,p.ly);
+    zCtx.fillStyle=CONF[p.m.cf];
+    zCtx.fillRect(p.side==='l'?p.lx+2.5:p.lx-4.5,p.ly-6,2,6);
+  });
+}
 
 /* ═══════════ UI ═══════════ */
 function buildChips(){
@@ -839,14 +1152,15 @@ function buildChips(){
   Object.keys(LABS).forEach(k=>{
     const cnt=k==='all'?models.length:models.filter(m=>m.l===k).length;
     if(cnt===0)return;
-    const c=document.createElement('div');
-    c.className='chip'+(k===activeLab?' active':'');
+    const c=document.createElement('button');
+    c.type='button';c.className='chip';
+    c.setAttribute('aria-pressed',String(k===activeLab));
     if(k===activeLab)c.style.background=LABS[k].color;
-    c.innerHTML=`<span class="cdot" style="background:${LABS[k].color}"></span>${labName(k)}<span class="ccount">${cnt}</span>`;
+    c.innerHTML=`<span class="cdot" style="background:${LABS[k].color}" aria-hidden="true"></span>${labName(k)}<span class="ccount">${cnt}</span>`;
     c.onclick=()=>{
       activeLab=(activeLab===k&&k!=='all')?'all':k;
-      buildChips();renderStats();drawAll();
-      if(typeof track==='function')track('lab_filter',{lab_id:activeLab,lab_name:labName(activeLab)});
+      buildChips();renderStats();drawAll();syncURL();
+      track('lab_filter',{lab_id:activeLab,lab_name:labName(activeLab)});
     };
     box.appendChild(c);
   });
@@ -871,13 +1185,10 @@ function buildBrandBox(){
           <div class="small">ABCDEFG · abcdefg · 0123456789</div>
           <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_type_d}</div>
         </div></div>
-      <div class="brandcol"><h5>${t.brand_pal_t}</h5>
-        <div class="swatches">${pal.map(p=>swatch(p[0],p[1])).join('')}</div></div>
-      <div class="brandcol"><h5>${t.brand_era_t}</h5>
-        <div class="swatches">${era.map(p=>swatch(p[0],p[1])).join('')}</div>
+      <div class="brandcol"><h5>${t.brand_pal_t}</h5><div class="swatches">${pal.map(p=>swatch(p[0],p[1])).join('')}</div></div>
+      <div class="brandcol"><h5>${t.brand_era_t}</h5><div class="swatches">${era.map(p=>swatch(p[0],p[1])).join('')}</div>
         <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_era_d}</div></div>
-      <div class="brandcol"><h5>${t.brand_cf_t}</h5>
-        <div class="swatches">${CONF_ORDER.map(k=>swatch(CONF[k],t.cf_s[k])).join('')}</div>
+      <div class="brandcol"><h5>${t.brand_cf_t}</h5><div class="swatches">${CONF_ORDER.map(k=>swatch(CONF[k],t.cf_s[k])).join('')}</div>
         <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_cf_d}<br><br><em>${t.brand_lab_note}</em></div></div>
     </div>`;
 }
@@ -895,8 +1206,7 @@ function renderStats(){
   });
   const withP=set.filter(m=>m.p).length;
   inner.innerHTML=`
-    <div class="ls-title" style="color:${col}">${labName(activeLab)}
-      <small>${first.d} → ${last.d}</small></div>
+    <div class="ls-title" style="color:${col}">${labName(activeLab)}<small>${first.d} → ${last.d}</small></div>
     <div class="ls-metrics">
       <div class="ls-metric"><div class="ls-val" style="color:${col}">${set.length}</div><div class="ls-lab">${t.ls_models}</div></div>
       <div class="ls-metric"><div class="ls-val">${(last.y-first.y).toFixed(1)}</div><div class="ls-lab">${t.ls_span} (${t.years_unit})</div></div>
@@ -910,213 +1220,11 @@ function renderStats(){
     <div class="ls-note">${ols?t.ls_note:t.ls_note_few}</div>`;
   box.classList.add('show');
 }
-
-/* ═══════════ MAIN CHART ═══════════ */
-const mainC=document.getElementById('mainC'),mCtx=mainC.getContext('2d');
-const MW=625,MH=560;mainC.width=MW;mainC.height=MH;
-const MP={top:38,right:120,bottom:52,left:76};
-const mPW=MW-MP.left-MP.right,mPH=MH-MP.top-MP.bottom;
-const ZY1=2022.8,ZY2=2027,ZL1=5,ZL2=7.7;
-let D={x0:1955,x1:2028,l0:-15,l1:8};
-function computeDomain(){
-  if(activeLab==='all')return {x0:1955,x1:2028,l0:-15,l1:8};
-  const s=models.filter(m=>m.l===activeLab);
-  const ys=s.map(m=>m.y),ls=s.map(m=>Math.log10(m.pf));
-  let x0=Math.min(...ys),x1=Math.max(...ys);
-  const xp=Math.max((x1-x0)*0.10,0.45);x0-=xp;x1+=xp;
-  let l0=Math.min(...ls),l1=Math.max(...ls);
-  if(l1-l0<2){const c=(l0+l1)/2;l0=c-1;l1=c+1;}
-  else{const lp=(l1-l0)*0.12;l0-=lp;l1+=lp;}
-  return {x0,x1,l0,l1};
-}
-const mXp=y=>MP.left+(y-D.x0)/(D.x1-D.x0)*mPW;
-const mYp=v=>MP.top+mPH-(Math.log10(v)-D.l0)/(D.l1-D.l0)*mPH;
-
-function drawMain(){
-  const t=i18n[lang],filt=activeLab!=='all';
-  D=computeDomain();
-  mCtx.clearRect(0,0,MW,MH);mCtx.fillStyle=BRAND.surface;mCtx.fillRect(0,0,MW,MH);
-  if(!filt){
-    [{a:1955,b:2012,c:"#f0eeff"},{a:2012,b:2019.6,c:"#e9f0ff"},{a:2019.6,b:2028,c:"#ece7ff"}]
-     .forEach(e=>{mCtx.fillStyle=e.c;mCtx.fillRect(mXp(e.a),MP.top,mXp(e.b)-mXp(e.a),mPH);});
-    const zx=mXp(ZY1),zw=mXp(ZY2)-mXp(ZY1),zy=mYp(10**ZL2),zh=mYp(10**ZL1)-mYp(10**ZL2);
-    mCtx.fillStyle="rgba(78,0,255,.12)";mCtx.fillRect(zx,zy,zw,zh);
-    mCtx.save();mCtx.strokeStyle=BRAND.primary;mCtx.lineWidth=2;mCtx.setLineDash([6,3]);
-    mCtx.strokeRect(zx,zy,zw,zh);mCtx.restore();
-    mCtx.fillStyle=BRAND.primary;mCtx.font=`600 9px ${FD}`;mCtx.textAlign="left";
-    mCtx.fillText("🔍 ZOOM →",zx+3,zy-4);
-  }else{
-    mCtx.fillStyle=LABS[activeLab].color+"09";mCtx.fillRect(MP.left,MP.top,mPW,mPH);
-  }
-  ticks(D.l0,D.l1,[1,2,3,5,10],8).forEach(l=>{
-    const y=mYp(10**l);
-    mCtx.beginPath();mCtx.strokeStyle=BRAND.grid;mCtx.lineWidth=1;
-    mCtx.moveTo(MP.left,y);mCtx.lineTo(MW-MP.right,y);mCtx.stroke();
-    mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9px ${FM}`;mCtx.textAlign="right";
-    mCtx.fillText("10"+sup(l),MP.left-7,y+3.5);
-  });
-  const showMonth=(D.x1-D.x0)<6;
-  ticks(D.x0,D.x1,showMonth?[0.25,0.5,1]:[1,2,5,10,20,50],7).forEach(v=>{
-    const x=mXp(v);
-    mCtx.beginPath();mCtx.setLineDash([3,4]);mCtx.strokeStyle=BRAND.border;mCtx.lineWidth=1;
-    mCtx.moveTo(x,MP.top);mCtx.lineTo(x,MP.top+mPH);mCtx.stroke();mCtx.setLineDash([]);
-    mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9.3px ${FM}`;mCtx.textAlign="center";
-    mCtx.fillText(yearLabel(v,showMonth),x,MP.top+mPH+15);
-  });
-  mCtx.strokeStyle=BRAND.textMuted;mCtx.lineWidth=1.4;
-  mCtx.beginPath();mCtx.moveTo(MP.left,MP.top);mCtx.lineTo(MP.left,MP.top+mPH);mCtx.lineTo(MW-MP.right,MP.top+mPH);mCtx.stroke();
-  mCtx.save();mCtx.translate(13,MP.top+mPH/2);mCtx.rotate(-Math.PI/2);
-  mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9px ${FD}`;mCtx.textAlign="center";
-  mCtx.fillText(t.chart_yaxis,0,0);mCtx.restore();
-  mCtx.fillStyle=BRAND.textMuted;mCtx.font=`9.5px ${FD}`;mCtx.textAlign="center";
-  mCtx.fillText(t.chart_xaxis,MP.left+mPW/2,MH-8);
-  if(!filt){
-    [[1958,8.6e5/PFD,2012.6,4.7e17/PFD,colors.classic],
-     [2012.6,4.7e17/PFD,2017.8,1.6e23/PFD,colors.deeplearn],
-     [2020.4,3.14e23/PFD,2026.56,2.5e27/PFD,colors.frontier]].forEach(tr=>{
-      mCtx.beginPath();mCtx.setLineDash([8,5]);mCtx.strokeStyle=tr[4]+"88";mCtx.lineWidth=1.8;
-      mCtx.moveTo(mXp(tr[0]),mYp(tr[1]));mCtx.lineTo(mXp(tr[2]),mYp(tr[3]));mCtx.stroke();mCtx.setLineDash([]);
-    });
-  }
-  const set=filt?models.filter(m=>m.l===activeLab):models;
-  const inZoom=m=>!filt&&m.y>=ZY1&&Math.log10(m.pf)>=ZL1;
-  if(filt&&set.length>=3){
-    const o=olsRate(set);
-    if(o){
-      const f=x=>10**(o.inter+o.slope*x)/PFD;
-      mCtx.beginPath();mCtx.setLineDash([7,5]);
-      mCtx.moveTo(mXp(D.x0),mYp(f(D.x0)));mCtx.lineTo(mXp(D.x1),mYp(f(D.x1)));
-      mCtx.strokeStyle=LABS[activeLab].color+"70";mCtx.lineWidth=1.6;mCtx.stroke();mCtx.setLineDash([]);
-      mCtx.fillStyle=LABS[activeLab].color;mCtx.font=`700 9.5px ${FD}`;mCtx.textAlign="left";
-      mCtx.fillText(`MCO: ${o.perYear>=10?o.perYear.toFixed(0):o.perYear.toFixed(1)}× / ${t.years_unit.slice(0,3)}  ·  R²=${o.r2.toFixed(2)}`,MP.left+8,MP.top+14);
-    }
-  }
-  if(filt&&set.length>1){
-    const tr=[...set].sort((a,b)=>a.y-b.y);
-    mCtx.beginPath();
-    tr.forEach((m,i)=>{const x=mXp(m.y),y=mYp(m.pf);i?mCtx.lineTo(x,y):mCtx.moveTo(x,y);});
-    mCtx.strokeStyle=LABS[activeLab].color;mCtx.lineWidth=2.2;
-    mCtx.lineJoin="round";mCtx.lineCap="round";mCtx.stroke();
-  }
-  const labelled=filt?set:set.filter(m=>!inZoom(m));
-  const pts=labelled.map(m=>{
-    const x=mXp(m.y),y=mYp(m.pf);
-    const side=x>MP.left+mPW*0.70?'l':'r';
-    return {m,x,y,lx:side==='l'?x-8:x+8,ly:y+3,side};
-  });
-  deconflict(pts,filt?10.4:9.6,MP.top+8,MP.top+mPH-2);
-  set.forEach(m=>{
-    const x=mXp(m.y),y=mYp(m.pf);
-    if(filt){mCtx.beginPath();mCtx.arc(x,y,10,0,7);mCtx.fillStyle=CONF[m.cf]+"20";mCtx.fill();}
-    dot(mCtx,x,y,colors[m.c],filt?5.5:(inZoom(m)?3.2:5),m.ow);
-  });
-  pts.forEach(p=>{
-    const col=colors[p.m.c];
-    mCtx.beginPath();mCtx.moveTo(p.side==='l'?p.x-6:p.x+6,p.y);mCtx.lineTo(p.lx,p.ly-2.5);
-    mCtx.strokeStyle=col+"55";mCtx.lineWidth=.7;mCtx.stroke();
-    mCtx.fillStyle=col;mCtx.font=`${filt?'600 ':''}8.4px ${FM}`;
-    mCtx.textAlign=p.side==='l'?'right':'left';mCtx.fillText(p.m.n,p.lx,p.ly);
-    mCtx.fillStyle=CONF[p.m.cf];
-    mCtx.fillRect(p.side==='l'?p.lx+2.5:p.lx-4.5,p.ly-6,2,6);
-  });
-}
-
-/* ═══════════ ZOOM CHART ═══════════ */
-const zoomC=document.getElementById('zoomC'),zCtx=zoomC.getContext('2d');
-const ZW=565,ZH=560;zoomC.width=ZW;zoomC.height=ZH;
-const ZP={top:30,right:112,bottom:52,left:96};
-const zPW=ZW-ZP.left-ZP.right,zPH=ZH-ZP.top-ZP.bottom;
-const zXp=y=>ZP.left+(y-ZY1)/(ZY2-ZY1)*zPW;
-const zYp=v=>ZP.top+zPH-(Math.log10(v)-ZL1)/(ZL2-ZL1)*zPH;
-const zoomAll=models.filter(m=>m.y>=ZY1&&Math.log10(m.pf)>=ZL1);
-const zoomSet=()=>activeLab==='all'?zoomAll:zoomAll.filter(m=>m.l===activeLab);
-
-function drawZoom(){
-  const t=i18n[lang],filt=activeLab!=='all';
-  zCtx.clearRect(0,0,ZW,ZH);zCtx.fillStyle=BRAND.surface;zCtx.fillRect(0,0,ZW,ZH);
-  zCtx.fillStyle="#f4f0ff";zCtx.fillRect(ZP.left,ZP.top,zPW,zPH);
-  zCtx.strokeStyle=BRAND.primary;zCtx.lineWidth=2;zCtx.strokeRect(ZP.left,ZP.top,zPW,zPH);
-  for(let l=ZL1;l<=ZL2;l+=.5){
-    const y=zYp(10**l);if(y<ZP.top-1||y>ZP.top+zPH+1)continue;
-    zCtx.beginPath();zCtx.strokeStyle=Number.isInteger(l)?BRAND.border:BRAND.gridSoft;zCtx.lineWidth=1;
-    zCtx.moveTo(ZP.left,y);zCtx.lineTo(ZW-ZP.right,y);zCtx.stroke();
-    if(Number.isInteger(l)){
-      zCtx.fillStyle=BRAND.textMuted;zCtx.font=`9px ${FM}`;zCtx.textAlign="right";
-      zCtx.fillText("10"+sup(l),ZP.left-30,y+3.5);
-      zCtx.fillStyle=BRAND.primaryLt;zCtx.font=`7.5px ${FMono}`;
-      zCtx.fillText("10"+sup(Math.round(l+Math.log10(PFD))),ZP.left-4,y+3.5);
-    }
-  }
-  for(let yr=2023;yr<=2027;yr++){
-    const x=zXp(yr);if(x<ZP.left||x>ZP.left+zPW)continue;
-    zCtx.beginPath();zCtx.setLineDash([3,4]);zCtx.strokeStyle=BRAND.border;zCtx.lineWidth=1;
-    zCtx.moveTo(x,ZP.top);zCtx.lineTo(x,ZP.top+zPH);zCtx.stroke();zCtx.setLineDash([]);
-    zCtx.fillStyle=BRAND.textMuted;zCtx.font=`9.5px ${FM}`;zCtx.textAlign="center";
-    zCtx.fillText(yr,x,ZP.top+zPH+15);
-  }
-  zCtx.strokeStyle=BRAND.primary;zCtx.lineWidth=1.4;
-  zCtx.beginPath();zCtx.moveTo(ZP.left,ZP.top);zCtx.lineTo(ZP.left,ZP.top+zPH);zCtx.lineTo(ZW-ZP.right,ZP.top+zPH);zCtx.stroke();
-  zCtx.save();zCtx.translate(13,ZP.top+zPH/2);zCtx.rotate(-Math.PI/2);
-  zCtx.fillStyle=BRAND.primary;zCtx.font=`8.5px ${FD}`;zCtx.textAlign="center";
-  zCtx.fillText("PF/s-días  ·  FLOP",0,0);zCtx.restore();
-  const xT=zXp(2026.58);
-  zCtx.beginPath();zCtx.setLineDash([5,4]);zCtx.strokeStyle=BRAND.primary+"99";zCtx.lineWidth=1.5;
-  zCtx.moveTo(xT,ZP.top);zCtx.lineTo(xT,ZP.top+zPH);zCtx.stroke();zCtx.setLineDash([]);
-  zCtx.fillStyle=BRAND.primary;zCtx.font=`700 9px ${FD}`;zCtx.textAlign="center";
-  zCtx.fillText(t.zoom_today,xT,ZP.top+zPH+28);
-  const y26=zYp(1e26/PFD);
-  zCtx.beginPath();zCtx.setLineDash([2,3]);zCtx.strokeStyle=BRAND.warn;zCtx.lineWidth=1.4;
-  zCtx.moveTo(ZP.left,y26);zCtx.lineTo(ZW-ZP.right,y26);zCtx.stroke();zCtx.setLineDash([]);
-  zCtx.fillStyle=BRAND.warn;zCtx.font=`700 7.6px ${FM}`;zCtx.textAlign="left";
-  zCtx.fillText("10²⁶ FLOP · EU AI Act",ZP.left+4,y26-4);
-  zCtx.beginPath();zCtx.setLineDash([8,5]);zCtx.strokeStyle=BRAND.primary+(filt?"25":"55");zCtx.lineWidth=1.6;
-  zCtx.moveTo(zXp(2023),zYp(6e24/PFD));zCtx.lineTo(zXp(2026.6),zYp(2.5e27/PFD));zCtx.stroke();zCtx.setLineDash([]);
-  const set=zoomSet();
-  if(filt){
-    zoomAll.filter(m=>m.l!==activeLab).forEach(m=>{
-      zCtx.globalAlpha=.12;dot(zCtx,zXp(m.y),zYp(m.pf),colors[m.c],4.5,m.ow);zCtx.globalAlpha=1;
-    });
-    if(!set.length){
-      zCtx.fillStyle=BRAND.textMuted;zCtx.font=`italic 10.5px ${FD}`;zCtx.textAlign="center";
-      zCtx.fillText(t.ls_zoom_empty,ZP.left+zPW/2,ZP.top+zPH/2);
-    }
-    const tr=[...set].sort((a,b)=>a.y-b.y);
-    if(tr.length>1){
-      zCtx.beginPath();
-      tr.forEach((m,i)=>{const x=zXp(m.y),y=zYp(m.pf);i?zCtx.lineTo(x,y):zCtx.moveTo(x,y);});
-      zCtx.strokeStyle=LABS[activeLab].color;zCtx.lineWidth=2.4;
-      zCtx.lineJoin="round";zCtx.lineCap="round";zCtx.stroke();
-    }
-  }
-  const pts=set.map(m=>{
-    const x=zXp(m.y),y=zYp(m.pf);
-    const side=x>ZP.left+zPW*0.62?'l':'r';
-    return {m,x,y,lx:side==='l'?x-9:x+9,ly:y+3,side};
-  });
-  deconflict(pts,10.6,ZP.top+7,ZP.top+zPH-2);
-  set.forEach(m=>{
-    const x=zXp(m.y),y=zYp(m.pf);
-    zCtx.beginPath();zCtx.arc(x,y,12,0,7);zCtx.fillStyle=CONF[m.cf]+"1c";zCtx.fill();
-    dot(zCtx,x,y,colors[m.c],5.5,m.ow);
-  });
-  pts.forEach(p=>{
-    const col=colors[p.m.c];
-    zCtx.beginPath();zCtx.moveTo(p.side==='l'?p.x-7:p.x+7,p.y);zCtx.lineTo(p.lx,p.ly-2.5);
-    zCtx.strokeStyle=col+"66";zCtx.lineWidth=.8;zCtx.stroke();
-    zCtx.fillStyle=col;
-    zCtx.font=`${(p.m.c==='y2026'||filt)?'600 ':''}9.2px ${FM}`;
-    zCtx.textAlign=p.side==='l'?'right':'left';zCtx.fillText(p.m.n,p.lx,p.ly);
-    zCtx.fillStyle=CONF[p.m.cf];
-    zCtx.fillRect(p.side==='l'?p.lx+2.5:p.lx-4.5,p.ly-6,2,6);
-  });
-}
-
-/* ═══════════ TITLES ═══════════ */
 function updateTitles(){
   const t=i18n[lang];
   const tm=document.getElementById('titleMain'),tz=document.getElementById('titleZoom'),hz=document.getElementById('hintZoom');
   if(activeLab==='all'){
-    tm.textContent=t.t_full;tz.textContent=t.t_zoomfix;hz.textContent=t.hint_all;
+    tm.textContent=t.t_full;tz.textContent=t.t_zoomfix;
     tm.style.color='';tz.style.color='';
   }else{
     const s=models.filter(m=>m.l===activeLab).sort((a,b)=>a.y-b.y);
@@ -1124,13 +1232,14 @@ function updateTitles(){
     tm.style.color=LABS[activeLab].color;
     tz.textContent=`${labName(activeLab)} · ${t.t_ctx}`;
     tz.style.color=LABS[activeLab].color;
-    hz.textContent=t.hint_lab;
   }
+  hz.textContent = narrow ? t.hint_touch : (activeLab==='all'?t.hint_all:t.hint_lab);
 }
 
-/* ═══════════ TOOLTIP ═══════════ */
+/* ═══════════ TOOLTIP · ratón + táctil ═══════════ */
 const tip=document.getElementById('sharedTip');
-function showTip(m,cx,cy){
+let tipTimer=null;
+function showTip(m,cx,cy,touch){
   const t=i18n[lang],col=colors[m.c];
   const pfv=m.pf>=1?m.pf.toLocaleString('es-CO',{maximumSignificantDigits:3}):m.pf.toExponential(2);
   const fl=m.f.toExponential(1).replace('e+',' × 10^');
@@ -1140,7 +1249,7 @@ function showTip(m,cx,cy){
       ?`<div class="t-param">🧩 <b>${fmtParams(m.p)}</b> ${t.p_total} · <b>${fmtParams(m.pa)}</b> ${t.p_active}<br><i>${t.p_moe}${m.pr?' · '+t.p_rumor:''}</i></div>`
       :`<div class="t-param">🧩 <b>${fmtParams(m.p)}</b> ${t.p_label.toLowerCase()}${m.pr?`<br><i>${t.p_rumor}</i>`:''}</div>`;
   }
-  tip.style.borderLeftColor=CONF[m.cf];
+  tip.style.borderLeftColor=CONF[m.cf];tip.style.borderTopColor=CONF[m.cf];
   tip.innerHTML=`<span class="t-name">${m.n}</span>
     <div class="t-row"><span class="t-icon">🏢</span><span>${m.o}</span></div>
     <div class="t-row"><span class="t-icon">📅</span><span class="t-val">${m.d}</span></div>
@@ -1153,43 +1262,198 @@ function showTip(m,cx,cy){
       ${m.ow?`<span class="t-tag" style="background:#64748b">OW</span>`:''}
     </div>
     <span class="t-src">${m.s}</span>`;
-  const TW=246,TH=m.p?228:192,vw=innerWidth,vh=innerHeight;
-  let tx=cx+18,ty=cy-TH/2;
-  if(tx+TW>vw-8)tx=cx-TW-14;
-  if(tx<8)tx=8;
-  ty=Math.max(8,Math.min(ty,vh-TH-8));
-  tip.style.left=tx+'px';tip.style.top=ty+'px';tip.style.display='block';
+  tip.style.display='block';
+  if(touch||narrow){
+    tip.classList.add('m');
+    tip.style.top='auto';tip.style.bottom='12px';tip.style.left='10px';tip.style.right='10px';
+    clearTimeout(tipTimer);tipTimer=setTimeout(hideTip,7000);
+  }else{
+    tip.classList.remove('m');tip.style.bottom='auto';tip.style.right='auto';
+    const TW=246,TH=m.p?228:192,vw=innerWidth,vh=innerHeight;
+    let tx=cx+18,ty=cy-TH/2;
+    if(tx+TW>vw-8)tx=cx-TW-14;
+    if(tx<8)tx=8;
+    ty=Math.max(8,Math.min(ty,vh-TH-8));
+    tip.style.left=tx+'px';tip.style.top=ty+'px';
+  }
 }
-function hideTip(){tip.style.display='none';}
-function addHover(cv,getSet,xf,yf,cw,ch){
+function hideTip(){tip.style.display='none';clearTimeout(tipTimer);}
+function pick(cv,getSet,xf,yf,cw,clientX,clientY,rad){
+  const r=cv.getBoundingClientRect(),sx=cw/r.width;
+  const mx=(clientX-r.left)*sx,my=(clientY-r.top)*sx;
+  let found=null,best=rad;
+  getSet().forEach(m=>{const d=Math.hypot(mx-xf(m.y),my-yf(m.pf));if(d<best){best=d;found=m;}});
+  return found;
+}
+function bindChart(cv,getSet,xf,yf,cwGetter){
   cv.addEventListener('mousemove',e=>{
-    const r=cv.getBoundingClientRect(),sx=cw/r.width,sy=ch/r.height;
-    const mx=(e.clientX-r.left)*sx,my=(e.clientY-r.top)*sy;
-    let found=null,best=16;
-    getSet().forEach(m=>{const d=Math.hypot(mx-xf(m.y),my-yf(m.pf));if(d<best){best=d;found=m;}});
-    if(found){cv.style.cursor='pointer';showTip(found,e.clientX,e.clientY);}
+    if(narrow)return;
+    const f=pick(cv,getSet,xf,yf,cwGetter(),e.clientX,e.clientY,16);
+    if(f){cv.style.cursor='pointer';showTip(f,e.clientX,e.clientY,false);}
     else{cv.style.cursor='crosshair';hideTip();}
   });
-  cv.addEventListener('mouseleave',()=>{hideTip();cv.style.cursor='crosshair';});
+  cv.addEventListener('mouseleave',()=>{if(!narrow){hideTip();cv.style.cursor='crosshair';}});
+  cv.addEventListener('touchstart',e=>{
+    const tch=e.touches[0];if(!tch)return;
+    const f=pick(cv,getSet,xf,yf,cwGetter(),tch.clientX,tch.clientY,30);
+    if(f){showTip(f,tch.clientX,tch.clientY,true);track('point_tap',{model:f.n});}
+    else hideTip();
+  },{passive:true});
 }
-addHover(mainC,()=>activeLab==='all'?models:models.filter(m=>m.l===activeLab),mXp,mYp,MW,MH);
-addHover(zoomC,zoomSet,zXp,zYp,ZW,ZH);
+bindChart(mainC,()=>activeLab==='all'?models:models.filter(m=>m.l===activeLab),mXp,mYp,()=>MAIN.w);
+bindChart(zoomC,zoomSet,zXp,zYp,()=>ZOOM.w);
+document.addEventListener('touchstart',e=>{
+  if(!e.target.closest('canvas'))hideTip();
+},{passive:true});
 
-/* ═══════════ LANG ═══════════ */
-function applyLang(l){
+/* ═══════════ EXPORTACIÓN ═══════════ */
+function download(blob,name){
+  const a=document.createElement('a'),url=URL.createObjectURL(blob);
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},300);
+}
+const stamp=()=>new Date().toISOString().slice(0,10);
+const csvCell=v=>{v=(v===undefined||v===null)?'':String(v);return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+function exportCSV(){
+  const t=i18n[lang];
+  const head=['modelo','fecha','anio_decimal','organizacion','laboratorio','flop_entrenamiento',
+    'petaflop_s_dias','parametros_totales','parametros_activos','arquitectura_moe','pesos_abiertos',
+    'nivel_evidencia','fuente'];
+  const rows=models.map(m=>[m.n,m.d,m.y,m.o,labName(m.l),m.f,m.pf,m.p||'',m.pa||'',m.pa?'si':'no',
+    m.ow?'si':'no',t.cf_s[m.cf],m.s]);
+  const meta=[
+    ['# Cómputo de entrenamiento de modelos de IA, 1958-2026'],
+    ['# Javier Forero · '+SITE],
+    ['# Fuentes: Epoch AI (CC BY) · OpenAI "AI and Compute" · papers de los laboratorios'],
+    ['# Unidad: 1 PetaFLOP/s-dia = 8.64e19 FLOP'],
+    ['# Los modelos de 2026 no tienen estimacion publicada: ubicados sobre tendencia 4-5x anual'],
+    ['# Generado: '+new Date().toISOString()],[]
+  ];
+  const csv=[...meta,head,...rows].map(r=>r.map(csvCell).join(',')).join('\r\n');
+  download(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}),`ia-compute-${stamp()}.csv`);
+  track('export_csv',{lab:activeLab});
+}
+function exportPNG(){
+  const t=i18n[lang],d=dpr();
+  const stack=MAIN.w<560;
+  const pad=Math.round(26*d), gap=Math.round(18*d);
+  const headH=Math.round(104*d), footH=Math.round(56*d);
+  const cw = stack?Math.max(mainC.width,zoomC.width):(mainC.width+gap+zoomC.width);
+  const ch = stack?(mainC.height+gap+zoomC.height):Math.max(mainC.height,zoomC.height);
+  const W=cw+pad*2, H=headH+ch+footH;
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  const c=off.getContext('2d');
+  c.fillStyle=BRAND.bg;c.fillRect(0,0,W,H);
+  c.fillStyle=BRAND.secondary;c.fillRect(0,0,W,Math.round(5*d));
+  c.textAlign='left';
+  c.fillStyle=BRAND.text;c.font=`700 ${Math.round(27*d)}px ${FD}`;
+  c.fillText(t.png_title,pad,Math.round(46*d));
+  c.fillStyle=BRAND.textSoft;c.font=`${Math.round(14*d)}px ${FD}`;
+  c.fillText(t.png_sub,pad,Math.round(70*d));
+  const sub2 = activeLab==='all' ? '' : '· '+labName(activeLab);
+  if(sub2){c.fillStyle=LABS[activeLab].color;c.font=`700 ${Math.round(14*d)}px ${FD}`;
+    c.fillText(sub2,pad+c.measureText(t.png_sub).width+Math.round(10*d),Math.round(70*d));}
+  if(stack){c.drawImage(mainC,pad,headH);c.drawImage(zoomC,pad,headH+mainC.height+gap);}
+  else{c.drawImage(mainC,pad,headH);c.drawImage(zoomC,pad+mainC.width+gap,headH);}
+  const fy=headH+ch+Math.round(34*d);
+  c.fillStyle=BRAND.primary;c.font=`700 ${Math.round(14*d)}px ${FD}`;
+  c.fillText('dashboards.javierforero.co/ia-compute',pad,fy);
+  c.fillStyle=BRAND.textMuted;c.font=`${Math.round(12*d)}px ${FD}`;
+  c.textAlign='right';c.fillText(t.png_src,W-pad,fy);
+  off.toBlob(b=>{if(b)download(b,`ia-compute-${activeLab}-${stamp()}.png`);},'image/png');
+  track('export_png',{lab:activeLab});
+}
+function copyLink(btn){
+  const url=stateURL(),t=i18n[lang];
+  const ok=()=>{
+    const prev=btn.innerHTML;
+    btn.innerHTML=`<span class="tb-ico">✓</span>${t.tb_copied}`;btn.classList.add('done');
+    setTimeout(()=>{btn.innerHTML=prev;btn.classList.remove('done');},2200);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(ok).catch(()=>fallback());
+  }else fallback();
+  function fallback(){
+    const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');ok();}catch(e){}
+    ta.remove();
+  }
+  track('copy_link',{lab:activeLab,tab:currentTab});
+}
+function buildToolbar(){
+  const t=i18n[lang],box=document.getElementById('toolbar');
+  box.innerHTML='';
+  const mk=(ico,label,fn)=>{
+    const b=document.createElement('button');b.type='button';b.className='tb-btn';
+    b.innerHTML=`<span class="tb-ico" aria-hidden="true">${ico}</span>${label}`;
+    b.onclick=()=>fn(b);box.appendChild(b);
+  };
+  mk('🖼️',t.tb_png,exportPNG);
+  mk('📄',t.tb_csv,exportCSV);
+  mk('🔗',t.tb_link,copyLink);
+}
+
+/* ═══════════ TABS + TECLADO ═══════════ */
+function setTab(id,focus){
+  currentTab=id;
+  document.querySelectorAll('.tab').forEach(b=>{
+    const on=b.dataset.tab===id;
+    b.setAttribute('aria-selected',String(on));
+    b.tabIndex = on?0:-1;
+    if(on&&focus)b.focus();
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
+  hideTip();
+  if(id==='viz')requestAnimationFrame(()=>{layout();drawAll();});
+  syncURL();
+  track('tab_view',{tab_id:id});
+}
+const tabsEl=document.getElementById('tabs');
+tabsEl.addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setTab(b.dataset.tab,false);});
+tabsEl.addEventListener('keydown',e=>{
+  const keys=['ArrowRight','ArrowLeft','Home','End'];
+  if(!keys.includes(e.key))return;
+  e.preventDefault();
+  const i=VALID_TABS.indexOf(currentTab);
+  let n=i;
+  if(e.key==='ArrowRight')n=(i+1)%VALID_TABS.length;
+  if(e.key==='ArrowLeft') n=(i-1+VALID_TABS.length)%VALID_TABS.length;
+  if(e.key==='Home')n=0;
+  if(e.key==='End')n=VALID_TABS.length-1;
+  setTab(VALID_TABS[n],true);
+});
+
+/* ═══════════ IDIOMA ═══════════ */
+function applyLang(l,silent){
   lang=l;const t=i18n[l];
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.innerHTML=t[k];});
-  document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('active',o.dataset.lang===l));
+  document.querySelectorAll('.lang-opt').forEach(o=>o.setAttribute('aria-pressed',String(o.dataset.lang===l)));
   document.documentElement.lang=l;
-  buildChips();buildConfLegend();buildBrandBox();renderStats();drawAll();
+  buildChips();buildConfLegend();buildBrandBox();buildEraBlocks();buildToolbar();renderStats();
+  layout();drawAll();
+  if(!silent){syncURL();track('lang_switch',{lang:l});}
 }
-document.getElementById('langToggle').addEventListener('click',e=>{const o=e.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang);});
+document.getElementById('langToggle').addEventListener('click',e=>{
+  const o=e.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang,false);
+});
 
+/* ═══════════ ARRANQUE + RESIZE ═══════════ */
 function drawAll(){drawMain();drawZoom();updateTitles();}
-buildChips();buildConfLegend();buildBrandBox();drawAll();
-/* redibuja cuando Igra Sans termina de cargar, para que los
-   textos de canvas no queden con la métrica del fallback */
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>drawAll());
+readState();
+applyLang(lang,true);
+setTab(currentTab,false);
+syncURL();
+
+let rzT=null;
+function onResize(){clearTimeout(rzT);rzT=setTimeout(()=>{layout();drawAll();},140);}
+window.addEventListener('resize',onResize);
+window.addEventListener('orientationchange',onResize);
+if(window.ResizeObserver){
+  const ro=new ResizeObserver(onResize);
+  ro.observe(document.querySelector('.charts-container'));
+}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{layout();drawAll();});
 </script>
 </body>
 </html>
