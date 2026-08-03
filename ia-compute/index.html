@@ -114,7 +114,6 @@
   .tab-panel.active{display:flex;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-  /* ── BUSCADOR ── */
   .search-row{max-width:1200px;width:100%;padding:0 16px;margin-top:20px;display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;}
   .msearch-wrap{position:relative;flex:0 1 340px;min-width:220px;}
   .msearch{width:100%;font-family:var(--font-body);font-size:.78rem;color:var(--jf-text);background:var(--jf-surface);border:1.5px solid var(--jf-border);border-radius:100px;padding:10px 16px 10px 36px;outline:none;transition:border-color .2s,box-shadow .2s;}
@@ -182,7 +181,6 @@
   .tooltip .t-src{display:block;margin-top:6px;font-size:.55rem;color:var(--jf-text-muted);line-height:1.45;}
   .tooltip.m .t-src{font-size:.62rem;}
 
-  /* ── LEYENDA FILTRABLE ── */
   .legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;padding:0 16px;}
   .legend-btn{font-family:var(--font-body);display:inline-flex;align-items:center;gap:6px;font-size:.63rem;color:var(--jf-text-soft);font-weight:500;background:var(--jf-surface);border:1.5px solid var(--jf-border);border-radius:100px;padding:5px 12px;cursor:pointer;transition:all .2s cubic-bezier(.22,.68,0,1.2);}
   .legend-btn:hover{transform:translateY(-2px);border-color:var(--jf-primary-lt);box-shadow:0 3px 10px rgba(78,0,255,.1);}
@@ -290,16 +288,6 @@
   .methodology strong{color:#451a03;font-weight:700;}
   .paramnote{padding:16px 20px;background:var(--jf-bg2);border:1px solid var(--jf-border);border-left:4px solid var(--jf-primary);border-radius:var(--r);font-size:.73rem;color:var(--jf-secondary);line-height:1.75;}
   .paramnote strong{color:var(--jf-primary);font-weight:700;}
-
-  .brandgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px;}
-  .brandcol h5{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--jf-text-muted);margin-bottom:9px;}
-  .swatches{display:flex;flex-wrap:wrap;gap:6px;}
-  .sw{width:74px;border-radius:8px;overflow:hidden;border:1px solid var(--jf-border);}
-  .sw-c{height:34px;}
-  .sw-t{font-family:var(--font-mono);font-size:.53rem;padding:3px 4px;text-align:center;color:var(--jf-text-soft);background:var(--jf-bg);}
-  .typespec{background:var(--jf-bg);border:1px solid var(--jf-border);border-radius:10px;padding:12px 14px;font-size:.7rem;line-height:1.65;}
-  .typespec .big{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.1;color:var(--jf-primary);}
-  .typespec .small{font-family:var(--font-display);font-size:.72rem;color:var(--jf-text-soft);margin-top:5px;letter-spacing:.02em;}
 
   .jf-footer{margin-top:44px;max-width:1200px;width:100%;padding:20px 16px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--jf-border);}
   .jf-footer-logo{font-family:var(--font-display);font-size:.87rem;font-weight:700;color:var(--jf-primary);text-decoration:none;}
@@ -494,7 +482,7 @@
 <div class="tab-panel" id="panel-src" role="tabpanel" aria-labelledby="tab-src" tabindex="0">
   <div class="section-head">
     <h2 data-i18n="src_h2">Referencias y fuentes de datos</h2>
-    <p data-i18n="src_p">Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo, la nota metodológica sobre lo que aún no se puede verificar, y el sistema de marca aplicado.</p>
+    <p data-i18n="src_p">Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo y la nota metodológica sobre lo que aún no se puede verificar.</p>
   </div>
   <div class="src-block"><div class="src-card">
     <div class="src-grid">
@@ -519,10 +507,6 @@
   </div></div>
   <div class="src-block"><div class="methodology" data-i18n="methodology"><strong>⚠️ Nota metodológica sobre el cómputo —</strong> Cada modelo lleva una <strong>etiqueta de confianza tomada del campo <em>Confidence</em> de la base de Epoch AI</strong>, la misma que usan Our World in Data y el AI Index de Stanford. Los laboratorios frontera dejaron de publicar cifras de cómputo después de GPT-4, así que los modelos recientes se apoyan en triangulación o en imputación por benchmarks. <strong>Los modelos de 2026 aún no tienen estimación de cómputo publicada por Epoch</strong>: se ubican sobre la tendencia de 4–5× anual dentro de la ventana documentada de 10²⁶–10²⁷ FLOP y están marcados como «Tendencia».</div></div>
   <div class="src-block"><div class="paramnote" data-i18n="paramnote"><strong>🧩 Nota sobre los parámetros —</strong> El conteo de parámetros aparece en el tooltip <strong>solo cuando existe una fuente pública</strong>. Para arquitecturas <strong>Mixture-of-Experts</strong> se muestran dos cifras: <em>parámetros totales</em> y <em>parámetros activos</em> por token — esta última es la que gobierna el cómputo vía <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. DeepSeek-V3 tiene 671B totales pero activa solo 37B, así que su cómputo se parece más al de un modelo de 37B.</div></div>
-  <div class="src-block"><div class="src-card">
-    <div class="src-group-label" data-i18n="brand_label">🎨 Sistema de marca aplicado</div>
-    <div id="brandBox"></div>
-  </div></div>
   <div class="src-block"><div class="src-card"><div class="src-note" data-i18n="src_note"><strong>Unidad:</strong> 1 PetaFLOP/s-día = 8.64 × 10¹⁹ FLOP. &nbsp;|&nbsp; <strong>Eje Y:</strong> escala logarítmica base 10. &nbsp;|&nbsp; <strong>Marcadores:</strong> puntos rellenos = modelos cerrados; anillos = pesos abiertos. &nbsp;|&nbsp; <strong>Umbral regulatorio:</strong> la línea ámbar de 10²⁶ FLOP marca el nivel a partir del cual la EU AI Act clasifica un sistema como de riesgo sistémico. &nbsp;|&nbsp; <strong>Licencia:</strong> datos de Epoch AI bajo Creative Commons BY.</div></div></div>
 </div>
 
@@ -555,7 +539,6 @@ const LABS={
   academia:{name:"Academia / otros",color:"#64748b"},
 };
 
-/* ═══════════ i18n ═══════════ */
 const i18n={
  es:{
   topbar_tag:"Divulgación · datos públicos verificables",eyebrow:"Visualización de datos · IA &amp; cómputo",
@@ -584,17 +567,11 @@ const i18n={
   insight_text:`"Entrenar un modelo frontera de 2026 consume más cómputo que toda la investigación en IA acumulada antes de 2020."`,
   insight_detail:`El acelerador no fue una sola tecnología, sino la conjunción de cuatro factores: <strong>(1)</strong> hardware especializado (GPUs, luego TPUs y ahora Blackwell/Ironwood), <strong>(2)</strong> una arquitectura escalable (Transformer, 2017), <strong>(3)</strong> capital privado masivo, y desde 2024 <strong>(4)</strong> el <em>reinforcement learning</em> aplicado al razonamiento, que abre un segundo eje de escalamiento. El <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> se vuelve más relevante con cada orden de magnitud.`,
   src_h2:"Referencias y fuentes de datos",
-  src_p:"Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo, la nota metodológica sobre lo que aún no se puede verificar, y el sistema de marca aplicado.",
+  src_p:"Toda cifra de cómputo y de parámetros de esta visualización es rastreable a una fuente pública. Aquí está el rastro completo y la nota metodológica sobre lo que aún no se puede verificar.",
   src_db_label:"📊 Bases de datos de referencia",src_papers_label:"🔑 Cifras publicadas por los laboratorios",
-  brand_label:"🎨 Sistema de marca aplicado",
   src_note:`<strong>Unidad:</strong> 1 PetaFLOP/s-día = 8.64 × 10¹⁹ FLOP. &nbsp;|&nbsp; <strong>Eje Y:</strong> escala logarítmica base 10. &nbsp;|&nbsp; <strong>Marcadores:</strong> puntos rellenos = modelos cerrados; anillos = pesos abiertos. &nbsp;|&nbsp; <strong>Umbral regulatorio:</strong> la línea ámbar de 10²⁶ FLOP marca el nivel a partir del cual la EU AI Act clasifica un sistema como de riesgo sistémico. &nbsp;|&nbsp; <strong>Licencia:</strong> datos de Epoch AI bajo Creative Commons BY.`,
   methodology:`<strong>⚠️ Nota metodológica sobre el cómputo —</strong> Cada modelo lleva una <strong>etiqueta de confianza tomada del campo <em>Confidence</em> de la base de Epoch AI</strong>, la misma que usan Our World in Data y el AI Index de Stanford. Los laboratorios frontera dejaron de publicar cifras de cómputo después de GPT-4, así que los modelos recientes se apoyan en triangulación o en imputación por benchmarks. <strong>Los modelos de 2026 aún no tienen estimación de cómputo publicada por Epoch</strong>: se ubican sobre la tendencia de 4–5× anual dentro de la ventana documentada de 10²⁶–10²⁷ FLOP y están marcados como «Tendencia».`,
   paramnote:`<strong>🧩 Nota sobre los parámetros —</strong> El conteo de parámetros aparece en el tooltip <strong>solo cuando existe una fuente pública</strong>. Para arquitecturas <strong>Mixture-of-Experts</strong> se muestran dos cifras: <em>parámetros totales</em> y <em>parámetros activos</em> por token — esta última es la que gobierna el cómputo vía <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. DeepSeek-V3 tiene 671B totales pero activa solo 37B, así que su cómputo se parece más al de un modelo de 37B.`,
-  brand_type_t:"Tipografía",brand_pal_t:"Paleta primaria",brand_era_t:"Escala de eras (derivada)",brand_cf_t:"Escala semántica (fuera de paleta)",
-  brand_type_d:"<strong>Igra Sans</strong> en toda la interfaz. Se carga por <span style='font-family:var(--font-mono)'>@font-face</span> con respaldo a la pila del sistema. Las micro-etiquetas de los ejes usan la pila neutra: Igra Sans es una grotesca ancha de un solo peso y a ese tamaño pierde legibilidad.",
-  brand_era_d:"Las cuatro primeras eras <em>son</em> los cuatro colores de marca. 2025 y 2026 extienden la rampa rotando el matiz del primario hacia el magenta.",
-  brand_cf_d:"Verde–turquesa–ámbar–rojo señalan un juicio sobre el dato, no la identidad. Van deliberadamente fuera de la paleta. La excepción es «Tendencia», en violeta desaturado: esa inferencia sí es de la casa.",
-  brand_lab_note:"Los colores de los chips de laboratorio son identidades de terceros, no de la marca.",
   ls_models:"Modelos",ls_span:"Período",ls_total:"Crecimiento",ls_last:"Último",
   ls_peryear:"× por año",ls_r2:"R² del ajuste",
   ls_note_few:"Con menos de 3 modelos la tasa no es estadísticamente significativa; se muestra solo el crecimiento punta a punta.",
@@ -652,17 +629,11 @@ const i18n={
   insight_text:`"Training a single 2026 frontier model consumes more compute than all AI research accumulated before 2020."`,
   insight_detail:`The accelerator was not a single technology, but the convergence of four factors: <strong>(1)</strong> specialized hardware (GPUs, then TPUs, now Blackwell/Ironwood), <strong>(2)</strong> a scalable architecture (Transformer, 2017), <strong>(3)</strong> massive private capital, and since 2024 <strong>(4)</strong> <em>reinforcement learning</em> applied to reasoning, opening a second scaling axis. <strong>"Human-in-the-Loop ≠ Human-in-Control"</strong> becomes more relevant with every order of magnitude.`,
   src_h2:"References and data sources",
-  src_p:"Every compute and parameter figure in this visualization traces back to a public source. Here is the full trail, the methodological note on what still cannot be verified, and the brand system applied.",
+  src_p:"Every compute and parameter figure in this visualization traces back to a public source. Here is the full trail and the methodological note on what still cannot be verified.",
   src_db_label:"📊 Reference databases",src_papers_label:"🔑 Lab-published figures",
-  brand_label:"🎨 Brand system applied",
   src_note:`<strong>Unit:</strong> 1 PetaFLOP/s-day = 8.64 × 10¹⁹ FLOP. &nbsp;|&nbsp; <strong>Y-axis:</strong> base-10 logarithmic scale. &nbsp;|&nbsp; <strong>Markers:</strong> filled dots = closed models; rings = open weights. &nbsp;|&nbsp; <strong>Regulatory threshold:</strong> the amber 10²⁶ FLOP line marks where the EU AI Act classifies a system as posing systemic risk. &nbsp;|&nbsp; <strong>Licence:</strong> Epoch AI data under Creative Commons BY.`,
   methodology:`<strong>⚠️ Methodological note on compute —</strong> Every model carries a <strong>confidence label taken from the <em>Confidence</em> field of the Epoch AI database</strong> — the same source used by Our World in Data and Stanford's AI Index. Frontier labs stopped publishing compute figures after GPT-4, so recent models rely on triangulation or benchmark imputation. <strong>2026 models have no published Epoch compute estimate yet</strong>: they are placed along the 4–5×/year trend within the documented 10²⁶–10²⁷ FLOP window and flagged as "Trend".`,
   paramnote:`<strong>🧩 Note on parameters —</strong> Parameter counts appear in the tooltip <strong>only where a public source exists</strong>. For <strong>Mixture-of-Experts</strong> architectures two figures are shown: <em>total</em> and <em>active</em> parameters per token — the latter governs compute via <span style="font-family:var(--font-mono)">C ≈ 6ND</span>. DeepSeek-V3 has 671B total but activates only 37B, so its compute resembles a 37B model.`,
-  brand_type_t:"Typography",brand_pal_t:"Primary palette",brand_era_t:"Era scale (derived)",brand_cf_t:"Semantic scale (off-palette)",
-  brand_type_d:"<strong>Igra Sans</strong> throughout the interface. Loaded via <span style='font-family:var(--font-mono)'>@font-face</span> with a system fallback. Axis micro-labels use the neutral stack: Igra Sans is a wide single-weight grotesque and loses legibility at that size.",
-  brand_era_d:"The first four eras <em>are</em> the four brand colours. 2025 and 2026 extend the ramp by rotating the primary's hue toward magenta.",
-  brand_cf_d:"Green–teal–amber–red signal a judgement about the data, not the identity. They sit deliberately outside the palette. The exception is \"Trend\", in desaturated violet: that inference is the studio's own.",
-  brand_lab_note:"Lab chip colours are third-party identities, not brand colours.",
   ls_models:"Models",ls_span:"Span",ls_total:"Growth",ls_last:"Latest",
   ls_peryear:"× per year",ls_r2:"Fit R²",
   ls_note_few:"With fewer than 3 models the rate is not statistically meaningful; only end-to-end growth is shown.",
@@ -695,7 +666,6 @@ const i18n={
  }
 };
 
-/* ═══════════ ANOTACIONES NARRATIVAS ═══════════ */
 const ANNOT_MAIN=[
  {y:2012.6,f:4.7e17,dx:16,dy:-40,col:colors.deeplearn,
   es:["AlexNet gana ImageNet:","empieza la era GPU"],en:["AlexNet wins ImageNet:","the GPU era begins"]},
@@ -711,7 +681,6 @@ const ANNOT_ZOOM=[
   es:["Zona sin cifras publicadas:","20 modelos sobre tendencia"],en:["No published figures here:","20 models placed on trend"]},
 ];
 
-/* ═══════════ DATA ═══════════ */
 const PFD=8.64e19;
 const raw=[
  {n:"Perceptron",       y:1958,   d:"1958",     f:8.6e5,  c:"classic",   l:"academia", cf:"lik", o:"Cornell (Rosenblatt)",   p:5.12e2, s:"OpenAI · AI and Compute"},
@@ -905,7 +874,6 @@ function deconflict(pts,minGap,topB,botB){
     if(!moved)break;
   }
 }
-/* ── dibujo de anotaciones ── */
 function drawAnnots(ctx,list,xf,yf,box){
   ctx.save();
   list.forEach(a=>{
@@ -1078,7 +1046,6 @@ function drawMain(){
   }
   const set=shownSet();
   const inZoom=m=>!filt&&m.y>=ZY1&&Math.log10(m.pf)>=ZL1;
-  // atenuados
   models.filter(m=>!isShown(m)).forEach(m=>{
     const x=mXp(m.y),y=mYp(m.pf);
     if(x<MP.left-8||x>W-MP.right+8)return;
@@ -1104,7 +1071,7 @@ function drawMain(){
   }
   set.forEach(m=>{
     const x=mXp(m.y),y=mYp(m.pf);
-    if(query){ // halo de búsqueda
+    if(query){
       mCtx.beginPath();mCtx.arc(x,y,13,0,7);mCtx.fillStyle=BRAND.primary+"1f";mCtx.fill();
       mCtx.beginPath();mCtx.arc(x,y,11,0,7);mCtx.strokeStyle=BRAND.primary+"88";mCtx.lineWidth=1.4;mCtx.stroke();
     }else if(filt){mCtx.beginPath();mCtx.arc(x,y,narrow?12:10,0,7);mCtx.fillStyle=CONF[m.cf]+"20";mCtx.fill();}
@@ -1231,10 +1198,7 @@ function buildChips(){
     c.setAttribute('aria-pressed',String(k===activeLab));
     if(k===activeLab)c.style.background=LABS[k].color;
     c.innerHTML=`<span class="cdot" style="background:${LABS[k].color}" aria-hidden="true"></span>${labName(k)}<span class="ccount">${cnt}</span>`;
-    c.onclick=()=>{
-      activeLab=(activeLab===k&&k!=='all')?'all':k;
-      refresh();track('lab_filter',{lab_id:activeLab});
-    };
+    c.onclick=()=>{activeLab=(activeLab===k&&k!=='all')?'all':k;refresh();track('lab_filter',{lab_id:activeLab});};
     box.appendChild(c);
   });
 }
@@ -1266,24 +1230,6 @@ function buildConfLegend(){
     h+=`<span class="conf-chip"><span class="conf-sq" style="background:${CONF[k]}"></span>${t.cf[k]} <b>${n}</b></span>`;
   });
   document.getElementById('confLegend').innerHTML=h;
-}
-function swatch(c,label){return `<div class="sw"><div class="sw-c" style="background:${c}"></div><div class="sw-t">${label}</div></div>`;}
-function buildBrandBox(){
-  const t=i18n[lang];
-  const pal=[[BRAND.primary,"#4e00ff"],[BRAND.primaryLt,"#7c4dff"],[BRAND.secondary,"#041c59"],[BRAND.tertiary,"#0048ff"]];
-  const era=ERA_KEYS.map((k,i)=>[colors[k],i<4?("era "+(i+1)):(i===4?"2025":"2026")]);
-  document.getElementById('brandBox').innerHTML=`
-    <div class="brandgrid">
-      <div class="brandcol"><h5>${t.brand_type_t}</h5>
-        <div class="typespec"><div class="big">Igra Sans</div>
-          <div class="small">ABCDEFG · abcdefg · 0123456789</div>
-          <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_type_d}</div></div></div>
-      <div class="brandcol"><h5>${t.brand_pal_t}</h5><div class="swatches">${pal.map(p=>swatch(p[0],p[1])).join('')}</div></div>
-      <div class="brandcol"><h5>${t.brand_era_t}</h5><div class="swatches">${era.map(p=>swatch(p[0],p[1])).join('')}</div>
-        <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_era_d}</div></div>
-      <div class="brandcol"><h5>${t.brand_cf_t}</h5><div class="swatches">${CONF_ORDER.map(k=>swatch(CONF[k],t.cf_s[k])).join('')}</div>
-        <div style="margin-top:8px;font-size:.67rem;color:var(--jf-text-soft);line-height:1.6">${t.brand_cf_d}<br><br><em>${t.brand_lab_note}</em></div></div>
-    </div>`;
 }
 function activeFilterLabel(){
   const t=i18n[lang],bits=[];
@@ -1514,7 +1460,6 @@ document.getElementById('clearBtn').addEventListener('click',()=>{
   refresh();track('clear_filters',{});
 });
 
-/* ═══════════ REFRESH GLOBAL ═══════════ */
 function refresh(){
   buildChips();buildLegend();buildConfLegend();buildToolbar();
   renderStats();updateSearchUI();drawAll();syncURL();
@@ -1553,7 +1498,7 @@ function applyLang(l,silent){
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.innerHTML=t[k];});
   document.querySelectorAll('.lang-opt').forEach(o=>o.setAttribute('aria-pressed',String(o.dataset.lang===l)));
   document.documentElement.lang=l;
-  buildBrandBox();buildEraBlocks();
+  buildEraBlocks();
   buildChips();buildLegend();buildConfLegend();buildToolbar();renderStats();updateSearchUI();
   layout();drawAll();
   if(!silent){syncURL();track('lang_switch',{lang:l});}
