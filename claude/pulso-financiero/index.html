@@ -370,7 +370,7 @@ details.metod b{color:var(--deep-blue);}
 
     <div class="card">
       <h3>1 · ¿Qué modelo merece tu confianza para <span id="serName1">las ventas</span>?</h3>
-      <div class="sub">Los cuatro se entrenan con la misma historia, se les <b>ocultan los últimos <span id="btH">—</span> meses</b> y se les pide predecirlos a ciegas. Después se compara cada predicción contra lo que realmente pasó. Menor error = más confiable.</div>
+      <div class="sub">Los cuatro se entrenan con la misma historia, se les <b>ocultan los últimos <span id="btH">—</span> <span id="btU">meses</span></b> y se les pide predecirlos a ciegas. Después se compara cada predicción contra lo que realmente pasó. Menor error = más confiable.</div>
       <div id="gCmp">
         <div id="cmpTable"></div>
         <div id="cmpVerdict"></div>
@@ -482,21 +482,23 @@ details.metod b{color:var(--deep-blue);}
     <div class="grid2">
       <div class="card">
         <h3>1 · Prepara el archivo</h3>
-        <div class="sub">Una fila por mes, encabezados en la primera fila. En Excel se usa la hoja “Datos” o, si no existe, la primera hoja.</div>
+        <div class="sub"><b>Una fila por periodo y el periodo en la primera columna.</b> Después, las métricas que quieras — el tablero activa las capas según lo que encuentre y te dice qué reconoció. No necesitas columnas auxiliares de año, mes ni nombre del mes. En Excel se usa la hoja “Datos” o, si no existe, la primera.</div>
         <div class="tblw"><table>
-          <tr><th>Columna</th><th>Formato</th><th>Uso</th><th>Qué habilita</th></tr>
-          <tr><td><b>Fecha</b> (o <b>Anio</b> + <b>Mes</b>)</td><td>AAAA-MM</td><td><span class="bq req">Requerida</span></td><td>La serie temporal completa</td></tr>
-          <tr><td><b>Ventas_Millones</b></td><td>número</td><td><span class="bq req">Requerida</span></td><td>Crecimiento, tendencia, predicción</td></tr>
-          <tr><td><b>Costos_Millones</b> <i>o</i> <b>Margen_Millones</b></td><td>número</td><td><span class="bq req">Requerida</span></td><td>Margen y diagnóstico de costos (la faltante se deriva)</td></tr>
-          <tr><td>FlujoCaja_Millones</td><td>número</td><td><span class="bq opc">Opcional</span></td><td>Capa de caja y conversión</td></tr>
-          <tr><td>Unidades</td><td>entero</td><td><span class="bq opc">Opcional</span></td><td>Puente precio-volumen y KPI de mix</td></tr>
-          <tr><td>Precio_Promedio</td><td>número</td><td><span class="bq opc">Opcional</span></td><td>Con Unidades, habilita el F_precio de los KPIs Inteligentes</td></tr>
-          <tr><td>Activos_Corrientes + Pasivos_Corrientes</td><td>número</td><td><span class="bq opc">Opcional</span></td><td>Capa de liquidez (razón corriente)</td></tr>
+          <tr><th>Columna</th><th>Ejemplos de encabezado</th><th>Uso</th><th>Qué habilita</th></tr>
+          <tr><td><b>1ª columna: el periodo</b></td><td><code>Fecha</code>, <code>Periodo</code>, <code>Mes</code>… <i>o el nombre que quieras</i><br/><b>AAAA-MM</b> mensual · <b>AAAA-QX</b> trimestral</td><td><span class="bq req">Requerida</span></td><td>La serie temporal. Se detecta por posición: basta con que vaya primero.</td></tr>
+          <tr><td><b>Ventas</b></td><td>Ventas · Ingresos · Revenue · Sales · Facturación</td><td><span class="bq req">Requerida</span></td><td>Crecimiento, tendencia y predicción</td></tr>
+          <tr><td><b>Costos</b> <i>o</i> <b>Margen</b></td><td>Costos · COGS · Costes &nbsp;|&nbsp; Margen · Utilidad bruta · Gross profit</td><td><span class="bq req">Requerida</span></td><td>Margen y diagnóstico de costos (la que falte se deriva)</td></tr>
+          <tr><td>Flujo de caja</td><td>FlujoCaja · Cash flow · FCL</td><td><span class="bq opc">Opcional</span></td><td>Capa de caja y conversión</td></tr>
+          <tr><td>Unidades</td><td>Unidades · Units · Cantidad · Volumen</td><td><span class="bq opc">Opcional</span></td><td>Puente precio-volumen y KPI de mix</td></tr>
+          <tr><td>Precio promedio</td><td>Precio · Price · Precio medio</td><td><span class="bq opc">Opcional</span></td><td>Con Unidades, el F_precio de los KPIs Inteligentes</td></tr>
+          <tr><td>Activos + Pasivos corrientes</td><td>Activos corrientes · Current assets &nbsp;|&nbsp; Pasivos corrientes</td><td><span class="bq opc">Opcional</span></td><td>Capa de liquidez (razón corriente)</td></tr>
+          <tr><td><i>Todo lo demás</i></td><td>—</td><td><span class="bq opc">Se ignora</span></td><td>Las columnas que no reconozca se listan al validar, sin romper nada</td></tr>
           <tr><td><i>KPIs Inteligentes</i></td><td>—</td><td><span class="bq opc">Automático</span></td><td>Se calculan a partir de tus datos (no requieren columnas adicionales)</td></tr>
         </table></div>
         <ul class="hint" style="margin:10px 0 0 16px;">
-          <li><b>Mensual y consecutivo</b>: sin meses faltantes ni duplicados.</li>
-          <li>Mínimo <b>12 meses</b>. Con <b>24+</b> se activan predicción, descomposición y comparaciones anuales; con <b>30+</b> el backtest (completo con <b>36+</b>).</li>
+          <li><b>Consecutivo y sin mezclar</b>: sin periodos faltantes ni duplicados, y todo el archivo en la misma frecuencia (mensual <i>o</i> trimestral).</li>
+          <li><b>Mensual</b>: mínimo 12 meses; con 24+ se activan predicción y descomposición; con 30+ el backtest completo.</li>
+          <li><b>Trimestral</b> (<code>2024-Q1</code>, <code>2024-T1</code>, <code>Q1-2024</code>): mínimo 8 trimestres; con 12+ se activan predicción y descomposición; con 20+ SARIMA.</li>
           <li>Decimales con punto (recomendado) y sin separador de miles. CSV con coma o punto y coma.</li>
           <li>Los encabezados aceptan variantes: “Ventas”, “Ingresos”, “Revenue”, “Costos”, “COGS”, “Cash Flow”…</li>
           <li>Escala libre (miles, millones…): el tablero es consistente mientras todas las columnas monetarias usen la misma.</li>
@@ -550,7 +552,15 @@ const RAW_TSMC={"meses":["2023-07","2023-08","2023-09","2023-10","2023-11","2023
 
 /* ===== Utilidades ===== */
 const MESN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-const lab=m=>{const[y,mm]=m.split('-');return MESN[+mm-1]+'-'+y.slice(2);};
+const isQ=p=>typeof p==='string'&&p.indexOf('-Q')>0;
+/* Periodicidad activa: 12 = mensual, 4 = trimestral */
+let SEAS=12,FREQ='M';
+function setFreq(list){FREQ=(list&&list.length&&isQ(list[0]))?'Q':'M';SEAS=(FREQ==='Q')?4:12;}
+const PU=()=>FREQ==='Q'?'trimestre':'mes';
+const PUp=()=>FREQ==='Q'?'trimestres':'meses';
+const CYC=()=>FREQ==='Q'?'4 trimestres':'12 meses';
+const lab=p=>isQ(p)?(p.split('-Q')[1]+'T-'+p.slice(2,4)):(MESN[+p.split('-')[1]-1]+'-'+p.slice(2,4));
+const seasIdx=p=>isQ(p)?+p.split('-Q')[1]:+p.split('-')[1];
 const sum=a=>a.reduce((x,y)=>x+y,0);
 const avg=a=>sum(a)/a.length;
 const variance=a=>{const m=avg(a);return avg(a.map(v=>(v-m)*(v-m)));};
@@ -558,8 +568,10 @@ const f1=x=>x.toLocaleString('es-CO',{minimumFractionDigits:1,maximumFractionDig
 const f0=x=>Math.round(x).toLocaleString('es-CO');
 const pctS=x=>(x>=0?'+':'')+f1(x*100)+'%';
 const ppS=x=>(x>=0?'+':'')+f1(x)+' pp';
-function addM(ym,k){let[y,m]=ym.split('-').map(Number);m+=k;y+=Math.floor((m-1)/12);m=((m-1)%12)+1;return y+'-'+String(m).padStart(2,'0');}
-const ymIdx=ym=>{const[y,m]=ym.split('-').map(Number);return y*12+m;};
+function addM(p,k){
+ if(isQ(p)){let[y,q]=p.split('-Q').map(Number);q+=k;y+=Math.floor((q-1)/4);q=((q-1)%4+4)%4+1;return y+'-Q'+q;}
+ let[y,m]=p.split('-').map(Number);m+=k;y+=Math.floor((m-1)/12);m=((m-1)%12+12)%12+1;return y+'-'+String(m).padStart(2,'0');}
+const ymIdx=p=>{if(isQ(p)){const[y,q]=p.split('-Q').map(Number);return y*4+q;}const[y,m]=p.split('-').map(Number);return y*12+m;};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 /* ===== Lectura de archivos ===== */
@@ -582,8 +594,28 @@ function mapHeaders(headers){
  headers.forEach((h,i)=>{const n=normH(h);
   for(const k in COLMAP) if(found[k]===undefined && COLMAP[k].includes(n)) found[k]=i;});
  return found;}
+/* Si el encabezado de la fecha no se reconoce, se detecta por contenido.
+   Se prueba primero la columna 1 (la convención) y luego el resto. */
+function detectPeriodCol(rows,headers){
+ const N=Math.min(rows.length-1,10);
+ const probe=c=>{let ok=0,tot=0,txt=0;
+  for(let r=1;r<=N;r++){const v=rows[r]&&rows[r][c];
+   if(v==null||String(v).trim()==='')continue;
+   tot++;if(typeof v!=='number')txt++;if(parseYM(v))ok++;}
+  /* exige que todas las muestras sean interpretables y que no sea una columna puramente numérica
+     (un importe como 45646 podría confundirse con un serial de fecha de Excel) */
+  return tot>=2&&ok===tot&&txt===tot;};
+ if(probe(0))return 0;
+ for(let c=1;c<headers.length;c++)if(probe(c))return c;
+ return -1;}
 function parseYM(v){
  if(v==null||v==='')return null;
+ {const q=String(v).trim();let mq;
+  /* Trimestres: 2014-Q1 · 2014Q1 · 2014-T1 · Q1-2014 · 1T2014 · 2014/Q1 */
+  if(mq=q.match(/^(\d{4})\s*[-\/\.\s]?\s*[QqTt]\s*([1-4])$/))return mq[1]+'-Q'+mq[2];
+  if(mq=q.match(/^[QqTt]\s*([1-4])\s*[-\/\.\s]?\s*(\d{4})$/))return mq[2]+'-Q'+mq[1];
+  if(mq=q.match(/^([1-4])\s*[QqTt]\s*[-\/\.\s]?\s*(\d{4})$/))return mq[2]+'-Q'+mq[1];
+ }
  if(typeof v==='number'&&v>20000&&v<70000){const d=new Date(Math.round((v-25569)*86400*1000));
   return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');}
  const s=String(v).trim();let m;
@@ -618,10 +650,15 @@ function buildDataset(rows,fileName){
  const errors=[],warnings=[];
  if(!rows||rows.length<2)return{ok:false,errors:['El archivo no tiene filas de datos.']};
  const headers=rows[0],H=mapHeaders(headers);
+ let autoFecha=false;
+ if(H.fecha===undefined&&!(H.anio!==undefined&&H.mesn!==undefined)){
+   const c=detectPeriodCol(rows,headers);
+   if(c>=0){H.fecha=c;autoFecha=true;}
+ }
  const hasFecha=H.fecha!==undefined,hasAM=H.anio!==undefined&&H.mesn!==undefined;
- if(!hasFecha&&!hasAM)errors.push('Falta la columna <b>Fecha</b> (AAAA-MM) o el par <b>Anio</b> + <b>Mes</b>.');
- if(H.ventas===undefined)errors.push('Falta la columna <b>Ventas_Millones</b> (o Ventas/Ingresos/Revenue).');
- if(H.costos===undefined&&H.margen===undefined)errors.push('Falta <b>Costos_Millones</b> o <b>Margen_Millones</b> (al menos una).');
+ if(!hasFecha&&!hasAM)errors.push('No se encontró una columna de <b>fecha o periodo</b>. Pon el periodo en la <b>primera columna</b>, con formato AAAA-MM (mensual) o AAAA-QX (trimestral).');
+ if(H.ventas===undefined)errors.push('Falta la columna de <b>ventas</b> (acepta: Ventas, Ingresos, Revenue, Sales, Facturación…).');
+ if(H.costos===undefined&&H.margen===undefined)errors.push('Falta <b>Costos</b> o <b>Margen</b> (al menos una; la otra se deriva).');
  if(errors.length)return{ok:false,errors};
  const recs=[];
  for(let r=1;r<rows.length;r++){const row=rows[r];
@@ -630,7 +667,7 @@ function buildDataset(rows,fileName){
   if(hasFecha)ym=parseYM(row[H.fecha]);
   if(!ym&&hasAM){const y=toNum(row[H.anio]),m=toNum(row[H.mesn]);
    if(y&&m>=1&&m<=12)ym=Math.round(y)+'-'+String(Math.round(m)).padStart(2,'0');}
-  if(!ym){errors.push('Fila '+(r+1)+': fecha no interpretable («'+esc(String(row[H.fecha]??''))+'»). Usa AAAA-MM.');continue;}
+  if(!ym){errors.push('Fila '+(r+1)+': periodo no interpretable («'+esc(String(row[H.fecha]??''))+'»). Usa AAAA-MM (mensual) o AAAA-QX (trimestral).');continue;}
   const g=k=>H[k]===undefined?null:toNum(row[H[k]]);
   const rec={ym,ventas:g('ventas'),costos:g('costos'),margen:g('margen'),flujo:g('flujo'),
    unidades:g('unidades'),precio:g('precio'),ac:g('ac'),pc:g('pc')};
@@ -638,12 +675,17 @@ function buildDataset(rows,fileName){
   if(rec.costos==null&&rec.margen==null)errors.push('Fila '+(r+1)+' ('+ym+'): sin Costos ni Margen numéricos.');
   recs.push(rec);}
  if(errors.length)return{ok:false,errors:errors.slice(0,10)};
+ const nQ=recs.filter(r=>isQ(r.ym)).length;
+ if(nQ>0&&nQ<recs.length){errors.push('El archivo mezcla periodos mensuales y trimestrales ('+nQ+' trimestrales de '+recs.length+' filas). Usa un solo formato: AAAA-MM o AAAA-QX.');
+  return{ok:false,errors:errors.slice(0,10)};}
+ setFreq(recs.map(r=>r.ym));
  recs.sort((a,b)=>ymIdx(a.ym)-ymIdx(b.ym));
  for(let i=1;i<recs.length;i++){const d=ymIdx(recs[i].ym)-ymIdx(recs[i-1].ym);
-  if(d===0)errors.push('Mes duplicado: '+recs[i].ym+'.');
+  if(d===0)errors.push((FREQ==='Q'?'Trimestre':'Mes')+' duplicado: '+recs[i].ym+'.');
   else if(d>1){const miss=[];for(let k=1;k<d;k++)miss.push(addM(recs[i-1].ym,k));
    errors.push('Serie no continua: faltan '+miss.slice(0,4).join(', ')+(miss.length>4?'…':'')+'.');}}
- if(recs.length<12)errors.push('Se requieren al menos <b>12 meses</b>; el archivo trae '+recs.length+'.');
+ const MINP=(FREQ==='Q'?8:12);
+ if(recs.length<MINP)errors.push('Se requieren al menos <b>'+MINP+' '+PUp()+'</b>; el archivo trae '+recs.length+'.');
  if(errors.length)return{ok:false,errors:errors.slice(0,10)};
  const col=k=>recs.map(r=>r[k]);
  const d={meses:col('ym'),ventas:col('ventas')};
@@ -660,17 +702,27 @@ function buildDataset(rows,fileName){
  else if(acC.some(v=>v!=null)||pcC.some(v=>v!=null))warnings.push('Liquidez requiere Activos y Pasivos Corrientes completos — capa desactivada.');
  if(headers.some(h=>IAHDRS.includes(normH(h))))warnings.push('Columnas IA detectadas: ya no son necesarias — los KPIs Inteligentes se calculan automáticamente a partir de tus datos básicos, así que se ignoran.');
  if(d.ventas.some(v=>v<=0))warnings.push('Hay meses con ventas ≤ 0: los porcentajes pueden ser inestables.');
- return{ok:true,errors:[],warnings,data:d,name:fileName};}
+ /* Mapa de columnas: qué se reconoció y qué se ignoró (transparencia para el usuario) */
+ const ROLES={fecha:'Periodo',ventas:'Ventas',costos:'Costos',margen:'Margen',flujo:'Flujo de caja',
+   unidades:'Unidades',precio:'Precio promedio',ac:'Activos corrientes',pc:'Pasivos corrientes',
+   anio:'Año',mesn:'Mes'};
+ const porCol={},usadas=[];
+ for(const k in H){if(H[k]===undefined||!ROLES[k])continue;
+   if(hasFecha&&(k==='anio'||k==='mesn'))continue;   /* si hay columna de periodo, año/mes no se usan */
+   porCol[H[k]]=ROLES[k];}
+ headers.forEach((h,i)=>{if(porCol[i])usadas.push({col:String(h||('columna '+(i+1))),rol:porCol[i]});});
+ const ignoradas=headers.map((h,i)=>porCol[i]?null:String(h||'')).filter(x=>x&&x.trim()!=='');
+ return{ok:true,errors:[],warnings,data:d,name:fileName,mapa:{usadas,ignoradas,autoFecha}};}
 
 /* ===== Modelos (JS, mismos algoritmos que la versión Python) ===== */
 function decompose(y,meses){
- const n=y.length,trend=new Array(n).fill(null);
- for(let t=6;t<=n-7;t++){let s=(y[t-6]+y[t+6])/2;for(let i=t-5;i<=t+5;i++)s+=y[i];trend[t]=s/12;}
+ const n=y.length,trend=new Array(n).fill(null),P=SEAS,h=P/2;
+ for(let t=h;t<=n-1-h;t++){let acc=(y[t-h]+y[t+h])/2;for(let i=t-h+1;i<=t+h-1;i++)acc+=y[i];trend[t]=acc/P;}
  const bym={};
- for(let t=0;t<n;t++){if(trend[t]==null)continue;const m=+meses[t].split('-')[1];(bym[m]=bym[m]||[]).push(y[t]-trend[t]);}
+ for(let t=0;t<n;t++){if(trend[t]==null)continue;const m=seasIdx(meses[t]);(bym[m]=bym[m]||[]).push(y[t]-trend[t]);}
  const idx={};for(const m in bym)idx[m]=avg(bym[m]);
  const mean=avg(Object.values(idx));for(const m in idx)idx[m]-=mean;
- const seasonal=y.map((v,t)=>{const m=+meses[t].split('-')[1];return idx[m]!=null?+idx[m].toFixed(3):0;});
+ const seasonal=y.map((v,t)=>{const m=seasIdx(meses[t]);return idx[m]!=null?+idx[m].toFixed(3):0;});
  const resid=y.map((v,t)=>trend[t]==null?null:+(v-trend[t]-seasonal[t]).toFixed(3));
  const rs=resid.filter(v=>v!=null),sr=resid.map((r,t)=>r==null?null:r+seasonal[t]).filter(v=>v!=null);
  const fuerza=Math.max(0,Math.min(1,1-variance(rs)/variance(sr)));
@@ -688,7 +740,7 @@ function hwRun(y,m,a,b,g,h){
 function hwSSE(y,m,a,b,g){const r=hwRun(y,m,a,b,g,0);let s=0;
  for(let t=m;t<y.length;t++){const e=y[t]-r.fitted[t];s+=e*e;}return s;}
 function fitHW(y,h){
- const m=12;let best=null;
+ const m=SEAS;let best=null;
  for(let a=.05;a<=.96;a+=.09)for(let b=.02;b<=.5;b+=.06)for(let g=.05;g<=.96;g+=.09){
   const s=hwSSE(y,m,a,b,g);if(!best||s<best.s)best={s,a,b,g};}
  const st=.02,cl=(x)=>Math.min(.99,Math.max(.01,x));
@@ -702,10 +754,10 @@ function fitHW(y,h){
   params:{a:+best.a.toFixed(2),b:+best.b.toFixed(2),g:+best.g.toFixed(2)}};}
 function backtest(y,h){
  const train=y.slice(0,y.length-h),test=y.slice(-h);
- if(train.length<24)return null;
+ if(train.length<(SEAS===4?12:24))return null;
  const f=fitHW(train,h);let ae=0,se=0,na=0;
  for(let i=0;i<h;i++){ae+=Math.abs((test[i]-f.fc[i])/test[i]);se+=Math.pow(test[i]-f.fc[i],2);
-  na+=Math.abs((test[i]-y[y.length-h-12+i])/test[i]);}
+  na+=Math.abs((test[i]-y[y.length-h-SEAS+i])/test[i]);}
  return{pred:f.fc,h,mape:+(ae/h*100).toFixed(2),rmse:+Math.sqrt(se/h).toFixed(2),naive:+(na/h*100).toFixed(2)};}
 
 /* ===================================================================
@@ -741,24 +793,24 @@ const finiteArr=a=>Array.isArray(a)&&a.length>0&&a.every(v=>typeof v==='number'&
    estacional por mes; proyecta extrapolando la recta de la tendencia
    y volviendo a sumar el índice del mes correspondiente.            */
 function fitDecomp(y,meses,h){
-  if(y.length<24)return null;
+  if(y.length<(SEAS===4?12:24))return null;
   const d=decompose(y,meses),n=y.length;
   const X=[],Y=[];
   d.trend.forEach((v,i)=>{if(v!=null){X.push([1,i]);Y.push(v);}});
   if(X.length<6)return null;
   const beta=olsFit(X,Y);if(!beta||!finiteArr(beta))return null;
   const idx={};
-  d.seasonal.forEach((s,i)=>{idx[+meses[i].split('-')[1]]=s;});
+  d.seasonal.forEach((s,i)=>{idx[seasIdx(meses[i])]=s;});
   const fitted=y.map((v,i)=>beta[0]+beta[1]*i+(d.seasonal[i]||0));
   const res=y.map((v,i)=>v-fitted[i]);
   const fc=[];
   for(let k=1;k<=h;k++){
-    const t=n-1+k,mm=+addM(meses[n-1],k).split('-')[1];
+    const t=n-1+k,mm=seasIdx(addM(meses[n-1],k));
     fc.push(beta[0]+beta[1]*t+(idx[mm]||0));
   }
   if(!finiteArr(fc))return null;
   return{fc:fc.map(v=>+v.toFixed(2)),fitted,sd:+Math.sqrt(variance(res)).toFixed(3),
-    kpar:2+11,detalle:'tendencia lineal + índice estacional de 12 meses',
+    kpar:2+(SEAS-1),detalle:'tendencia lineal + índice estacional de '+SEAS+' '+PUp(),
     params:{pend:+beta[1].toFixed(3),fuerza:+(d.fuerza*100).toFixed(0)}};
 }
 
@@ -768,7 +820,7 @@ function fitDecomp(y,meses,h){
    más complejas, pero se penaliza el exceso de parámetros.         */
 function fourierRow(t,K){
   const r=[1,t];
-  for(let k=1;k<=K;k++){const w=2*Math.PI*k*t/12;r.push(Math.sin(w),Math.cos(w));}
+  for(let k=1;k<=K;k++){const w=2*Math.PI*k*t/SEAS;r.push(Math.sin(w),Math.cos(w));}
   return r;
 }
 function fourierOne(y,h,K){
@@ -785,9 +837,9 @@ function fourierOne(y,h,K){
     kpar,aicc,K,params:{K,pend:+beta[1].toFixed(3)}};
 }
 function fitFourier(y,h){
-  if(y.length<24)return null;
+  if(y.length<(SEAS===4?12:24))return null;
   let best=null;
-  const Kmax=Math.min(5,Math.max(2,Math.floor((y.length-4)/6)));
+  const Kmax=Math.max(1,Math.min(Math.floor(SEAS/2),Math.min(5,Math.max(2,Math.floor((y.length-4)/6)))));
   for(let K=1;K<=Kmax;K++){const m=fourierOne(y,h,K);if(m&&(!best||m.aicc<best.aicc))best=m;}
   if(best)best.detalle=best.K+' armónico'+(best.K>1?'s':'')+' (elegido por AICc) + tendencia lineal';
   return best;
@@ -798,21 +850,21 @@ function fitFourier(y,h){
    (1-B)(1-B¹²) — y modela el residuo con términos AR/MA regulares y
    estacionales multiplicativos. La configuración se elige por AICc.  */
 const SAR_CFG=[
-  {name:'(0,1,1)(0,1,1)₁₂',free:['th','Th']},
-  {name:'(1,1,0)(1,1,0)₁₂',free:['ph','Ph']},
-  {name:'(1,1,1)(0,1,1)₁₂',free:['ph','th','Th']},
-  {name:'(0,1,1)(1,1,1)₁₂',free:['th','Ph','Th']}
+  {name:'(0,1,1)(0,1,1)',free:['th','Th']},
+  {name:'(1,1,0)(1,1,0)',free:['ph','Ph']},
+  {name:'(1,1,1)(0,1,1)',free:['ph','th','Th']},
+  {name:'(0,1,1)(1,1,1)',free:['th','Ph','Th']}
 ];
 function sarimaCSS(z,idxs,st,p){
-  const ee={};let sse=0,cnt=0;
+  const ee={};let sse=0,cnt=0;const S1=SEAS,S2=SEAS+1;
   for(let i=0;i<idxs.length;i++){
     const t=idxs[i];let v=z[t];
     if(z[t-1]!=null)v-=p.ph*z[t-1];
-    if(z[t-12]!=null)v-=p.Ph*z[t-12];
-    if(z[t-13]!=null)v+=p.ph*p.Ph*z[t-13];
+    if(z[t-S1]!=null)v-=p.Ph*z[t-S1];
+    if(z[t-S2]!=null)v+=p.ph*p.Ph*z[t-S2];
     if(ee[t-1]!=null)v-=p.th*ee[t-1];
-    if(ee[t-12]!=null)v-=p.Th*ee[t-12];
-    if(ee[t-13]!=null)v-=p.th*p.Th*ee[t-13];
+    if(ee[t-S1]!=null)v-=p.Th*ee[t-S1];
+    if(ee[t-S2]!=null)v-=p.th*p.Th*ee[t-S2];
     if(!isFinite(v))return null;
     ee[t]=v;
     if(t>=st){sse+=v*v;cnt++;}
@@ -820,11 +872,12 @@ function sarimaCSS(z,idxs,st,p){
   return cnt>0?{ee,sse,cnt}:null;
 }
 function fitSARIMA(y,h){
-  const n=y.length;if(n<30)return null;
-  const z={};for(let t=13;t<n;t++)z[t]=y[t]-y[t-1]-y[t-12]+y[t-13];
+  const n=y.length,S1=SEAS,S2=SEAS+1;
+  if(n<(SEAS===4?20:30))return null;
+  const z={};for(let t=S2;t<n;t++)z[t]=y[t]-y[t-1]-y[t-S1]+y[t-S2];
   const idxs=Object.keys(z).map(Number).sort((a,b)=>a-b);
   if(idxs.length<10)return null;
-  const st=idxs[0]+Math.min(12,Math.floor(idxs.length*0.2));
+  const st=idxs[0]+Math.min(SEAS,Math.floor(idxs.length*0.2));
   let best=null;
   for(const cfg of SAR_CFG){
     const base={ph:0,th:0,Ph:0,Th:0};
@@ -870,13 +923,13 @@ function fitSARIMA(y,h){
     const t=n-1+k;
     let zh=0;
     if(zf[t-1]!=null)zh+=p.ph*zf[t-1];
-    if(zf[t-12]!=null)zh+=p.Ph*zf[t-12];
-    if(zf[t-13]!=null)zh-=p.ph*p.Ph*zf[t-13];
+    if(zf[t-S1]!=null)zh+=p.Ph*zf[t-S1];
+    if(zf[t-S2]!=null)zh-=p.ph*p.Ph*zf[t-S2];
     if(ef[t-1]!=null)zh+=p.th*ef[t-1];
-    if(ef[t-12]!=null)zh+=p.Th*ef[t-12];
-    if(ef[t-13]!=null)zh+=p.th*p.Th*ef[t-13];
+    if(ef[t-S1]!=null)zh+=p.Th*ef[t-S1];
+    if(ef[t-S2]!=null)zh+=p.th*p.Th*ef[t-S2];
     zf[t]=zh;ef[t]=0;
-    const yv=zh+yf[t-1]+yf[t-12]-yf[t-13];
+    const yv=zh+yf[t-1]+yf[t-S1]-yf[t-S2];
     if(!isFinite(yv))return null;
     yf[t]=yv;fc.push(yv);
   }
@@ -884,28 +937,28 @@ function fitSARIMA(y,h){
   const res=idxs.filter(t=>t>=st).map(t=>ee[t]);
   const pr={};['ph','th','Ph','Th'].forEach(k2=>{if(p[k2])pr[k2]=+p[k2].toFixed(3);});
   return{fc:fc.map(v=>+v.toFixed(2)),fitted,sd:+Math.sqrt(variance(res)).toFixed(3),
-    kpar:best.cfg.free.length,detalle:'orden '+best.cfg.name+' elegido por AICc',
-    orden:best.cfg.name,params:pr};
+    kpar:best.cfg.free.length,detalle:'orden '+best.cfg.name+'['+SEAS+'] elegido por AICc',
+    orden:best.cfg.name+'['+SEAS+']',params:pr};
 }
 
 /* ---------- Catálogo de modelos ---------- */
 const FCMODELS=[
- {id:'dec',n:'Descomposición',min:24,
+ {id:'dec',n:'Descomposición',get min(){return SEAS===4?12:24;},
   corto:'Separa la serie en tendencia + estacionalidad y proyecta cada parte.',
   fuerte:'Transparente y fácil de explicar en comité: se ve de dónde sale cada peso.',
   debil:'Asume que la tendencia sigue recta; reacciona lento a cambios de ritmo.',
   fit:(y,ms,h)=>fitDecomp(y,ms,h)},
- {id:'hw',n:'Holt-Winters',min:24,
+ {id:'hw',n:'Holt-Winters',get min(){return SEAS===4?12:24;},
   corto:'Suaviza nivel, tendencia y estacionalidad dando más peso a lo reciente.',
   fuerte:'Se adapta rápido cuando el negocio cambia de ritmo. Estándar en la industria.',
   debil:'Con series cortas o muy ruidosas puede sobrerreaccionar al último dato.',
   fit:(y,ms,h)=>fitHW(y,h)},
- {id:'fou',n:'Regresión estacional (Fourier)',min:24,
+ {id:'fou',n:'Regresión estacional (Fourier)',get min(){return SEAS===4?12:24;},
   corto:'Regresión con tendencia y ondas seno/coseno que recrean el ciclo anual.',
   fuerte:'Estable y parsimoniosa: pocos parámetros, buena con historia corta o ruidosa.',
   debil:'La estacionalidad es rígida: si el patrón anual cambia, no lo sigue.',
   fit:(y,ms,h)=>fitFourier(y,h)},
- {id:'sar',n:'SARIMA',min:30,
+ {id:'sar',n:'SARIMA',get min(){return SEAS===4?20:30;},
   corto:'Diferencia la serie y modela la memoria que queda en los errores.',
   fuerte:'El más flexible: captura inercia y arrastre que los otros no ven.',
   debil:'Caja más opaca y exige más historia; puede sobreajustar si la serie es corta.',
@@ -926,15 +979,16 @@ function fcMetrics(act,pred){
 function evalModels(y,meses,h){
   const n=y.length;
   if(n<24)return null;
-  const H=n>=42?12:(n>=30?6:3);   /* deja ≥30 meses de entrenamiento cuando se puede: SARIMA los exige */
+  /* Horizonte de validación: deja suficiente entrenamiento para los modelos estacionales */
+  const H=(SEAS===4)?(n>=28?8:(n>=20?4:2)):(n>=42?12:(n>=30?6:3));
   const trY=y.slice(0,n-H),trM=meses.slice(0,n-H),teY=y.slice(n-H);
   /* referencia: ingenuo estacional (repetir el mismo mes del año pasado) */
-  const nv=[];for(let i=0;i<H;i++)nv.push(y[n-H-12+i]);
-  const nvM=(n-H-12>=0)?fcMetrics(teY,nv):null;
+  const nv=[];for(let i=0;i<H;i++)nv.push(y[n-H-SEAS+i]);
+  const nvM=(n-H-SEAS>=0)?fcMetrics(teY,nv):null;
   const out=FCMODELS.map(M=>{
     const r={id:M.id,n:M.n,corto:M.corto,fuerte:M.fuerte,debil:M.debil};
     if(n<M.min){r.ok=false;r.motivo='Requiere ≥'+M.min+' meses de historia (tienes '+n+').';return r;}
-    if(trY.length<Math.max(24,M.min)){
+    if(trY.length<Math.max(SEAS===4?12:24,M.min)){
       r.ok=false;r.sinVal=true;
       r.motivo='Serie demasiado corta para validarlo a ciegas (haría falta 1 año más). Se muestra sin verificar.';
       try{const f=M.fit(y,meses,h);if(f&&finiteArr(f.fc)){r.full=f;r.detalle=f.detalle||'';r.params=f.params||{};}}catch(e){}
@@ -999,7 +1053,7 @@ function curM(){
   if(!(fcSerie in S.modsCache)){
     const q=fcSer();
     S.modsCache[fcSerie]=(q&&q.arr&&q.arr.length===S.n&&q.arr.every(v=>typeof v==='number'&&isFinite(v)))
-      ? evalModels(q.arr,S.d.meses,6) : null;
+      ? evalModels(q.arr,S.d.meses,(SEAS===4)?4:6) : null;
   }
   return S.modsCache[fcSerie];
 }
@@ -1038,7 +1092,7 @@ function renderCmp(){
       '<td>'+(win?'<span class="vd vd-win">Recomendado</span>':'<span class="vd vd-alt">Alternativa</span>')+'</td></tr>';
   });
   html+='</tbody></table></div>';
-  if(M.naiveM)html+='<div class="hint">Referencia · <b>método ingenuo estacional</b> (repetir el mismo mes del año anterior): MAPE '+f1(M.naiveM.mape)+'%. Un modelo que no le gane a esta referencia no está aportando valor.</div>';
+  if(M.naiveM)html+='<div class="hint">Referencia · <b>método ingenuo estacional</b> (repetir el mismo '+PU()+' del año anterior): MAPE '+f1(M.naiveM.mape)+'%. Un modelo que no le gane a esta referencia no está aportando valor.</div>';
   document.getElementById('cmpTable').innerHTML=html;
 
   /* veredicto en lenguaje claro */
@@ -1127,14 +1181,15 @@ function drawFC(){
     margin:{l:56,r:14,t:30,b:36},yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);
   const ser=fcSer(),esFlujo=['ventas','margen','costos','flujo','unidades'].includes(ser.id);
   const arr=ser.arr;
-  const q=esFlujo?sum(r.full.fc.slice(0,3)):avg(r.full.fc.slice(0,3));
-  const qp=esFlujo?sum(arr.slice(S.n-12,S.n-9)):avg(arr.slice(S.n-12,S.n-9));
+  const QN=S.qn||3, DET=Math.min(r.full.fc.length,SEAS===4?4:3);
+  const q=esFlujo?sum(r.full.fc.slice(0,QN)):avg(r.full.fc.slice(0,QN));
+  const qp=esFlujo?sum(arr.slice(S.n-SEAS,S.n-SEAS+QN)):avg(arr.slice(S.n-SEAS,S.n-SEAS+QN));
   const yy=(qp&&Math.abs(qp)>1e-9)?q/qp-1:null;
   document.getElementById('fcNote').innerHTML=
     '<b>'+esc(r.n)+'</b> proyecta '+(esFlujo?'el próximo trimestre de <b>'+esc(ser.n)+'</b> en <b>'+fcFmt(q)+'</b>'
       :'<b>'+esc(ser.n)+'</b> con un promedio trimestral de <b>'+fcFmt(q)+'</b>')+
     (yy!=null?' ('+pctS(yy)+' vs el mismo trimestre del año previo)':'')+': '+
-    S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+fcFmt(r.full.fc[i])).join(', ')+
+    S.fcMeses.slice(0,DET).map((m,i)=>lab(m)+' '+fcFmt(r.full.fc[i])).join(', ')+
     '. Banda de ~80%: ±'+fcFmt(z*sd).replace(/^-/,'')+'/mes. '+
     (!r.ok?'<b>Sin validación:</b> la serie es muy corta para probarlo a ciegas; usa el rango, no el número.':
      r.id===curM().best?'Es el modelo con menor error en la prueba a ciegas.':
@@ -1249,7 +1304,7 @@ function expModelos(){
       r.ok?r.mape:'', r.ok?r.rmse:'', r.ok?(r.mejorQueNaive?'Sí':'No'):'', r.ok&&r.skill!=null?r.skill:'',
       r.detalle||'', r.ok?'':(r.motivo||'')]);
   });
-  if(M.naiveM)rows.push(['Referencia: ingenuo estacional','Benchmark',M.naiveM.mape,M.naiveM.rmse,'','','Repetir el mismo mes del año anterior','']);
+  if(M.naiveM)rows.push(['Referencia: ingenuo estacional','Benchmark',M.naiveM.mape,M.naiveM.rmse,'','','Repetir el mismo '+PU()+' del año anterior','']);
   return rows;
 }
 function expPronostico(){
@@ -1295,7 +1350,7 @@ function expMetodo(){
   const M=curM();
   return [['Metodología y advertencias'],[],
    ['Indicador pronosticado',fcSer()?fcSer().n:'Ventas'],
-   ['Protocolo de validación',M?('Se ocultan los últimos '+M.H+' meses; cada modelo se entrena con el resto y predice ese tramo a ciegas. Se compara con el método ingenuo estacional (repetir el mismo mes del año anterior).'):'No aplicable: serie demasiado corta.'],
+   ['Protocolo de validación',M?('Se ocultan los últimos '+M.H+' meses; cada modelo se entrena con el resto y predice ese tramo a ciegas. Se compara con el método ingenuo estacional (repetir el mismo '+PU()+' del año anterior).'):'No aplicable: serie demasiado corta.'],
    ['Limitación del protocolo','Es una sola ventana de validación (holdout único). Con otra ventana el orden entre modelos cercanos podría cambiar.'],
    ['Banda de incertidumbre','±1,2816 desviaciones de los residuos del ajuste ≈ 80% de cobertura. Es aproximada: no incorpora incertidumbre de los parámetros.'],
    ['Naturaleza de los datos',(CUR.src==='demo')?'Datos simulados con fines de demostración.':
@@ -1347,12 +1402,13 @@ function expNote(t){['expNote','expNote2'].forEach(id=>{const el=document.getEle
 
 /* ===== Pipeline de cálculo (demo y datos del usuario, mismo camino) ===== */
 function computeAll(d){
- const n=d.meses.length,S={d,n,labs:d.meses.map(lab)};
+ setFreq(d.meses);
+ const n=d.meses.length,S={d,n,labs:d.meses.map(lab),freq:FREQ,seas:SEAS};
  if(!d.iat)deriveIA(d);
  S.has={flujo:!!d.flujo,unidades:!!d.unidades,liq:!!(d.ac&&d.pc),ia:!!d.iat,iaPrec:!!d.iap,iaEsc:!!d.iae};S.iaCalc=!!d.iaCalc;
  S.margen_pct=d.margen.map((m,i)=>+(m/d.ventas[i]*100).toFixed(2));
  if(S.has.liq)S.rc=d.ac.map((a,i)=>+(a/d.pc[i]).toFixed(3));
- const w=(arr,k)=>{const end=n-12*(k-1),st=end-12;return st<0?null:arr.slice(st,end);};
+ const w=(arr,k)=>{const end=n-SEAS*(k-1),st=end-SEAS;return st<0?null:arr.slice(st,end);};
  S.win={};['ventas','costos','margen','flujo'].forEach(c=>{if(d[c])S.win[c]=[1,2,3].map(k=>{const x=w(d[c],k);return x?sum(x):null;});});
  if(d.unidades)S.win.unidades=[1,2,3].map(k=>{const x=w(d.unidades,k);return x?sum(x):null;});
  const V=S.win.ventas,M=S.win.margen;
@@ -1376,20 +1432,23 @@ function computeAll(d){
   const b2=mk(2);if(b2)S.bridges.push(b2);
   if(b1){const tot=b1.act-b1.prev;S.shareP=Math.abs(tot)>1e-6?b1.efPrecio/tot:null;}
   if(b2){const tot=b2.act-b2.prev;S.sharePprev=Math.abs(tot)>1e-6?b2.efPrecio/tot:null;}}
- if(n>=24){
+ if(n>=(SEAS===4?12:24)){
   S.dec=decompose(d.ventas,d.meses);
-  S.hw=fitHW(d.ventas,6);
-  S.mods=evalModels(d.ventas,d.meses,6);
+  const HZ0=(SEAS===4)?4:6;
+  S.hw=fitHW(d.ventas,HZ0);
+  S.mods=evalModels(d.ventas,d.meses,HZ0);
   if(S.mods&&S.mods.best){const bm=S.mods.rows.find(r=>r.id===S.mods.best);
    if(bm&&bm.full){S.hw=bm.full;S.bestName=bm.n;S.bestMape=bm.mape;}}
   S.hwM=fitHW(d.margen,3);
-  S.fcMeses=[1,2,3,4,5,6].map(k=>addM(d.meses[n-1],k));
-  S.q1=sum(S.hw.fc.slice(0,3));S.q1prev=sum(d.ventas.slice(n-12,n-9));
+  const HZ=(SEAS===4)?4:6, QN=(SEAS===4)?1:3;
+  S.fcMeses=[];for(let k=1;k<=HZ;k++)S.fcMeses.push(addM(d.meses[n-1],k));
+  S.qn=QN;
+  S.q1=sum(S.hw.fc.slice(0,QN));S.q1prev=sum(d.ventas.slice(n-SEAS,n-SEAS+QN));
   S.q1yoy=S.q1prev>0?S.q1/S.q1prev-1:null;
-  if(n>=36)S.bt=backtest(d.ventas,12);else if(n>=30)S.bt=backtest(d.ventas,6);}
- if(S.has.ia){S.K={pmBase:sum(d.margen.slice(n-12,n-9)),
+  if(SEAS===4){if(n>=24)S.bt=backtest(d.ventas,8);else if(n>=20)S.bt=backtest(d.ventas,4);}else{if(n>=36)S.bt=backtest(d.ventas,12);else if(n>=30)S.bt=backtest(d.ventas,6);}}
+ if(S.has.ia){S.K={pmBase:sum(d.margen.slice(n-SEAS,n-SEAS+((SEAS===4)?1:3))),
    dlrBase:S.has.liq?avg(S.rc.slice(-3)):null,
-   roiHist:sum(d.margen.slice(-12))/sum(d.costos.slice(-12))*100};
+   roiHist:sum(d.margen.slice(-SEAS))/sum(d.costos.slice(-SEAS))*100};
   S.escList=S.has.iaEsc?['Optimista','Base','Pesimista'].filter(e=>d.iae.includes(e))
     .concat([...new Set(d.iae)].filter(e=>!['Optimista','Base','Pesimista'].includes(e))):[];}
  /* ciclo anual: hasta los últimos 4 años calendario */
@@ -1416,7 +1475,7 @@ function buildNarrative(S){
    'Estudio de elasticidad antes de la próxima decisión de precio');
   else if(S.shareP>0.7)add('warn',`<b>Crecimiento dependiente del precio:</b> ${f0(S.shareP*100)}% del Δ ventas viene de precio, no de volumen — tiene techo (elasticidad).`,
    'Plan de volumen: demanda, canales o portafolio');}
- if(S.g1!=null&&S.g1<0)add('bad',`<b>Las ventas se contraen:</b> ${pctS(S.g1)} en los últimos 12 meses.`,
+ if(S.g1!=null&&S.g1<0)add('bad',`<b>Las ventas se contraen:</b> ${pctS(S.g1)} en el último año móvil.`,
   'Revisión del plan comercial y del pipeline de demanda');
  if(S.has.liq){
   if(S.rcLast<1)add('bad',`<b>Liquidez crítica:</b> razón corriente ${f1(S.rcLast)}× en el último mes (&lt;1×).`,
@@ -1448,7 +1507,7 @@ function buildNarrative(S){
 function deriveIA(d){
  const n=d.meses.length;
  const mm3=(a,i)=>{if(i<0)return null;const w=[];for(let k=Math.max(0,i-2);k<=i;k++)if(a[k]!=null)w.push(a[k]);return w.length?w.reduce((x,y)=>x+y,0)/w.length:null;};
- const yoy=(a,i)=>{const c=mm3(a,i),p=mm3(a,i-12);return(c!=null&&p!=null&&p>0)?c/p:null;};
+ const yoy=(a,i)=>{const c=mm3(a,i),p=mm3(a,i-SEAS);return(c!=null&&p!=null&&p>0)?c/p:null;};
  const mom=(a,i)=>{const c=mm3(a,i),p=mm3(a,i-1);return(c!=null&&p!=null&&p>0)?c/p:null;};
  const fill=arr=>{const f=arr.find(v=>v!=null);return arr.map(v=>v==null?(f!=null?f:1):v);};
  const deriveF=src=>{
@@ -1473,8 +1532,8 @@ function fac(S,mode){
 
 /* ===== Frases condicionales ===== */
 function growthHead(S){
- if(S.g1==null)return`<b>Lectura descriptiva de ${S.n} meses.</b> Con 24+ meses se activan las comparaciones anuales y la predicción.`;
- if(S.g1<0)return`<b>Las ventas se contraen ${pctS(S.g1)}</b> en los últimos 12 meses${S.g0!=null?` (periodo previo: ${pctS(S.g0)})`:''}.`;
+ if(S.g1==null)return`<b>Lectura descriptiva de ${S.n} meses.</b> Con 2 ciclos anuales completos se activan las comparaciones anuales y la predicción.`;
+ if(S.g1<0)return`<b>Las ventas se contraen ${pctS(S.g1)}</b> en el último año móvil${S.g0!=null?` (periodo previo: ${pctS(S.g0)})`:''}.`;
  if(S.g0!=null&&S.g1<S.g0-0.02)return`<b>Crecemos, pero el ritmo se enfría:</b> ${pctS(S.g1)} vs ${pctS(S.g0)} del periodo previo.`;
  if(S.g0!=null&&S.g1>S.g0+0.02)return`<b>El crecimiento se acelera:</b> ${pctS(S.g1)} vs ${pctS(S.g0)} del periodo previo.`;
  return`<b>El crecimiento se sostiene en ${pctS(S.g1)}</b> anual.`;}
@@ -1536,7 +1595,7 @@ function renderSource(){
  if(el)el.innerHTML=`<span class="chip ${M.cls}">${M.ic} ${M.et}</span>`;
  const hk=document.getElementById('heroKick');
  if(hk)hk.textContent=M.et+' · '+(CUR.src==='real'?'TSMC · semiconductores':'Finanzas corporativas')+' · '+
-   lab(S.d.meses[0])+'–'+lab(S.d.meses[S.n-1])+' ('+S.n+' meses'+(CUR.src==='demo'?', datos simulados':(CUR.src==='real'?', datos públicos reales':''))+')';
+   lab(S.d.meses[0])+'–'+lab(S.d.meses[S.n-1])+' ('+S.n+' '+PUp()+''+(CUR.src==='demo'?', datos simulados':(CUR.src==='real'?', datos públicos reales':''))+')';
  renderSrcPicker();}
 function renderVeredicto(){
  const p=[growthHead(S),marginClause(S)];
@@ -1544,7 +1603,7 @@ function renderVeredicto(){
  if(S.has.flujo)p.push(`La conversión de caja es ${f1(S.conv1)}%${S.conv1>=85?' (sana)':' (bajo el umbral de 85%)'}.`);
  if(S.has.liq)p.push(`La liquidez cierra en ${f1(S.rcLast)}×${S.rcLast<1?' — crítica':S.rcLast<1.2?' — zona de alerta':''}.`);
  if(S.hw&&S.q1yoy!=null)p.push(`${S.bestName&&S.mods&&S.mods.validado?'El modelo más confiable para tu serie ('+S.bestName.split(' (')[0]+', error de '+f1(S.bestMape)+'% en la prueba a ciegas)':'El modelo estadístico'} proyecta el próximo trimestre en <b>${f0(S.q1)}</b> (${pctS(S.q1yoy)} vs el mismo trimestre del año previo, con rango).`);
- document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · con ${CUR.src==='user'?'tus datos':(CUR.src==='real'?'datos reales de TSMC':'datos del demo')} (últimos 12 meses vs 12 previos)</div><p>${p.join(' ')}</p>`;}
+ document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · con ${CUR.src==='user'?'tus datos':(CUR.src==='real'?'datos reales de TSMC':'datos del demo')} (último año móvil vs el previo)</div><p>${p.join(' ')}</p>`;}
 function renderKpis(){
  if(!S)return;const pu=css('--purple'),mu=css('--muted');const cards=[];
  const spark=(vals,color)=>{const v=vals.filter(x=>x!=null);if(v.length<2)return'';
@@ -1586,7 +1645,7 @@ function renderStatic(){
   document.getElementById('tPuente').textContent=S.shareP!=null?`El precio aporta ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del cambio en ventas (${b.l0} → ${b.l1})`:'Puente precio-volumen';}
  if(S.has.liq)document.getElementById('tRC').textContent=`Liquidez: ${f1(S.rc12)}× promedio 12m, ${S.rcBad} mes(es) críticos en el histórico`;
  if(S.has.flujo)document.getElementById('tFlujo').textContent=`La caja convierte ${f1(S.conv1)}% del margen en efectivo`;
- if(S.mods)document.getElementById('btH').textContent=S.mods.H;
+ if(S.mods){document.getElementById('btH').textContent=S.mods.H;const bu=document.getElementById('btU');if(bu)bu.textContent=PUp();}
   if(S.mods&&S.mods.validado&&S.bestName){const cm=document.getElementById('chipMdl');
    if(cm)cm.textContent='Mejor modelo: '+S.bestName.split(' (')[0]+' · MAPE '+f1(S.bestMape)+'%';}
   if(S.dec)document.getElementById('fseas').textContent=f0(S.dec.fuerza*100)+'%';
@@ -1751,13 +1810,13 @@ document.getElementById('btnGovReset').addEventListener('click',()=>{GOV=JSON.pa
 
 /* ===== Q&A ===== */
 const QA=[
- {q:'¿Cómo cierran los últimos 12 meses?',k:['cierra','cierre','resumen','como va','cómo va','ultimos','últimos'],
-  a:()=>{let t=`<b>Últimos 12 meses:</b> ventas ${f0(S.win.ventas[0])}${S.g1!=null?` (${pctS(S.g1)} vs los 12m previos)`:''}, margen ${f1(S.m1)}%${S.m0!=null?` (${ppS(S.m1-S.m0)})`:''}.`;
+ {q:'¿Cómo cierra el último año móvil?',k:['cierra','cierre','resumen','como va','cómo va','ultimos','últimos'],
+  a:()=>{let t=`<b>Último año móvil:</b> ventas ${f0(S.win.ventas[0])}${S.g1!=null?` (${pctS(S.g1)} vs los 12m previos)`:''}, margen ${f1(S.m1)}%${S.m0!=null?` (${ppS(S.m1-S.m0)})`:''}.`;
    if(S.has.flujo)t+=` Conversión de caja ${f1(S.conv1)}%.`;
    if(S.has.liq)t+=` Razón corriente ${f1(S.rcLast)}× al cierre.`;
    return t;}},
  {q:'¿Qué proyecta el modelo?',k:['proyecta','pronóstico','pronostico','holt','prediccion','predicción','forecast','trimestre','2025'],
-  a:()=>S.hw?`<b>Holt-Winters${S.bt?` (validado: MAPE ${S.bt.mape}%)`:''}:</b> próximo trimestre en ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} vs el mismo trimestre del año previo): ${S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+f1(S.hw.fc[i])).join(', ')}, con banda de ±${f1(1.2816*S.hw.sd)}/mes (~80%).`
+  a:()=>S.hw?`<b>Holt-Winters${S.bt?` (validado: MAPE ${S.bt.mape}%)`:''}:</b> próximo trimestre en ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} vs el mismo trimestre del año previo): ${S.fcMeses.slice(0,S.qn||3).map((m,i)=>lab(m)+' '+f1(S.hw.fc[i])).join(', ')}, con banda de ±${f1(1.2816*S.hw.sd)}/${PU()} (~80%).`
    :'La predicción requiere al menos <b>24 meses</b> de historia; tu serie trae '+S.n+'.'},
  {q:'¿Cómo va el margen?',k:['margen','erosion','erosión','rentabilidad','utilidad'],
   a:()=>{let t='<b>'+marginClause(S)+'</b>';
@@ -1793,7 +1852,7 @@ document.getElementById('btnBrief').addEventListener('click',()=>{
  L.push('','## Veredicto',document.getElementById('veredicto').textContent.replace(/\s+/g,' ').trim());
  L.push('','## Alertas');S.alerts.forEach(a=>L.push('- ['+a.c.toUpperCase()+'] '+a.t.replace(/<[^>]+>/g,'')));
  if(S.hw){L.push('','## Predicción (Holt-Winters'+(S.bt?`, backtest MAPE ${S.bt.mape}% vs naive ${S.bt.naive}%`:', sin backtest por historia corta')+')');
-  L.push(`Próximo trimestre: ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} interanual). Mensual: ${S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+f1(S.hw.fc[i])).join(' / ')}. Banda ~80%: ±${f1(1.2816*S.hw.sd)}/mes.`);}
+  L.push(`Próximo trimestre: ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} interanual). Detalle: ${S.fcMeses.slice(0,S.qn||3).map((m,i)=>lab(m)+' '+f1(S.hw.fc[i])).join(' / ')}. Banda ~80%: ±${f1(1.2816*S.hw.sd)}/${PU()}.`);}
  if(S.has.ia){const F=fac(S,escMode);const pm=S.K.pmBase*F.Ft*F.Fp;
   L.push('','## KPIs Inteligentes (escenario: '+(escMode==='rec'?'reciente 3m':escMode)+`, F_tend ${F.Ft.toFixed(4)}, F_precio ${F.Fp.toFixed(4)})`);
   L.push(`- Predictive Margin: ${f1(pm)} vs historico ${f1(S.K.pmBase)}${S.hwM?` · triangulacion HW: ${f1(sum(S.hwM.fc))}`:''}.`);
@@ -1820,9 +1879,14 @@ function acceptDataset(ds,src){
  renderSource();renderStatic();renderKpis();gateAll();renderIK();drawAll();
  if(src==='user'){try{safeStore.set('jf-pf-userdata',JSON.stringify({name:ds.name,data:ds.data}));}catch(e){}}
  const ls=layersSummary(S);
+ const mp=ds.mapa;
+ const linMapa=mp?['<b>Columnas reconocidas:</b> '+mp.usadas.map(u=>'<code>'+esc(u.col)+'</code> → '+u.rol).join(' · ')+
+   (mp.autoFecha?' <i>(el periodo se tomó de la primera columna)</i>':'')]
+   .concat(mp.ignoradas.length?['<b>Columnas ignoradas:</b> '+mp.ignoradas.map(x=>'<code>'+esc(x)+'</code>').join(', ')+' — no corresponden a métricas del tablero.']:[]):[];
  report(true,'✓ Archivo válido: el tablero ya está recalculado con tus datos.',
-  ['<b>'+esc(ds.name)+'</b> · '+S.n+' meses ('+lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1])+').',
+  ['<b>'+esc(ds.name)+'</b> · '+S.n+' '+PUp()+' ('+lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1])+').',
    'Capas activas: '+ls.on.join(', ')+'.']
+  .concat(linMapa)
   .concat(ls.off.length?['Capas sin datos: '+ls.off.join(', ')+' (ver tabla de formato).']:[])
   .concat(ds.warnings&&ds.warnings.length?ds.warnings.map(w=>'⚠ '+w):[]));}
 function handleFile(file){
@@ -1867,11 +1931,12 @@ function toCSV(d){
  return lines.join('\n');}
 document.getElementById('btnTpl').addEventListener('click',()=>{
  dl('plantilla-pulso-financiero.csv',
-['Fecha,Anio,Mes,Mes_Nombre,Ventas_Millones,Unidades,Precio_Promedio,Costos_Millones,Margen_Millones,FlujoCaja_Millones,Activos_Corrientes,Pasivos_Corrientes',
- '2024-01-31,2024,1,Ene,120.5,980,122.9,82.3,38.2,33.1,150000,110000',
- '2024-02-29,2024,2,Feb,118.2,965,122.5,80.9,37.3,32.4,148500,112300',
- '2024-03-31,2024,3,Mar,131.7,1040,126.6,88.4,43.3,37.2,155200,109800',
- '# Borra esta fila. Minimo 12 meses consecutivos. Requeridas: Fecha (o Anio+Mes) + Ventas + (Costos o Margen); el resto es opcional y las capas IA se calculan solas.'].join('\n'),'text/csv');});
+['Fecha,Ventas,Costos,FlujoCaja,Unidades,Precio_Promedio,Activos_Corrientes,Pasivos_Corrientes',
+ '2024-01,120.5,82.3,33.1,980,122.9,150000,110000',
+ '2024-02,118.2,80.9,32.4,965,122.5,148500,112300',
+ '2024-03,131.7,88.4,37.2,1040,126.6,155200,109800',
+ '# Borra esta fila. Solo son obligatorias: el periodo (1a columna) + Ventas + (Costos o Margen).',
+ '# Trimestral: usa 2024-Q1, 2024-Q2... en la primera columna. Las columnas opcionales pueden eliminarse.'].join('\n'),'text/csv');});
 document.getElementById('btnDemoCsv').addEventListener('click',()=>dl('demo-pulso-financiero.csv',toCSV(RAW_DEMO),'text/csv'));
 
 /* ===== Init ===== */
