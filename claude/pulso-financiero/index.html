@@ -245,6 +245,17 @@ details.metod b{color:var(--deep-blue);}
 .srcbar-d b{color:var(--text);}
 .srcbar-d .priv{color:var(--ok);font-weight:700;}
 @media(max-width:800px){.srcbar-d{margin-left:0;text-align:left;width:100%;}}
+
+/* ===== Selector de indicador a pronosticar ===== */
+.sercard{border-left:5px solid var(--vibrant-blue);}
+.sersel{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 2px;}
+.serlbl{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+.serinp{min-width:210px;max-width:290px;width:auto;flex:0 0 auto;font-weight:700;font-size:.88rem;padding:9px 12px;border-radius:10px;
+  border:1.5px solid var(--purple);background:var(--white);color:var(--text);font-family:inherit;cursor:pointer;}
+.serinp:focus-visible{outline:3px solid var(--vibrant-blue);outline-offset:2px;}
+.serwhy{flex:1;min-width:220px;font-size:.79rem;color:var(--muted);line-height:1.45;}
+#serWarn{background:var(--warn-bg);color:var(--warn);border-radius:9px;padding:8px 11px;margin-top:10px;}
+@media(max-width:640px){.sersel{flex-direction:column;align-items:stretch;} .serinp{width:100%;}}
 </style>
 </head>
 <body>
@@ -346,8 +357,19 @@ details.metod b{color:var(--deep-blue);}
     <div class="sect-title">Predicción · cuatro modelos, una decisión</div>
     <div class="sect-desc">No existe un modelo bueno para todas las series: existe el que menos se equivoca <b>con la tuya</b>. Aquí los cuatro compiten en igualdad de condiciones y el tablero recomienda uno con evidencia, no con fe. Regla de los Sources: una predicción sin rango ni decisión asociada es curiosidad estadística.</div>
 
+    <div class="card sercard">
+      <h3>0 · ¿Qué quieres pronosticar?</h3>
+      <div class="sub">El pronóstico no es solo de ventas. Elige el indicador y los cuatro modelos se re-entrenan y se vuelven a comparar sobre esa serie. Las opciones dependen de las columnas que traiga tu archivo.</div>
+      <div class="sersel">
+        <label class="serlbl" for="fcSerie">Indicador</label>
+        <select class="inp serinp" id="fcSerie"></select>
+        <span class="serwhy" id="serWhy"></span>
+      </div>
+      <div class="hint" id="serWarn" hidden></div>
+    </div>
+
     <div class="card">
-      <h3>1 · ¿Qué modelo merece tu confianza?</h3>
+      <h3>1 · ¿Qué modelo merece tu confianza para <span id="serName1">las ventas</span>?</h3>
       <div class="sub">Los cuatro se entrenan con la misma historia, se les <b>ocultan los últimos <span id="btH">—</span> meses</b> y se les pide predecirlos a ciegas. Después se compara cada predicción contra lo que realmente pasó. Menor error = más confiable.</div>
       <div id="gCmp">
         <div id="cmpTable"></div>
@@ -359,7 +381,7 @@ details.metod b{color:var(--deep-blue);}
     </div>
 
     <div class="card">
-      <h3>2 · Proyección con el modelo que elijas</h3>
+      <h3>2 · Proyección de <span id="serName2">las ventas</span> con el modelo que elijas</h3>
       <div class="sub">El recomendado viene marcado con ★. Puedes cambiarlo si prefieres otro criterio — por ejemplo, uno más fácil de explicar en comité.</div>
       <div id="gFC">
         <div class="mdlsel" id="modelSel" role="group" aria-label="Elegir modelo de predicción"></div>
@@ -941,19 +963,58 @@ function evalModels(y,meses,h){
 /* ===================================================================
    UI · Comparador de modelos de predicción
    =================================================================== */
-let fcSel=null;   /* modelo elegido por el usuario (null = recomendado) */
+let fcSel=null;   /* modelo elegido (null = recomendado) */
+let fcSerie='ventas';  /* indicador a pronosticar */
+
+/* Catálogo de indicadores pronosticables · depende de lo que traiga el archivo */
+function fcSeriesList(){
+  if(!S)return[];
+  const L=[
+    {id:'ventas',n:'Ventas',arr:S.d.ventas,dec:1,
+     que:'El motor de ingresos: cuánto se factura cada mes.'},
+    {id:'margen',n:'Margen bruto',arr:S.d.margen,dec:1,
+     que:'Lo que queda tras el costo directo. Pronosticarlo anticipa la rentabilidad, no solo el volumen.'},
+    {id:'costos',n:'Costos',arr:S.d.costos,dec:1,
+     que:'La base de costo. Útil para presupuestar y ver si crece más rápido que las ventas.'},
+    {id:'margen_pct',n:'Margen %',arr:S.margen_pct,dec:2,suf:'%',
+     que:'La rentabilidad relativa. Su tendencia revela poder de precio o presión de costos.'}
+  ];
+  if(S.has.flujo)L.push({id:'flujo',n:'Flujo de caja',arr:S.d.flujo,dec:1,
+     que:'La caja que efectivamente entra. Es lo que condiciona las decisiones de tesorería.'});
+  if(S.d.unidades)L.push({id:'unidades',n:'Unidades',arr:S.d.unidades,dec:0,
+     que:'El volumen real, sin efecto precio. Clave para planear capacidad e inventario.'});
+  if(S.d.precio)L.push({id:'precio',n:'Precio promedio',arr:S.d.precio,dec:2,
+     que:'El precio medio por unidad. Separa la estrategia comercial del volumen.'});
+  if(S.has.liq)L.push({id:'rc',n:'Razón corriente',arr:S.rc,dec:2,suf:'×',
+     que:'La liquidez de corto plazo. Anticipar su caída da margen para actuar antes de la tensión.'});
+  return L;
+}
+function fcSer(){const L=fcSeriesList();return L.find(x=>x.id===fcSerie)||L[0];}
+function fcFmt(v){const q=fcSer();if(v==null||!isFinite(v))return'—';
+  return (q.dec===0?f0(v):(q.dec===2?v.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2}):f1(v)))+(q.suf||'');}
+/* Los modelos se calculan por indicador y se guardan en caché */
+function curM(){
+  if(!S)return null;
+  if(!S.modsCache)S.modsCache={ventas:S.mods};
+  if(!(fcSerie in S.modsCache)){
+    const q=fcSer();
+    S.modsCache[fcSerie]=(q&&q.arr&&q.arr.length===S.n&&q.arr.every(v=>typeof v==='number'&&isFinite(v)))
+      ? evalModels(q.arr,S.d.meses,6) : null;
+  }
+  return S.modsCache[fcSerie];
+}
 
 function fcActiveId(){
-  if(!S.mods)return null;
-  if(fcSel&&S.mods.rows.some(r=>r.id===fcSel&&r.full))return fcSel;
-  return S.mods.best;
+  if(!curM())return null;
+  if(fcSel&&curM().rows.some(r=>r.id===fcSel&&r.full))return fcSel;
+  return curM().best;
 }
-function fcActive(){const id=fcActiveId();return id?S.mods.rows.find(r=>r.id===id):null;}
+function fcActive(){const id=fcActiveId();return id?curM().rows.find(r=>r.id===id):null;}
 
 /* ---------- Tabla comparativa ---------- */
 function renderCmp(){
-  if(!S.mods)return;
-  const M=S.mods,best=M.best;
+  if(!curM())return;
+  const M=curM(),best=M.best;
   const rows=M.rows.slice().sort((a,b)=>{
     if(a.ok&&b.ok)return a.mape-b.mape;
     return a.ok?-1:(b.ok?1:0);
@@ -1002,10 +1063,10 @@ function renderCmp(){
 
 /* ---------- Gráfico del backtest: real vs los 4 a ciegas ---------- */
 function drawCmp(){
-  if(!visible('chCmp')||!S.mods)return;
-  const c=colors(),M=S.mods,l=M.testLabs.map(lab);
+  if(!visible('chCmp')||!curM())return;
+  const c=colors(),M=curM(),l=M.testLabs.map(lab);
   const pal={dec:c.db,hw:c.pu,fou:c.vb,sar:c.warn};
-  const tr=[{x:l,y:M.test,name:'Real',mode:'lines+markers',line:{color:c.pu,width:3},marker:{size:7}}];
+  const tr=[{x:l,y:M.test,name:'Real ('+fcSer().n+')',mode:'lines+markers',line:{color:c.pu,width:3},marker:{size:7}}];
   M.rows.forEach(r=>{if(!r.ok)return;
     tr.push({x:l,y:r.pred,name:r.n.split(' (')[0],mode:'lines+markers',
       line:{color:pal[r.id]||c.mu,width:r.id===M.best?2.4:1.4,dash:r.id===M.best?'dot':'dashdot'},
@@ -1017,14 +1078,14 @@ function drawCmp(){
 
 /* ---------- Selector de modelo (accesible por teclado) ---------- */
 function renderSel(){
-  if(!S.mods)return;
+  if(!curM())return;
   const act=fcActiveId(),el=document.getElementById('modelSel');
-  el.innerHTML=S.mods.rows.map(r=>{
+  el.innerHTML=curM().rows.map(r=>{
     const on=r.id===act;
     const usable=!!r.full;
     return '<button type="button" class="mdlbtn'+(on?' on':'')+(usable?'':' dis')+'" data-m="'+r.id+'"'+
       (usable?'':' disabled aria-disabled="true"')+' aria-pressed="'+(on?'true':'false')+'">'+
-      esc(r.n.split(' (')[0])+(r.id===S.mods.best&&S.mods.validado?' <span class="star" aria-label="recomendado">★</span>':'')+
+      esc(r.n.split(' (')[0])+(r.id===curM().best&&curM().validado?' <span class="star" aria-label="recomendado">★</span>':'')+
       (r.ok?'<span class="mm">'+f1(r.mape)+'%</span>':'<span class="mm">'+(usable?'sin validar':'n/d')+'</span>')+'</button>';
   }).join('');
   el.querySelectorAll('.mdlbtn').forEach(b=>{
@@ -1049,14 +1110,14 @@ function renderExplain(){
 
 /* ---------- Gráfico de proyección del modelo activo ---------- */
 function drawFC(){
-  if(!visible('chFC')||!S.mods)return;
+  if(!visible('chFC')||!curM())return;
   const r=fcActive();if(!r||!r.full)return;
   const c=colors(),z=1.2816,sd=r.full.sd;
   const fl=S.fcMeses.map(lab);
   const hi=r.full.fc.map(v=>+(v+z*sd).toFixed(1)),lo=r.full.fc.map(v=>+(v-z*sd).toFixed(1));
-  const lastL=S.labs[S.n-1],lastV=S.d.ventas[S.n-1];
+  const lastL=S.labs[S.n-1],lastV=fcSer().arr[S.n-1];
   Plotly.react('chFC',[
-    {x:S.labs,y:S.d.ventas,name:'Histórico',mode:'lines',line:{color:c.pu,width:2}},
+    {x:S.labs,y:fcSer().arr,name:'Histórico · '+fcSer().n,mode:'lines',line:{color:c.pu,width:2}},
     {x:[lastL].concat(fl),y:[lastV].concat(hi),name:'Banda ~80%',mode:'lines',line:{width:0},showlegend:false,hoverinfo:'skip'},
     {x:[lastL].concat(fl),y:[lastV].concat(lo),name:'Banda ~80%',mode:'lines',line:{width:0},
       fill:'tonexty',fillcolor:'rgba(0,72,255,.13)',hoverinfo:'skip'},
@@ -1064,28 +1125,51 @@ function drawFC(){
       line:{color:c.vb,width:2.4,dash:'dot'},marker:{size:6,symbol:'diamond'}}
   ],baseLayout({showlegend:true,legend:{orientation:'h',y:1.14,x:0,font:{size:10}},
     margin:{l:56,r:14,t:30,b:36},yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);
-  const q=sum(r.full.fc.slice(0,3));
-  const qp=sum(S.d.ventas.slice(S.n-12,S.n-9));
-  const yy=qp>0?q/qp-1:null;
+  const ser=fcSer(),esFlujo=['ventas','margen','costos','flujo','unidades'].includes(ser.id);
+  const arr=ser.arr;
+  const q=esFlujo?sum(r.full.fc.slice(0,3)):avg(r.full.fc.slice(0,3));
+  const qp=esFlujo?sum(arr.slice(S.n-12,S.n-9)):avg(arr.slice(S.n-12,S.n-9));
+  const yy=(qp&&Math.abs(qp)>1e-9)?q/qp-1:null;
   document.getElementById('fcNote').innerHTML=
-    '<b>'+esc(r.n)+'</b> proyecta el próximo trimestre en <b>'+f0(q)+'</b>'+
+    '<b>'+esc(r.n)+'</b> proyecta '+(esFlujo?'el próximo trimestre de <b>'+esc(ser.n)+'</b> en <b>'+fcFmt(q)+'</b>'
+      :'<b>'+esc(ser.n)+'</b> con un promedio trimestral de <b>'+fcFmt(q)+'</b>')+
     (yy!=null?' ('+pctS(yy)+' vs el mismo trimestre del año previo)':'')+': '+
-    S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+f1(r.full.fc[i])).join(', ')+
-    '. Banda de ~80%: ±'+f1(z*sd)+'/mes. '+
+    S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+fcFmt(r.full.fc[i])).join(', ')+
+    '. Banda de ~80%: ±'+fcFmt(z*sd).replace(/^-/,'')+'/mes. '+
     (!r.ok?'<b>Sin validación:</b> la serie es muy corta para probarlo a ciegas; usa el rango, no el número.':
-     r.id===S.mods.best?'Es el modelo con menor error en la prueba a ciegas.':
-     '<b>Ojo:</b> no es el modelo recomendado ('+esc(S.mods.rows.find(x=>x.id===S.mods.best).n)+
-     ' erró '+f1(S.mods.rows.find(x=>x.id===S.mods.best).mape)+'% vs '+f1(r.mape)+'% de este).');
+     r.id===curM().best?'Es el modelo con menor error en la prueba a ciegas.':
+     '<b>Ojo:</b> no es el modelo recomendado ('+esc(curM().rows.find(x=>x.id===curM().best).n)+
+     ' erró '+f1(curM().rows.find(x=>x.id===curM().best).mape)+'% vs '+f1(r.mape)+'% de este).');
 }
 
+function renderSerSel(){
+  const sel=document.getElementById('fcSerie');if(!sel)return;
+  const L=fcSeriesList();
+  if(!L.some(x=>x.id===fcSerie))fcSerie=L.length?L[0].id:'ventas';
+  sel.innerHTML=L.map(x=>'<option value="'+x.id+'"'+(x.id===fcSerie?' selected':'')+'>'+esc(x.n)+'</option>').join('');
+  sel.onchange=()=>{fcSerie=sel.value;fcSel=null;renderPredAll();drawCmp();drawFC();};
+  const q=fcSer();
+  const why=document.getElementById('serWhy');if(why)why.textContent=q?q.que:'';
+  ['serName1','serName2'].forEach(id=>{const e=document.getElementById(id);
+    if(e)e.textContent=q?q.n.toLowerCase():'la serie';});
+  /* Advertencia honesta: con valores ≤0 el error porcentual deja de ser fiable */
+  const w=document.getElementById('serWarn');
+  if(w){const neg=q&&q.arr&&q.arr.some(v=>v<=0);
+    w.hidden=!neg;
+    if(neg)w.innerHTML='⚠ <b>'+esc(q.n)+'</b> tiene meses con valores cero o negativos: el error porcentual (MAPE) se vuelve inestable. Para comparar modelos en esta serie, guíate por el <b>RMSE</b>.';}
+}
 function renderPredAll(){
-  const hay=S.mods&&S.mods.rows.some(r=>r.full);
-  if(!S.mods){
+  renderSerSel();
+  const M=curM();
+  if(!M){gate('gCmp','naCmp',false,'Este indicador no tiene una serie completa de datos numéricos para modelar.');
+    gate('gFC','naFC',false,'Elige otro indicador en el selector de arriba.');return;}
+  const hay=M.rows.some(r=>r.full);
+  if(!curM()){
     gate('gCmp','naCmp',false,'La comparación de modelos requiere al menos <b>24 meses</b> de historia mensual continua; tu serie trae '+S.n+'.');
     gate('gFC','naFC',false,'Sin historia suficiente no hay proyección que mostrar.');return;}
-  gate('gCmp','naCmp',S.mods.validado,'Para comparar modelos a ciegas hacen falta <b>27 meses</b> (24 de entrenamiento + 3 de prueba); tu serie trae '+S.n+'. La proyección sin validar se muestra abajo.');
+  gate('gCmp','naCmp',curM().validado,'Para comparar modelos a ciegas hacen falta <b>27 meses</b> (24 de entrenamiento + 3 de prueba); tu serie trae '+S.n+'. La proyección sin validar se muestra abajo.');
   gate('gFC','naFC',hay,'Ningún modelo pudo ajustarse a esta serie.');
-  if(S.mods.validado)renderCmp();
+  if(curM().validado)renderCmp();
   renderSel();renderExplain();
 }
 
@@ -1157,8 +1241,9 @@ function expSerie(){
 }
 function expModelos(){
   const rows=[['Modelo','Estado','MAPE_%','RMSE','Mejor_que_ingenuo','Ventaja_vs_ingenuo_%','Configuracion','Nota']];
-  if(!S.mods){rows.push(['—','Sin comparación: la serie no alcanza los 27 meses necesarios','','','','','','']);return rows;}
-  const M=S.mods;
+  const M=curM();
+  if(!M){rows.push(['—','Sin comparación disponible para este indicador','','','','','','']);return rows;}
+  rows.push(['Indicador: '+(fcSer()?fcSer().n:'Ventas'),'','','','','','','']);
   M.rows.slice().sort((a,b)=>(a.ok&&b.ok)?a.mape-b.mape:(a.ok?-1:1)).forEach(r=>{
     rows.push([r.n, r.ok?(r.id===M.best?'RECOMENDADO':'Alternativa'):'No disponible',
       r.ok?r.mape:'', r.ok?r.rmse:'', r.ok?(r.mejorQueNaive?'Sí':'No'):'', r.ok&&r.skill!=null?r.skill:'',
@@ -1168,9 +1253,10 @@ function expModelos(){
   return rows;
 }
 function expPronostico(){
-  const rows=[];
-  if(!S.mods||!S.fcMeses){rows.push(['Sin pronóstico disponible']);return rows;}
-  const usable=S.mods.rows.filter(r=>r.full);
+  const rows=[],M=curM(),ser=fcSer();
+  if(!M||!S.fcMeses){rows.push(['Sin pronóstico disponible']);return rows;}
+  rows.push(['Indicador pronosticado',ser?ser.n:'Ventas']);rows.push([]);
+  const usable=M.rows.filter(r=>r.full);
   const h=['Mes'];usable.forEach(r=>h.push(r.n.split(' (')[0]));
   const act=fcActive();
   if(act)h.push('Banda_inferior_80%','Banda_superior_80%');
@@ -1183,7 +1269,7 @@ function expPronostico(){
   });
   rows.push([]);
   rows.push(['Modelo usado para la banda',act?act.n:'—']);
-  rows.push(['Recomendado por menor error',S.mods.best&&S.mods.validado?S.mods.rows.find(r=>r.id===S.mods.best).n:'sin validación posible']);
+  rows.push(['Recomendado por menor error',M.best&&M.validado?M.rows.find(r=>r.id===M.best).n:'sin validación posible']);
   return rows;
 }
 function expResumen(){
@@ -1206,8 +1292,9 @@ function expResumen(){
   return rows;
 }
 function expMetodo(){
-  const M=S.mods;
+  const M=curM();
   return [['Metodología y advertencias'],[],
+   ['Indicador pronosticado',fcSer()?fcSer().n:'Ventas'],
    ['Protocolo de validación',M?('Se ocultan los últimos '+M.H+' meses; cada modelo se entrena con el resto y predice ese tramo a ciegas. Se compara con el método ingenuo estacional (repetir el mismo mes del año anterior).'):'No aplicable: serie demasiado corta.'],
    ['Limitación del protocolo','Es una sola ventana de validación (holdout único). Con otra ventana el orden entre modelos cercanos podría cambiar.'],
    ['Banda de incertidumbre','±1,2816 desviaciones de los residuos del ajuste ≈ 80% de cobertura. Es aproximada: no incorpora incertidumbre de los parámetros.'],
@@ -1729,7 +1816,7 @@ function layersSummary(S){
  (S.bt?on:off).push('Backtest');(S.has.ia?on:off).push('KPIs Inteligentes');
  return{on,off};}
 function acceptDataset(ds,src){
- CUR={name:ds.name,src};S=computeAll(ds.data);
+ CUR={name:ds.name,src};S=computeAll(ds.data);fcSerie='ventas';fcSel=null;
  renderSource();renderStatic();renderKpis();gateAll();renderIK();drawAll();
  if(src==='user'){try{safeStore.set('jf-pf-userdata',JSON.stringify({name:ds.name,data:ds.data}));}catch(e){}}
  const ls=layersSummary(S);
