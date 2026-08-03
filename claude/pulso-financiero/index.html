@@ -226,6 +226,25 @@ details.metod b{color:var(--deep-blue);}
 .tblw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .tblw table{min-width:0;}
 @media(max-width:800px){.tblw table{min-width:430px;}}
+
+/* ===== Barra de origen en el encabezado (visible desde el inicio) ===== */
+.srcbar{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 16px 12px;margin:14px 0 6px;box-shadow:var(--shadow);}
+.srcbar-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.srcbar-t{font-weight:800;font-size:.94rem;color:var(--deep-blue);}
+.srcbar-s{font-size:.78rem;color:var(--muted);}
+[data-theme="dark"] .srcbar-t{color:var(--text);}
+.srcpick.compact{gap:10px;margin:0;}
+.srcpick.compact .srcopt{padding:11px 13px;border-radius:13px;}
+.srcpick.compact .so-ic{font-size:1.15rem;}
+.srcpick.compact .so-tx b{font-size:.86rem;}
+.srcpick.compact .so-tx span{font-size:.72rem;}
+.srcbar .srcinfo{margin:10px 0 0;padding:9px 12px;font-size:.76rem;}
+@media(max-width:800px){.srcbar{padding:12px;} .srcpick.compact{grid-template-columns:1fr;}}
+
+.srcbar-d{margin-left:auto;font-size:.78rem;color:var(--muted);text-align:right;}
+.srcbar-d b{color:var(--text);}
+.srcbar-d .priv{color:var(--ok);font-weight:700;}
+@media(max-width:800px){.srcbar-d{margin-left:0;text-align:left;width:100%;}}
 </style>
 </head>
 <body>
@@ -254,7 +273,17 @@ details.metod b{color:var(--deep-blue);}
   </header>
 
   <div class="veredicto" id="veredicto"></div>
-  <div class="srcline" id="srcChip"></div>
+
+  <div class="srcbar">
+    <div class="srcbar-h">
+      <span class="srcbar-t">¿Con qué datos quieres ver el tablero?</span>
+      <span class="srcbar-s">Elige un origen: todo se recalcula al instante.</span>
+      <span class="srcbar-d" id="srcDetail"></span>
+    </div>
+    <div class="srcpick compact" id="srcPicker" role="group" aria-label="Elegir origen de los datos"></div>
+    <div class="srcinfo" id="srcInfo"></div>
+  </div>
+
 
   <div class="tabs" id="tabs" role="tablist">
     <button class="tab active" data-t="resumen"><span class="n">1</span>Resumen</button>
@@ -413,8 +442,8 @@ details.metod b{color:var(--deep-blue);}
   <section class="panel" id="tab-datos">
     <div class="sect-title">Datos · elige con qué quieres ver el tablero</div>
     <div class="sect-desc">Tres caminos, el mismo motor analítico: todo el tablero —veredicto, KPIs, alertas, los cuatro modelos predictivos, KPIs inteligentes, Q&amp;A y brief— se recalcula con el origen que elijas.</div>
-    <div class="srcpick" id="srcPicker" role="group" aria-label="Elegir origen de los datos"></div>
-    <div class="srcinfo" id="srcInfo"></div>
+    <div class="srcpick compact" id="srcPicker2" role="group" aria-label="Elegir origen de los datos"></div>
+    <div class="srcinfo" id="srcInfo2"></div>
 
     <div class="card expcard">
       <h3>⤓ Llévate los resultados</h3>
@@ -1077,25 +1106,32 @@ function loadTSMC(){
               'TSMC no publica flujo de caja, unidades ni balance con frecuencia mensual: esas capas quedan desactivadas a propósito en vez de rellenarse con estimaciones.']},'real');
 }
 function renderSrcPicker(){
-  const el=document.getElementById('srcPicker');if(!el)return;
   const cur=CUR.src||'demo';
+  const mounts=['srcPicker','srcPicker2'].map(id=>document.getElementById(id)).filter(Boolean);
+  if(!mounts.length)return;
+  const el={innerHTML:'',querySelectorAll:()=>[]};
   const opt=(id,tit,sub,act)=>
     '<button type="button" class="srcopt'+(act?' on':'')+'" data-src="'+id+'" aria-pressed="'+(act?'true':'false')+'">'+
     '<span class="so-ic" aria-hidden="true">'+SRC_META[id].ic+'</span>'+
     '<span class="so-tx"><b>'+tit+'</b><span>'+sub+'</span></span>'+
     (act?'<span class="so-on" aria-label="activo">●</span>':'')+'</button>';
-  el.innerHTML=
+  const html=
     opt('demo','Datos simulados','Demo de 36 meses con todas las capas activas',cur==='demo')+
     opt('real','Empresa real','TSMC · datos públicos verificables',cur==='real')+
     opt('user','Tus propios datos','CSV o Excel · nada sale de tu navegador',cur==='user');
-  const inf=document.getElementById('srcInfo');
-  if(inf)inf.innerHTML='<b>'+SRC_META[cur].et+':</b> '+SRC_META[cur].desc;
-  el.querySelectorAll('.srcopt').forEach(b=>b.addEventListener('click',()=>{
+  mounts.forEach(m=>{m.innerHTML=html;});
+  ['srcInfo','srcInfo2'].forEach(id=>{const inf=document.getElementById(id);
+    if(inf)inf.innerHTML='<b>'+SRC_META[cur].et+':</b> '+SRC_META[cur].desc;});
+  const allBtns=[];mounts.forEach(m=>m.querySelectorAll('.srcopt').forEach(b=>allBtns.push(b)));
+  allBtns.forEach(b=>b.addEventListener('click',()=>{
     const v=b.dataset.src;
     if(v==='demo'&&cur!=='demo')restoreDemo();
     else if(v==='real'&&cur!=='real')loadTSMC();
-    else if(v==='user'){document.getElementById('drop').scrollIntoView({behavior:'smooth',block:'center'});
-      const dz=document.getElementById('drop');if(dz){dz.classList.add('pulse');setTimeout(()=>dz.classList.remove('pulse'),1600);}}
+    else if(v==='user'){
+      goTab('datos');
+      setTimeout(()=>{const dz=document.getElementById('drop');
+        if(dz){dz.scrollIntoView({behavior:'smooth',block:'center'});
+          dz.classList.add('pulse');setTimeout(()=>dz.classList.remove('pulse'),1700);}},220);}
   }));
 }
 
@@ -1405,13 +1441,12 @@ function gateAll(){
 
 /* ===== Render principal ===== */
 function renderSource(){
- const el=document.getElementById('srcChip');
  const rng=lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1]);
  const M=SRC_META[CUR.src]||SRC_META.demo;
- el.innerHTML=`<span class="chip ${M.cls}">${M.ic} ${M.et}</span>
-  <span><b>${esc(CUR.name)}</b> · ${S.n} meses (${rng})${CUR.src==='user'?' · procesados solo en tu navegador':''}</span>
-  <button class="seg" id="chipGo" type="button">⇄ cambiar origen</button>`;
- const g=document.getElementById('chipGo');if(g)g.addEventListener('click',()=>goTab('datos'));
+ const det=document.getElementById('srcDetail');
+ if(det)det.innerHTML=`<b>${esc(CUR.name)}</b> · ${S.n} meses (${rng})${CUR.src==='user'?' · <span class="priv">procesados solo en tu navegador</span>':''}`;
+ const el=document.getElementById('srcChip');
+ if(el)el.innerHTML=`<span class="chip ${M.cls}">${M.ic} ${M.et}</span>`;
  const hk=document.getElementById('heroKick');
  if(hk)hk.textContent=M.et+' · '+(CUR.src==='real'?'TSMC · semiconductores':'Finanzas corporativas')+' · '+
    lab(S.d.meses[0])+'–'+lab(S.d.meses[S.n-1])+' ('+S.n+' meses'+(CUR.src==='demo'?', datos simulados':(CUR.src==='real'?', datos públicos reales':''))+')';
@@ -1422,7 +1457,7 @@ function renderVeredicto(){
  if(S.has.flujo)p.push(`La conversión de caja es ${f1(S.conv1)}%${S.conv1>=85?' (sana)':' (bajo el umbral de 85%)'}.`);
  if(S.has.liq)p.push(`La liquidez cierra en ${f1(S.rcLast)}×${S.rcLast<1?' — crítica':S.rcLast<1.2?' — zona de alerta':''}.`);
  if(S.hw&&S.q1yoy!=null)p.push(`${S.bestName&&S.mods&&S.mods.validado?'El modelo más confiable para tu serie ('+S.bestName.split(' (')[0]+', error de '+f1(S.bestMape)+'% en la prueba a ciegas)':'El modelo estadístico'} proyecta el próximo trimestre en <b>${f0(S.q1)}</b> (${pctS(S.q1yoy)} vs el mismo trimestre del año previo, con rango).`);
- document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · con ${CUR.src==='user'?'tus datos':'datos del demo'} (últimos 12 meses vs 12 previos)</div><p>${p.join(' ')}</p>`;}
+ document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · con ${CUR.src==='user'?'tus datos':(CUR.src==='real'?'datos reales de TSMC':'datos del demo')} (últimos 12 meses vs 12 previos)</div><p>${p.join(' ')}</p>`;}
 function renderKpis(){
  if(!S)return;const pu=css('--purple'),mu=css('--muted');const cards=[];
  const spark=(vals,color)=>{const v=vals.filter(x=>x!=null);if(v.length<2)return'';
