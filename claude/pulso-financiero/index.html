@@ -25,7 +25,7 @@
 <meta name="twitter:title" content="Pulso Financiero · Crecimiento, Margen, Caja y Predicción"/>
 <meta name="twitter:description" content="Dashboard financiero decision-first: crecimiento, margen, caja, predicción con backtest y KPIs Inteligentes. Sube tu CSV/Excel y todo se recalcula."/>
 <meta name="twitter:image" content="https://dashboards.javierforero.co/og-image.png"/>
-<meta name="description" content="Dashboard financiero decision-first: descriptivo, diagnóstico, predictivo (descomposición + Holt-Winters) y KPIs inteligentes con gobernanza."/>
+<meta name="description" content="Dashboard financiero decision-first: descriptivo, diagnóstico, predictivo (descomposición + Holt-Winters, Fourier y SARIMA comparados) y KPIs inteligentes con gobernanza."/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -163,6 +163,69 @@ details.metod b{color:var(--deep-blue);}
 .bq.req{background:var(--bad-bg);color:var(--bad);} .bq.opc{background:var(--soft-lilac);color:var(--purple);}
 .srcline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);margin:8px 2px 0;}
 @media(max-width:640px){.wrap{padding:10px 10px 24px;}.chart{min-height:260px;}}
+
+/* ===== Comparador de modelos de predicción ===== */
+.tblwrap{overflow-x:auto;margin:6px 0 4px;}
+.cmptbl{width:100%;border-collapse:collapse;font-size:.82rem;min-width:520px;}
+.cmptbl th,.cmptbl td{padding:10px 11px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top;}
+.cmptbl thead th{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;border-bottom:2px solid var(--border);}
+.cmptbl tbody th{font-weight:700;color:var(--text);}
+.cmptbl td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.cmptbl tr.win{background:var(--soft-lilac);}
+.cmptbl tr.off th,.cmptbl tr.off td{color:var(--muted);font-weight:400;}
+.cmptbl .mdet{display:block;font-weight:400;font-size:.72rem;color:var(--muted);margin-top:3px;}
+.cmptbl .pos{color:var(--ok);font-weight:700;} .cmptbl .neg{color:var(--bad);font-weight:700;}
+.vd{display:inline-block;border-radius:999px;padding:3px 10px;font-size:.7rem;font-weight:800;white-space:nowrap;}
+.vd-win{background:var(--ok-bg);color:var(--ok);} .vd-alt{background:var(--soft-lilac);color:var(--purple);}
+.vd-off{background:var(--bg);color:var(--muted);}
+.vbox{border-radius:12px;padding:12px 14px;margin:10px 0 4px;font-size:.85rem;line-height:1.5;border-left:5px solid var(--purple);background:var(--soft-lilac);}
+.vbox.ok{border-left-color:var(--ok);background:var(--ok-bg);} .vbox.warn{border-left-color:var(--warn);background:var(--warn-bg);}
+.mdlsel{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px;}
+.mdlbtn{display:inline-flex;align-items:center;gap:7px;background:var(--white);border:1.5px solid var(--border);color:var(--text);
+  border-radius:999px;padding:8px 15px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s ease;}
+.mdlbtn:hover:not(.dis){border-color:var(--purple);color:var(--purple);}
+.mdlbtn:focus-visible{outline:3px solid var(--vibrant-blue);outline-offset:2px;}
+.mdlbtn.on{background:var(--purple);border-color:var(--purple);color:#fff;}
+.mdlbtn.dis{opacity:.45;cursor:not-allowed;}
+.mdlbtn .mm{font-size:.72rem;font-weight:800;opacity:.85;background:rgba(0,0,0,.08);border-radius:999px;padding:2px 7px;}
+.mdlbtn.on .mm{background:rgba(255,255,255,.22);}
+.mdlbtn .star{color:#ffc53d;}
+.expl{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:.83rem;line-height:1.5;}
+.expl .e1{margin:0 0 9px;font-weight:600;color:var(--text);}
+.expl .e2{display:grid;gap:6px;}
+.expl .prm{margin-top:9px;font-size:.75rem;color:var(--muted);}
+.expl code{background:var(--soft-lilac);border:1px solid var(--border);border-radius:5px;padding:1px 5px;font-size:.92em;}
+.tg{display:inline-block;border-radius:999px;padding:1px 8px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-right:5px;}
+.tg-ok{background:var(--ok-bg);color:var(--ok);} .tg-bad{background:var(--warn-bg);color:var(--warn);}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+@media(max-width:640px){.mdlbtn{flex:1 1 calc(50% - 4px);justify-content:center;}}
+
+/* ===== Selector de origen de datos ===== */
+.srcpick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 12px;}
+@media(max-width:800px){.srcpick{grid-template-columns:1fr;}}
+.srcopt{display:flex;align-items:flex-start;gap:12px;text-align:left;background:var(--white);border:1.5px solid var(--border);
+  border-radius:16px;padding:15px 16px;cursor:pointer;font-family:inherit;color:var(--text);transition:all .16s ease;position:relative;}
+.srcopt:hover{border-color:var(--purple);transform:translateY(-2px);box-shadow:var(--shadow);}
+.srcopt:focus-visible{outline:3px solid var(--vibrant-blue);outline-offset:2px;}
+.srcopt.on{border-color:var(--purple);background:var(--soft-lilac);box-shadow:0 0 0 3px rgba(78,0,255,.10);}
+.so-ic{font-size:1.35rem;line-height:1;color:var(--purple);flex-shrink:0;margin-top:1px;}
+.so-tx{display:flex;flex-direction:column;gap:3px;}
+.so-tx b{font-size:.92rem;font-weight:800;}
+.so-tx span{font-size:.76rem;color:var(--muted);line-height:1.35;}
+.so-on{position:absolute;top:11px;right:12px;color:var(--purple);font-size:.7rem;}
+.srcinfo{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--purple);border-radius:10px;
+  padding:11px 14px;font-size:.8rem;color:var(--muted);line-height:1.5;margin-bottom:16px;}
+.srcinfo b{color:var(--text);}
+.chip.real{background:var(--warn-bg);color:var(--warn);}
+.expcard{border-left:5px solid var(--purple);}
+#drop.pulse{animation:dzp 1.6s ease;}
+@keyframes dzp{0%,100%{box-shadow:0 0 0 0 rgba(78,0,255,0);}30%{box-shadow:0 0 0 7px rgba(78,0,255,.20);}60%{box-shadow:0 0 0 3px rgba(78,0,255,.10);}}
+
+/* Contención de desbordamiento horizontal en móvil */
+.grid2>*{min-width:0;}
+.tblw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tblw table{min-width:0;}
+@media(max-width:800px){.tblw table{min-width:430px;}}
 </style>
 </head>
 <body>
@@ -181,11 +244,11 @@ details.metod b{color:var(--deep-blue);}
   </nav>
 
   <header class="hero">
-    <div class="kicker">Demo · Finanzas corporativas · 2022–2024 (36 meses, datos simulados)</div>
+    <div class="kicker" id="heroKick">Demo · Finanzas corporativas · 2022–2024 (36 meses, datos simulados)</div>
     <h1>Pulso Financiero: crecimiento, margen, caja y predicción</h1>
-    <p>Del “qué pasó” al “qué hacer”: descriptivo, diagnóstico, dos modelos predictivos (descomposición + Holt-Winters con backtest) y KPIs inteligentes — con incertidumbre declarada y gobernanza. Y ahora <b>con tus propios datos</b>: sube un CSV/Excel y todo el tablero se recalcula e interpreta en tu navegador.</p>
+    <p>Del “qué pasó” al “qué hacer”: descriptivo, diagnóstico, cuatro modelos predictivos comparados a ciegas (descomposición, Holt-Winters, Fourier y SARIMA) y KPIs inteligentes — con incertidumbre declarada y gobernanza. Y ahora <b>con tus propios datos</b>: sube un CSV/Excel y todo el tablero se recalcula e interpreta en tu navegador.</p>
     <div class="meta">
-      <span class="hchip">5 niveles de analítica</span><span class="hchip">Holt-Winters · MAPE 6.5%</span>
+      <span class="hchip">5 niveles de analítica</span><span class="hchip" id="chipMdl">4 modelos comparados</span>
       <span class="hchip">KPIs Inteligentes</span><span class="hchip">Gobernanza umbral·dueño·decisión</span><span class="hchip">Offline · 1 archivo</span><span class="hchip">⤒ Trae tus datos (CSV/XLSX)</span>
     </div>
   </header>
@@ -251,12 +314,48 @@ details.metod b{color:var(--deep-blue);}
 
   <!-- 5 PREDICCIÓN -->
   <section class="panel" id="tab-prediccion">
-    <div class="sect-title">Predicción · ¿Qué esperar en 2025 y cuánto confiar?</div>
-    <div class="sect-desc">Dos modelos clásicos sobre 36 meses: descomposición (entender la estructura) y Holt-Winters (proyectar). Regla de los Sources: una predicción sin rango ni decisión asociada es curiosidad estadística.</div>
-    <div class="card"><h3>1 · Descomposición: la serie tiene tres capas</h3><div class="sub">Observado = Tendencia + Estacionalidad + Residuo (modelo aditivo, periodo 12). Fuerza estacional: <b id="fseas"></b> — la estacionalidad explica la mayor parte de la variación de corto plazo.</div><div id="gDec"><div class="chart chart-tall" id="chDec"></div></div><div class="na" id="naDec" hidden></div></div>
-    <div class="grid2">
-      <div class="card"><h3>2 · Validación honesta (backtest)</h3><div class="sub">Entrenado con 2022–2023, se le pidió predecir 2024 a ciegas y se comparó contra la realidad.</div><div id="gBT"><div class="chart" id="chBT"></div><div id="btNote" class="hint"></div></div><div class="na" id="naBT" hidden></div></div>
-      <div class="card"><h3 id="tHW"></h3><div class="sub">Holt-Winters aditivo entrenado con los 36 meses. Banda de ~80% construida con los residuos del ajuste (aproximada).</div><div id="gHW"><div class="chart" id="chHW"></div><div id="hwNote" class="hint"></div></div><div class="na" id="naHW" hidden></div></div>
+    <div class="sect-title">Predicción · cuatro modelos, una decisión</div>
+    <div class="sect-desc">No existe un modelo bueno para todas las series: existe el que menos se equivoca <b>con la tuya</b>. Aquí los cuatro compiten en igualdad de condiciones y el tablero recomienda uno con evidencia, no con fe. Regla de los Sources: una predicción sin rango ni decisión asociada es curiosidad estadística.</div>
+
+    <div class="card">
+      <h3>1 · ¿Qué modelo merece tu confianza?</h3>
+      <div class="sub">Los cuatro se entrenan con la misma historia, se les <b>ocultan los últimos <span id="btH">—</span> meses</b> y se les pide predecirlos a ciegas. Después se compara cada predicción contra lo que realmente pasó. Menor error = más confiable.</div>
+      <div id="gCmp">
+        <div id="cmpTable"></div>
+        <div id="cmpVerdict"></div>
+        <div class="chart" id="chCmp"></div>
+        <div class="hint"><b>Cómo leer el gráfico:</b> la línea gruesa es lo que ocurrió de verdad; las punteadas son lo que cada modelo predijo sin haberlo visto. Mientras más pegada a la real, mejor el modelo.</div>
+      </div>
+      <div class="na" id="naCmp" hidden></div>
+    </div>
+
+    <div class="card">
+      <h3>2 · Proyección con el modelo que elijas</h3>
+      <div class="sub">El recomendado viene marcado con ★. Puedes cambiarlo si prefieres otro criterio — por ejemplo, uno más fácil de explicar en comité.</div>
+      <div id="gFC">
+        <div class="mdlsel" id="modelSel" role="group" aria-label="Elegir modelo de predicción"></div>
+        <div id="modelExplain"></div>
+        <div class="chart" id="chFC"></div>
+        <div class="hint" id="fcNote"></div>
+      </div>
+      <div class="na" id="naFC" hidden></div>
+    </div>
+
+    <div class="card">
+      <h3>3 · Llévate el pronóstico</h3>
+      <div class="sub">Descarga los meses proyectados por <b>los cuatro modelos</b>, la banda de incertidumbre del elegido y la tabla que justifica la recomendación.</div>
+      <div class="btnrow">
+        <button class="btn btn-p" id="btnExpXlsx2" type="button">⤓ Excel (5 hojas)</button>
+        <button class="btn btn-g" id="btnExpCsv2" type="button">⤓ CSV</button>
+      </div>
+      <div class="hint" id="expNote2">Incluye la metodología y las advertencias, para que quien reciba el archivo sepa cómo se produjo cada cifra.</div>
+    </div>
+
+    <div class="card">
+      <h3>4 · Anatomía de la serie: por qué los modelos ven lo que ven</h3>
+      <div class="sub">Observado = Tendencia + Estacionalidad + Residuo (modelo aditivo, periodo 12). Fuerza estacional: <b id="fseas"></b>. Si la estacionalidad es fuerte, los modelos que la capturan bien llevan ventaja; si el residuo domina, ningún modelo predecirá con precisión y hay que decidir con rangos.</div>
+      <div id="gDec"><div class="chart chart-tall" id="chDec"></div></div>
+      <div class="na" id="naDec" hidden></div>
     </div>
   </section>
 
@@ -312,8 +411,23 @@ details.metod b{color:var(--deep-blue);}
 
   <!-- 9 MIS DATOS -->
   <section class="panel" id="tab-datos">
-    <div class="sect-title">Trae tus datos · CSV o Excel</div>
-    <div class="sect-desc">Sube tu serie financiera mensual y <b>todo el tablero se recalcula e interpreta con tu información</b>: veredicto, KPIs, alertas, modelos predictivos, KPIs inteligentes, Q&amp;A y brief. <b>Privacidad total:</b> el archivo se procesa localmente en tu navegador — ningún dato sale de tu equipo.</div>
+    <div class="sect-title">Datos · elige con qué quieres ver el tablero</div>
+    <div class="sect-desc">Tres caminos, el mismo motor analítico: todo el tablero —veredicto, KPIs, alertas, los cuatro modelos predictivos, KPIs inteligentes, Q&amp;A y brief— se recalcula con el origen que elijas.</div>
+    <div class="srcpick" id="srcPicker" role="group" aria-label="Elegir origen de los datos"></div>
+    <div class="srcinfo" id="srcInfo"></div>
+
+    <div class="card expcard">
+      <h3>⤓ Llévate los resultados</h3>
+      <div class="sub">Tus datos no se guardan en ningún servidor, así que <b>el tablero es efímero pero los resultados no tienen por qué serlo</b>. Descarga el análisis completo — con el pronóstico de los cuatro modelos y la comparación que justifica cuál es el mejor.</div>
+      <div class="btnrow">
+        <button class="btn btn-p" id="btnExpXlsx" type="button">⤓ Excel (5 hojas)</button>
+        <button class="btn btn-g" id="btnExpCsv" type="button">⤓ CSV (un archivo)</button>
+      </div>
+      <div class="hint" id="expNote">El Excel trae Resumen, Pronóstico, Modelos, Serie y Metodología en hojas separadas. El CSV los apila en un solo archivo, listo para abrir en cualquier herramienta.</div>
+    </div>
+
+    <div class="sect-title" style="margin-top:22px;">Tus propios datos · CSV o Excel</div>
+    <div class="sect-desc"><b>Privacidad total:</b> el archivo se procesa localmente en tu navegador — ningún dato sale de tu equipo.</div>
     <div class="grid2">
       <div class="card">
         <h3>1 · Prepara el archivo</h3>
@@ -381,6 +495,7 @@ const safeStore=(()=>{const mem={};let ok=false;
 
 /* ===== Datos de demo (crudos; TODO se recalcula en el navegador) ===== */
 const RAW_DEMO={"meses": ["2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"], "ventas": [104.34, 113.3, 110.85, 116.14, 119.37, 131.61, 125.84, 130.07, 133.96, 119.41, 128.33, 135.62, 130.27, 130.3, 127.55, 131.86, 157.77, 156.6, 161.43, 154.84, 152.27, 152.83, 141.39, 162.06, 134.86, 145.25, 157.31, 149.35, 169.05, 170.55, 179.82, 169.92, 159.64, 160.55, 164.84, 169.71], "costos": [71.84, 73.4, 74.43, 81.86, 79.42, 90.81, 88.12, 89.17, 87.42, 80.4, 92.3, 86.73, 87.87, 87.16, 87.05, 91.64, 112.36, 105.64, 112.4, 106.84, 104.99, 102.2, 93.32, 106.63, 89.66, 99.7, 109.36, 102.52, 113.1, 122.14, 127.74, 114.34, 105.92, 109.59, 116.27, 116.53], "margen": [32.5, 39.89, 36.42, 34.28, 39.95, 40.79, 37.72, 40.9, 46.54, 39.0, 36.04, 48.89, 42.41, 43.13, 40.51, 40.22, 45.41, 50.96, 49.04, 48.0, 47.28, 50.63, 48.06, 55.42, 45.2, 45.55, 47.95, 46.82, 55.95, 48.42, 52.08, 55.58, 53.71, 50.96, 48.57, 53.18], "flujo": [30.16, 35.48, 33.61, 33.5, 35.48, 37.01, 34.43, 37.39, 38.6, 31.44, 30.6, 44.41, 39.34, 37.68, 39.25, 35.91, 40.91, 45.37, 44.46, 44.89, 44.13, 43.29, 46.92, 46.85, 40.85, 40.37, 40.64, 41.97, 48.28, 43.75, 47.92, 54.11, 49.17, 44.31, 42.76, 48.23], "unidades": [855, 894, 897, 946, 959, 995, 1048, 1037, 993, 945, 980, 1026, 956, 1008, 974, 1007, 1100, 1108, 1153, 1140, 1092, 1064, 1045, 1128, 1002, 1062, 1092, 1088, 1183, 1234, 1249, 1206, 1138, 1117, 1107, 1179], "precio": [111.39, 109.25, 108.6, 112.96, 111.8, 112.71, 112.42, 112.07, 116.08, 114.32, 117.71, 117.25, 116.48, 116.13, 117.12, 117.12, 121.65, 119.91, 121.67, 119.34, 121.65, 123.41, 122.17, 124.38, 122.41, 122.65, 125.31, 124.97, 126.77, 124.2, 128.0, 130.83, 128.26, 128.9, 129.64, 127.77], "ac": [102542.0, 110789.0, 103143.0, 163641.0, 131436.0, 150857.0, 190757.0, 124929.0, 141038.0, 175555.0, 122880.0, 107698.0, 128975.0, 116122.0, 192970.0, 180812.0, 163340.0, 187146.0, 180367.0, 118657.0, 189256.0, 153934.0, 180744.0, 189609.0, 131800.0, 111005.0, 122794.0, 142711.0, 181801.0, 186073.0, 100695.0, 151075.0, 141741.0, 122211.0, 111987.0, 133762.0], "pc": [144291.0, 82320.0, 101879.0, 120302.0, 86363.0, 147178.0, 146245.0, 75178.0, 99725.0, 80088.0, 78484.0, 53689.0, 110956.0, 100268.0, 55148.0, 77865.0, 140827.0, 73956.0, 64489.0, 98945.0, 148565.0, 74206.0, 117214.0, 126162.0, 73764.0, 122822.0, 86778.0, 113231.0, 113353.0, 103577.0, 59029.0, 133530.0, 82078.0, 68652.0, 54078.0, 109089.0]};
+const RAW_TSMC={"meses":["2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"ventas":[177.62,188.69,180.43,243.2,206.03,176.3,215.78,181.65,195.21,236.02,229.62,207.87,256.95,250.87,251.87,314.24,276.06,278.16,293.29,260.01,285.96,349.57,320.52,263.71,323.17,335.77,330.98,367.47,343.61,335,401.25,317.66,415.19,410.73,416.98,442.68],"costos":[81.17,86.23,82.46,114.31,96.83,82.86,101.2,85.19,91.55,110.46,107.46,97.28,108.43,105.87,106.29,128.84,113.18,114.05,120.83,107.12,117.81,144.72,132.69,109.18,130.88,135.99,134.05,138.54,129.54,126.3,135.62,107.37,140.33,132.66,134.68,142.99],"margen":[96.45,102.46,97.97,128.89,109.2,93.44,114.58,96.46,103.66,125.56,122.16,110.59,148.52,145,145.58,185.4,162.88,164.11,172.46,152.89,168.15,204.85,187.83,154.53,192.29,199.78,196.93,228.93,214.07,208.7,265.63,210.29,274.86,278.07,282.3,299.69]};
 
 /* ===== Utilidades ===== */
 const MESN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -531,7 +646,9 @@ function fitHW(y,h){
  const r=hwRun(y,m,best.a,best.b,best.g,h);
  const res=[];for(let t=m;t<y.length;t++)res.push(y[t]-r.fitted[t]);
  return{fitted:r.fitted.map(v=>+v.toFixed(2)),fc:r.fc?r.fc.map(v=>+v.toFixed(2)):null,
-  sd:+Math.sqrt(variance(res)).toFixed(3),params:{a:+best.a.toFixed(2),b:+best.b.toFixed(2),g:+best.g.toFixed(2)}};}
+  sd:+Math.sqrt(variance(res)).toFixed(3),
+  detalle:'α='+best.a.toFixed(2)+', β='+best.b.toFixed(2)+', γ='+best.g.toFixed(2)+' (optimizados por mínimos cuadrados)',
+  params:{a:+best.a.toFixed(2),b:+best.b.toFixed(2),g:+best.g.toFixed(2)}};}
 function backtest(y,h){
  const train=y.slice(0,y.length-h),test=y.slice(-h);
  if(train.length<24)return null;
@@ -539,6 +656,571 @@ function backtest(y,h){
  for(let i=0;i<h;i++){ae+=Math.abs((test[i]-f.fc[i])/test[i]);se+=Math.pow(test[i]-f.fc[i],2);
   na+=Math.abs((test[i]-y[y.length-h-12+i])/test[i]);}
  return{pred:f.fc,h,mape:+(ae/h*100).toFixed(2),rmse:+Math.sqrt(se/h).toFixed(2),naive:+(na/h*100).toFixed(2)};}
+
+/* ===================================================================
+   MOTOR DE PRONÓSTICO · 4 modelos comparables con backtest común
+   Todos se entrenan con la misma historia, se les ocultan los últimos
+   H meses y se les pide predecirlos a ciegas. Gana el que menos yerra.
+   =================================================================== */
+
+/* ---------- Álgebra: mínimos cuadrados por ecuaciones normales ---------- */
+function solveLin(A,b){
+  const n=b.length,M=A.map((r,i)=>r.concat([b[i]]));
+  for(let c=0;c<n;c++){
+    let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;
+    if(Math.abs(M[p][c])<1e-12)return null;
+    const tmp=M[c];M[c]=M[p];M[p]=tmp;
+    for(let r=0;r<n;r++){if(r===c)continue;const f=M[r][c]/M[c][c];
+      for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k];}
+  }
+  return M.map((row,i)=>row[n]/M[i][i]);
+}
+function olsFit(X,y){
+  const k=X[0].length,n=X.length;
+  const A=Array.from({length:k},()=>new Array(k).fill(0)),b=new Array(k).fill(0);
+  for(let i=0;i<n;i++){for(let a=0;a<k;a++){b[a]+=X[i][a]*y[i];
+    for(let c=0;c<k;c++)A[a][c]+=X[i][a]*X[i][c];}}
+  for(let a=0;a<k;a++)A[a][a]+=1e-9;   /* regularización mínima: estabilidad numérica */
+  return solveLin(A,b);
+}
+const finiteArr=a=>Array.isArray(a)&&a.length>0&&a.every(v=>typeof v==='number'&&isFinite(v));
+
+/* ---------- 1 · DESCOMPOSICIÓN CLÁSICA como pronosticador ----------
+   Separa la serie en tendencia (media móvil centrada 12) + índice
+   estacional por mes; proyecta extrapolando la recta de la tendencia
+   y volviendo a sumar el índice del mes correspondiente.            */
+function fitDecomp(y,meses,h){
+  if(y.length<24)return null;
+  const d=decompose(y,meses),n=y.length;
+  const X=[],Y=[];
+  d.trend.forEach((v,i)=>{if(v!=null){X.push([1,i]);Y.push(v);}});
+  if(X.length<6)return null;
+  const beta=olsFit(X,Y);if(!beta||!finiteArr(beta))return null;
+  const idx={};
+  d.seasonal.forEach((s,i)=>{idx[+meses[i].split('-')[1]]=s;});
+  const fitted=y.map((v,i)=>beta[0]+beta[1]*i+(d.seasonal[i]||0));
+  const res=y.map((v,i)=>v-fitted[i]);
+  const fc=[];
+  for(let k=1;k<=h;k++){
+    const t=n-1+k,mm=+addM(meses[n-1],k).split('-')[1];
+    fc.push(beta[0]+beta[1]*t+(idx[mm]||0));
+  }
+  if(!finiteArr(fc))return null;
+  return{fc:fc.map(v=>+v.toFixed(2)),fitted,sd:+Math.sqrt(variance(res)).toFixed(3),
+    kpar:2+11,detalle:'tendencia lineal + índice estacional de 12 meses',
+    params:{pend:+beta[1].toFixed(3),fuerza:+(d.fuerza*100).toFixed(0)}};
+}
+
+/* ---------- 3 · REGRESIÓN ESTACIONAL (FOURIER) ----------
+   y ~ intercepto + tendencia + Σ[sen,cos] de K armónicos anuales.
+   K se elige por AICc: más armónicos capturan formas estacionales
+   más complejas, pero se penaliza el exceso de parámetros.         */
+function fourierRow(t,K){
+  const r=[1,t];
+  for(let k=1;k<=K;k++){const w=2*Math.PI*k*t/12;r.push(Math.sin(w),Math.cos(w));}
+  return r;
+}
+function fourierOne(y,h,K){
+  const n=y.length,X=[],Y=[];
+  for(let t=0;t<n;t++){X.push(fourierRow(t,K));Y.push(y[t]);}
+  const beta=olsFit(X,Y);if(!beta||!finiteArr(beta))return null;
+  const dot=r=>r.reduce((s,v,i)=>s+v*beta[i],0);
+  const fitted=X.map(dot),res=y.map((v,i)=>v-fitted[i]);
+  const fc=[];for(let k=1;k<=h;k++)fc.push(dot(fourierRow(n-1+k,K)));
+  if(!finiteArr(fc))return null;
+  const sse=res.reduce((s,e)=>s+e*e,0),kpar=beta.length;
+  const aicc=n*Math.log(sse/n)+2*kpar+(n-kpar-1>0?2*kpar*(kpar+1)/(n-kpar-1):1e6);
+  return{fc:fc.map(v=>+v.toFixed(2)),fitted,sd:+Math.sqrt(variance(res)).toFixed(3),
+    kpar,aicc,K,params:{K,pend:+beta[1].toFixed(3)}};
+}
+function fitFourier(y,h){
+  if(y.length<24)return null;
+  let best=null;
+  const Kmax=Math.min(5,Math.max(2,Math.floor((y.length-4)/6)));
+  for(let K=1;K<=Kmax;K++){const m=fourierOne(y,h,K);if(m&&(!best||m.aicc<best.aicc))best=m;}
+  if(best)best.detalle=best.K+' armónico'+(best.K>1?'s':'')+' (elegido por AICc) + tendencia lineal';
+  return best;
+}
+
+/* ---------- 4 · SARIMA (p,1,q)(P,1,Q)[12] por suma de cuadrados condicional ----------
+   Diferencia la serie una vez en el nivel y otra en la estación —
+   (1-B)(1-B¹²) — y modela el residuo con términos AR/MA regulares y
+   estacionales multiplicativos. La configuración se elige por AICc.  */
+const SAR_CFG=[
+  {name:'(0,1,1)(0,1,1)₁₂',free:['th','Th']},
+  {name:'(1,1,0)(1,1,0)₁₂',free:['ph','Ph']},
+  {name:'(1,1,1)(0,1,1)₁₂',free:['ph','th','Th']},
+  {name:'(0,1,1)(1,1,1)₁₂',free:['th','Ph','Th']}
+];
+function sarimaCSS(z,idxs,st,p){
+  const ee={};let sse=0,cnt=0;
+  for(let i=0;i<idxs.length;i++){
+    const t=idxs[i];let v=z[t];
+    if(z[t-1]!=null)v-=p.ph*z[t-1];
+    if(z[t-12]!=null)v-=p.Ph*z[t-12];
+    if(z[t-13]!=null)v+=p.ph*p.Ph*z[t-13];
+    if(ee[t-1]!=null)v-=p.th*ee[t-1];
+    if(ee[t-12]!=null)v-=p.Th*ee[t-12];
+    if(ee[t-13]!=null)v-=p.th*p.Th*ee[t-13];
+    if(!isFinite(v))return null;
+    ee[t]=v;
+    if(t>=st){sse+=v*v;cnt++;}
+  }
+  return cnt>0?{ee,sse,cnt}:null;
+}
+function fitSARIMA(y,h){
+  const n=y.length;if(n<30)return null;
+  const z={};for(let t=13;t<n;t++)z[t]=y[t]-y[t-1]-y[t-12]+y[t-13];
+  const idxs=Object.keys(z).map(Number).sort((a,b)=>a-b);
+  if(idxs.length<10)return null;
+  const st=idxs[0]+Math.min(12,Math.floor(idxs.length*0.2));
+  let best=null;
+  for(const cfg of SAR_CFG){
+    const base={ph:0,th:0,Ph:0,Th:0};
+    let cur=Object.assign({},base),curSSE=Infinity,curCnt=0;
+    /* búsqueda gruesa → dos refinamientos locales */
+    const rounds=[{lo:-0.85,hi:0.85,st:0.25},{d:0.15,st:0.05},{d:0.05,st:0.0125}];
+    for(let r=0;r<rounds.length;r++){
+      const R=rounds[r];
+      const ranges=cfg.free.map(f=>{
+        const vals=[];
+        if(r===0){for(let v=R.lo;v<=R.hi+1e-9;v+=R.st)vals.push(+v.toFixed(4));}
+        else{for(let v=cur[f]-R.d;v<=cur[f]+R.d+1e-9;v+=R.st)
+              vals.push(+Math.max(-0.98,Math.min(0.98,v)).toFixed(4));}
+        return vals;
+      });
+      const combo=(i,acc)=>{
+        if(i===cfg.free.length){
+          const p=Object.assign({},base,acc);
+          const r2=sarimaCSS(z,idxs,st,p);
+          if(r2&&r2.sse<curSSE){curSSE=r2.sse;curCnt=r2.cnt;cur=Object.assign({},p);}
+          return;
+        }
+        for(const v of ranges[i]){acc[cfg.free[i]]=v;combo(i+1,acc);}
+      };
+      combo(0,{});
+      if(!isFinite(curSSE))break;
+    }
+    if(!isFinite(curSSE))continue;
+    const k=cfg.free.length;
+    const aicc=curCnt*Math.log(curSSE/curCnt)+2*k+(curCnt-k-1>0?2*k*(k+1)/(curCnt-k-1):1e6);
+    if(!best||aicc<best.aicc)best={aicc,cfg,p:cur,sse:curSSE,cnt:curCnt};
+  }
+  if(!best)return null;
+  /* residuos y ajuste en muestra */
+  const run=sarimaCSS(z,idxs,st,best.p);if(!run)return null;
+  const ee=run.ee,p=best.p;
+  const fitted=y.slice();
+  idxs.forEach(t=>{fitted[t]=y[t]-ee[t];});
+  /* pronóstico recursivo: e futuro = 0 */
+  const zf=Object.assign({},z),ef=Object.assign({},ee),yf=y.slice();
+  const fc=[];
+  for(let k=1;k<=h;k++){
+    const t=n-1+k;
+    let zh=0;
+    if(zf[t-1]!=null)zh+=p.ph*zf[t-1];
+    if(zf[t-12]!=null)zh+=p.Ph*zf[t-12];
+    if(zf[t-13]!=null)zh-=p.ph*p.Ph*zf[t-13];
+    if(ef[t-1]!=null)zh+=p.th*ef[t-1];
+    if(ef[t-12]!=null)zh+=p.Th*ef[t-12];
+    if(ef[t-13]!=null)zh+=p.th*p.Th*ef[t-13];
+    zf[t]=zh;ef[t]=0;
+    const yv=zh+yf[t-1]+yf[t-12]-yf[t-13];
+    if(!isFinite(yv))return null;
+    yf[t]=yv;fc.push(yv);
+  }
+  if(!finiteArr(fc))return null;
+  const res=idxs.filter(t=>t>=st).map(t=>ee[t]);
+  const pr={};['ph','th','Ph','Th'].forEach(k2=>{if(p[k2])pr[k2]=+p[k2].toFixed(3);});
+  return{fc:fc.map(v=>+v.toFixed(2)),fitted,sd:+Math.sqrt(variance(res)).toFixed(3),
+    kpar:best.cfg.free.length,detalle:'orden '+best.cfg.name+' elegido por AICc',
+    orden:best.cfg.name,params:pr};
+}
+
+/* ---------- Catálogo de modelos ---------- */
+const FCMODELS=[
+ {id:'dec',n:'Descomposición',min:24,
+  corto:'Separa la serie en tendencia + estacionalidad y proyecta cada parte.',
+  fuerte:'Transparente y fácil de explicar en comité: se ve de dónde sale cada peso.',
+  debil:'Asume que la tendencia sigue recta; reacciona lento a cambios de ritmo.',
+  fit:(y,ms,h)=>fitDecomp(y,ms,h)},
+ {id:'hw',n:'Holt-Winters',min:24,
+  corto:'Suaviza nivel, tendencia y estacionalidad dando más peso a lo reciente.',
+  fuerte:'Se adapta rápido cuando el negocio cambia de ritmo. Estándar en la industria.',
+  debil:'Con series cortas o muy ruidosas puede sobrerreaccionar al último dato.',
+  fit:(y,ms,h)=>fitHW(y,h)},
+ {id:'fou',n:'Regresión estacional (Fourier)',min:24,
+  corto:'Regresión con tendencia y ondas seno/coseno que recrean el ciclo anual.',
+  fuerte:'Estable y parsimoniosa: pocos parámetros, buena con historia corta o ruidosa.',
+  debil:'La estacionalidad es rígida: si el patrón anual cambia, no lo sigue.',
+  fit:(y,ms,h)=>fitFourier(y,h)},
+ {id:'sar',n:'SARIMA',min:30,
+  corto:'Diferencia la serie y modela la memoria que queda en los errores.',
+  fuerte:'El más flexible: captura inercia y arrastre que los otros no ven.',
+  debil:'Caja más opaca y exige más historia; puede sobreajustar si la serie es corta.',
+  fit:(y,ms,h)=>fitSARIMA(y,h)}
+];
+
+/* ---------- Métricas y backtest común ---------- */
+function fcMetrics(act,pred){
+  let ae=0,se=0,n=0;
+  for(let i=0;i<act.length;i++){
+    if(pred[i]==null||!isFinite(pred[i]))return null;
+    if(Math.abs(act[i])>1e-9){ae+=Math.abs((act[i]-pred[i])/act[i]);n++;}
+    se+=Math.pow(act[i]-pred[i],2);
+  }
+  if(!n)return null;
+  return{mape:+(ae/n*100).toFixed(2),rmse:+Math.sqrt(se/act.length).toFixed(2)};
+}
+function evalModels(y,meses,h){
+  const n=y.length;
+  if(n<24)return null;
+  const H=n>=42?12:(n>=30?6:3);   /* deja ≥30 meses de entrenamiento cuando se puede: SARIMA los exige */
+  const trY=y.slice(0,n-H),trM=meses.slice(0,n-H),teY=y.slice(n-H);
+  /* referencia: ingenuo estacional (repetir el mismo mes del año pasado) */
+  const nv=[];for(let i=0;i<H;i++)nv.push(y[n-H-12+i]);
+  const nvM=(n-H-12>=0)?fcMetrics(teY,nv):null;
+  const out=FCMODELS.map(M=>{
+    const r={id:M.id,n:M.n,corto:M.corto,fuerte:M.fuerte,debil:M.debil};
+    if(n<M.min){r.ok=false;r.motivo='Requiere ≥'+M.min+' meses de historia (tienes '+n+').';return r;}
+    if(trY.length<Math.max(24,M.min)){
+      r.ok=false;r.sinVal=true;
+      r.motivo='Serie demasiado corta para validarlo a ciegas (haría falta 1 año más). Se muestra sin verificar.';
+      try{const f=M.fit(y,meses,h);if(f&&finiteArr(f.fc)){r.full=f;r.detalle=f.detalle||'';r.params=f.params||{};}}catch(e){}
+      if(!r.full)r.motivo='Requiere ≥'+M.min+' meses; tu serie trae '+n+'.';
+      return r;}
+    let bt=null,full=null;
+    try{bt=M.fit(trY,trM,H);}catch(e){bt=null;}
+    try{full=M.fit(y,meses,h);}catch(e){full=null;}
+    if(!bt||!full||!finiteArr(bt.fc)||!finiteArr(full.fc)){r.ok=false;r.motivo='El modelo no convergió con esta serie.';return r;}
+    const m=fcMetrics(teY,bt.fc);
+    if(!m){r.ok=false;r.motivo='No fue posible evaluar el error (valores nulos o cero en la prueba).';return r;}
+    r.ok=true;r.mape=m.mape;r.rmse=m.rmse;r.pred=bt.fc;r.full=full;
+    r.detalle=full.detalle||'';r.params=full.params||{};
+    r.mejorQueNaive=nvM?m.mape<nvM.mape:null;
+    r.skill=nvM&&nvM.mape>0?+((1-m.mape/nvM.mape)*100).toFixed(0):null;
+    return r;
+  });
+  const ok=out.filter(r=>r.ok).sort((a,b)=>a.mape-b.mape);
+  const usable=out.filter(r=>r.full);
+  return{H,test:teY,testLabs:meses.slice(n-H),naive:nv,naiveM:nvM,
+    rows:out,rank:ok,best:ok.length?ok[0].id:(usable.length?usable[0].id:null),
+    validado:ok.length>0,
+    ganaANaive:ok.length&&nvM?ok[0].mape<nvM.mape:null};
+}
+
+/* ===================================================================
+   UI · Comparador de modelos de predicción
+   =================================================================== */
+let fcSel=null;   /* modelo elegido por el usuario (null = recomendado) */
+
+function fcActiveId(){
+  if(!S.mods)return null;
+  if(fcSel&&S.mods.rows.some(r=>r.id===fcSel&&r.full))return fcSel;
+  return S.mods.best;
+}
+function fcActive(){const id=fcActiveId();return id?S.mods.rows.find(r=>r.id===id):null;}
+
+/* ---------- Tabla comparativa ---------- */
+function renderCmp(){
+  if(!S.mods)return;
+  const M=S.mods,best=M.best;
+  const rows=M.rows.slice().sort((a,b)=>{
+    if(a.ok&&b.ok)return a.mape-b.mape;
+    return a.ok?-1:(b.ok?1:0);
+  });
+  let html='<div class="tblwrap"><table class="cmptbl"><caption class="vh">Comparación de modelos por error de predicción a ciegas</caption><thead><tr>'+
+    '<th scope="col">Modelo</th><th scope="col">Error medio (MAPE)</th><th scope="col">RMSE</th>'+
+    '<th scope="col">vs. método ingenuo</th><th scope="col">Veredicto</th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    if(!r.ok){
+      html+='<tr class="off"><th scope="row">'+esc(r.n)+'</th><td colspan="3">'+esc(r.motivo)+'</td>'+
+            '<td><span class="vd vd-off">No disponible</span></td></tr>';return;
+    }
+    const win=r.id===best;
+    const sk=r.skill==null?'—':(r.skill>0?'▲ '+r.skill+'% mejor':(r.skill<0?'▼ '+Math.abs(r.skill)+'% peor':'igual'));
+    const skc=r.skill==null?'':(r.skill>0?'pos':'neg');
+    html+='<tr'+(win?' class="win"':'')+'><th scope="row">'+(win?'<span aria-hidden="true">★ </span>':'')+esc(r.n)+
+      '<span class="mdet">'+esc(r.detalle||'')+'</span></th>'+
+      '<td class="num"><b>'+f1(r.mape)+'%</b></td>'+
+      '<td class="num">'+f1(r.rmse)+'</td>'+
+      '<td class="num '+skc+'">'+sk+'</td>'+
+      '<td>'+(win?'<span class="vd vd-win">Recomendado</span>':'<span class="vd vd-alt">Alternativa</span>')+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  if(M.naiveM)html+='<div class="hint">Referencia · <b>método ingenuo estacional</b> (repetir el mismo mes del año anterior): MAPE '+f1(M.naiveM.mape)+'%. Un modelo que no le gane a esta referencia no está aportando valor.</div>';
+  document.getElementById('cmpTable').innerHTML=html;
+
+  /* veredicto en lenguaje claro */
+  const b=M.rows.find(r=>r.id===best);
+  let v='';
+  if(!b||!M.validado){
+    v='<div class="vbox warn"><b>Todavía no se puede elegir con evidencia.</b> Para probar los modelos a ciegas hacen falta al menos <b>27 meses</b> (24 para entrenar + 3 para evaluar) y tu serie trae '+S.n+'. Puedes ver la proyección abajo, pero <b>sin validación</b>: trátala como referencia, no como compromiso.</div>';
+  }else{
+    const seg=M.rank[1];
+    const dif=seg?+(seg.mape-b.mape).toFixed(2):null;
+    const cerca=dif!=null&&dif<0.5;
+    v='<div class="vbox '+(M.ganaANaive?'ok':'warn')+'">'+
+      '<b>Recomendado para tu serie: '+esc(b.n)+'</b> — se equivocó en promedio <b>'+f1(b.mape)+'%</b> al predecir a ciegas los últimos '+M.H+' meses'+
+      (M.naiveM?', frente al '+f1(M.naiveM.mape)+'% del método ingenuo':'')+'. ';
+    if(!M.ganaANaive)v+='<b>Advertencia:</b> ningún modelo superó a repetir el año anterior. La serie es poco predecible con métodos estadísticos: usa el rango, no el número, y apóyate en el juicio de negocio. ';
+    else if(cerca)v+='La diferencia con <b>'+esc(seg.n)+'</b> ('+f1(seg.mape)+'%) es mínima; si prefieres un modelo más fácil de explicar, la alternativa es defendible. ';
+    else v+='La ventaja sobre el segundo ('+esc(seg?seg.n:'—')+') es clara. ';
+    v+='</div>';
+  }
+  document.getElementById('cmpVerdict').innerHTML=v;
+}
+
+/* ---------- Gráfico del backtest: real vs los 4 a ciegas ---------- */
+function drawCmp(){
+  if(!visible('chCmp')||!S.mods)return;
+  const c=colors(),M=S.mods,l=M.testLabs.map(lab);
+  const pal={dec:c.db,hw:c.pu,fou:c.vb,sar:c.warn};
+  const tr=[{x:l,y:M.test,name:'Real',mode:'lines+markers',line:{color:c.pu,width:3},marker:{size:7}}];
+  M.rows.forEach(r=>{if(!r.ok)return;
+    tr.push({x:l,y:r.pred,name:r.n.split(' (')[0],mode:'lines+markers',
+      line:{color:pal[r.id]||c.mu,width:r.id===M.best?2.4:1.4,dash:r.id===M.best?'dot':'dashdot'},
+      marker:{size:r.id===M.best?6:4,symbol:r.id===M.best?'diamond':'circle'},opacity:r.id===M.best?1:.62});});
+  if(M.naiveM)tr.push({x:l,y:M.naive,name:'Ingenuo',mode:'lines',line:{color:c.mu,width:1.2,dash:'dot'},opacity:.5});
+  Plotly.react('chCmp',tr,baseLayout({showlegend:true,legend:{orientation:'h',y:1.16,x:0,font:{size:10}},
+    margin:{l:56,r:14,t:34,b:36},yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);
+}
+
+/* ---------- Selector de modelo (accesible por teclado) ---------- */
+function renderSel(){
+  if(!S.mods)return;
+  const act=fcActiveId(),el=document.getElementById('modelSel');
+  el.innerHTML=S.mods.rows.map(r=>{
+    const on=r.id===act;
+    const usable=!!r.full;
+    return '<button type="button" class="mdlbtn'+(on?' on':'')+(usable?'':' dis')+'" data-m="'+r.id+'"'+
+      (usable?'':' disabled aria-disabled="true"')+' aria-pressed="'+(on?'true':'false')+'">'+
+      esc(r.n.split(' (')[0])+(r.id===S.mods.best&&S.mods.validado?' <span class="star" aria-label="recomendado">★</span>':'')+
+      (r.ok?'<span class="mm">'+f1(r.mape)+'%</span>':'<span class="mm">'+(usable?'sin validar':'n/d')+'</span>')+'</button>';
+  }).join('');
+  el.querySelectorAll('.mdlbtn').forEach(b=>{
+    b.addEventListener('click',()=>{if(b.disabled)return;fcSel=b.dataset.m;renderSel();renderExplain();drawFC();});
+  });
+}
+
+/* ---------- Explicación del modelo activo ---------- */
+function renderExplain(){
+  const r=fcActive(),el=document.getElementById('modelExplain');
+  if(!r){el.innerHTML='';return;}
+  const p=r.params||{};
+  const PL={pend:'tendencia (por mes)',fuerza:'fuerza estacional (%)',a:'α · nivel',b:'β · tendencia',
+    g:'γ · estacionalidad',K:'armónicos',ph:'φ · AR',th:'θ · MA',Ph:'Φ · AR estacional',Th:'Θ · MA estacional'};
+  const ps=Object.keys(p).length?('<div class="prm">Parámetros ajustados: '+
+    Object.keys(p).map(k=>'<code>'+(PL[k]||k)+' = '+p[k]+'</code>').join(' · ')+'</div>'):'';
+  el.innerHTML='<div class="expl"><p class="e1">'+esc(r.corto)+'</p>'+
+    '<div class="e2"><div><span class="tg tg-ok">Fortaleza</span> '+esc(r.fuerte)+'</div>'+
+    '<div><span class="tg tg-bad">Límite</span> '+esc(r.debil)+'</div></div>'+
+    (r.detalle?'<div class="prm">Configuración elegida automáticamente: <b>'+esc(r.detalle)+'</b></div>':'')+ps+'</div>';
+}
+
+/* ---------- Gráfico de proyección del modelo activo ---------- */
+function drawFC(){
+  if(!visible('chFC')||!S.mods)return;
+  const r=fcActive();if(!r||!r.full)return;
+  const c=colors(),z=1.2816,sd=r.full.sd;
+  const fl=S.fcMeses.map(lab);
+  const hi=r.full.fc.map(v=>+(v+z*sd).toFixed(1)),lo=r.full.fc.map(v=>+(v-z*sd).toFixed(1));
+  const lastL=S.labs[S.n-1],lastV=S.d.ventas[S.n-1];
+  Plotly.react('chFC',[
+    {x:S.labs,y:S.d.ventas,name:'Histórico',mode:'lines',line:{color:c.pu,width:2}},
+    {x:[lastL].concat(fl),y:[lastV].concat(hi),name:'Banda ~80%',mode:'lines',line:{width:0},showlegend:false,hoverinfo:'skip'},
+    {x:[lastL].concat(fl),y:[lastV].concat(lo),name:'Banda ~80%',mode:'lines',line:{width:0},
+      fill:'tonexty',fillcolor:'rgba(0,72,255,.13)',hoverinfo:'skip'},
+    {x:[lastL].concat(fl),y:[lastV].concat(r.full.fc),name:'Proyección',mode:'lines+markers',
+      line:{color:c.vb,width:2.4,dash:'dot'},marker:{size:6,symbol:'diamond'}}
+  ],baseLayout({showlegend:true,legend:{orientation:'h',y:1.14,x:0,font:{size:10}},
+    margin:{l:56,r:14,t:30,b:36},yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);
+  const q=sum(r.full.fc.slice(0,3));
+  const qp=sum(S.d.ventas.slice(S.n-12,S.n-9));
+  const yy=qp>0?q/qp-1:null;
+  document.getElementById('fcNote').innerHTML=
+    '<b>'+esc(r.n)+'</b> proyecta el próximo trimestre en <b>'+f0(q)+'</b>'+
+    (yy!=null?' ('+pctS(yy)+' vs el mismo trimestre del año previo)':'')+': '+
+    S.fcMeses.slice(0,3).map((m,i)=>lab(m)+' '+f1(r.full.fc[i])).join(', ')+
+    '. Banda de ~80%: ±'+f1(z*sd)+'/mes. '+
+    (!r.ok?'<b>Sin validación:</b> la serie es muy corta para probarlo a ciegas; usa el rango, no el número.':
+     r.id===S.mods.best?'Es el modelo con menor error en la prueba a ciegas.':
+     '<b>Ojo:</b> no es el modelo recomendado ('+esc(S.mods.rows.find(x=>x.id===S.mods.best).n)+
+     ' erró '+f1(S.mods.rows.find(x=>x.id===S.mods.best).mape)+'% vs '+f1(r.mape)+'% de este).');
+}
+
+function renderPredAll(){
+  const hay=S.mods&&S.mods.rows.some(r=>r.full);
+  if(!S.mods){
+    gate('gCmp','naCmp',false,'La comparación de modelos requiere al menos <b>24 meses</b> de historia mensual continua; tu serie trae '+S.n+'.');
+    gate('gFC','naFC',false,'Sin historia suficiente no hay proyección que mostrar.');return;}
+  gate('gCmp','naCmp',S.mods.validado,'Para comparar modelos a ciegas hacen falta <b>27 meses</b> (24 de entrenamiento + 3 de prueba); tu serie trae '+S.n+'. La proyección sin validar se muestra abajo.');
+  gate('gFC','naFC',hay,'Ningún modelo pudo ajustarse a esta serie.');
+  if(S.mods.validado)renderCmp();
+  renderSel();renderExplain();
+}
+
+/* ===================================================================
+   TRES ORÍGENES DE DATOS · demo simulado · empresa real · tus datos
+   =================================================================== */
+const SRC_META={
+  demo:{et:'Demo simulado',ic:'▦',cls:'info',
+    desc:'Serie de 36 meses construida para mostrar todas las capas del tablero funcionando a la vez.'},
+  real:{et:'Empresa real',ic:'◉',cls:'real',
+    desc:'TSMC (TWSE 2330 · NYSE TSM), jul-2023 → jun-2026. Ventas mensuales oficiales publicadas por la empresa y margen bruto trimestral reportado, mensualizado con método declarado.'},
+  user:{et:'Tus datos',ic:'⤒',cls:'ok',
+    desc:'Tu archivo, procesado únicamente en tu navegador. No se envía ni se guarda en ningún servidor.'}
+};
+function loadTSMC(){
+  acceptDataset({name:'TSMC · caso real (NT$ miles de millones)',data:JSON.parse(JSON.stringify(RAW_TSMC)),
+    warnings:['Caso real con fines de demostración. Las ventas mensuales son oficiales; los costos se derivan del margen bruto trimestral reportado, asignado de forma uniforme a los meses del trimestre (supuesto declarado).',
+              'TSMC no publica flujo de caja, unidades ni balance con frecuencia mensual: esas capas quedan desactivadas a propósito en vez de rellenarse con estimaciones.']},'real');
+}
+function renderSrcPicker(){
+  const el=document.getElementById('srcPicker');if(!el)return;
+  const cur=CUR.src||'demo';
+  const opt=(id,tit,sub,act)=>
+    '<button type="button" class="srcopt'+(act?' on':'')+'" data-src="'+id+'" aria-pressed="'+(act?'true':'false')+'">'+
+    '<span class="so-ic" aria-hidden="true">'+SRC_META[id].ic+'</span>'+
+    '<span class="so-tx"><b>'+tit+'</b><span>'+sub+'</span></span>'+
+    (act?'<span class="so-on" aria-label="activo">●</span>':'')+'</button>';
+  el.innerHTML=
+    opt('demo','Datos simulados','Demo de 36 meses con todas las capas activas',cur==='demo')+
+    opt('real','Empresa real','TSMC · datos públicos verificables',cur==='real')+
+    opt('user','Tus propios datos','CSV o Excel · nada sale de tu navegador',cur==='user');
+  const inf=document.getElementById('srcInfo');
+  if(inf)inf.innerHTML='<b>'+SRC_META[cur].et+':</b> '+SRC_META[cur].desc;
+  el.querySelectorAll('.srcopt').forEach(b=>b.addEventListener('click',()=>{
+    const v=b.dataset.src;
+    if(v==='demo'&&cur!=='demo')restoreDemo();
+    else if(v==='real'&&cur!=='real')loadTSMC();
+    else if(v==='user'){document.getElementById('drop').scrollIntoView({behavior:'smooth',block:'center'});
+      const dz=document.getElementById('drop');if(dz){dz.classList.add('pulse');setTimeout(()=>dz.classList.remove('pulse'),1600);}}
+  }));
+}
+
+/* ===================================================================
+   EXPORTACIÓN DE RESULTADOS · Excel multi-hoja y CSV
+   =================================================================== */
+function expSerie(){
+  const d=S.d,rows=[],h=['Mes','Ventas','Costos','Margen','Margen_%'];
+  if(d.flujo)h.push('FlujoCaja');
+  if(d.unidades)h.push('Unidades');
+  if(d.precio)h.push('Precio_Promedio');
+  if(S.has.liq)h.push('Activos_Corrientes','Pasivos_Corrientes','Razon_Corriente');
+  rows.push(h);
+  for(let i=0;i<S.n;i++){
+    const r=[d.meses[i],d.ventas[i],d.costos[i],d.margen[i],S.margen_pct[i]];
+    if(d.flujo)r.push(d.flujo[i]);
+    if(d.unidades)r.push(d.unidades[i]);
+    if(d.precio)r.push(d.precio[i]);
+    if(S.has.liq)r.push(d.ac[i],d.pc[i],S.rc[i]);
+    rows.push(r);
+  }
+  return rows;
+}
+function expModelos(){
+  const rows=[['Modelo','Estado','MAPE_%','RMSE','Mejor_que_ingenuo','Ventaja_vs_ingenuo_%','Configuracion','Nota']];
+  if(!S.mods){rows.push(['—','Sin comparación: la serie no alcanza los 27 meses necesarios','','','','','','']);return rows;}
+  const M=S.mods;
+  M.rows.slice().sort((a,b)=>(a.ok&&b.ok)?a.mape-b.mape:(a.ok?-1:1)).forEach(r=>{
+    rows.push([r.n, r.ok?(r.id===M.best?'RECOMENDADO':'Alternativa'):'No disponible',
+      r.ok?r.mape:'', r.ok?r.rmse:'', r.ok?(r.mejorQueNaive?'Sí':'No'):'', r.ok&&r.skill!=null?r.skill:'',
+      r.detalle||'', r.ok?'':(r.motivo||'')]);
+  });
+  if(M.naiveM)rows.push(['Referencia: ingenuo estacional','Benchmark',M.naiveM.mape,M.naiveM.rmse,'','','Repetir el mismo mes del año anterior','']);
+  return rows;
+}
+function expPronostico(){
+  const rows=[];
+  if(!S.mods||!S.fcMeses){rows.push(['Sin pronóstico disponible']);return rows;}
+  const usable=S.mods.rows.filter(r=>r.full);
+  const h=['Mes'];usable.forEach(r=>h.push(r.n.split(' (')[0]));
+  const act=fcActive();
+  if(act)h.push('Banda_inferior_80%','Banda_superior_80%');
+  rows.push(h);
+  const z=1.2816;
+  S.fcMeses.forEach((m,i)=>{
+    const r=[m];usable.forEach(x=>r.push(x.full.fc[i]));
+    if(act){r.push(+(act.full.fc[i]-z*act.full.sd).toFixed(2),+(act.full.fc[i]+z*act.full.sd).toFixed(2));}
+    rows.push(r);
+  });
+  rows.push([]);
+  rows.push(['Modelo usado para la banda',act?act.n:'—']);
+  rows.push(['Recomendado por menor error',S.mods.best&&S.mods.validado?S.mods.rows.find(r=>r.id===S.mods.best).n:'sin validación posible']);
+  return rows;
+}
+function expResumen(){
+  const M=SRC_META[CUR.src||'demo'];
+  const rows=[['Pulso Financiero · resultados exportados'],[],
+    ['Origen de los datos',M.et],['Conjunto',CUR.name],
+    ['Periodo',lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1])],['Meses',S.n],
+    ['Generado',new Date().toLocaleString('es-CO')],[],
+    ['INDICADOR','VALOR','COMPARATIVO'],
+    ['Ventas últimos 12m',S.win.ventas[0],S.g1!=null?(S.g1*100).toFixed(1)+'% vs 12m previos':''],
+    ['Margen últimos 12m (%)',+S.m1.toFixed(2),S.m0!=null?(S.m1-S.m0).toFixed(1)+' pp vs previo':'']];
+  if(S.has.flujo)rows.push(['Conversión de caja (%)',+S.conv1.toFixed(1),'Flujo / Margen']);
+  if(S.has.liq)rows.push(['Razón corriente (cierre)',S.rc[S.n-1],'Activos / Pasivos corrientes']);
+  if(S.q1!=null)rows.push(['Próximo trimestre (proyección)',+S.q1.toFixed(1),
+    (S.bestName?'Modelo: '+S.bestName.split(' (')[0]:'')+(S.q1yoy!=null?' · '+(S.q1yoy*100).toFixed(1)+'% interanual':'')]);
+  rows.push([],['VEREDICTO'],[document.getElementById('veredicto')?
+    document.getElementById('veredicto').innerText.replace(/\s+/g,' ').trim():'']);
+  if(S.alerts&&S.alerts.length){rows.push([],['ALERTAS']);
+    S.alerts.forEach(a=>rows.push([a.t.replace(/<[^>]+>/g,'')]));}
+  return rows;
+}
+function expMetodo(){
+  const M=S.mods;
+  return [['Metodología y advertencias'],[],
+   ['Protocolo de validación',M?('Se ocultan los últimos '+M.H+' meses; cada modelo se entrena con el resto y predice ese tramo a ciegas. Se compara con el método ingenuo estacional (repetir el mismo mes del año anterior).'):'No aplicable: serie demasiado corta.'],
+   ['Limitación del protocolo','Es una sola ventana de validación (holdout único). Con otra ventana el orden entre modelos cercanos podría cambiar.'],
+   ['Banda de incertidumbre','±1,2816 desviaciones de los residuos del ajuste ≈ 80% de cobertura. Es aproximada: no incorpora incertidumbre de los parámetros.'],
+   ['Naturaleza de los datos',(CUR.src==='demo')?'Datos simulados con fines de demostración.':
+     (CUR.src==='real')?'Datos públicos reales de TSMC. Ventas mensuales oficiales; costos derivados del margen bruto trimestral reportado asignado uniformemente a los meses del trimestre.':
+     'Datos aportados por el usuario, procesados localmente en el navegador.'],
+   ['Uso responsable','Una predicción sin rango ni decisión asociada es curiosidad estadística. Triangula siempre contra el juicio de negocio antes de comprometer cifras.'],
+   ['Fuente','Pulso Financiero · dashboards.javierforero.co · Javier Forero']];
+}
+function csvEsc(v){
+  if(v==null)return'';
+  const s=String(v);
+  return /[",;\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
+function rowsToCSV(rows){return rows.map(r=>(r||[]).map(csvEsc).join(',')).join('\n');}
+
+function exportCSV(){
+  const stamp=new Date().toISOString().slice(0,10);
+  const blocks=[['PRONÓSTICO']].concat(expPronostico()).concat([[],['COMPARACIÓN DE MODELOS']]).concat(expModelos())
+    .concat([[],['SERIE HISTÓRICA']]).concat(expSerie());
+  dl('pulso-financiero-resultados-'+stamp+'.csv','\ufeff'+rowsToCSV(blocks),'text/csv;charset=utf-8;');
+  expNote('✓ CSV descargado: pronóstico, comparación de modelos y serie histórica en un solo archivo.');
+}
+function exportXLSX(){
+  if(typeof XLSX==='undefined'){
+    expNote('⚠ El motor de Excel no está disponible sin conexión. Se descargó el CSV, que abre igual en Excel.');
+    exportCSV();return;
+  }
+  try{
+    const wb=XLSX.utils.book_new();
+    const add=(rows,name)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),name);
+    add(expResumen(),'Resumen');
+    add(expPronostico(),'Pronóstico');
+    add(expModelos(),'Modelos');
+    add(expSerie(),'Serie');
+    add(expMetodo(),'Metodología');
+    XLSX.writeFile(wb,'pulso-financiero-resultados-'+new Date().toISOString().slice(0,10)+'.xlsx');
+    expNote('✓ Excel descargado con 5 hojas: Resumen, Pronóstico, Modelos, Serie y Metodología.');
+  }catch(e){
+    expNote('⚠ No se pudo generar el Excel ('+(e.message||'error')+'). Descargando CSV como alternativa.');
+    exportCSV();
+  }
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ const bind=(id,fn)=>{const e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
+ bind('btnExpXlsx',exportXLSX);bind('btnExpCsv',exportCSV);
+ bind('btnExpXlsx2',exportXLSX);bind('btnExpCsv2',exportCSV);
+});
+function expNote(t){['expNote','expNote2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});}
 
 /* ===== Pipeline de cálculo (demo y datos del usuario, mismo camino) ===== */
 function computeAll(d){
@@ -574,6 +1256,9 @@ function computeAll(d){
  if(n>=24){
   S.dec=decompose(d.ventas,d.meses);
   S.hw=fitHW(d.ventas,6);
+  S.mods=evalModels(d.ventas,d.meses,6);
+  if(S.mods&&S.mods.best){const bm=S.mods.rows.find(r=>r.id===S.mods.best);
+   if(bm&&bm.full){S.hw=bm.full;S.bestName=bm.n;S.bestMape=bm.mape;}}
   S.hwM=fitHW(d.margen,3);
   S.fcMeses=[1,2,3,4,5,6].map(k=>addM(d.meses[n-1],k));
   S.q1=sum(S.hw.fc.slice(0,3));S.q1prev=sum(d.ventas.slice(n-12,n-9));
@@ -715,25 +1400,28 @@ function gateAll(){
  gate('gRC','naRC',S.has.liq,'Añade <b>Activos_Corrientes</b> y <b>Pasivos_Corrientes</b> (completas) para activar la capa de liquidez.');
  const okM=S.n>=24;
  gate('gDec','naDec',!!S.dec,'La descomposición requiere al menos <b>24 meses</b> (2 ciclos anuales). Tu serie trae '+S.n+'.');
- gate('gHW','naHW',!!S.hw,'La predicción Holt-Winters requiere al menos <b>24 meses</b>. Tu serie trae '+S.n+'.');
- gate('gBT','naBT',!!S.bt,S.n>=24?'El backtest requiere al menos <b>30 meses</b> (24 para entrenar + 6 de validación). Tu serie trae '+S.n+': el pronóstico se muestra, pero sin validación independiente.':'Backtest no disponible con menos de 30 meses.');
+ renderPredAll();
  gate('gIK','naIK',S.has.ia,'Añade la columna <b>IA_Factor_Tendencia</b> (y opcionalmente <b>IA_Escenario</b> e <b>IA_Precio_Ajustado</b>) para activar los KPIs Inteligentes: margen proyectado, liquidez dinámica y ROI ajustado, comparando Histórico vs IA Proyectado.');}
 
 /* ===== Render principal ===== */
 function renderSource(){
  const el=document.getElementById('srcChip');
  const rng=lab(S.d.meses[0])+' – '+lab(S.d.meses[S.n-1]);
- el.innerHTML=`<span class="chip ${CUR.src==='user'?'ok':'info'}">${CUR.src==='user'?'● Tus datos':'● Demo'}</span>
+ const M=SRC_META[CUR.src]||SRC_META.demo;
+ el.innerHTML=`<span class="chip ${M.cls}">${M.ic} ${M.et}</span>
   <span><b>${esc(CUR.name)}</b> · ${S.n} meses (${rng})${CUR.src==='user'?' · procesados solo en tu navegador':''}</span>
-  ${CUR.src==='user'?'<button class="seg" id="chipRestore" type="button">↺ volver al demo</button>':'<button class="seg" id="chipGo" type="button">⤒ usar mis datos</button>'}`;
- const r=document.getElementById('chipRestore');if(r)r.addEventListener('click',restoreDemo);
- const g=document.getElementById('chipGo');if(g)g.addEventListener('click',()=>goTab('datos'));}
+  <button class="seg" id="chipGo" type="button">⇄ cambiar origen</button>`;
+ const g=document.getElementById('chipGo');if(g)g.addEventListener('click',()=>goTab('datos'));
+ const hk=document.getElementById('heroKick');
+ if(hk)hk.textContent=M.et+' · '+(CUR.src==='real'?'TSMC · semiconductores':'Finanzas corporativas')+' · '+
+   lab(S.d.meses[0])+'–'+lab(S.d.meses[S.n-1])+' ('+S.n+' meses'+(CUR.src==='demo'?', datos simulados':(CUR.src==='real'?', datos públicos reales':''))+')';
+ renderSrcPicker();}
 function renderVeredicto(){
  const p=[growthHead(S),marginClause(S)];
  if(S.shareP!=null&&S.g1>0)p.push(`El precio explica ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del crecimiento${S.sharePprev!=null?` (antes ${f0(Math.max(0,Math.min(100,S.sharePprev*100)))}%)`:''}.`);
  if(S.has.flujo)p.push(`La conversión de caja es ${f1(S.conv1)}%${S.conv1>=85?' (sana)':' (bajo el umbral de 85%)'}.`);
  if(S.has.liq)p.push(`La liquidez cierra en ${f1(S.rcLast)}×${S.rcLast<1?' — crítica':S.rcLast<1.2?' — zona de alerta':''}.`);
- if(S.hw&&S.q1yoy!=null)p.push(`El modelo estadístico proyecta el próximo trimestre en <b>${f0(S.q1)}</b> (${pctS(S.q1yoy)} vs el mismo trimestre del año previo, con rango).`);
+ if(S.hw&&S.q1yoy!=null)p.push(`${S.bestName&&S.mods&&S.mods.validado?'El modelo más confiable para tu serie ('+S.bestName.split(' (')[0]+', error de '+f1(S.bestMape)+'% en la prueba a ciegas)':'El modelo estadístico'} proyecta el próximo trimestre en <b>${f0(S.q1)}</b> (${pctS(S.q1yoy)} vs el mismo trimestre del año previo, con rango).`);
  document.getElementById('veredicto').innerHTML=`<div class="vt">Veredicto · con ${CUR.src==='user'?'tus datos':'datos del demo'} (últimos 12 meses vs 12 previos)</div><p>${p.join(' ')}</p>`;}
 function renderKpis(){
  if(!S)return;const pu=css('--purple'),mu=css('--muted');const cards=[];
@@ -776,10 +1464,11 @@ function renderStatic(){
   document.getElementById('tPuente').textContent=S.shareP!=null?`El precio aporta ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del cambio en ventas (${b.l0} → ${b.l1})`:'Puente precio-volumen';}
  if(S.has.liq)document.getElementById('tRC').textContent=`Liquidez: ${f1(S.rc12)}× promedio 12m, ${S.rcBad} mes(es) críticos en el histórico`;
  if(S.has.flujo)document.getElementById('tFlujo').textContent=`La caja convierte ${f1(S.conv1)}% del margen en efectivo`;
- if(S.hw){document.getElementById('tHW').textContent=`Holt-Winters proyecta el próximo trimestre en ${f0(S.q1)} (${S.q1yoy!=null?pctS(S.q1yoy):'—'} interanual)`;
-  document.getElementById('hwNote').innerHTML=`Parámetros optimizados (α=${S.hw.params.a}, β=${S.hw.params.b}, γ=${S.hw.params.g}). Decisión asociada: si el borde bajo del rango se materializa dos meses seguidos, se revisa el plan comercial (regla en Gobernanza).`;}
- if(S.dec)document.getElementById('fseas').textContent=f0(S.dec.fuerza*100)+'%';
- if(S.bt)document.getElementById('btNote').innerHTML=`Horizonte de validación: ${S.bt.h} meses. MAPE <b>${S.bt.mape}%</b> vs <b>${S.bt.naive}%</b> del benchmark ingenuo (repetir el año anterior)${S.bt.mape<S.bt.naive?' — el modelo aporta valor real':' — <b>el modelo no supera al benchmark: úsalo con cautela</b>'}. Error típico ±${f1(S.bt.rmse)}/mes.`;
+ if(S.mods)document.getElementById('btH').textContent=S.mods.H;
+  if(S.mods&&S.mods.validado&&S.bestName){const cm=document.getElementById('chipMdl');
+   if(cm)cm.textContent='Mejor modelo: '+S.bestName.split(' (')[0]+' · MAPE '+f1(S.bestMape)+'%';}
+  if(S.dec)document.getElementById('fseas').textContent=f0(S.dec.fuerza*100)+'%';
+ 
  renderPuenteSel();}
 function renderPuenteSel(){
  const el=document.getElementById('selPuente');if(!S.bridges){el.innerHTML='';return;}
@@ -867,7 +1556,7 @@ function drawHW(){if(!visible('chHW')||!S.hw)return;const c=colors();
   {x:[lastL].concat(fl),y:[lastV].concat(lo),name:'Banda ~80%',mode:'lines',line:{width:0},fill:'tonexty',fillcolor:'rgba(124,77,255,.18)'},
   {x:[lastL].concat(fl),y:[lastV].concat(S.hw.fc),name:'Pronóstico HW',mode:'lines+markers',line:{color:c.vb,width:2.4,dash:'dash'},marker:{size:5}}
  ],baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
-function drawAll(){if(!S)return;drawVentas();drawCiclo();drawPuente();drawMargen();drawFlujo();drawIdx();drawRC();drawDec();drawBT();drawHW();}
+function drawAll(){if(!S)return;drawVentas();drawCiclo();drawPuente();drawMargen();drawFlujo();drawIdx();drawRC();drawDec();drawCmp();drawFC();}
 window.addEventListener('resize',()=>{clearTimeout(window.__rz);window.__rz=setTimeout(drawAll,150);});
 
 /* ===== KPIs Inteligentes ===== */
