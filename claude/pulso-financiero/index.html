@@ -323,11 +323,11 @@ details.metod b{color:var(--deep-blue);}
   <section class="panel" id="tab-crecimiento">
     <div class="sect-title">Crecimiento · ¿A qué ritmo y con qué motor?</div>
     <div class="sect-desc">Pregunta 1: ¿crecemos? Pregunta 2 (la importante): ¿el crecimiento viene de vender más unidades o de cobrar más caro?</div>
-    <div class="card"><h3 id="tVentas"></h3><div class="sub">Ventas mensuales con la tendencia estimada por descomposición (sin ruido estacional).</div><div class="chart" id="chVentas"></div></div>
+    <div class="card"><h3 id="tVentas"></h3><div class="sub" id="sVentas">Ventas con la tendencia estimada por descomposición (sin ruido estacional).</div><div class="chart" id="chVentas"></div></div>
     <div class="grid2">
-      <div class="card"><h3>El patrón se repite cada año</h3><div class="sub">Cycle plot: los tres años superpuestos mes a mes. El valle Ene–Abr y los picos May–Jul y Dic son estructurales.</div><div class="chart" id="chCiclo"></div></div>
+      <div class="card"><h3 id="tCiclo">El patrón que se repite cada año</h3><div class="sub" id="sCiclo">Cycle plot: cada año superpuesto sobre el mismo eje.</div><div class="chart" id="chCiclo"></div></div>
       <div class="card">
-        <h3 id="tPuente">Puente precio-volumen</h3><div class="sub">Cuánto del cambio en ventas aporta cada palanca (ingreso implícito = ventas/unidades), comparando ventanas de 12 meses.</div>
+        <h3 id="tPuente">Puente precio-volumen</h3><div class="sub" id="sPuente">Cuánto del cambio en ventas aporta cada palanca (ingreso implícito = ventas/unidades), comparando años móviles.</div>
         <div id="gPuente"><div class="segsel" id="selPuente"></div><div class="chart" id="chPuente"></div></div>
         <div class="na" id="naPuente" hidden></div>
       </div>
@@ -1451,9 +1451,11 @@ function computeAll(d){
    roiHist:sum(d.margen.slice(-SEAS))/sum(d.costos.slice(-SEAS))*100};
   S.escList=S.has.iaEsc?['Optimista','Base','Pesimista'].filter(e=>d.iae.includes(e))
     .concat([...new Set(d.iae)].filter(e=>!['Optimista','Base','Pesimista'].includes(e))):[];}
- /* ciclo anual: hasta los últimos 4 años calendario */
- const byY={};d.meses.forEach((ym,i)=>{const y=ym.slice(0,4);(byY[y]=byY[y]||new Array(12).fill(null))[+ym.slice(5)-1]=d.ventas[i];});
+ /* ciclo anual: hasta los últimos 4 años calendario (12 meses o 4 trimestres por año) */
+ const byY={};d.meses.forEach((ym,i)=>{const y=ym.slice(0,4);
+   (byY[y]=byY[y]||new Array(SEAS).fill(null))[seasIdx(ym)-1]=d.ventas[i];});
  S.cycle=Object.keys(byY).sort().slice(-4).map(y=>({y,vals:byY[y]}));
+ S.cycleLabs=(SEAS===4)?['1T','2T','3T','4T']:MESN.slice();
  /* narrativa: alertas y recomendaciones */
  buildNarrative(S);
  return S;}
@@ -1627,6 +1629,41 @@ function renderKpis(){
   cmp:S.sharePprev!=null?`aporte del precio: ${f0(Math.max(0,Math.min(100,S.sharePprev*100)))}% → ${f0(Math.max(0,Math.min(100,S.shareP*100)))}%`:'últimos 12m vs previos',
   ch:S.shareP<0.3?chip('warn','▼ palanca débil'):S.shareP>0.7?chip('warn','⚠ depende del precio'):chip('ok','✓ equilibrado'),sp:spark([1,2].map(()=>1),mu)});
  document.getElementById('kpiCards').innerHTML=cards.map(c=>`<div class="kpi"><span class="lbl">${c.lbl}</span><span class="val">${c.val}</span>${c.ch}<span class="cmp">${c.cmp}</span>${c.sp}</div>`).join('');}
+/* Describe el patrón estacional a partir del índice real de la serie (no cableado) */
+function cicloTexto(){
+  const XL=S.cycleLabs||MESN, U=(SEAS===4)?'trimestre':'mes';
+  const nAnios=S.cycle?S.cycle.length:0;
+  const base='Cycle plot: '+(nAnios>1?'los '+nAnios+' años superpuestos '+U+' a '+U:'el año disponible')+'. ';
+  if(!S.dec||!S.dec.seasonal){
+    return{t:'El patrón que se repite cada año',
+      s:base+'Con al menos 2 ciclos anuales completos el tablero estima el índice estacional y describe picos y valles.'};
+  }
+  /* índice estacional promedio por posición del año */
+  const acc={},cnt={};
+  S.d.meses.forEach((m,i)=>{const k=seasIdx(m);acc[k]=(acc[k]||0)+S.dec.seasonal[i];cnt[k]=(cnt[k]||0)+1;});
+  const idx=[];for(let k=1;k<=SEAS;k++)if(cnt[k])idx.push({k,v:acc[k]/cnt[k],lab:XL[k-1]});
+  if(!idx.length)return{t:'El patrón que se repite cada año',s:base};
+  idx.sort((a,b)=>b.v-a.v);
+  const alto=idx.slice(0,SEAS===4?1:2), bajo=idx.slice(-(SEAS===4?1:2)).reverse();
+  const media=avg(S.d.ventas);
+  const amp=media>0?((idx[0].v-idx[idx.length-1].v)/media*100):null;
+  const nm=a=>a.map(x=>x.lab).join(' y ');
+  const fuerza=S.dec.fuerza!=null?Math.round(S.dec.fuerza*100):null;
+  let t=(fuerza!=null&&fuerza<25)?'El patrón anual es débil':'El patrón que se repite cada año';
+  let txt=base+'Los picos están en <b>'+nm(alto)+'</b> y el valle en <b>'+nm(bajo)+'</b>';
+  if(amp!=null&&isFinite(amp))txt+=', con una amplitud de <b>'+f1(Math.abs(amp))+'%</b> sobre la media';
+  txt+='. ';
+  if(fuerza!=null){
+    txt+= fuerza>=60?'La estacionalidad explica buena parte de la variación de corto plazo (fuerza '+fuerza+'%): comparar contra el mismo '+U+' del año previo es más honesto que contra el '+U+' anterior.'
+        : fuerza>=25?'La estacionalidad es moderada (fuerza '+fuerza+'%): existe, pero el ruido y la tendencia pesan tanto o más.'
+        : 'La estacionalidad es débil (fuerza '+fuerza+'%): estos picos y valles pueden ser ruido, no estructura. Trátalos con cautela.';
+  }
+  /* Advertencia de fragilidad: pocos años completos = índice estacional provisional */
+  const completos=(S.cycle||[]).filter(c=>c.vals.every(v=>v!=null)).length;
+  if(completos<3)txt+=' <b>Cautela:</b> solo hay '+completos+' año'+(completos===1?'':'s')+' completo'+(completos===1?'':'s')+
+    ' en la serie, así que el índice estacional es provisional: un solo año atípico puede estar marcando el patrón.';
+  return{t,s:txt};
+}
 function renderStatic(){
  renderVeredicto();
  document.getElementById('alerts').innerHTML=S.alerts.map(a=>`<div class="alert ${a.c}"><span class="dot"></span><div>${a.t}</div></div>`).join('')||'<div class="alert ok"><span class="dot"></span><div>Sin alertas: los indicadores disponibles están en zona sana.</div></div>';
@@ -1641,14 +1678,21 @@ function renderStatic(){
  document.getElementById('tMargen').textContent=marginClause(S).replace(/<[^>]+>/g,'');
  if(S.costG!=null&&S.g1!=null)document.getElementById('tCostos').textContent=S.costG>S.g1?'Los costos crecen más rápido que las ventas: el margen se comprime':'Las ventas crecen por encima de los costos: el margen respira';
  else document.getElementById('tCostos').textContent='Ventas y costos indexados (primer mes = 100)';
- if(S.bridges&&S.bridges.length){const b=S.bridges[0];
-  document.getElementById('tPuente').textContent=S.shareP!=null?`El precio aporta ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del cambio en ventas (${b.l0} → ${b.l1})`:'Puente precio-volumen';}
+ {const tp=document.getElementById('tPuente');
+  if(tp)tp.textContent=(S.bridges&&S.bridges.length&&S.shareP!=null)
+    ?`El precio aporta ${f0(Math.max(0,Math.min(100,S.shareP*100)))}% del cambio en ventas (${S.bridges[0].l0} → ${S.bridges[0].l1})`
+    :'Puente precio-volumen';}
  if(S.has.liq)document.getElementById('tRC').textContent=`Liquidez: ${f1(S.rc12)}× promedio 12m, ${S.rcBad} mes(es) críticos en el histórico`;
  if(S.has.flujo)document.getElementById('tFlujo').textContent=`La caja convierte ${f1(S.conv1)}% del margen en efectivo`;
  if(S.mods){document.getElementById('btH').textContent=S.mods.H;const bu=document.getElementById('btU');if(bu)bu.textContent=PUp();}
   if(S.mods&&S.mods.validado&&S.bestName){const cm=document.getElementById('chipMdl');
    if(cm)cm.textContent='Mejor modelo: '+S.bestName.split(' (')[0]+' · MAPE '+f1(S.bestMape)+'%';}
   if(S.dec)document.getElementById('fseas').textContent=f0(S.dec.fuerza*100)+'%';
+  {const ct=cicloTexto();
+   const et=document.getElementById('tCiclo');if(et)et.textContent=ct.t;
+   const es=document.getElementById('sCiclo');if(es)es.innerHTML=ct.s;
+   const sv=document.getElementById('sVentas');
+   if(sv)sv.textContent='Ventas '+(SEAS===4?'trimestrales':'mensuales')+' con la tendencia estimada por descomposición (sin ruido estacional).';}
  
  renderPuenteSel();}
 function renderPuenteSel(){
@@ -1664,7 +1708,8 @@ function drawVentas(){if(!visible('chVentas'))return;const c=colors();
  if(S.dec)tr.push({x:S.labs,y:S.dec.trend,name:'Tendencia (descomposición)',mode:'lines',line:{color:c.mu,width:2,dash:'dot'},connectgaps:false});
  Plotly.react('chVentas',tr,baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
 function drawCiclo(){if(!visible('chCiclo'))return;const c=colors();const cols=[c.mu,c.vb,c.pl,c.pu];
- Plotly.react('chCiclo',S.cycle.map((s,i)=>({x:MESN,y:s.vals,name:s.y,mode:'lines+markers',
+ const XL=S.cycleLabs||MESN;
+ Plotly.react('chCiclo',S.cycle.map((s,i)=>({x:XL,y:s.vals,name:s.y,mode:'lines+markers',
   line:{color:cols[i%4],width:i===S.cycle.length-1?2.6:1.6},marker:{size:4},connectgaps:false})),
   baseLayout({yaxis:{title:{text:'Ventas',font:{size:10}},gridcolor:c.grid,zeroline:false}}),CFG);}
 function drawPuente(){if(!visible('chPuente')||!S.bridges)return;const c=colors();
