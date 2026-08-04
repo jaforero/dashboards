@@ -290,6 +290,7 @@ details.metod b{color:var(--deep-blue);}
 .fml .fl i{font-family:inherit;color:var(--muted);}
 .fml .nota{font-family:inherit;color:var(--muted);font-size:.76rem;}
 .fml sub,.fml sup{font-size:.72em;}
+.cmptbl .rng{display:block;font-size:.68rem;font-weight:400;color:var(--muted);margin-top:2px;}
 </style>
 </head>
 <body>
@@ -404,12 +405,12 @@ details.metod b{color:var(--deep-blue);}
 
     <div class="card">
       <h3>1 · ¿Qué modelo merece tu confianza para <span id="serName1">las ventas</span>?</h3>
-      <div class="sub">Los cuatro se entrenan con la misma historia, se les <b>ocultan los últimos <span id="btH">—</span> <span id="btU">meses</span></b> y se les pide predecirlos a ciegas. Después se compara cada predicción contra lo que realmente pasó. Menor error = más confiable.</div>
+      <div class="sub" id="btTxt">—</div>
       <div id="gCmp">
         <div id="cmpTable"></div>
         <div id="cmpVerdict"></div>
         <div class="chart" id="chCmp"></div>
-        <div class="hint"><b>Cómo leer el gráfico:</b> la línea gruesa es lo que ocurrió de verdad; las punteadas son lo que cada modelo predijo sin haberlo visto. Mientras más pegada a la real, mejor el modelo.</div>
+        <div class="hint"><b>Cómo leer el gráfico:</b> la línea gruesa es lo que ocurrió de verdad; las punteadas son lo que cada modelo predijo sin haberlo visto. Se muestra el <b>corte más reciente</b>; los errores de la tabla promedian todos los cortes. El rango bajo cada MAPE indica cuánto varía entre cortes: si es amplio, la ventaja de ese modelo es frágil.</div>
         <details class="fmlbox">
           <summary>Fórmulas de los indicadores de error y del protocolo</summary>
           <div class="fml">
@@ -420,7 +421,7 @@ details.metod b{color:var(--deep-blue);}
             <div class="fl"><b>Método ingenuo estacional</b>: F<sub>t</sub> = A<sub>t−m</sub>. Es la referencia mínima: predecir repitiendo el mismo periodo del año anterior.</div>
             <div class="fl"><b>Ventaja vs. ingenuo</b> = (1 − MAPE<sub>modelo</sub> / MAPE<sub>ingenuo</sub>) × 100. Negativa ⇒ el modelo no aporta valor.</div>
             <div class="fl"><b>AICc</b> (usado para elegir armónicos y orden SARIMA) = n·ln(SSE/n) + 2k + 2k(k+1)/(n−k−1), donde k = número de parámetros. Premia el ajuste y castiga la complejidad.</div>
-            <div class="fl nota"><b>Protocolo:</b> los cuatro modelos se entrenan con los primeros n−H periodos y predicen los últimos H <b>sin verlos</b> (validación fuera de muestra con holdout único). Con otra ventana el orden entre modelos muy parejos podría cambiar.</div>
+            <div class="fl nota"><b>Protocolo (origen móvil):</b> el modelo se re-entrena en varios cortes del tiempo; en cada corte predice a ciegas los H periodos siguientes y se promedian los errores. Es más robusto que un holdout único, cuyo resultado depende de dónde se corte.</div>
           </div>
         </details>
       </div>
@@ -1050,10 +1051,28 @@ function evalModels(y,meses,h){
   if(n<24)return null;
   /* Horizonte de validación: deja suficiente entrenamiento para los modelos estacionales */
   const H=(SEAS===4)?(n>=28?8:(n>=20?4:2)):(n>=42?12:(n>=30?6:3));
-  const trY=y.slice(0,n-H),trM=meses.slice(0,n-H),teY=y.slice(n-H);
-  /* referencia: ingenuo estacional (repetir el mismo mes del año pasado) */
-  const nv=[];for(let i=0;i<H;i++)nv.push(y[n-H-SEAS+i]);
-  const nvM=(n-H-SEAS>=0)?fcMetrics(teY,nv):null;
+  const MINTR=(SEAS===4)?12:24;
+  /* ORIGEN MÓVIL: varios cortes temporales en vez de uno solo. Un holdout único es
+     inestable: la misma implementación puede parecer buena o mala según dónde se corte. */
+  /* EQUIDAD: todos los modelos deben evaluarse en LOS MISMOS cortes. El corte más
+     antiguo lo fija el modelo más exigente en historia (si no, se compararían
+     promedios calculados sobre periodos distintos). */
+  let reqMin=MINTR;
+  FCMODELS.forEach(M=>{if(n>=M.min)reqMin=Math.max(reqMin,M.min);});
+  const sep=Math.max(1,Math.round(H/2)),ORIG=[];
+  for(let k=0;k<3;k++){const o=n-H-sep*k;if(o>=reqMin)ORIG.push(o);}
+  ORIG.reverse();
+  if(!ORIG.length)ORIG.push(Math.max(MINTR,n-H));
+  const O_LAST=ORIG.length?ORIG[ORIG.length-1]:(n-H);
+  const trY=y.slice(0,O_LAST),trM=meses.slice(0,O_LAST),teY=y.slice(O_LAST,O_LAST+H);
+  const nv=[];for(let i=0;i<H;i++)nv.push(y[O_LAST-SEAS+i]);
+  let nvM=null;
+  {const acc=[];ORIG.forEach(o=>{if(o-SEAS<0)return;
+     const p=[];for(let i=0;i<H;i++)p.push(y[o-SEAS+i]);
+     const mm=fcMetrics(y.slice(o,o+H),p);if(mm)acc.push(mm);});
+   if(acc.length)nvM={mape:+(acc.reduce((s2,x)=>s2+x.mape,0)/acc.length).toFixed(2),
+     mae:+(acc.reduce((s2,x)=>s2+x.mae,0)/acc.length).toFixed(2),
+     rmse:+(acc.reduce((s2,x)=>s2+x.rmse,0)/acc.length).toFixed(2)};}
   const out=FCMODELS.map(M=>{
     const r={id:M.id,n:M.n,corto:M.corto,fuerte:M.fuerte,debil:M.debil};
     if(n<M.min){r.ok=false;r.motivo='Requiere ≥'+M.min+' meses de historia (tienes '+n+').';return r;}
@@ -1063,21 +1082,32 @@ function evalModels(y,meses,h){
       try{const f=M.fit(y,meses,h);if(f&&finiteArr(f.fc)){r.full=f;r.detalle=f.detalle||'';r.params=f.params||{};}}catch(e){}
       if(!r.full)r.motivo='Requiere ≥'+M.min+' meses; tu serie trae '+n+'.';
       return r;}
-    let bt=null,full=null;
-    try{bt=M.fit(trY,trM,H);}catch(e){bt=null;}
-    try{full=M.fit(y,meses,h);}catch(e){full=null;}
-    if(!bt||!full||!finiteArr(bt.fc)||!finiteArr(full.fc)){r.ok=false;r.motivo='El modelo no convergió con esta serie.';return r;}
-    const m=fcMetrics(teY,bt.fc);
-    if(!m){r.ok=false;r.motivo='No fue posible evaluar el error (valores nulos o cero en la prueba).';return r;}
-    r.ok=true;r.mape=m.mape;r.mae=m.mae;r.rmse=m.rmse;r.pred=bt.fc;r.full=full;
-    r.detalle=full.detalle||'';r.params=full.params||{};
-    r.mejorQueNaive=nvM?m.mape<nvM.mape:null;
-    r.skill=nvM&&nvM.mape>0?+((1-m.mape/nvM.mape)*100).toFixed(0):null;
+    let full=null;try{full=M.fit(y,meses,h);}catch(e){full=null;}
+    if(!full||!finiteArr(full.fc)){r.ok=false;r.motivo='El modelo no convergió con esta serie.';return r;}
+    const acc=[];let lastPred=null;
+    for(let oi=0;oi<ORIG.length;oi++){const o=ORIG[oi];
+      let f=null;
+      try{f=M.fit(y.slice(0,o),meses.slice(0,o),H);}catch(e){f=null;}
+      if(!f||!finiteArr(f.fc))continue;
+      const mm=fcMetrics(y.slice(o,o+H),f.fc);
+      if(!mm)continue;
+      acc.push(mm);if(o===O_LAST)lastPred=f.fc;
+    }
+    if(!acc.length){r.ok=false;r.motivo='No fue posible validarlo a ciegas con esta serie.';return r;}
+    if(acc.length<ORIG.length)r.parcial=true;
+    const avg2=k2=>+(acc.reduce((s2,x)=>s2+x[k2],0)/acc.length).toFixed(2);
+    r.ok=true;r.mape=avg2('mape');r.mae=avg2('mae');r.rmse=avg2('rmse');
+    r.nOrig=acc.length;
+    r.mapeMin=+Math.min.apply(null,acc.map(x=>x.mape)).toFixed(2);
+    r.mapeMax=+Math.max.apply(null,acc.map(x=>x.mape)).toFixed(2);
+    r.pred=lastPred;r.full=full;r.detalle=full.detalle||'';r.params=full.params||{};
+    r.mejorQueNaive=nvM?r.mape<nvM.mape:null;
+    r.skill=nvM&&nvM.mape>0?+((1-r.mape/nvM.mape)*100).toFixed(0):null;
     return r;
   });
   const ok=out.filter(r=>r.ok).sort((a,b)=>a.mape-b.mape);
   const usable=out.filter(r=>r.full);
-  return{H,test:teY,testLabs:meses.slice(n-H),naive:nv,naiveM:nvM,
+  return{H,ORIG,nOrig:ORIG.length,test:teY,testLabs:meses.slice(O_LAST,O_LAST+H),naive:nv,naiveM:nvM,
     rows:out,rank:ok,best:ok.length?ok[0].id:(usable.length?usable[0].id:null),
     validado:ok.length>0,
     ganaANaive:ok.length&&nvM?ok[0].mape<nvM.mape:null};
@@ -1221,7 +1251,7 @@ function renderCmp(){
     const skc=r.skill==null?'':(r.skill>0?'pos':'neg');
     html+='<tr'+(win?' class="win"':'')+'><th scope="row">'+(win?'<span aria-hidden="true">★ </span>':'')+esc(r.n)+
       '<span class="mdet">'+esc(r.detalle||'')+'</span></th>'+
-      '<td class="num"><b>'+f1(r.mape)+'%</b></td>'+
+      '<td class="num"><b>'+f1(r.mape)+'%</b>'+(r.nOrig>1?'<span class="rng">'+f1(r.mapeMin)+'–'+f1(r.mapeMax)+(r.parcial?' ⚠':'')+'</span>':'')+'</td>'+
       '<td class="num">'+f1(r.mae)+'</td>'+
       '<td class="num">'+f1(r.rmse)+'</td>'+
       '<td class="num '+skc+'">'+sk+'</td>'+
@@ -1241,7 +1271,7 @@ function renderCmp(){
     const dif=seg?+(seg.mape-b.mape).toFixed(2):null;
     const cerca=dif!=null&&dif<0.5;
     v='<div class="vbox '+(M.ganaANaive?'ok':'warn')+'">'+
-      '<b>Recomendado para tu serie: '+esc(b.n)+'</b> — se equivocó en promedio <b>'+f1(b.mape)+'%</b> al predecir a ciegas los últimos '+M.H+' meses'+
+      '<b>Recomendado para tu serie: '+esc(b.n)+'</b> — se equivocó en promedio <b>'+f1(b.mape)+'%</b> al predecir a ciegas '+M.H+' '+PUp()+' en cada uno de '+M.nOrig+' cortes del tiempo'+
       (M.naiveM?', frente al '+f1(M.naiveM.mape)+'% del método ingenuo':'')+'. ';
     if(!M.ganaANaive)v+='<b>Advertencia:</b> ningún modelo superó a repetir el año anterior. La serie es poco predecible con métodos estadísticos: usa el rango, no el número, y apóyate en el juicio de negocio. ';
     else if(cerca)v+='La diferencia con <b>'+esc(seg.n)+'</b> ('+f1(seg.mape)+'%) es mínima; si prefieres un modelo más fácil de explicar, la alternativa es defendible. ';
@@ -1492,8 +1522,8 @@ function expMetodo(){
   const M=curM();
   return [['Metodología y advertencias'],[],
    ['Indicador pronosticado',fcSer()?fcSer().n:'Ventas'],
-   ['Protocolo de validación',M?('Se ocultan los últimos '+M.H+' meses; cada modelo se entrena con el resto y predice ese tramo a ciegas. Se compara con el método ingenuo estacional (repetir el mismo '+PU()+' del año anterior).'):'No aplicable: serie demasiado corta.'],
-   ['Limitación del protocolo','Es una sola ventana de validación (holdout único). Con otra ventana el orden entre modelos cercanos podría cambiar.'],
+   ['Protocolo de validación',M?('Origen móvil: el modelo se re-entrena en '+M.nOrig+' cortes del tiempo y en cada uno predice a ciegas los '+M.H+' '+PUp()+' siguientes; los errores se promedian. Referencia: ingenuo estacional F(t)=A(t-'+SEAS+').'):'No aplicable: serie demasiado corta.'],
+   ['Limitación del protocolo','Con historias cortas todos los criterios de selección son ruidosos: si dos modelos quedan a menos de ~0,5 puntos de MAPE, la diferencia puede no ser real. El rango min-max entre cortes indica esa fragilidad.'],
    ['Banda de incertidumbre','±1,2816 desviaciones de los residuos del ajuste ≈ 80% de cobertura. Es aproximada: no incorpora incertidumbre de los parámetros.'],
    ['Naturaleza de los datos',(CUR.src==='demo')?'Datos simulados con fines de demostración.':
      (CUR.src==='real')?'Datos públicos reales de TSMC. Ventas mensuales oficiales; costos derivados del margen bruto trimestral reportado asignado uniformemente a los meses del trimestre.':
@@ -1841,7 +1871,11 @@ function renderStatic(){
     :'Puente precio-volumen';}
  if(S.has.liq)document.getElementById('tRC').textContent=`Liquidez: ${f1(S.rc12)}× promedio 12m, ${S.rcBad} mes(es) críticos en el histórico`;
  if(S.has.flujo)document.getElementById('tFlujo').textContent=`La caja convierte ${f1(S.conv1)}% del margen en efectivo`;
- if(S.mods){document.getElementById('btH').textContent=S.mods.H;const bu=document.getElementById('btU');if(bu)bu.textContent=PUp();}
+ if(S.mods){const bt=document.getElementById('btTxt');
+   if(bt){const k=S.mods.nOrig,H=S.mods.H;
+    bt.innerHTML = k>1
+     ? 'Los cuatro se re-entrenan en <b>'+k+' cortes distintos del tiempo</b> y en cada uno predicen a ciegas los <b>'+H+' '+PUp()+'</b> siguientes; los errores se promedian. Un solo corte puede favorecer a un modelo por azar: varios revelan cuál es realmente más confiable.'
+     : 'Los cuatro se entrenan con la misma historia, se les <b>ocultan los últimos '+H+' '+PUp()+'</b> y se les pide predecirlos a ciegas. <b>Con esta serie solo cabe un corte</b> (los modelos más exigentes necesitan casi toda la historia para entrenar), así que las diferencias pequeñas entre modelos pueden no ser reales.';}}
   {const fm=document.getElementById('fmlM');if(fm)fm.textContent=SEAS;}
   if(S.mods&&S.mods.validado&&S.bestName){const cm=document.getElementById('chipMdl');
    if(cm)cm.textContent='Mejor modelo: '+S.bestName.split(' (')[0]+' · MAPE '+f1(S.bestMape)+'%';}
