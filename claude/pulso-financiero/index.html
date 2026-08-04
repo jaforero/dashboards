@@ -256,6 +256,40 @@ details.metod b{color:var(--deep-blue);}
 .serwhy{flex:1;min-width:220px;font-size:.79rem;color:var(--muted);line-height:1.45;}
 #serWarn{background:var(--warn-bg);color:var(--warn);border-radius:9px;padding:8px 11px;margin-top:10px;}
 @media(max-width:640px){.sersel{flex-direction:column;align-items:stretch;} .serinp{width:100%;}}
+
+/* ===== Tooltips de métricas ===== */
+.tipb{margin-left:3px;vertical-align:middle;}
+.tipb{width:16px;height:16px;line-height:1;border-radius:50%;border:1.4px solid var(--muted);background:transparent;
+  color:var(--muted);font-size:.62rem;font-weight:800;cursor:help;padding:0;font-family:inherit;display:inline-flex;
+  align-items:center;justify-content:center;transition:all .15s ease;}
+.tipb:hover,.tipb:focus-visible{background:var(--purple);border-color:var(--purple);color:#fff;}
+.tipb:focus-visible{outline:3px solid var(--vibrant-blue);outline-offset:2px;}
+.tipbox{position:fixed;z-index:9999;width:min(330px,84vw);background:var(--deep-blue);color:#fff;border-radius:12px;padding:12px 14px;
+  box-shadow:0 12px 32px rgba(4,28,89,.32);font-weight:400;text-transform:none;letter-spacing:0;
+  font-size:.76rem;line-height:1.5;text-align:left;white-space:normal;}
+.tipbox[hidden]{display:none;}
+.tipbox b{color:#fff;display:block;margin-bottom:6px;font-size:.8rem;}
+.tipbox .tf{display:block;background:rgba(255,255,255,.13);border-radius:7px;padding:7px 9px;margin:6px 0;
+  font-family:ui-monospace,"SFMono-Regular",Menlo,monospace;font-size:.75rem;}
+.tipbox .td{display:block;opacity:.94;}
+.tipbox .tc{display:block;margin-top:7px;opacity:.85;font-size:.73rem;border-top:1px solid rgba(255,255,255,.18);padding-top:6px;}
+
+/* ===== Cajas de fórmulas ===== */
+.fmlbox{margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--bg);overflow:hidden;}
+.fmlbox>summary{cursor:pointer;padding:10px 14px;font-size:.82rem;font-weight:700;color:var(--purple);list-style:none;}
+.fmlbox>summary::-webkit-details-marker{display:none;}
+.fmlbox>summary::before{content:"▸ ";}
+.fmlbox[open]>summary::before{content:"▾ ";}
+.fmlbox>summary:focus-visible{outline:3px solid var(--vibrant-blue);outline-offset:-2px;}
+.fml{padding:4px 14px 14px;}
+.fml .fl{font-size:.79rem;line-height:1.65;color:var(--text);padding:7px 0;border-bottom:1px dashed var(--border);
+  font-family:ui-monospace,"SFMono-Regular",Menlo,monospace;}
+.fml .fl:last-child{border-bottom:none;}
+.fml .fl b{font-family:inherit;color:var(--deep-blue);}
+[data-theme="dark"] .fml .fl b{color:#c7d2fe;}
+.fml .fl i{font-family:inherit;color:var(--muted);}
+.fml .nota{font-family:inherit;color:var(--muted);font-size:.76rem;}
+.fml sub,.fml sup{font-size:.72em;}
 </style>
 </head>
 <body>
@@ -376,6 +410,19 @@ details.metod b{color:var(--deep-blue);}
         <div id="cmpVerdict"></div>
         <div class="chart" id="chCmp"></div>
         <div class="hint"><b>Cómo leer el gráfico:</b> la línea gruesa es lo que ocurrió de verdad; las punteadas son lo que cada modelo predijo sin haberlo visto. Mientras más pegada a la real, mejor el modelo.</div>
+        <details class="fmlbox">
+          <summary>Fórmulas de los indicadores de error y del protocolo</summary>
+          <div class="fml">
+            <div class="fl"><b>Notación:</b> A<sub>t</sub> = valor real observado · F<sub>t</sub> = valor pronosticado · n = número de periodos evaluados · m = <span id="fmlM">12</span> (periodos por ciclo anual).</div>
+            <div class="fl"><b>MAPE</b> (error porcentual absoluto medio) = (100/n) · Σ |A<sub>t</sub> − F<sub>t</sub>| / |A<sub>t</sub>| &nbsp;— <i>comparable entre series; inestable si A<sub>t</sub> ≈ 0.</i></div>
+            <div class="fl"><b>MAE</b> (error absoluto medio) = (1/n) · Σ |A<sub>t</sub> − F<sub>t</sub>| &nbsp;— <i>en las unidades de tus datos.</i></div>
+            <div class="fl"><b>RMSE</b> (raíz del error cuadrático medio) = √( (1/n) · Σ (A<sub>t</sub> − F<sub>t</sub>)² ) &nbsp;— <i>penaliza más los errores grandes.</i></div>
+            <div class="fl"><b>Método ingenuo estacional</b>: F<sub>t</sub> = A<sub>t−m</sub>. Es la referencia mínima: predecir repitiendo el mismo periodo del año anterior.</div>
+            <div class="fl"><b>Ventaja vs. ingenuo</b> = (1 − MAPE<sub>modelo</sub> / MAPE<sub>ingenuo</sub>) × 100. Negativa ⇒ el modelo no aporta valor.</div>
+            <div class="fl"><b>AICc</b> (usado para elegir armónicos y orden SARIMA) = n·ln(SSE/n) + 2k + 2k(k+1)/(n−k−1), donde k = número de parámetros. Premia el ajuste y castiga la complejidad.</div>
+            <div class="fl nota"><b>Protocolo:</b> los cuatro modelos se entrenan con los primeros n−H periodos y predicen los últimos H <b>sin verlos</b> (validación fuera de muestra con holdout único). Con otra ventana el orden entre modelos muy parejos podría cambiar.</div>
+          </div>
+        </details>
       </div>
       <div class="na" id="naCmp" hidden></div>
     </div>
@@ -947,34 +994,56 @@ const FCMODELS=[
   corto:'Separa la serie en tendencia + estacionalidad y proyecta cada parte.',
   fuerte:'Transparente y fácil de explicar en comité: se ve de dónde sale cada peso.',
   debil:'Asume que la tendencia sigue recta; reacciona lento a cambios de ritmo.',
+  fml:['<b>Modelo aditivo:</b> y<sub>t</sub> = T<sub>t</sub> + S<sub>t</sub> + E<sub>t</sub>',
+       '<b>Tendencia</b> (media móvil centrada de orden s, luego recta por mínimos cuadrados): T̂<sub>t</sub> = a + b·t',
+       '<b>Índice estacional:</b> S<sub>k</sub> = promedio de (y<sub>t</sub> − T<sub>t</sub>) para todos los periodos de la posición k, centrado a media cero',
+       '<b>Pronóstico:</b> ŷ<sub>n+h</sub> = a + b·(n+h) + S<sub>k(n+h)</sub>'],
   fit:(y,ms,h)=>fitDecomp(y,ms,h)},
  {id:'hw',n:'Holt-Winters',get min(){return SEAS===4?12:24;},
   corto:'Suaviza nivel, tendencia y estacionalidad dando más peso a lo reciente.',
   fuerte:'Se adapta rápido cuando el negocio cambia de ritmo. Estándar en la industria.',
   debil:'Con series cortas o muy ruidosas puede sobrerreaccionar al último dato.',
+  fml:['<b>Nivel:</b> ℓ<sub>t</sub> = α·(y<sub>t</sub> − s<sub>t−m</sub>) + (1−α)·(ℓ<sub>t−1</sub> + b<sub>t−1</sub>)',
+       '<b>Tendencia:</b> b<sub>t</sub> = β·(ℓ<sub>t</sub> − ℓ<sub>t−1</sub>) + (1−β)·b<sub>t−1</sub>',
+       '<b>Estacionalidad:</b> s<sub>t</sub> = γ·(y<sub>t</sub> − ℓ<sub>t</sub>) + (1−γ)·s<sub>t−m</sub>',
+       '<b>Pronóstico:</b> ŷ<sub>t+h</sub> = ℓ<sub>t</sub> + h·b<sub>t</sub> + s<sub>t+h−m</sub>',
+       '<i>α, β, γ ∈ [0,1] se eligen por búsqueda en malla minimizando la suma de errores al cuadrado.</i>'],
   fit:(y,ms,h)=>fitHW(y,h)},
  {id:'fou',n:'Regresión estacional (Fourier)',get min(){return SEAS===4?12:24;},
   corto:'Regresión con tendencia y ondas seno/coseno que recrean el ciclo anual.',
   fuerte:'Estable y parsimoniosa: pocos parámetros, buena con historia corta o ruidosa.',
   debil:'La estacionalidad es rígida: si el patrón anual cambia, no lo sigue.',
+  fml:['<b>Regresión:</b> y<sub>t</sub> = β<sub>0</sub> + β<sub>1</sub>·t + Σ<sub>k=1..K</sub> [ a<sub>k</sub>·sen(2πkt/m) + b<sub>k</sub>·cos(2πkt/m) ] + ε<sub>t</sub>',
+       '<b>Estimación:</b> mínimos cuadrados ordinarios (ecuaciones normales X′Xβ = X′y)',
+       '<b>Elección de K</b> (número de armónicos) por AICc: n·ln(SSE/n) + 2k + 2k(k+1)/(n−k−1)',
+       '<b>Pronóstico:</b> se evalúa la misma ecuación en t = n+h'],
   fit:(y,ms,h)=>fitFourier(y,h)},
  {id:'sar',n:'SARIMA',get min(){return SEAS===4?20:30;},
   corto:'Diferencia la serie y modela la memoria que queda en los errores.',
   fuerte:'El más flexible: captura inercia y arrastre que los otros no ven.',
   debil:'Caja más opaca y exige más historia; puede sobreajustar si la serie es corta.',
+  fml:['<b>Forma general</b> SARIMA(p,1,q)(P,1,Q)<sub>m</sub>:',
+       'φ(B)·Φ(B<sup>m</sup>)·(1−B)(1−B<sup>m</sup>)·y<sub>t</sub> = θ(B)·Θ(B<sup>m</sup>)·ε<sub>t</sub>',
+       '<b>Serie diferenciada:</b> z<sub>t</sub> = y<sub>t</sub> − y<sub>t−1</sub> − y<sub>t−m</sub> + y<sub>t−m−1</sub>',
+       '<b>Residuo (CSS):</b> ε<sub>t</sub> = z<sub>t</sub> − φz<sub>t−1</sub> − Φz<sub>t−m</sub> + φΦz<sub>t−m−1</sub> − θε<sub>t−1</sub> − Θε<sub>t−m</sub> − θΘε<sub>t−m−1</sub>',
+       '<b>Estimación:</b> suma de cuadrados condicional (búsqueda en malla + refinamiento); orden elegido por AICc',
+       '<b>Reintegración:</b> ŷ<sub>t</sub> = ẑ<sub>t</sub> + y<sub>t−1</sub> + y<sub>t−m</sub> − y<sub>t−m−1</sub>'],
   fit:(y,ms,h)=>fitSARIMA(y,h)}
 ];
 
 /* ---------- Métricas y backtest común ---------- */
 function fcMetrics(act,pred){
-  let ae=0,se=0,n=0;
+  let ape=0,ae=0,se=0,n=0;
   for(let i=0;i<act.length;i++){
     if(pred[i]==null||!isFinite(pred[i]))return null;
-    if(Math.abs(act[i])>1e-9){ae+=Math.abs((act[i]-pred[i])/act[i]);n++;}
-    se+=Math.pow(act[i]-pred[i],2);
+    const e=act[i]-pred[i];
+    if(Math.abs(act[i])>1e-9){ape+=Math.abs(e/act[i]);n++;}
+    ae+=Math.abs(e); se+=e*e;
   }
   if(!n)return null;
-  return{mape:+(ae/n*100).toFixed(2),rmse:+Math.sqrt(se/act.length).toFixed(2)};
+  return{mape:+(ape/n*100).toFixed(2),
+         mae:+(ae/act.length).toFixed(2),
+         rmse:+Math.sqrt(se/act.length).toFixed(2)};
 }
 function evalModels(y,meses,h){
   const n=y.length;
@@ -1000,7 +1069,7 @@ function evalModels(y,meses,h){
     if(!bt||!full||!finiteArr(bt.fc)||!finiteArr(full.fc)){r.ok=false;r.motivo='El modelo no convergió con esta serie.';return r;}
     const m=fcMetrics(teY,bt.fc);
     if(!m){r.ok=false;r.motivo='No fue posible evaluar el error (valores nulos o cero en la prueba).';return r;}
-    r.ok=true;r.mape=m.mape;r.rmse=m.rmse;r.pred=bt.fc;r.full=full;
+    r.ok=true;r.mape=m.mape;r.mae=m.mae;r.rmse=m.rmse;r.pred=bt.fc;r.full=full;
     r.detalle=full.detalle||'';r.params=full.params||{};
     r.mejorQueNaive=nvM?m.mape<nvM.mape:null;
     r.skill=nvM&&nvM.mape>0?+((1-m.mape/nvM.mape)*100).toFixed(0):null;
@@ -1066,6 +1135,68 @@ function fcActiveId(){
 function fcActive(){const id=fcActiveId();return id?curM().rows.find(r=>r.id===id):null;}
 
 /* ---------- Tabla comparativa ---------- */
+/* Definiciones de las métricas de error (fórmula + lectura + trampa) */
+const METDEF={
+ mape:{t:'MAPE · Error porcentual absoluto medio',
+   f:'MAPE = (100/n) · Σ |A<sub>t</sub> − F<sub>t</sub>| / |A<sub>t</sub>|',
+   d:'Promedio de cuánto se desvía la predicción respecto del valor real, en porcentaje. Es comparable entre series de distinta escala.',
+   c:'Se dispara cuando los valores reales se acercan a cero y penaliza más la sobrepredicción que la subpredicción.'},
+ mae:{t:'MAE · Error absoluto medio',
+   f:'MAE = (1/n) · Σ |A<sub>t</sub> − F<sub>t</sub>|',
+   d:'El error típico en las unidades de tus datos. Si el MAE es 8, el modelo se equivoca en promedio 8 unidades.',
+   c:'No es comparable entre series con escalas distintas, y trata todos los errores por igual sin castigar los grandes.'},
+ rmse:{t:'RMSE · Raíz del error cuadrático medio',
+   f:'RMSE = √( (1/n) · Σ (A<sub>t</sub> − F<sub>t</sub>)² )',
+   d:'Como el MAE pero elevando los errores al cuadrado: castiga con fuerza los fallos grandes. Útil cuando un error puntual grande es más costoso que varios pequeños.',
+   c:'Muy sensible a valores atípicos: un solo mes raro puede dominar la métrica.'},
+ skill:{t:'Ventaja sobre el método ingenuo',
+   f:'Ventaja = (1 − MAPE<sub>modelo</sub> / MAPE<sub>ingenuo</sub>) × 100',
+   d:'Cuánto mejor lo hace el modelo que simplemente repetir el mismo periodo del año anterior (F<sub>t</sub> = A<sub>t−m</sub>). Positivo = aporta valor.',
+   c:'Si sale negativo, el modelo es peor que no modelar nada: conviene decidir con rangos y juicio de negocio.'}
+};
+function tip(k){
+  const D=METDEF[k];if(!D)return'';
+  return '<button type="button" class="tipb" data-tip="'+k+'" aria-label="Cómo se calcula: '+esc(D.t)+'">?</button>';
+}
+/* Globo único anclado al <body>: inmune al recorte de contenedores con overflow */
+function tipLayer(){
+  let L=document.getElementById('tipLayer');
+  if(!L){L=document.createElement('div');L.id='tipLayer';L.className='tipbox';L.setAttribute('role','tooltip');
+    L.hidden=true;document.body.appendChild(L);}
+  return L;
+}
+let TIPBTN=null;
+function showTip(btn){
+  const D=METDEF[btn.dataset.tip];if(!D)return;
+  TIPBTN=btn;
+  const L=tipLayer();
+  L.innerHTML='<b>'+D.t+'</b><span class="tf">'+D.f+'</span><span class="td">'+D.d+'</span>'+
+    '<span class="tc"><b>Cuidado:</b> '+D.c+'</span>';
+  L.hidden=false;
+  const b=btn.getBoundingClientRect(),W=document.documentElement.clientWidth,H=document.documentElement.clientHeight;
+  const lw=L.offsetWidth,lh=L.offsetHeight;
+  let left=b.left+b.width/2-lw/2;
+  left=Math.max(10,Math.min(left,W-lw-10));
+  let top=b.bottom+9;
+  if(top+lh>H-10)top=Math.max(10,b.top-lh-9);   /* si no cabe abajo, se abre hacia arriba */
+  L.style.left=left+'px';L.style.top=top+'px';
+  btn.setAttribute('aria-describedby','tipLayer');
+}
+function hideTip(btn){const L=document.getElementById('tipLayer');if(L)L.hidden=true;
+  if(btn)btn.removeAttribute('aria-describedby');
+  if(!btn||btn===TIPBTN)TIPBTN=null;}
+document.addEventListener('mouseover',e=>{const b=e.target.closest&&e.target.closest('.tipb');if(b)showTip(b);});
+document.addEventListener('mouseout',e=>{const b=e.target.closest&&e.target.closest('.tipb');if(b)hideTip(b);});
+document.addEventListener('focusin',e=>{const b=e.target.closest&&e.target.closest('.tipb');if(b)showTip(b);});
+document.addEventListener('focusout',e=>{const b=e.target.closest&&e.target.closest('.tipb');if(b)hideTip(b);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTip(TIPBTN);});
+/* Al desplazar: reposiciona si el botón sigue visible; oculta si salió de pantalla */
+window.addEventListener('scroll',()=>{
+  if(!TIPBTN)return;
+  const b=TIPBTN.getBoundingClientRect();
+  if(b.bottom<0||b.top>document.documentElement.clientHeight)hideTip(TIPBTN);
+  else showTip(TIPBTN);
+},true);
 function renderCmp(){
   if(!curM())return;
   const M=curM(),best=M.best;
@@ -1074,11 +1205,15 @@ function renderCmp(){
     return a.ok?-1:(b.ok?1:0);
   });
   let html='<div class="tblwrap"><table class="cmptbl"><caption class="vh">Comparación de modelos por error de predicción a ciegas</caption><thead><tr>'+
-    '<th scope="col">Modelo</th><th scope="col">Error medio (MAPE)</th><th scope="col">RMSE</th>'+
-    '<th scope="col">vs. método ingenuo</th><th scope="col">Veredicto</th></tr></thead><tbody>';
+    '<th scope="col">Modelo</th>'+
+    '<th scope="col">MAPE '+tip('mape')+'</th>'+
+    '<th scope="col">MAE '+tip('mae')+'</th>'+
+    '<th scope="col">RMSE '+tip('rmse')+'</th>'+
+    '<th scope="col">vs. ingenuo '+tip('skill')+'</th>'+
+    '<th scope="col">Veredicto</th></tr></thead><tbody>';
   rows.forEach(r=>{
     if(!r.ok){
-      html+='<tr class="off"><th scope="row">'+esc(r.n)+'</th><td colspan="3">'+esc(r.motivo)+'</td>'+
+      html+='<tr class="off"><th scope="row">'+esc(r.n)+'</th><td colspan="4">'+esc(r.motivo)+'</td>'+
             '<td><span class="vd vd-off">No disponible</span></td></tr>';return;
     }
     const win=r.id===best;
@@ -1087,12 +1222,13 @@ function renderCmp(){
     html+='<tr'+(win?' class="win"':'')+'><th scope="row">'+(win?'<span aria-hidden="true">★ </span>':'')+esc(r.n)+
       '<span class="mdet">'+esc(r.detalle||'')+'</span></th>'+
       '<td class="num"><b>'+f1(r.mape)+'%</b></td>'+
+      '<td class="num">'+f1(r.mae)+'</td>'+
       '<td class="num">'+f1(r.rmse)+'</td>'+
       '<td class="num '+skc+'">'+sk+'</td>'+
       '<td>'+(win?'<span class="vd vd-win">Recomendado</span>':'<span class="vd vd-alt">Alternativa</span>')+'</td></tr>';
   });
   html+='</tbody></table></div>';
-  if(M.naiveM)html+='<div class="hint">Referencia · <b>método ingenuo estacional</b> (repetir el mismo '+PU()+' del año anterior): MAPE '+f1(M.naiveM.mape)+'%. Un modelo que no le gane a esta referencia no está aportando valor.</div>';
+  if(M.naiveM)html+='<div class="hint">Referencia · <b>método ingenuo estacional</b> (F<sub>t</sub> = A<sub>t−'+SEAS+'</sub>, repetir el mismo '+PU()+' del año anterior): MAPE '+f1(M.naiveM.mape)+'% · MAE '+f1(M.naiveM.mae)+' · RMSE '+f1(M.naiveM.rmse)+'. Un modelo que no le gane a esta referencia no está aportando valor.</div>';
   document.getElementById('cmpTable').innerHTML=html;
 
   /* veredicto en lenguaje claro */
@@ -1156,10 +1292,16 @@ function renderExplain(){
     g:'γ · estacionalidad',K:'armónicos',ph:'φ · AR',th:'θ · MA',Ph:'Φ · AR estacional',Th:'Θ · MA estacional'};
   const ps=Object.keys(p).length?('<div class="prm">Parámetros ajustados: '+
     Object.keys(p).map(k=>'<code>'+(PL[k]||k)+' = '+p[k]+'</code>').join(' · ')+'</div>'):'';
+  const M=FCMODELS.find(x=>x.id===r.id);
+  const fml=(M&&M.fml)?('<details class="fmlbox"><summary>Ver la formulación matemática de '+esc(r.n.split(' (')[0])+'</summary>'+
+    '<div class="fml">'+M.fml.map(l=>'<div class="fl">'+l+'</div>').join('')+
+    '<div class="fl nota">m = '+SEAS+' ('+PUp()+' por ciclo anual) · B = operador de rezago (B·y<sub>t</sub> = y<sub>t−1</sub>) · h = pasos hacia adelante</div>'+
+    '<div class="fl nota"><b>Banda de incertidumbre:</b> ŷ ± 1,2816·σ̂<sub>ε</sub>, donde σ̂<sub>ε</sub> es la desviación estándar de los residuos del ajuste (≈80% de cobertura, supone errores normales e independientes).</div>'+
+    '</div></details>'):'';
   el.innerHTML='<div class="expl"><p class="e1">'+esc(r.corto)+'</p>'+
     '<div class="e2"><div><span class="tg tg-ok">Fortaleza</span> '+esc(r.fuerte)+'</div>'+
     '<div><span class="tg tg-bad">Límite</span> '+esc(r.debil)+'</div></div>'+
-    (r.detalle?'<div class="prm">Configuración elegida automáticamente: <b>'+esc(r.detalle)+'</b></div>':'')+ps+'</div>';
+    (r.detalle?'<div class="prm">Configuración elegida automáticamente: <b>'+esc(r.detalle)+'</b></div>':'')+ps+fml+'</div>';
 }
 
 /* ---------- Gráfico de proyección del modelo activo ---------- */
@@ -1295,16 +1437,16 @@ function expSerie(){
   return rows;
 }
 function expModelos(){
-  const rows=[['Modelo','Estado','MAPE_%','RMSE','Mejor_que_ingenuo','Ventaja_vs_ingenuo_%','Configuracion','Nota']];
+  const rows=[['Modelo','Estado','MAPE_%','MAE','RMSE','Mejor_que_ingenuo','Ventaja_vs_ingenuo_%','Configuracion','Nota']];
   const M=curM();
   if(!M){rows.push(['—','Sin comparación disponible para este indicador','','','','','','']);return rows;}
   rows.push(['Indicador: '+(fcSer()?fcSer().n:'Ventas'),'','','','','','','']);
   M.rows.slice().sort((a,b)=>(a.ok&&b.ok)?a.mape-b.mape:(a.ok?-1:1)).forEach(r=>{
     rows.push([r.n, r.ok?(r.id===M.best?'RECOMENDADO':'Alternativa'):'No disponible',
-      r.ok?r.mape:'', r.ok?r.rmse:'', r.ok?(r.mejorQueNaive?'Sí':'No'):'', r.ok&&r.skill!=null?r.skill:'',
+      r.ok?r.mape:'', r.ok?r.mae:'', r.ok?r.rmse:'', r.ok?(r.mejorQueNaive?'Sí':'No'):'', r.ok&&r.skill!=null?r.skill:'',
       r.detalle||'', r.ok?'':(r.motivo||'')]);
   });
-  if(M.naiveM)rows.push(['Referencia: ingenuo estacional','Benchmark',M.naiveM.mape,M.naiveM.rmse,'','','Repetir el mismo '+PU()+' del año anterior','']);
+  if(M.naiveM)rows.push(['Referencia: ingenuo estacional','Benchmark',M.naiveM.mape,M.naiveM.mae,M.naiveM.rmse,'','','F(t) = A(t-'+SEAS+'): repetir el mismo '+PU()+' del año anterior','']);
   return rows;
 }
 function expPronostico(){
@@ -1356,6 +1498,21 @@ function expMetodo(){
    ['Naturaleza de los datos',(CUR.src==='demo')?'Datos simulados con fines de demostración.':
      (CUR.src==='real')?'Datos públicos reales de TSMC. Ventas mensuales oficiales; costos derivados del margen bruto trimestral reportado asignado uniformemente a los meses del trimestre.':
      'Datos aportados por el usuario, procesados localmente en el navegador.'],
+   [],['FÓRMULAS DE LOS INDICADORES DE ERROR'],
+   ['Notación','A(t) = valor real · F(t) = pronóstico · n = periodos evaluados · m = '+SEAS+' (periodos por ciclo anual)'],
+   ['MAPE (%)','(100/n) * SUMA( |A(t) - F(t)| / |A(t)| )  — comparable entre series; inestable si A(t) tiende a 0'],
+   ['MAE','(1/n) * SUMA( |A(t) - F(t)| )  — en las unidades de los datos'],
+   ['RMSE','RAIZ( (1/n) * SUMA( (A(t) - F(t))^2 ) )  — penaliza más los errores grandes'],
+   ['Ingenuo estacional','F(t) = A(t-m)  — referencia mínima'],
+   ['Ventaja vs ingenuo (%)','(1 - MAPE_modelo / MAPE_ingenuo) * 100'],
+   ['AICc','n*ln(SSE/n) + 2k + 2k(k+1)/(n-k-1), k = número de parámetros'],
+   [],['FORMULACIÓN DE LOS MODELOS'],
+   ['Descomposición','y(t) = T(t) + S(t) + E(t); T por media móvil centrada de orden m y recta por mínimos cuadrados; pronóstico = a + b*(n+h) + S(k)'],
+   ['Holt-Winters aditivo','l(t)=a*(y(t)-s(t-m))+(1-a)*(l(t-1)+b(t-1)); b(t)=B*(l(t)-l(t-1))+(1-B)*b(t-1); s(t)=g*(y(t)-l(t))+(1-g)*s(t-m); pronóstico = l(t)+h*b(t)+s(t+h-m)'],
+   ['Regresión estacional (Fourier)','y(t) = B0 + B1*t + SUMA_k[ a(k)*sen(2*pi*k*t/m) + b(k)*cos(2*pi*k*t/m) ] + e(t); K elegido por AICc'],
+   ['SARIMA(p,1,q)(P,1,Q)m','phi(B)*PHI(B^m)*(1-B)*(1-B^m)*y(t) = theta(B)*THETA(B^m)*e(t); estimación por suma de cuadrados condicional; orden por AICc'],
+   ['Banda de incertidumbre','pronóstico +/- 1.2816 * desviación estándar de los residuos (~80% de cobertura; supone errores normales e independientes)'],
+   [],
    ['Uso responsable','Una predicción sin rango ni decisión asociada es curiosidad estadística. Triangula siempre contra el juicio de negocio antes de comprometer cifras.'],
    ['Fuente','Pulso Financiero · dashboards.javierforero.co · Javier Forero']];
 }
@@ -1685,6 +1842,7 @@ function renderStatic(){
  if(S.has.liq)document.getElementById('tRC').textContent=`Liquidez: ${f1(S.rc12)}× promedio 12m, ${S.rcBad} mes(es) críticos en el histórico`;
  if(S.has.flujo)document.getElementById('tFlujo').textContent=`La caja convierte ${f1(S.conv1)}% del margen en efectivo`;
  if(S.mods){document.getElementById('btH').textContent=S.mods.H;const bu=document.getElementById('btU');if(bu)bu.textContent=PUp();}
+  {const fm=document.getElementById('fmlM');if(fm)fm.textContent=SEAS;}
   if(S.mods&&S.mods.validado&&S.bestName){const cm=document.getElementById('chipMdl');
    if(cm)cm.textContent='Mejor modelo: '+S.bestName.split(' (')[0]+' · MAPE '+f1(S.bestMape)+'%';}
   if(S.dec)document.getElementById('fseas').textContent=f0(S.dec.fuerza*100)+'%';
