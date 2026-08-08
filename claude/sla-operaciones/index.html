@@ -301,6 +301,14 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 .vr ul{margin:8px 0 0 18px;padding:0;}
 .vr-ok{border-color:#12b76a55;background:#12b76a12;}
 .vr-err{border-color:#dc262655;background:#dc262612;}
+
+.lang-toggle{display:inline-flex;align-items:center;border-radius:100px;padding:3px;gap:2px;user-select:none;
+  background:rgba(120,120,160,.12);border:1px solid rgba(120,120,160,.25);}
+.lang-opt{font-family:inherit;padding:5px 11px;border:none;background:none;border-radius:100px;
+  font-size:.7rem;font-weight:800;letter-spacing:.05em;color:inherit;opacity:.65;cursor:pointer;transition:all .2s ease;}
+.lang-opt:hover{opacity:1;}
+.lang-opt:focus-visible{outline:3px solid #0048ff;outline-offset:2px;}
+.lang-opt[aria-pressed="true"]{background:#4e00ff;color:#fff;opacity:1;}
 </style>
 </head>
 <body>
@@ -309,82 +317,82 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
   <nav class="brandnav">
     <div class="bn-left">
       <span class="bn-logo">JF</span>
-      <div><div class="bn-name">Javier Forero</div><div class="bn-tag">Analítica · IA · Transformación Digital</div></div>
+      <div><div class="bn-name" data-i18n>Javier Forero</div><div class="bn-tag" data-i18n>Analítica · IA · Transformación Digital</div></div>
     </div>
     <div class="bn-right">
-      <a class="bn-link" href="../">← Hub de dashboards</a>
-      <a class="bn-link" href="https://javierforero.co" target="_blank" rel="noopener">javierforero.co</a>
-      <button class="bn-link" id="goData" type="button" style="cursor:pointer;font:inherit;">⤒ Mis datos</button>
-      <button class="brand-pill" id="themeToggle" type="button" aria-pressed="false" aria-label="Cambiar a tema oscuro">🌙</button>
+      <a class="bn-link" href="../" data-i18n>← Hub de dashboards</a>
+      <a class="bn-link" href="https://javierforero.co" target="_blank" rel="noopener" data-i18n>javierforero.co</a>
+      <button class="bn-link" id="goData" type="button" style="cursor:pointer;font:inherit;" data-i18n>⤒ Mis datos</button>
+      <div class="lang-toggle" id="langToggle" role="group" aria-label="Idioma / Language"><button type="button" class="lang-opt" data-lang="es" aria-pressed="true" lang="es">ES</button><button type="button" class="lang-opt" data-lang="en" aria-pressed="false" lang="en">EN</button></div><button class="brand-pill" id="themeToggle" type="button" aria-pressed="false" aria-label="Cambiar a tema oscuro">🌙</button>
     </div>
   </nav>
 
   <header class="hero">
-    <h1>Dashboard de Operaciones · Cumplimiento de SLA</h1>
-    <div class="sub">Monitoreo del cumplimiento de SLA del portafolio logístico. No descubre el hallazgo: lo vigila, lo defiende y lo convierte en decisión.</div>
+    <h1 data-i18n>Dashboard de Operaciones · Cumplimiento de SLA</h1>
+    <div class="sub" data-i18n>Monitoreo del cumplimiento de SLA del portafolio logístico. No descubre el hallazgo: lo vigila, lo defiende y lo convierte en decisión.</div>
     <div class="meta">
-      <span class="chip" id="chip-periodo">Periodo: —</span>
-      <span class="chip" id="chip-hasta">Datos hasta: —</span>
+      <span class="chip" id="chip-periodo" data-i18n>Periodo: —</span>
+      <span class="chip" id="chip-hasta" data-i18n>Datos hasta: —</span>
       <span class="chip" id="chip-fuente"></span>
-      <span class="chip" id="chip-gen">Vista generada: —</span>
-      <span class="chip" id="chip-rutas">— rutas · — filas</span>
+      <span class="chip" id="chip-gen" data-i18n>Vista generada: —</span>
+      <span class="chip" id="chip-rutas" data-i18n>— rutas · — filas</span>
     </div>
     <div class="alert-stack" id="alertStack"></div>
   </header>
 
-  <div class="sect-title" style="margin-top:26px;">Filtros globales</div>
+  <div class="sect-title" style="margin-top:26px;" data-i18n>Filtros globales</div>
   <div class="card filters-card">
-    <div class="filters-hint">🎛 Interactivos — cámbialos para explorar los datos</div>
+    <div class="filters-hint" data-i18n>🎛 Interactivos — cámbialos para explorar los datos</div>
     <div class="filters">
-      <div class="field"><label for="fRegion">Región</label><select id="fRegion"></select></div>
-      <div class="field"><label for="fTipo">Tipo de cliente</label><select id="fTipo"></select></div>
-      <div class="field" style="flex:1.6;"><label>Rango de meses</label>
+      <div class="field"><label for="fRegion" data-i18n>Región</label><select id="fRegion"></select></div>
+      <div class="field"><label for="fTipo" data-i18n>Tipo de cliente</label><select id="fTipo"></select></div>
+      <div class="field" style="flex:1.6;"><label data-i18n>Rango de meses</label>
         <div class="range-row"><select id="fDesde"></select><select id="fHasta"></select></div>
       </div>
-      <button class="btn-reset" id="btnReset">Restablecer</button>
+      <button class="btn-reset" id="btnReset" data-i18n>Restablecer</button>
     </div>
   </div>
 
   <div class="tabbar" id="tabbar">
-    <button class="tab active" data-tab="tab-resumen">Resumen</button>
-    <button class="tab" data-tab="tab-salud">Salud</button>
-    <button class="tab" data-tab="tab-eficiencia">Eficiencia</button>
-    <button class="tab" data-tab="tab-riesgo">Riesgo</button>
-    <button class="tab" data-tab="tab-prediccion">Predicción</button>
-    <button class="tab" data-tab="tab-diagnostico">Diagnóstico</button>
-    <button class="tab" data-tab="tab-gobernanza">Gobernanza</button>
-    <button class="tab" data-tab="tab-qa">Q&amp;A · IA</button>
-    <button class="tab" data-tab="tab-datos">⤒ Mis datos</button>
+    <button class="tab active" data-tab="tab-resumen" data-i18n>Resumen</button>
+    <button class="tab" data-tab="tab-salud" data-i18n>Salud</button>
+    <button class="tab" data-tab="tab-eficiencia" data-i18n>Eficiencia</button>
+    <button class="tab" data-tab="tab-riesgo" data-i18n>Riesgo</button>
+    <button class="tab" data-tab="tab-prediccion" data-i18n>Predicción</button>
+    <button class="tab" data-tab="tab-diagnostico" data-i18n>Diagnóstico</button>
+    <button class="tab" data-tab="tab-gobernanza" data-i18n>Gobernanza</button>
+    <button class="tab" data-tab="tab-qa" data-i18n>Q&amp;A · IA</button>
+    <button class="tab" data-tab="tab-datos" data-i18n>⤒ Mis datos</button>
   </div>
 
   <section class="panel active" id="tab-resumen">
-    <div class="sect-title">Smart Narratives · Lectura ejecutiva</div>
-    <div class="sect-desc">Narrativa generada a partir de los datos filtrados. Las causas se plantean como hipótesis y deben pasar validación humana antes de comité.</div>
+    <div class="sect-title" data-i18n>Smart Narratives · Lectura ejecutiva</div>
+    <div class="sect-desc" data-i18n>Narrativa generada a partir de los datos filtrados. Las causas se plantean como hipótesis y deben pasar validación humana antes de comité.</div>
     <div class="card narr" id="narrCard"></div>
   </section>
 
   <section class="panel" id="tab-salud">
-    <div class="sect-title">Capa 1 · Salud</div>
-    <div class="sect-desc">Estado del cumplimiento en el mes más reciente frente a su línea base histórica.</div>
+    <div class="sect-title" data-i18n>Capa 1 · Salud</div>
+    <div class="sect-desc" data-i18n>Estado del cumplimiento en el mes más reciente frente a su línea base histórica.</div>
     <div class="grid k3" id="kpiRow"></div>
   </section>
 
   <section class="panel" id="tab-eficiencia">
-    <div class="sect-title">Capa 2 · Eficiencia por región</div>
-    <div class="sect-desc">Cumplimiento promedio por región en el rango seleccionado, con su meta SLA de referencia (◆).</div>
+    <div class="sect-title" data-i18n>Capa 2 · Eficiencia por región</div>
+    <div class="sect-desc" data-i18n>Cumplimiento promedio por región en el rango seleccionado, con su meta SLA de referencia (◆).</div>
     <div class="card"><div id="plotEficiencia" class="plot"></div>
       <div class="legend">
         <span><span class="sw" style="background:var(--ok)"></span>En meta o por encima</span>
         <span><span class="sw" style="background:var(--warn)"></span>Brecha leve (0 a −3 pp)</span>
         <span><span class="sw" style="background:var(--alert)"></span>Brecha &gt; −3 pp</span>
-        <span>◆ Meta SLA promedio de la región</span>
+        <span data-i18n>◆ Meta SLA promedio de la región</span>
       </div>
     </div>
   </section>
 
   <section class="panel" id="tab-riesgo">
-    <div class="sect-title">Capa 3 · Riesgo · Rutas en breach severo</div>
-    <div class="sect-desc">Rutas con brecha promedio &lt; −5 pp en el último trimestre del rango. Intensidad de rojo = severidad.</div>
+    <div class="sect-title" data-i18n>Capa 3 · Riesgo · Rutas en breach severo</div>
+    <div class="sect-desc" data-i18n>Rutas con brecha promedio &lt; −5 pp en el último trimestre del rango. Intensidad de rojo = severidad.</div>
     <div class="card">
       <p class="count-note" id="riskCount">—</p>
       <div class="tbl-wrap"><table id="riskTable"></table></div>
@@ -392,8 +400,8 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
   </section>
 
   <section class="panel" id="tab-prediccion">
-    <div class="sect-title">Capa 4 · Predicción</div>
-    <div class="sect-desc">Serie mensual con el quiebre detectado anotado (si existe) y proyección lineal a 3 meses (punteada) separada del histórico.</div>
+    <div class="sect-title" data-i18n>Capa 4 · Predicción</div>
+    <div class="sect-desc" data-i18n>Serie mensual con el quiebre detectado anotado (si existe) y proyección lineal a 3 meses (punteada) separada del histórico.</div>
     <div class="card"><div id="plotPrediccion" class="plot"></div>
       <p class="muted" style="font-size:.78rem;margin:10px 0 0;" id="projNote"></p>
     </div>
@@ -401,12 +409,12 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 
   <!-- DIAGNOSTICO -->
   <section class="panel" id="tab-diagnostico">
-    <div class="sect-title" id="diagTitle">Diagnóstico del quiebre</div>
-    <div class="sect-desc">Antes de escalar a una decisión de alto impacto (renegociar operador), descompón la causa. La IA no sabe del paro de la semana 32 ni de un cambio de fórmula: tú sí. Este panel estructura tu filtro de Contexto.</div>
+    <div class="sect-title" id="diagTitle" data-i18n>Diagnóstico del quiebre</div>
+    <div class="sect-desc" data-i18n>Antes de escalar a una decisión de alto impacto (renegociar operador), descompón la causa. La IA no sabe del paro de la semana 32 ni de un cambio de fórmula: tú sí. Este panel estructura tu filtro de Contexto.</div>
     <div class="card">
       <div id="diagFacts"></div>
-      <h4 style="color:var(--deep-blue);margin:18px 0 4px;font-size:.9rem;">Hipótesis de causa — evalúa cada una</h4>
-      <p class="hint">Marca el estado y anota la evidencia. Mientras haya causas “Pendiente”, el veredicto bloquea el escalamiento.</p>
+      <h4 style="color:var(--deep-blue);margin:18px 0 4px;font-size:.9rem;" data-i18n>Hipótesis de causa — evalúa cada una</h4>
+      <p class="hint" data-i18n>Marca el estado y anota la evidencia. Mientras haya causas “Pendiente”, el veredicto bloquea el escalamiento.</p>
       <div id="diagCauses"></div>
       <div id="diagVerdict"></div>
     </div>
@@ -414,51 +422,51 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 
   <!-- GOBERNANZA -->
   <section class="panel" id="tab-gobernanza">
-    <div class="sect-title">Gobernanza · Dueño · Umbral · Decisión</div>
-    <div class="sect-desc">Un KPI sin dueño ni decisión es un adorno. Completa aquí la casa permanente del hallazgo: quién responde, con qué umbral y qué decisión se dispara. Se refleja en las tarjetas y alertas al instante.</div>
+    <div class="sect-title" data-i18n>Gobernanza · Dueño · Umbral · Decisión</div>
+    <div class="sect-desc" data-i18n>Un KPI sin dueño ni decisión es un adorno. Completa aquí la casa permanente del hallazgo: quién responde, con qué umbral y qué decisión se dispara. Se refleja en las tarjetas y alertas al instante.</div>
     <div class="card">
       <div class="gov-head">
-        <div class="field"><label>Cadencia de actualización del dato</label><input class="inp" id="govCadencia" placeholder="Ej: semanal · lunes 8:00 a.m."/></div>
-        <div class="field" style="max-width:230px;"><label>Alertar frescura si el dato supera (días)</label><input class="inp" id="govFresh" type="number" min="1" value="35"/></div>
+        <div class="field"><label data-i18n>Cadencia de actualización del dato</label><input class="inp" id="govCadencia" placeholder="Ej: semanal · lunes 8:00 a.m."/></div>
+        <div class="field" style="max-width:230px;"><label data-i18n>Alertar frescura si el dato supera (días)</label><input class="inp" id="govFresh" type="number" min="1" value="35"/></div>
       </div>
       <div class="tbl-wrap"><table class="gov-table" id="govTable"></table></div>
       <div class="btnrow">
-        <button class="btn btn-ghost" id="btnExportGov">⤓ Exportar gobernanza (JSON)</button>
+        <button class="btn btn-ghost" id="btnExportGov" data-i18n>⤓ Exportar gobernanza (JSON)</button>
         <label class="btn btn-ghost" style="display:inline-flex;align-items:center;">⤒ Importar JSON<input type="file" id="fileImportGov" accept="application/json,.json" style="display:none;"/></label>
       </div>
 
-      <h4 style="color:var(--deep-blue);margin:22px 0 4px;font-size:.9rem;">Validación humana — obligatoria antes de exportar a comité</h4>
-      <p class="hint">La IA es el músculo; el criterio humano es el cerebro. Confirma los 3 filtros para habilitar el one-pager.</p>
+      <h4 style="color:var(--deep-blue);margin:22px 0 4px;font-size:.9rem;" data-i18n>Validación humana — obligatoria antes de exportar a comité</h4>
+      <p class="hint" data-i18n>La IA es el músculo; el criterio humano es el cerebro. Confirma los 3 filtros para habilitar el one-pager.</p>
       <ul class="val-list">
-        <li><input type="checkbox" id="valC1"/><label for="valC1"><b>Correctitud.</b> Verifiqué que las cifras del brief cuadran con el sistema fuente (conteos, rangos, suma del KPI principal).</label></li>
-        <li><input type="checkbox" id="valC2"/><label for="valC2"><b>Contexto.</b> Consideré eventos del negocio (paro, cambio de operador, cambio de medición, calendario) que la IA no conoce.</label></li>
-        <li><input type="checkbox" id="valC3"/><label for="valC3"><b>Consecuencias.</b> Evalué el impacto y la reversibilidad de la decisión; si afecta clientes/finanzas, exijo evidencia adicional.</label></li>
+        <li><input type="checkbox" id="valC1"/><label for="valC1" data-i18n><b data-i18n>Correctitud.</b> Verifiqué que las cifras del brief cuadran con el sistema fuente (conteos, rangos, suma del KPI principal).</label></li>
+        <li><input type="checkbox" id="valC2"/><label for="valC2" data-i18n><b data-i18n>Contexto.</b> Consideré eventos del negocio (paro, cambio de operador, cambio de medición, calendario) que la IA no conoce.</label></li>
+        <li><input type="checkbox" id="valC3"/><label for="valC3" data-i18n><b data-i18n>Consecuencias.</b> Evalué el impacto y la reversibilidad de la decisión; si afecta clientes/finanzas, exijo evidencia adicional.</label></li>
       </ul>
       <div class="btnrow">
-        <button class="btn btn-primary" id="btnOnePager" disabled>🖨 Exportar a comité (one-pager DATA→IDEA→DECISIÓN)</button>
+        <button class="btn btn-primary" id="btnOnePager" disabled data-i18n>🖨 Exportar a comité (one-pager DATA→IDEA→DECISIÓN)</button>
       </div>
 
       <details style="margin-top:18px;">
-        <summary>Definiciones y método (auditabilidad)</summary>
-        <p><b>SLA objetivo:</b> <span class="muted">nivel de cumplimiento comprometido por ruta (90–98%), no uniforme.</span></p>
-        <p><b>cumplimiento_pct:</b> <span class="muted">% de entregas dentro del SLA en el mes-ruta.</span> · <b>brecha_pp:</b> <span class="muted">cumplimiento_pct − sla_objetivo_pct (puntos porcentuales).</span></p>
-        <p><b>Base 12 meses:</b> <span class="muted">promedio de los hasta 12 meses previos al último mes (ventana móvil; es referencia, no meta).</span></p>
-        <p><b>Breach severo:</b> <span class="muted">brecha &lt; −5 pp (señal accionable; brecha &lt; 0 = bajo meta, hoy 100%).</span></p>
-        <p><b>Proyección:</b> <span class="muted">regresión lineal (mínimos cuadrados) sobre el régimen post-quiebre (desde el quiebre detectado, o los últimos 6 meses si no lo hay), 3 meses adelante. Frágil por pocos puntos.</span></p>
-        <p><b>Alertas:</b> <span class="muted">🔴 último mes &gt; 5 pp bajo la base 12m · 🟡 brecha promedio del trimestre &lt; 0 · 🟠 frescura: dato supera el umbral de días.</span></p>
+        <summary data-i18n>Definiciones y método (auditabilidad)</summary>
+        <p><b data-i18n>SLA objetivo:</b> <span class="muted" data-i18n>nivel de cumplimiento comprometido por ruta (90–98%), no uniforme.</span></p>
+        <p><b data-i18n>cumplimiento_pct:</b> <span class="muted" data-i18n>% de entregas dentro del SLA en el mes-ruta.</span> · <b data-i18n>brecha_pp:</b> <span class="muted" data-i18n>cumplimiento_pct − sla_objetivo_pct (puntos porcentuales).</span></p>
+        <p><b data-i18n>Base 12 meses:</b> <span class="muted" data-i18n>promedio de los hasta 12 meses previos al último mes (ventana móvil; es referencia, no meta).</span></p>
+        <p><b data-i18n>Breach severo:</b> <span class="muted" data-i18n>brecha &lt; −5 pp (señal accionable; brecha &lt; 0 = bajo meta, hoy 100%).</span></p>
+        <p><b data-i18n>Proyección:</b> <span class="muted" data-i18n>regresión lineal (mínimos cuadrados) sobre el régimen post-quiebre (desde el quiebre detectado, o los últimos 6 meses si no lo hay), 3 meses adelante. Frágil por pocos puntos.</span></p>
+        <p><b data-i18n>Alertas:</b> <span class="muted" data-i18n>🔴 último mes &gt; 5 pp bajo la base 12m · 🟡 brecha promedio del trimestre &lt; 0 · 🟠 frescura: dato supera el umbral de días.</span></p>
       </details>
     </div>
   </section>
 
   <!-- Q&A -->
   <section class="panel" id="tab-qa">
-    <div class="sect-title">Q&amp;A · Conversational AI sobre tus datos</div>
-    <div class="sect-desc">Pregunta en lenguaje natural. Las cifras se calculan en vivo sobre tu dataset (deterministas, sin alucinación). Si hay IA generativa disponible, redacta sobre esas cifras verificadas; si no, responde el motor local.</div>
+    <div class="sect-title" data-i18n>Q&amp;A · Conversational AI sobre tus datos</div>
+    <div class="sect-desc" data-i18n>Pregunta en lenguaje natural. Las cifras se calculan en vivo sobre tu dataset (deterministas, sin alucinación). Si hay IA generativa disponible, redacta sobre esas cifras verificadas; si no, responde el motor local.</div>
     <div class="card">
-      <p class="qa-intro">Desempeño por región o cliente, conteo de rutas en breach, qué pasó en un mes, comparaciones o proyección de Q2.</p>
+      <p class="qa-intro" data-i18n>Desempeño por región o cliente, conteo de rutas en breach, qué pasó en un mes, comparaciones o proyección de Q2.</p>
       <div class="qa-box">
         <input id="qaInput" type="text" placeholder="Ej: ¿cuál es la peor región del último trimestre?"/>
-        <button class="qa-ask" id="qaAsk">Preguntar</button>
+        <button class="qa-ask" id="qaAsk" data-i18n>Preguntar</button>
       </div>
       <div class="qa-chips" id="qaChips"></div>
       <div id="qaAnswer"></div>
@@ -466,68 +474,68 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
   </section>
 
   <section class="panel" id="tab-datos">
-    <div class="sect-title">⤒ Mis datos · sube tu propio SLA</div>
-    <div class="sect-desc">Carga un CSV o Excel con tu histórico ruta×mes y todo el tablero —KPIs, alertas, narrativa, diagnóstico, predicción y Q&amp;A— se recalcula e interpreta <b>100% en tu navegador</b>: nada se envía a ningún servidor. El quiebre se detecta automáticamente (caída ≥3 pp de un mes al siguiente en el promedio del portafolio).</div>
+    <div class="sect-title" data-i18n>⤒ Mis datos · sube tu propio SLA</div>
+    <div class="sect-desc" data-i18n>Carga un CSV o Excel con tu histórico ruta×mes y todo el tablero —KPIs, alertas, narrativa, diagnóstico, predicción y Q&amp;A— se recalcula e interpreta <b data-i18n>100% en tu navegador</b>: nada se envía a ningún servidor. El quiebre se detecta automáticamente (caída ≥3 pp de un mes al siguiente en el promedio del portafolio).</div>
     <div class="up-grid">
       <div class="up-card">
-        <h4>1 · Formato esperado</h4>
+        <h4 data-i18n>1 · Formato esperado</h4>
         <div class="tbl-wrap"><table>
-          <thead><tr><th>Columna</th><th>Requerida</th><th>Notas</th></tr></thead>
+          <thead><tr><th data-i18n>Columna</th><th data-i18n>Requerida</th><th data-i18n>Notas</th></tr></thead>
           <tbody>
-            <tr><td><b>Fecha</b></td><td>Sí</td><td>AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel. Alternativa: par <b>Anio</b> + <b>Mes</b>.</td></tr>
-            <tr><td><b>Ruta</b></td><td>Sí</td><td>Identificador de ruta, carril o servicio.</td></tr>
-            <tr><td><b>Cumplimiento_pct</b></td><td>Sí</td><td>0–100 (acepta 0–1 y lo convierte). Alternativa: <b>Entregas_Totales</b> + <b>Entregas_A_Tiempo</b>.</td></tr>
-            <tr><td>SLA_Objetivo_pct</td><td>No</td><td>Si falta, se asume 95%.</td></tr>
-            <tr><td>Region · Ciudad_Origen · Tipo_Cliente</td><td>No</td><td>Habilitan filtros y análisis por segmento.</td></tr>
+            <tr><td data-i18n><b data-i18n>Fecha</b></td><td>Sí</td><td data-i18n>AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel. Alternativa: par <b data-i18n>Anio</b> + <b data-i18n>Mes</b>.</td></tr>
+            <tr><td data-i18n><b data-i18n>Ruta</b></td><td>Sí</td><td data-i18n>Identificador de ruta, carril o servicio.</td></tr>
+            <tr><td data-i18n><b data-i18n>Cumplimiento_pct</b></td><td>Sí</td><td data-i18n>0–100 (acepta 0–1 y lo convierte). Alternativa: <b data-i18n>Entregas_Totales</b> + <b data-i18n>Entregas_A_Tiempo</b>.</td></tr>
+            <tr><td data-i18n>SLA_Objetivo_pct</td><td>No</td><td data-i18n>Si falta, se asume 95%.</td></tr>
+            <tr><td data-i18n>Region · Ciudad_Origen · Tipo_Cliente</td><td>No</td><td data-i18n>Habilitan filtros y análisis por segmento.</td></tr>
           </tbody>
         </table></div>
-        <p class="na">Reglas: mínimo 6 meses continuos (sin huecos a nivel portafolio) y sin duplicados ruta+mes. Acepta separador «,» o «;» y decimales con coma.</p>
+        <p class="na" data-i18n>Reglas: mínimo 6 meses continuos (sin huecos a nivel portafolio) y sin duplicados ruta+mes. Acepta separador «,» o «;» y decimales con coma.</p>
         <div class="up-actions">
-          <button class="up-btn" id="btnPlantillaSla" type="button">⭳ Plantilla CSV</button>
-          <button class="up-btn" id="btnDemoCsvSla" type="button">⭳ Demo como CSV (570 filas)</button>
-          <button class="up-btn ghost" id="btnRestoreSla" type="button">↺ Volver al demo</button>
+          <button class="up-btn" id="btnPlantillaSla" type="button" data-i18n>⭳ Plantilla CSV</button>
+          <button class="up-btn" id="btnDemoCsvSla" type="button" data-i18n>⭳ Demo como CSV (570 filas)</button>
+          <button class="up-btn ghost" id="btnRestoreSla" type="button" data-i18n>↺ Volver al demo</button>
         </div>
       </div>
       <div class="up-card">
-        <h4>2 · Sube tu archivo</h4>
-        <div class="drop" id="dropSla">Arrastra aquí tu <b>CSV / XLSX</b><br><span class="na">o haz clic para elegirlo</span></div>
+        <h4 data-i18n>2 · Sube tu archivo</h4>
+        <div class="drop" id="dropSla">Arrastra aquí tu <b data-i18n>CSV / XLSX</b><br><span class="na" data-i18n>o haz clic para elegirlo</span></div>
         <input type="file" id="fileSla" accept=".csv,.xlsx,.xls" style="display:none;"/>
         <div id="valRepSla"></div>
-        <p class="na">Tus datos se guardan solo en este navegador (localStorage) para que el tablero recuerde tu carga; con «Volver al demo» se eliminan.</p>
+        <p class="na" data-i18n>Tus datos se guardan solo en este navegador (localStorage) para que el tablero recuerde tu carga; con «Volver al demo» se eliminan.</p>
       </div>
     </div>
   </section>
 
   <details>
-    <summary>Acerca de este dashboard · resumen</summary>
-    <p><b>Fuente:</b> <span class="muted">cumplimiento_sla_tidy.csv — 570 filas (38 rutas × 15 meses), 8 regiones, 4 tipos de cliente, sin faltantes.</span></p>
-    <p><b>Navegación:</b> <span class="muted">Filtros y alertas globales. Pestañas: 4 capas + Resumen + Diagnóstico + Gobernanza + Q&amp;A. El detalle de métodos está en Gobernanza → “Definiciones y método”.</span></p>
-    <p class="muted" style="font-size:.78rem;">La configuración de gobernanza vive en memoria durante la sesión; usa “Exportar gobernanza (JSON)” para guardarla y “Importar” para recuperarla en otra sesión.</p>
+    <summary data-i18n>Acerca de este dashboard · resumen</summary>
+    <p><b data-i18n>Fuente:</b> <span class="muted" data-i18n>cumplimiento_sla_tidy.csv — 570 filas (38 rutas × 15 meses), 8 regiones, 4 tipos de cliente, sin faltantes.</span></p>
+    <p><b data-i18n>Navegación:</b> <span class="muted" data-i18n>Filtros y alertas globales. Pestañas: 4 capas + Resumen + Diagnóstico + Gobernanza + Q&amp;A. El detalle de métodos está en Gobernanza → “Definiciones y método”.</span></p>
+    <p class="muted" style="font-size:.78rem;" data-i18n>La configuración de gobernanza vive en memoria durante la sesión; usa “Exportar gobernanza (JSON)” para guardarla y “Importar” para recuperarla en otra sesión.</p>
   </details>
 
   <div class="bigfooter">
     <div class="bf-top">
       <div>
-        <div class="bf-name">Javier Forero</div>
-        <div class="bf-bio">Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad. Consultor en Analítica, IA y Transformación Digital.</div>
+        <div class="bf-name" data-i18n>Javier Forero</div>
+        <div class="bf-bio" data-i18n>Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad. Consultor en Analítica, IA y Transformación Digital.</div>
       </div>
       <div class="bf-links">
-        <a class="bn-link cta" href="https://javierforero.co" target="_blank" rel="noopener">javierforero.co</a>
-        <a class="bn-link" href="https://www.linkedin.com/in/jforero/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="bn-link" href="https://github.com/jaforero" target="_blank" rel="noopener">GitHub</a>
+        <a class="bn-link cta" href="https://javierforero.co" target="_blank" rel="noopener" data-i18n>javierforero.co</a>
+        <a class="bn-link" href="https://www.linkedin.com/in/jforero/" target="_blank" rel="noopener" data-i18n>LinkedIn</a>
+        <a class="bn-link" href="https://github.com/jaforero" target="_blank" rel="noopener" data-i18n>GitHub</a>
       </div>
     </div>
-    <div class="bf-note">Demostración educativa del ejercicio “Métricas y eficiencia operativa”. Datos de ejemplo <b>sintéticos</b>; no representan operaciones ni clientes reales. Construido con Plotly.js. © <span id="yr">2026</span> Javier Forero.</div>
+    <div class="bf-note">Demostración educativa del ejercicio “Métricas y eficiencia operativa”. Datos de ejemplo <b data-i18n>sintéticos</b>; no representan operaciones ni clientes reales. Construido con Plotly.js. © <span id="yr">2026</span> Javier Forero.</div>
   </div>
-  <div class="footer">Javier Forero <span class="sep">·</span> <span class="dom">javierforero.co</span></div>
+  <div class="footer">Javier Forero <span class="sep">·</span> <span class="dom" data-i18n>javierforero.co</span></div>
 </div>
 
 <!-- ONE-PAGER (fuera de .wrap para impresión) -->
 <div id="opModal">
   <div class="op-sheet">
     <div class="op-actions">
-      <button class="btn btn-primary" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
-      <button class="btn btn-ghost" onclick="closeOnePager()">Cerrar</button>
+      <button class="btn btn-primary" onclick="window.print()" data-i18n>🖨 Imprimir / Guardar PDF</button>
+      <button class="btn btn-ghost" onclick="closeOnePager()" data-i18n>Cerrar</button>
     </div>
     <div id="opBody"></div>
   </div>
@@ -628,7 +636,7 @@ function freshnessDays(){ return Math.max(0, Math.round((Date.now()-LAST_DATA.ge
 
 /* ---------- Alertas (incluye frescura) ---------- */
 function renderAlerts(M){
-  const el=document.getElementById("alertStack"); el.innerHTML=""; let any=false;
+  const el=document.getElementById("alertStack"); el.innerHTML=TH(""); let any=false;
   const dR=GOV.items.alerta_roja.decision, dY=GOV.items.alerta_amarilla.decision;
   if(M.delta!=null && M.delta<-5){ any=true;
     el.innerHTML+=`<div class="banner red"><span class="dot">🔴</span><div><b>Alerta roja — caída severa.</b> ${mLong(M.hasta)} (<b>${fpct(M.lastVal)}</b>) está <b>${fpp(M.delta)}</b> bajo el promedio de 12 meses (${fpct(M.prev12Val)}). Umbral: −5 pp. Decisión: <b>${dR?esc(dR):"por definir"}</b>${GOV.items.alerta_roja.dueno?` · Dueño: ${esc(GOV.items.alerta_roja.dueno)}`:""}.</div></div>`; }
@@ -698,7 +706,7 @@ function renderNarratives(M){
   const recos=[`<b>Mesa de capacidad con el operador.</b> ${dR?esc(dR):'Dueño y decisión: <span class="tag-def">por definir</span> (Gobernanza).'}`,
     top3.length?`<b>Contingencia rutas críticas</b> (${top3.map(r=>r.ruta).join(", ")}). ${dRisk?esc(dRisk):'Umbral −10 pp · <span class="tag-def">por definir</span>.'}`:`<b>Definir umbral de escalamiento</b> por ruta.`,
     BREAK?`<b>Validar el quiebre de ${mShort(BREAK)}</b> en la pestaña Diagnóstico antes de comité.`:null].filter(Boolean);
-  document.getElementById("narrCard").innerHTML=`
+  document.getElementById("narrCard").innerHTML=TH(`
     <h3>Resumen ejecutivo</h3>
     <div class="narr-block"><p>${resumen}</p></div>
     <div class="narr-grid">
@@ -714,7 +722,7 @@ function renderNarratives(M){
         <div class="narr-block plain" style="margin-top:12px;"><h4>Cambios vs. histórico</h4><p>${cambios}</p></div>
         <div class="narr-block" style="margin-top:12px;"><h4>Recomendaciones (borrador)</h4><ul>${recos.map(r=>`<li>${r}</li>`).join("")}</ul></div>
       </div>
-    </div>`;
+    </div>`);
 }
 
 /* ---------- Eficiencia ---------- */
@@ -722,7 +730,7 @@ function renderEficiencia(M){
   if(typeof Plotly==="undefined")return;
   const rows=M.sub.filter(r=>rangeMonths().includes(r.mes));
   let data=[...new Set(rows.map(r=>r.region))].map(rg=>{const cu=avg(rows.filter(r=>r.region===rg).map(r=>r.cumplimiento_pct));const sl=avg(rows.filter(r=>r.region===rg).map(r=>r.sla_objetivo_pct));return{region:rg,cumpl:cu,sla:sl,gap:(cu!=null&&sl!=null)?cu-sl:null};}).filter(d=>d.cumpl!=null).sort((a,b)=>a.cumpl-b.cumpl);
-  if(!data.length){document.getElementById("plotEficiencia").innerHTML='<p class="muted" style="padding:20px;text-align:center;">Sin datos para el filtro.</p>';return;}
+  if(!data.length){document.getElementById("plotEficiencia").innerHTML=TH('<p class="muted" style="padding:20px;text-align:center;">Sin datos para el filtro.</p>');return;}
   const cf=g=>g==null?COL.muted:(g>=0?COL.ok:g>-3?COL.warn:COL.alert);
   const bars={type:"bar",orientation:"h",y:data.map(d=>d.region),x:data.map(d=>+d.cumpl.toFixed(1)),marker:{color:data.map(d=>cf(d.gap))},text:data.map(d=>d.cumpl.toFixed(1)+"%"),textposition:"auto",textfont:{color:"#fff",size:11},customdata:data.map(d=>[d.sla?d.sla.toFixed(1):"N/D",d.gap!=null?(d.gap>=0?"+":"")+d.gap.toFixed(1):"N/D"]),hovertemplate:"<b>%{y}</b><br>Cumplimiento: %{x:.1f}%<br>Meta SLA: %{customdata[0]}%<br>Brecha: %{customdata[1]} pp<extra></extra>"};
   const tg={type:"scatter",mode:"markers",y:data.map(d=>d.region),x:data.map(d=>d.sla?+d.sla.toFixed(1):null),marker:{symbol:"diamond",size:11,color:COL.deep,line:{color:"#fff",width:1}},hovertemplate:"Meta SLA %{y}: %{x:.1f}%<extra></extra>"};
@@ -737,15 +745,15 @@ function riskRoutes(M){
 }
 function renderRiesgo(M){
   const risk=riskRoutes(M), total=[...new Set(M.sub.map(r=>r.ruta))].length;
-  document.getElementById("riskCount").innerHTML=`<b>${risk.length}</b> de ${total} rutas en breach severo (&lt; −5 pp) en ${M.tri.map(mShort).join(" · ")}.`;
+  document.getElementById("riskCount").innerHTML=TH(`<b>${risk.length}</b> de ${total} rutas en breach severo (&lt; −5 pp) en ${M.tri.map(mShort).join(" · ")}.`);
   const t=document.getElementById("riskTable");
-  if(!risk.length){t.innerHTML=`<tr><td style="border:none;color:var(--muted);padding:14px;">Ninguna ruta en breach severo bajo el filtro.</td></tr>`;return;}
+  if(!risk.length){t.innerHTML=TH(`<tr><td style="border:none;color:var(--muted);padding:14px;">Ninguna ruta en breach severo bajo el filtro.</td></tr>`);return;}
   const g=GOV.items.riesgo; const dueno=g.dueno?esc(g.dueno):'<span class="tag-def">por definir</span>'; const dec=g.decision?esc(g.decision):'<span class="tag-def">por definir</span>';
   const rojo=b=>{const a=Math.max(0,Math.min(1,(Math.abs(b)-5)/13));return`rgba(220,38,38,${(a*0.72+0.10).toFixed(2)})`;};
   const tc=b=>(Math.abs(b)-5)/13>0.55?"#fff":"#7a1010";
-  t.innerHTML=`<thead><tr><th>Ruta</th><th>Región</th><th>Ciudad origen</th><th>Tipo</th><th>Meta</th><th>Cumpl.</th><th>Brecha (pp)</th><th>Dueño</th><th>Decisión</th></tr></thead>
+  t.innerHTML=TH(`<thead><tr><th>Ruta</th><th>Región</th><th>Ciudad origen</th><th>Tipo</th><th>Meta</th><th>Cumpl.</th><th>Brecha (pp)</th><th>Dueño</th><th>Decisión</th></tr></thead>
     <tbody>${risk.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.region}</td><td>${r.ciudad}</td><td>${r.tipo}</td><td>${r.sla}%</td><td>${r.cumpl.toFixed(1)}%</td>
-      <td style="background:${rojo(r.brecha)};color:${tc(r.brecha)};font-weight:800;text-align:center;">${r.brecha.toFixed(1)}</td><td>${dueno}</td><td>${dec}</td></tr>`).join("")}</tbody>`;
+      <td style="background:${rojo(r.brecha)};color:${tc(r.brecha)};font-weight:800;text-align:center;">${r.brecha.toFixed(1)}</td><td>${dueno}</td><td>${dec}</td></tr>`).join("")}</tbody>`);
 }
 
 /* ---------- Predicción ---------- */
@@ -767,13 +775,13 @@ function renderPrediccion(M){
   const ann=[]; if(BREAK&&list.includes(BREAK)){const yB=vals[list.indexOf(BREAK)]; if(yB!=null)ann.push({x:mShort(BREAK),y:yB,text:"Quiebre "+mShort(BREAK),showarrow:true,arrowhead:3,ax:0,ay:-42,font:{color:COL.alert,size:11,family:"Aptos"},arrowcolor:COL.alert,bgcolor:"#fff",bordercolor:COL.alert,borderpad:3,borderwidth:1});}
   const slaRef=avg(M.sub.filter(r=>list.includes(r.mes)).map(r=>r.sla_objetivo_pct));
   Plotly.react("plotPrediccion",traces,{height:360,margin:{l:48,r:20,t:16,b:40},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{gridcolor:COL.border,tickangle:-40},yaxis:{title:"Cumplimiento SLA (%)",gridcolor:COL.border,zeroline:false},legend:{orientation:"h",y:1.12,x:0},annotations:ann,shapes:slaRef!=null?[{type:"line",xref:"paper",x0:0,x1:1,y0:slaRef,y1:slaRef,line:{color:COL.muted,width:1,dash:"dash"}}]:[]},{responsive:true,displayModeBar:false});
-  document.getElementById("projNote").innerHTML=(slaRef!=null?`Línea gris = meta SLA promedio (${slaRef.toFixed(1)}%). `:"")+projText;
+  document.getElementById("projNote").innerHTML=TH((slaRef!=null?`Línea gris = meta SLA promedio (${slaRef.toFixed(1)}%). `:"")+projText);
 }
 
 /* ================= DIAGNÓSTICO ================= */
 function renderDiagFacts(M){
   const el=document.getElementById("diagFacts");
-  if(!BREAK){el.innerHTML=`<div class="narr-block"><p><b>Sin quiebre que diagnosticar.</b> En los datos cargados no se detecta una caída sistémica (≥3 pp de un mes al siguiente en el promedio del portafolio). Este panel se activa automáticamente cuando el monitoreo encuentre un quiebre.</p></div>`;return;}
+  if(!BREAK){el.innerHTML=TH(`<div class="narr-block"><p><b>Sin quiebre que diagnosticar.</b> En los datos cargados no se detecta una caída sistémica (≥3 pp de un mes al siguiente en el promedio del portafolio). Este panel se activa automáticamente cuando el monitoreo encuentre un quiebre.</p></div>`);return;}
   const sub=M.sub, bP=prevM(BREAK);
   const dic=avg(sub.filter(r=>r.mes===bP).map(r=>r.cumplimiento_pct));
   const ene=avg(sub.filter(r=>r.mes===BREAK).map(r=>r.cumplimiento_pct));
@@ -785,21 +793,21 @@ function renderDiagFacts(M){
   }).filter(x=>x.d!=null).sort((a,b)=>a.d-b.d);
   const nDown=perReg.filter(x=>x.d<0).length;
   const rango=perReg.length?`${perReg[0].d.toFixed(1)} a ${perReg[perReg.length-1].d.toFixed(1)} pp`:"N/D";
-  el.innerHTML=`
+  el.innerHTML=TH(`
     <div class="narr-block"><p><b>Hecho:</b> el cumplimiento cae de <b>${fpct(dic)}</b> (${mShort(bP)}) a <b>${fpct(ene)}</b> (${mShort(BREAK)}) — un salto de <span class="pill-num">${fpp(cliff)}</span> en un solo mes. La caída golpea a <b>${nDown}/${perReg.length}</b> regiones el <b>mismo mes</b>, en una banda de ${rango}. La simultaneidad es la evidencia más fuerte de un <b>evento único</b> (sistémico o de medición), no de fallas independientes.</p></div>
     <div class="tbl-wrap" style="margin-top:10px;"><table><thead><tr><th>Región</th><th>${mShort(bP)} → ${mShort(BREAK)} (Δ pp)</th></tr></thead>
-      <tbody>${perReg.map(x=>`<tr><td>${x.rg}</td><td style="font-weight:800;color:${x.d<0?'#b91c1c':'#0d6b41'};">${x.d>=0?'+':''}${x.d.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`;
+      <tbody>${perReg.map(x=>`<tr><td>${x.rg}</td><td style="font-weight:800;color:${x.d<0?'#b91c1c':'#0d6b41'};">${x.d>=0?'+':''}${x.d.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`);
 }
 function renderDiagCauses(){
-  const box=document.getElementById("diagCauses"); box.innerHTML="";
+  const box=document.getElementById("diagCauses"); box.innerHTML=TH("");
   Object.entries(DIAG.causes).forEach(([k,c])=>{
     const row=document.createElement("div"); row.className="diag-cause";
-    row.innerHTML=`<div class="lbl">${c.label}</div>
+    row.innerHTML=TH(`<div class="lbl">${c.label}</div>
       <select data-k="${k}" class="est-${c.estado}">
         <option ${c.estado==="Pendiente"?"selected":""}>Pendiente</option>
         <option ${c.estado==="Descartada"?"selected":""}>Descartada</option>
         <option ${c.estado==="Confirmada"?"selected":""}>Confirmada</option></select>
-      <textarea data-kn="${k}" placeholder="Evidencia / nota (opcional)">${esc(c.nota)}</textarea>`;
+      <textarea data-kn="${k}" placeholder="Evidencia / nota (opcional)">${esc(c.nota)}</textarea>`);
     box.appendChild(row);
   });
   box.querySelectorAll("select").forEach(s=>s.onchange=e=>{DIAG.causes[e.target.dataset.k].estado=e.target.value; e.target.className="est-"+e.target.value; renderDiagVerdict();});
@@ -815,9 +823,9 @@ function diagState(){
 }
 function renderDiagVerdict(){
   const st=diagState(), el=document.getElementById("diagVerdict");
-  if(st.kind==="block") el.innerHTML=`<div class="verdict block">⛔ <b>Diagnóstico incompleto</b> — quedan ${st.pend} causa(s) sin evaluar. <b>No escalar a renegociación de contrato</b> hasta cerrar la causa (filtro de Consecuencias).</div>`;
-  else if(st.kind==="go") el.innerHTML=`<div class="verdict go">✅ <b>Diagnóstico cerrado.</b> Causa(s) confirmada(s): ${st.conf.map(c=>"<b>"+c.label+"</b>").join(", ")}. Acción focalizada según la causa; documenta en el one-pager.</div>`;
-  else el.innerHTML=`<div class="verdict rev">⚠️ <b>Todas las causas descartadas.</b> El deterioro no se explica por las hipótesis evaluadas: revisa nuevas hipótesis o la calidad del dato antes de decidir.</div>`;
+  if(st.kind==="block") el.innerHTML=TH(`<div class="verdict block">⛔ <b>Diagnóstico incompleto</b> — quedan ${st.pend} causa(s) sin evaluar. <b>No escalar a renegociación de contrato</b> hasta cerrar la causa (filtro de Consecuencias).</div>`);
+  else if(st.kind==="go") el.innerHTML=TH(`<div class="verdict go">✅ <b>Diagnóstico cerrado.</b> Causa(s) confirmada(s): ${st.conf.map(c=>"<b>"+c.label+"</b>").join(", ")}. Acción focalizada según la causa; documenta en el one-pager.</div>`);
+  else el.innerHTML=TH(`<div class="verdict rev">⚠️ <b>Todas las causas descartadas.</b> El deterioro no se explica por las hipótesis evaluadas: revisa nuevas hipótesis o la calidad del dato antes de decidir.</div>`);
 }
 
 /* ================= GOBERNANZA ================= */
@@ -825,12 +833,12 @@ function renderGobernanza(){
   document.getElementById("govCadencia").value=GOV.cadencia;
   document.getElementById("govFresh").value=GOV.freshDias;
   const t=document.getElementById("govTable");
-  t.innerHTML=`<thead><tr><th style="min-width:150px;">Indicador</th><th style="min-width:150px;">Umbral</th><th style="min-width:150px;">Dueño</th><th>Decisión asociada</th></tr></thead>
+  t.innerHTML=TH(`<thead><tr><th style="min-width:150px;">Indicador</th><th style="min-width:150px;">Umbral</th><th style="min-width:150px;">Dueño</th><th>Decisión asociada</th></tr></thead>
     <tbody>${Object.entries(GOV.items).map(([k,g])=>`<tr>
       <td><b>${g.label}</b></td>
       <td><input class="inp" data-g="${k}" data-f="umbral" value="${esc(g.umbral)}"/></td>
       <td><input class="inp" data-g="${k}" data-f="dueno" value="${esc(g.dueno)}" placeholder="por definir"/></td>
-      <td><input class="inp" data-g="${k}" data-f="decision" value="${esc(g.decision)}" placeholder="por definir"/></td></tr>`).join("")}</tbody>`;
+      <td><input class="inp" data-g="${k}" data-f="decision" value="${esc(g.decision)}" placeholder="por definir"/></td></tr>`).join("")}</tbody>`);
   t.querySelectorAll("input").forEach(inp=>inp.onchange=e=>{GOV.items[e.target.dataset.g][e.target.dataset.f]=e.target.value; refreshGovDependents();});
 }
 function refreshGovDependents(){ if(LAST_M){ renderAlerts(LAST_M); renderKPIs(LAST_M); renderRiesgo(LAST_M); renderNarratives(LAST_M); } }
@@ -869,7 +877,7 @@ function openOnePager(){
     : (GOV.items.alerta_roja.decision || GOV.items.riesgo.decision || "Definir decisión en Gobernanza.");
   const rows=[["Cumplimiento último mes",fpct(M.lastVal)],["Base 12 meses",fpct(M.prev12Val)],["Delta vs base",fpp(M.delta)],["Breach severo (últ. mes)",M.pctSevere==null?"N/D":M.pctSevere.toFixed(0)+"%"],["Brecha del trimestre",fpp(M.triBrecha)],["Rutas en breach severo",F.riskN]];
   const owners=Object.values(GOV.items).filter(g=>g.dueno).map(g=>`${g.label}: ${esc(g.dueno)}`);
-  document.getElementById("opBody").innerHTML=`
+  document.getElementById("opBody").innerHTML=TH(`
     <div class="op-h"><h2>Brief de comité — Cumplimiento de SLA</h2>
       <div class="op-meta">Ámbito: ${esc(scope)} · Generado: ${new Date().toLocaleDateString("es-CO",{day:"2-digit",month:"long",year:"numeric"})} · Datos hasta ${mShort(lastM())} (${freshnessDays()} días)</div></div>
     <div class="op-did">
@@ -880,7 +888,7 @@ function openOnePager(){
     <table class="op-facts"><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table>
     ${F.risk.length?`<p style="margin:12px 0 4px;font-weight:800;color:var(--deep-blue);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;">Rutas críticas</p>
       <table class="op-facts"><tbody>${F.risk.map(r=>`<tr><td>${r.ruta} · ${r.region}/${r.ciudad}</td><td>${fpp(r.brecha)}</td></tr>`).join("")}</tbody></table>`:""}
-    <div class="op-foot">Cadencia: ${GOV.cadencia?esc(GOV.cadencia):"por definir"} · Dueños: ${owners.length?owners.join(" · "):"por definir"} · Validación humana: Correctitud ${VAL.c1?"✔":"—"} · Contexto ${VAL.c2?"✔":"—"} · Consecuencias ${VAL.c3?"✔":"—"}<br>Javier Forero · javierforero.co</div>`;
+    <div class="op-foot">Cadencia: ${GOV.cadencia?esc(GOV.cadencia):"por definir"} · Dueños: ${owners.length?owners.join(" · "):"por definir"} · Validación humana: Correctitud ${VAL.c1?"✔":"—"} · Contexto ${VAL.c2?"✔":"—"} · Consecuencias ${VAL.c3?"✔":"—"}<br>Javier Forero · javierforero.co</div>`);
   document.getElementById("opModal").classList.add("open");
 }
 function closeOnePager(){ document.getElementById("opModal").classList.remove("open"); }
@@ -944,7 +952,7 @@ function computeAnswer(q){
   return {scope,text:`El cumplimiento promedio de ${scope} es <b>${fpct(cu)}</b>, con brecha <b>${fpp(br)}</b> frente al SLA${br!=null&&br<0?" (bajo la meta)":""}.`,support:[["Cumplimiento promedio",fpct(cu)],["Brecha promedio",fpp(br)],["Rutas en ámbito",nrt],["Filas",scopeRows.length]]};
 }
 function qaSupportHTML(res){return `<div class="qa-support"><h4>Soporte de datos · ${res.scope}</h4><ul>${res.support.map(s=>`<li><span>${s[0]}</span><b>${s[1]}</b></li>`).join("")}</ul>${res.did?`<div class="qa-did"><b>DATA</b> ${res.did[0]}<br><b>IDEA</b> ${res.did[1]}<br><b>DECISIÓN</b> ${res.did[2]}</div>`:""}</div>`;}
-function renderAnswer(res,mode){document.getElementById("qaAnswer").innerHTML=`<div class="qa-mode ${mode==='ia'?'ia':'local'}">${mode==='ia'?'Respuesta asistida por IA generativa · cifras verificadas localmente':'Respuesta local · verificada sobre tus datos'}</div><div class="qa-text">${res.llmText?res.llmText.replace(/\n/g,"<br>"):res.text}</div>`+qaSupportHTML(res);}
+function renderAnswer(res,mode){document.getElementById("qaAnswer").innerHTML=TH(`<div class="qa-mode ${mode==='ia'?'ia':'local'}">${mode==='ia'?'Respuesta asistida por IA generativa · cifras verificadas localmente':'Respuesta local · verificada sobre tus datos'}</div><div class="qa-text">${res.llmText?res.llmText.replace(/\n/g,"<br>"):res.text}</div>`+qaSupportHTML(res));}
 function withTimeout(p,ms){return Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);}
 async function askLLM(q,res){
   const payload={model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:
@@ -953,7 +961,7 @@ async function askLLM(q,res){
   if(!r.ok)throw new Error("http "+r.status);const d=await r.json();const t=(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();if(!t)throw new Error("empty");return t;
 }
 async function onAsk(){const q=document.getElementById("qaInput").value.trim();if(!q)return;const res=computeAnswer(q);res.llmText=null;renderAnswer(res,'local');
-  const ans=document.getElementById("qaAnswer");const t=document.createElement("div");t.className="qa-thinking";t.textContent="Consultando IA generativa… (si no hay conexión, se mantiene la respuesta local).";ans.appendChild(t);
+  const ans=document.getElementById("qaAnswer");const t=document.createElement("div");t.className="qa-thinking";t.textContent=TH("Consultando IA generativa… (si no hay conexión, se mantiene la respuesta local).");ans.appendChild(t);
   try{const txt=await withTimeout(askLLM(q,res),14000);res.llmText=txt;renderAnswer(res,'ia');}catch(e){const el=ans.querySelector(".qa-thinking");if(el)el.remove();}}
 function setQ(t){document.getElementById("qaInput").value=t;onAsk();}
 
@@ -967,20 +975,20 @@ function showTab(id){
 /* ---------- Orquestación ---------- */
 function renderAll(){
   const M=metrics(); LAST_M=M;
-  document.getElementById("chip-periodo").textContent="Periodo: "+mShort(state.desde)+" → "+mShort(state.hasta);
-  document.getElementById("chip-rutas").textContent=[...new Set(M.sub.map(r=>r.ruta))].length+" rutas · "+M.sub.length+" filas";
-  const _ch=document.getElementById("chip-hasta"); if(_ch)_ch.textContent="Datos hasta: "+mShort(lastM());
+  document.getElementById("chip-periodo").textContent=TH("Periodo: "+mShort(state.desde)+" → "+mShort(state.hasta));
+  document.getElementById("chip-rutas").textContent=TH([...new Set(M.sub.map(r=>r.ruta))].length+" rutas · "+M.sub.length+" filas");
+  const _ch=document.getElementById("chip-hasta"); if(_ch)_ch.textContent=TH("Datos hasta: "+mShort(lastM()));
   renderSource();
-  const _dT=document.getElementById("diagTitle"); if(_dT)_dT.textContent="Diagnóstico del quiebre"+(BREAK?" · "+mShort(BREAK):" · sin quiebre detectado");
+  const _dT=document.getElementById("diagTitle"); if(_dT)_dT.textContent=TH("Diagnóstico del quiebre"+(BREAK?" · "+mShort(BREAK):" · sin quiebre detectado"));
   renderAlerts(M); renderKPIs(M); renderNarratives(M); renderRiesgo(M); renderDiagFacts(M);
   if(typeof Plotly!=="undefined"){ renderEficiencia(M); renderPrediccion(M); } else chartsPending();
 }
-function chartsPending(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML='<p style="color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;">Cargando librería de gráficos…</p>';});}
+function chartsPending(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;">Cargando librería de gráficos…</p>');});}
 
 /* ---------- Init ---------- */
-function opt(v,t){const o=document.createElement("option");o.value=v;o.textContent=t||v;return o;}
+function opt(v,t){const o=document.createElement("option");o.value=v;o.textContent=TH(t||v);return o;}
 function rebuildFilters(){
-  ["fRegion","fTipo","fDesde","fHasta"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML="";});
+  ["fRegion","fTipo","fDesde","fHasta"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=TH("");});
   const regs=[...new Set(RAW_DATA.map(r=>r.region))].sort(), tipos=[...new Set(RAW_DATA.map(r=>r.tipo_cliente))].sort();
   const R=document.getElementById("fRegion");R.appendChild(opt("Todas"));regs.forEach(x=>R.appendChild(opt(x)));
   const T=document.getElementById("fTipo");T.appendChild(opt("Todos"));tipos.forEach(x=>T.appendChild(opt(x)));
@@ -991,20 +999,20 @@ function rebuildFilters(){
   document.getElementById("btnReset").onclick=()=>{state.region="Todas";state.tipo="Todos";state.desde=MONTHS[0];state.hasta=MONTHS[MONTHS.length-1];R.value="Todas";T.value="Todos";D.value=state.desde;H.value=state.hasta;renderAll();};
 }
 function buildQAChips(){
-  const qc=document.getElementById("qaChips"); if(qc)qc.innerHTML="";
+  const qc=document.getElementById("qaChips"); if(qc)qc.innerHTML=TH("");
   const worstNow=(()=>{const g={};RAW_DATA.filter(r=>lastQ().includes(r.mes)).forEach(r=>{(g[r.region]=g[r.region]||[]).push(r.cumplimiento_pct);});return Object.entries(g).map(([k,v])=>({k,cu:avg(v)})).sort((a,b)=>a.cu-b.cu)[0].k;})();
   const tw=ENT.tipos.slice(0,2);
-  [`¿Cuál es la peor región en ${lastQLbl()}?`,`¿Cuántas rutas están en breach severo?`,tw.length>=2?`Compara ${tw[0]} vs ${tw[1]}`:`¿Cómo va ${ENT.regions[0]}?`,BREAK?`¿Qué pasó en ${mLong(BREAK)}?`:`¿Hay algún quiebre en la serie?`,`¿Cómo se ve la proyección para ${nextQLbl()}?`,`¿Cómo va ${worstNow}?`].forEach(c=>{const b=document.createElement("button");b.className="qa-chip";b.textContent=c;b.onclick=()=>setQ(c);document.getElementById("qaChips").appendChild(b);});
+  [`¿Cuál es la peor región en ${lastQLbl()}?`,`¿Cuántas rutas están en breach severo?`,tw.length>=2?`Compara ${tw[0]} vs ${tw[1]}`:`¿Cómo va ${ENT.regions[0]}?`,BREAK?`¿Qué pasó en ${mLong(BREAK)}?`:`¿Hay algún quiebre en la serie?`,`¿Cómo se ve la proyección para ${nextQLbl()}?`,`¿Cómo va ${worstNow}?`].forEach(c=>{const b=document.createElement("button");b.className="qa-chip";b.textContent=TH(c);b.onclick=()=>setQ(c);document.getElementById("qaChips").appendChild(b);});
 }
 function init(){
   try{const u=JSON.parse(safeStore.get("jf-sla-userdata")||"null");if(u&&u.rows&&u.rows.length){RAW_DATA=u.rows;CURSRC={name:u.name||"archivo",src:"user"};}}catch(e){}
   deriveStructure(); state.desde=MONTHS[0]; state.hasta=lastM();
   buildEntities(); initTheme();
-  document.getElementById("chip-gen").textContent="Vista generada: "+new Date().toLocaleDateString("es-CO",{day:"2-digit",month:"short",year:"numeric"});
+  document.getElementById("chip-gen").textContent=TH("Vista generada: "+new Date().toLocaleDateString("es-CO",{day:"2-digit",month:"short",year:"numeric"}));
   rebuildFilters();
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
   document.getElementById("themeToggle").onclick=toggleTheme;
-  var _yr=document.getElementById("yr"); if(_yr)_yr.textContent=new Date().getFullYear();
+  var _yr=document.getElementById("yr"); if(_yr)_yr.textContent=TH(new Date().getFullYear());
 
   // Gobernanza
   document.getElementById("govCadencia").onchange=e=>{GOV.cadencia=e.target.value;};
@@ -1029,10 +1037,10 @@ function ensurePlotly(cb){
   const cdns=["https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js","https://cdn.plot.ly/plotly-2.35.2.min.js","https://unpkg.com/plotly.js@2.35.2/dist/plotly.min.js"];
   (function next(i){if(typeof Plotly!=="undefined"){cb();return;}if(i>=cdns.length){plotlyFailed();return;}const s=document.createElement("script");s.src=cdns[i];s.onload=()=>(typeof Plotly!=="undefined")?cb():next(i+1);s.onerror=()=>next(i+1);document.head.appendChild(s);})(0);
 }
-function plotlyFailed(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML='<p style="color:#b45309;font-size:.85rem;padding:22px;text-align:center;">No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.</p>';});}
+function plotlyFailed(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#b45309;font-size:.85rem;padding:22px;text-align:center;">No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.</p>');});}
 
 const safeStore=(()=>{const mem={};let ok=false;try{const k='__jf__';localStorage.setItem(k,'1');localStorage.removeItem(k);ok=true;}catch(e){}return{get:k=>{try{return ok?localStorage.getItem(k):(k in mem?mem[k]:null);}catch(e){return k in mem?mem[k]:null;}},set:(k,v)=>{try{ok?localStorage.setItem(k,v):(mem[k]=v);}catch(e){mem[k]=v;}},del:k=>{try{ok?localStorage.removeItem(k):(delete mem[k]);}catch(e){delete mem[k];}}};})();
-function applyTheme(t){document.documentElement.setAttribute("data-theme",t);const b=document.getElementById("themeToggle");if(b){b.textContent=t==="dark"?"☀️":"🌙";b.setAttribute("aria-pressed",String(t==="dark"));b.setAttribute("aria-label",t==="dark"?"Cambiar a tema claro":"Cambiar a tema oscuro");}}
+function applyTheme(t){document.documentElement.setAttribute("data-theme",t);const b=document.getElementById("themeToggle");if(b){b.textContent=TH(t==="dark"?"☀️":"🌙");b.setAttribute("aria-pressed",String(t==="dark"));b.setAttribute("aria-label",t==="dark"?"Cambiar a tema claro":"Cambiar a tema oscuro");}}
 function initTheme(){let t=safeStore.get("jf-theme");if(!t)t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";applyTheme(t);}
 function toggleTheme(){const cur=document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light";const nxt=cur==="dark"?"light":"dark";applyTheme(nxt);safeStore.set("jf-theme",nxt);}
 /* ================= Mis datos (carga de usuario) ================= */
@@ -1148,13 +1156,13 @@ function applyDataset(rows, name, src){
 function restoreDemo(){
   safeStore.del("jf-sla-userdata");
   applyDataset(RAW_DEMO,"Demo simulado · 38 rutas","demo");
-  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML="";
+  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML=TH("");
 }
 function renderSource(){
   const el=document.getElementById("chip-fuente"); if(!el)return;
-  if(CURSRC.src==="user"){ el.style.display=""; el.innerHTML="Fuente: "+esc(CURSRC.name)+" · <a href=\"#\" id=\"lnkDemoBack\" style=\"color:inherit;text-decoration:underline;\">volver al demo</a>";
+  if(CURSRC.src==="user"){ el.style.display=""; el.innerHTML=TH("Fuente: "+esc(CURSRC.name)+" · <a href=\"#\" id=\"lnkDemoBack\" style=\"color:inherit;text-decoration:underline;\">volver al demo</a>");
     const l=document.getElementById("lnkDemoBack"); if(l)l.onclick=e=>{e.preventDefault();restoreDemo();};
-  } else { el.style.display="none"; el.textContent=""; }
+  } else { el.style.display="none"; el.textContent=TH(""); }
 }
 /* CSV de salida (plantilla / demo export) */
 function keyToLabel(m){return m;} // clave ya es abr_2025
@@ -1184,13 +1192,13 @@ function upReport(res){
   if(res.ok){
     const items=[]; items.push("<b>"+res.rows.length+"</b> filas · <b>"+res.nRutas+"</b> rutas · <b>"+res.months.length+"</b> meses ("+mShort(res.months[0])+"→"+mShort(res.months[res.months.length-1])+").");
     if(BREAK)items.push("Quiebre detectado en <b>"+mShort(BREAK)+"</b>."); else items.push("Sin quiebre sistémico detectado en el periodo.");
-    el.innerHTML='<div class="vr vr-ok"><b>✓ Datos cargados.</b><ul><li>'+items.join("</li><li>")+"</li>"+(res.warn.length?("<li>"+res.warn.join("</li><li>")+"</li>"):"")+"</ul></div>";
+    el.innerHTML=TH('<div class="vr vr-ok"><b>✓ Datos cargados.</b><ul><li>'+items.join("</li><li>")+"</li>"+(res.warn.length?("<li>"+res.warn.join("</li><li>")+"</li>"):"")+"</ul></div>");
   } else {
-    el.innerHTML='<div class="vr vr-err"><b>No se pudo cargar el archivo.</b><ul><li>'+res.err.join("</li><li>")+"</li></ul>"+(res.warn.length?('<div class="na" style="margin-top:6px;">Además: '+res.warn.join(" · ")+"</div>"):"")+"</div>";
+    el.innerHTML=TH('<div class="vr vr-err"><b>No se pudo cargar el archivo.</b><ul><li>'+res.err.join("</li><li>")+"</li></ul>"+(res.warn.length?('<div class="na" style="margin-top:6px;">Además: '+res.warn.join(" · ")+"</div>"):"")+"</div>");
   }
 }
 function handleSlaFile(file){
-  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML='<div class="vr">Procesando <b>'+esc(file.name)+'</b>…</div>';
+  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML=TH('<div class="vr">Procesando <b>'+esc(file.name)+'</b>…</div>');
   const ext=(file.name.split(".").pop()||"").toLowerCase();
   const finish=(headers,rows)=>{ const res=buildSlaDataset(headers,rows); upReport(res);
     if(res.ok){ applyDataset(res.rows,file.name,"user");
@@ -1229,6 +1237,54 @@ function wireDataTab(){
 }
 
 document.addEventListener("DOMContentLoaded",init);
+</script>
+<script>
+/* ===== Bilingüe ES/EN · mismo motor que el resto del portafolio ===== */
+let LANG='es';const TR={"Mes":"Month","Ruta":"Route","Anio":"Year","Fecha":"Date","Salud":"Health","Desde":"From","Hasta":"To","Notas":"Notes","Cerrar":"Close","Leer →":"Read →","Riesgo":"Risk","Claude":"Claude","Región":"Region","Perfil":"Profile","GitHub":"GitHub","Embudo":"Funnel","Plotly":"Plotly","Offline":"Offline","Columna":"Column","Fuente:":"Source:","Resumen":"Summary","Alertas:":"Alerts:","Backtest":"Backtest","LinkedIn":"LinkedIn","Perfil ↗":"Profile ↗","Propuesta":"Proposal","— fuentes":"— sources","Requerida":"Required","5 niveles":"5 levels","Preguntar":"Ask","Contexto.":"Context.","Secciones":"Sections","sintéticos":"synthetic","Eficiencia":"Efficiency","CSV / XLSX":"CSV / XLSX","Predicción":"Forecasting","brecha_pp:":"gap_pp:","Periodo: —":"Period: —","Gobernanza":"Governance","Navegación:":"Navigation:","Diagnóstico":"Diagnosis","Restablecer":"Reset","Snapshot: —":"Snapshot: —","⤒ Mis datos":"⤒ My data","↺ Reiniciar":"↺ Reset","Proyección:":"Projection:","— vendedores":"— reps","Holt-Winters":"Holt-Winters","Próximamente":"Coming soon","ChatGPT Work":"ChatGPT Work","Correctitud.":"Correctness.","determinista":"deterministic","Q&amp;A · IA":"Q&amp;A · AI","SLA objetivo:":"Target SLA:","2 portafolios":"2 portfolios","¿Por qué dos?":"Why two?","← Portafolios":"← Portfolios","Javier Forero":"Javier Forero","Datos hasta: —":"Data through: —","Consecuencias.":"Consequences.","Rango de meses":"Month range","Capa 1 · Salud":"Layer 1 · Health","Breach severo:":"Severe breach:","Base 12 meses:":"12-month base:","javierforero.co":"javierforero.co","Y el siguiente…":"And the next one…","⭳ Plantilla CSV":"⭳ CSV template","Ver dashboard →":"View dashboard →","Tipo de cliente":"Customer type","2 motores de IA":"2 AI engines","SLA_Objetivo_pct":"SLA_Target_pct","↺ Volver al demo":"↺ Back to the demo","Decisión · PULSE":"Decision · PULSE","Entregas_Totales":"Total_Deliveries","Cumplimiento_pct":"Compliance_pct","Filtros globales":"Global filters","IA conversacional":"Conversational AI","Entregas_A_Tiempo":"On_Time_Deliveries","Lectura ejecutiva":"Executive read","cumplimiento_pct:":"compliance_pct:","Vista generada: —":"View generated: —","KPIs Inteligentes":"Smart KPIs","Marco · 5 niveles":"Framework · 5 levels","POVs de Analítica":"Analytics POVs","— rutas · — filas":"— routes · — rows","Pipeline ponderado":"Weighted pipeline","Demos interactivos":"Interactive demos","2 · Sube tu archivo":"2 · Upload your file","Capa 4 · Predicción":"Layer 4 · Forecasting","Elige un portafolio":"Choose a portfolio","← Hub de dashboards":"← Dashboard hub","1 · Formato esperado":"1 · Expected format","100% en tu navegador":"100% in your browser","Perfil profesional ↗":"Professional profile ↗","Dashboards con Claude":"Dashboards with Claude","Cambiar a tema oscuro":"Switch to dark theme","Ranking de vendedores":"Sales rep ranking","Decision Intelligence":"Decision Intelligence","1 dirección analítica":"1 analytical direction","Pipeline &amp; Riesgo":"Pipeline &amp; Risk","<b data-i18n>Ruta</b>":"<b data-i18n>Route</b>","Dashboards con ChatGPT":"Dashboards with ChatGPT","Pregúntale a los datos":"Ask the data","<b data-i18n>Fecha</b>":"<b data-i18n>Date</b>","Diagnóstico del embudo":"Funnel diagnosis","✦ Construido con Claude":"✦ Built with Claude","Cumplimiento por región":"Compliance by region","Ventas &amp; Vendedores":"Sales &amp; Reps","Si falta, se asume 95%.":"If missing, 95% is assumed.","Marco conceptual · POVs":"Conceptual framework · POVs","Diagnóstico del quiebre":"Breakpoint diagnosis","🖨 Imprimir / Guardar PDF":"🖨 Print / Save as PDF","o haz clic para elegirlo":"or click to choose it","Sube tus datos (CSV/XLSX)":"Upload your data (CSV/XLSX)","Gobernanza de la decisión":"Decision governance","⭳ Demo como CSV (570 filas)":"⭳ Demo as CSV (570 rows)","Win rate por canal de origen":"Win rate by lead source","⤓ Exportar gobernanza (JSON)":"⤓ Export governance (JSON)","Ej: semanal · lunes 8:00 a.m.":"E.g.: weekly · Monday 8:00 a.m.","✦ Construido con ChatGPT Work":"✦ Built with ChatGPT Work","Entrar al portafolio Claude →":"Enter the Claude portfolio →","Entrar al portafolio ChatGPT →":"Enter the ChatGPT portfolio →","Capa 2 · Eficiencia por región":"Layer 2 · Efficiency by region","Javier Forero · javierforero.co":"Javier Forero · javierforero.co","Ventas vs. meta · serie mensual":"Revenue vs. target · monthly series","Analítica de Datos en 5 Niveles":"Data Analytics in 5 Levels","Diagnóstico de pipeline y riesgo":"Pipeline and risk diagnosis","⤒ Mis datos · sube tu propio SLA":"⤒ My data · upload your own SLA","◆ Meta SLA promedio de la región":"◆ Average target SLA for the region","<b data-i18n>Cumplimiento_pct</b>":"<b data-i18n>Compliance_pct</b>","Modelo, validación y advertencias":"Model, validation and caveats","¡Adiós a los dashboards aburridos!":"Goodbye to boring dashboards!","Dashboards que narran la operación":"Dashboards that narrate operations","Cadencia de actualización del dato":"Data refresh cadence","Acerca de este dashboard · resumen":"About this dashboard · summary","Desempeño Comercial · Dirección B2B":"Sales Performance · B2B Leadership","Hipótesis de causa — evalúa cada una":"Cause hypotheses — assess each one","Smart Narratives · Lectura ejecutiva":"Smart Narratives · Executive read","Definiciones y método (auditabilidad)":"Definitions and method (auditability)","Cumplimiento de SLA · Operaciones B2B":"SLA Compliance · B2B Operations","Region · Ciudad_Origen · Tipo_Cliente":"Region · Origin_City · Customer_Type","Gobernanza · Dueño · Umbral · Decisión":"Governance · Owner · Threshold · Decision","Proyección de ventas · próximos 3 meses":"Revenue projection · next 3 months","PULSE: decidir mejor que tu competencia":"PULSE: decide better than your competition","Desempeño Comercial · embudo y pipeline":"Sales Performance · funnel and pipeline","Analítica · IA · Transformación Digital":"Analytics · AI · Digital Transformation","Pipeline abierto · nominal vs. ponderado":"Open pipeline · nominal vs. weighted","El pensamiento detrás de estos tableros.":"The thinking behind these dashboards.","Pulso Financiero · Finanzas Corporativas":"Financial Pulse · Corporate Finance","Capa 3 · Riesgo · Rutas en breach severo":"Layer 3 · Risk · Routes in severe breach","Predicción financiera 2025 · Holt-Winters":"2025 financial forecast · Holt-Winters","Identificador de ruta, carril o servicio.":"Identifier for the route, lane or service.","Alertar frescura si el dato supera (días)":"Flag staleness if the data exceeds (days)","Cumplimiento SLA B2B · desempeño comercial":"B2B SLA compliance · sales performance","Ahora acepta tus propios datos (CSV/XLSX):":"It now accepts your own data (CSV/XLSX):","Habilitan filtros y análisis por segmento.":"They enable filters and analysis by segment.","Q&amp;A · Conversational AI sobre tus datos":"Q&amp;A · Conversational AI over your data","Dashboards de decisión · construidos con IA":"Decision dashboards · built with AI","Método pregunta → evidencia → señal → acción":"Method: question → evidence → signal → action","Pulso Financiero · cuatro modelos comparados":"Financial Pulse · four models compared","% de entregas dentro del SLA en el mes-ruta.":"% of deliveries within SLA for the route-month.","Dashboard de Operaciones · Cumplimiento de SLA":"Operations Dashboard · SLA Compliance","Ej: ¿dónde está el cuello de botella del embudo?":"E.g.: where is the bottleneck in the funnel?","✦ Construido con Claude · Colección de dashboards":"✦ Built with Claude · Dashboard collection","Ej: ¿cuál es la peor región del último trimestre?":"E.g.: which was the worst region last quarter?","🖨 Exportar a comité (one-pager DATA→IDEA→DECISIÓN)":"🖨 Export for committee (one-pager DATA→IDEA→DECISION)","🎛 Interactivos — cámbialos para explorar los datos":"🎛 Interactive — change them to explore the data","Dos portafolios. Dos IAs. El mismo criterio analítico.":"Two portfolios. Two AIs. The same analytical judgement.","cumplimiento_pct − sla_objetivo_pct (puntos porcentuales).":"compliance_pct − target_sla_pct (percentage points).","Validación humana — obligatoria antes de exportar a comité":"Human validation — required before exporting to committee","Conversión por etapa · primera vs. segunda mitad del periodo":"Conversion by stage · first vs. second half of the period","En este dominio · <code>dashboards.javierforero.co/claude/</code>":"On this domain · <code>dashboards.javierforero.co/claude/</code>","nivel de cumplimiento comprometido por ruta (90–98%), no uniforme.":"the compliance level committed per route (90–98%), not uniform.","Sitio externo · <code>javier-dashboards.jforero.chatgpt.site</code>":"External site · <code>javier-dashboards.jforero.chatgpt.site</code>","Preguntar a los datos en lenguaje natural, con el humano en control.":"Ask the data in plain language, with the human in control.","De la señal a la acción con dueño, umbral y mecanismo de aprendizaje.":"From signal to action, with an owner, a threshold and a learning loop.","Del descriptivo al cognitivo: por qué más complejidad no es más valor.":"From descriptive to cognitive: why more complexity isn't more value.","Dueño y decisión: <span class=\"tag-def\">por definir</span> (Gobernanza).":"Owner and decision: <span class=\"tag-def\">to be defined</span> (Governance).","brecha &lt; −5 pp (señal accionable; brecha &lt; 0 = bajo meta, hoy 100%).":"gap &lt; −5 pp (actionable signal; gap &lt; 0 = below target, today 100%).","Estado del cumplimiento en el mes más reciente frente a su línea base histórica.":"Compliance status in the most recent month against its historical baseline.","Tómale el pulso a tus decisiones: velocidad, verdad, ventaja, aprendizaje y aguante.":"Take the pulse of your decisions: speed, truth, edge, learning and stamina.","Cada tablero es autónomo, con datos reales embebidos y pensado para un comité que decide.":"Each dashboard is self-contained, with real embedded data, built for a committee that decides.","Barras = ventas del mes (verde ≥100%, morado 90–100%, rojo &lt;90%). Línea punteada = meta.":"Bars = revenue for the month (green ≥100%, purple 90–100%, red &lt;90%). Dotted line = target.","Tasa de cierre de oportunidades ya cerradas, por canal. Verde ≥ promedio, ámbar por debajo.":"Win rate on already-closed opportunities, by channel. Green ≥ average, amber below.","Ventas acumuladas ÷ meta acumulada en el periodo seleccionado. La marca vertical es el 100%.":"Cumulative revenue ÷ cumulative target over the selected period. The vertical mark is 100%.","promedio de los hasta 12 meses previos al último mes (ventana móvil; es referencia, no meta).":"average of up to the 12 months before the latest month (rolling window; a reference, not a target).","Cumplimiento promedio por región en el rango seleccionado, con su meta SLA de referencia (◆).":"Average compliance by region over the selected range, with its reference target SLA (◆).","Dashboards que no solo grafican: interpretan, diagnostican y convierten los datos en decisión.":"Dashboards that don't just plot: they interpret, diagnose and turn data into decisions.","Ordenado por cumplimiento del periodo. La última columna muestra el cumplimiento del mes más reciente.":"Sorted by compliance for the period. The last column shows compliance for the most recent month.","Rutas con brecha promedio &lt; −5 pp en el último trimestre del rango. Intensidad de rojo = severidad.":"Routes with an average gap &lt; −5 pp in the last quarter of the range. Red intensity = severity.","Rojo señala las etapas que se deterioran (caída &gt; 2 pp) entre la primera y la segunda mitad del rango.":"Red marks the stages that deteriorate (a drop &gt; 2 pp) between the first and second half of the range.","La IA es el músculo; el criterio humano es el cerebro. Confirma los 3 filtros para habilitar el one-pager.":"AI is the muscle; human judgement is the brain. Confirm the 3 filters to unlock the one-pager.","cumplimiento_sla_tidy.csv — 570 filas (38 rutas × 15 meses), 8 regiones, 4 tipos de cliente, sin faltantes.":"cumplimiento_sla_tidy.csv — 570 rows (38 routes × 15 months), 8 regions, 4 customer types, no gaps.","Marca el estado y anota la evidencia. Mientras haya causas “Pendiente”, el veredicto bloquea el escalamiento.":"Mark the status and record the evidence. While any cause is “Pending”, the verdict blocks escalation.","AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel. Alternativa: par <b data-i18n>Anio</b> + <b data-i18n>Mes</b>.":"YYYY-MM, dd/mm/yyyy, jan_2025 or an Excel date. Alternative: the pair <b data-i18n>Year</b> + <b data-i18n>Month</b>.","Desempeño por región o cliente, conteo de rutas en breach, qué pasó en un mes, comparaciones o proyección de Q2.":"Performance by region or customer, count of routes in breach, what happened in a month, comparisons or the Q2 projection.","Oportunidades por etapa y porcentaje que llega desde el tope del embudo, en el último mes del rango seleccionado.":"Opportunities by stage and the share reaching each one from the top of the funnel, for the last month of the selected range.","0–100 (acepta 0–1 y lo convierte). Alternativa: <b data-i18n>Entregas_Totales</b> + <b data-i18n>Entregas_A_Tiempo</b>.":"0–100 (it accepts 0–1 and converts). Alternative: <b data-i18n>Total_Deliveries</b> + <b data-i18n>On_Time_Deliveries</b>.","Serie mensual con el quiebre detectado anotado (si existe) y proyección lineal a 3 meses (punteada) separada del histórico.":"Monthly series with the detected breakpoint annotated (if any) and a 3-month linear projection (dotted) kept separate from history.","🔴 último mes &gt; 5 pp bajo la base 12m · 🟡 brecha promedio del trimestre &lt; 0 · 🟠 frescura: dato supera el umbral de días.":"🔴 latest month &gt; 5 pp below the 12m base · 🟡 average quarterly gap &lt; 0 · 🟠 staleness: data exceeds the day threshold.","La colección crece agregando carpetas hermanas de <code>sla-operaciones/</code>, cada una con su propio <code>index.html</code>.":"The collection grows by adding sibling folders to <code>sla-operaciones/</code>, each with its own <code>index.html</code>.","Cada colección es autónoma, con datos reales embebidos y pensada para un comité que decide. Misma metodología, dos motores de IA.":"Each collection is self-contained, with real embedded data, built for a committee that decides. Same methodology, two AI engines.","Suavizado de Holt (nivel + tendencia) con parámetros ajustados por backtest. Banda sombreada = incertidumbre (±1.5σ de residuos).":"Holt smoothing (level + trend) with parameters tuned by backtest. Shaded band = uncertainty (±1.5σ of residuals).","Tus datos se guardan solo en este navegador (localStorage) para que el tablero recuerde tu carga; con «Volver al demo» se eliminan.":"Your data is stored only in this browser (localStorage) so the dashboard remembers your upload; “Back to the demo” clears it.","Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad.":"A statistician with a storyteller's soul, born in Bogotá. He turns data and technical concepts into accessible stories, with feeling and clarity.","Monitoreo del cumplimiento de SLA del portafolio logístico. No descubre el hallazgo: lo vigila, lo defiende y lo convierte en decisión.":"SLA compliance monitoring for the logistics portfolio. It doesn't discover the finding: it watches it, defends it and turns it into a decision.","<b data-i18n>Contexto.</b> Consideré eventos del negocio (paro, cambio de operador, cambio de medición, calendario) que la IA no conoce.":"<b data-i18n>Context.</b> I considered business events (strikes, a change of carrier, a change in measurement, the calendar) that the AI doesn't know about.","Gris = valor nominal por etapa. Morado = valor ponderado por la probabilidad empírica de cierre de cada etapa (etiqueta = probabilidad).":"Grey = nominal value by stage. Purple = value weighted by the empirical close probability of each stage (label = probability).","<b data-i18n>Correctitud.</b> Verifiqué que las cifras del brief cuadran con el sistema fuente (conteos, rangos, suma del KPI principal).":"<b data-i18n>Correctness.</b> I checked that the figures in the brief reconcile with the source system (counts, ranges, total of the headline KPI).","Narrativa generada a partir de los datos filtrados. Las causas se plantean como hipótesis y deben pasar validación humana antes de comité.":"Narrative generated from the filtered data. Causes are stated as hypotheses and must pass human validation before committee.","Reglas: mínimo 6 meses continuos (sin huecos a nivel portafolio) y sin duplicados ruta+mes. Acepta separador «,» o «;» y decimales con coma.":"Rules: at least 6 continuous months (no gaps at portfolio level) and no duplicate route+month. It accepts “,” or “;” separators and comma decimals.","<b data-i18n>Consecuencias.</b> Evalué el impacto y la reversibilidad de la decisión; si afecta clientes/finanzas, exijo evidencia adicional.":"<b data-i18n>Consequences.</b> I assessed the impact and reversibility of the decision; if it affects customers or finances, I require further evidence.","Una colección de seis casos que revela señales, explica trade-offs y orienta la acción, organizada como un ciclo de decisión de principio a fin.":"A collection of six cases that surfaces signals, explains trade-offs and guides action, organised as a decision cycle from start to finish.","Escribe una pregunta o elige una sugerencia. Puedo responder sobre cumplimiento, vendedores, regiones, el embudo, el pipeline, canales y la proyección.":"Type a question or pick a suggestion. I can answer on compliance, reps, regions, the funnel, the pipeline, channels and the projection.","Tableros con IA conversacional determinista, gobernanza de la decisión y capa «trae tus datos»: sube tu propio CSV/Excel y todo se recalcula en el navegador.":"Dashboards with deterministic conversational AI, decision governance and a “bring your data” layer: upload your own CSV/Excel and everything recalculates in the browser.","La configuración de gobernanza vive en memoria durante la sesión; usa “Exportar gobernanza (JSON)” para guardarla y “Importar” para recuperarla en otra sesión.":"The governance settings live in memory for the session; use “Export governance (JSON)” to save them and “Import” to restore them in another session.","Filtros y alertas globales. Pestañas: 4 capas + Resumen + Diagnóstico + Gobernanza + Q&amp;A. El detalle de métodos está en Gobernanza → “Definiciones y método”.":"Global filters and alerts. Tabs: 4 layers + Summary + Diagnosis + Governance + Q&amp;A. Method details live in Governance → “Definitions and method”.","De la meta y la conversión a una cartera priorizada de acciones. No solo muestra las ventas: explica por qué caen y dónde intervenir para recuperar el crecimiento.":"From target and conversion to a prioritised portfolio of actions. It doesn't just show revenue: it explains why it falls and where to intervene to restore growth.","Motor conversacional <b data-i18n>determinista</b>: las respuestas se calculan directamente sobre los datos, sin generación de texto libre — cero riesgo de alucinación.":"A <b data-i18n>deterministic</b> conversational engine: answers are computed directly over the data, with no free text generation — zero hallucination risk.","Adiós a los dashboards aburridos. Analítica que no solo grafica: interpreta, diagnostica y convierte los datos en decisión — con IA conversacional y gobernanza de la decisión.":"Goodbye to boring dashboards. Analytics that doesn't just plot: it interprets, diagnoses and turns data into decisions — with conversational AI and decision governance.","regresión lineal (mínimos cuadrados) sobre el régimen post-quiebre (desde el quiebre detectado, o los últimos 6 meses si no lo hay), 3 meses adelante. Frágil por pocos puntos.":"linear regression (least squares) over the post-breakpoint regime (from the detected breakpoint, or the last 6 months if there is none), 3 months ahead. Fragile given the few points.","Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad. Consultor en Analítica, IA y Transformación Digital.":"A statistician with a storyteller's soul, born in Bogotá. He turns data and technical concepts into accessible stories, with feeling and clarity. Consultant in Analytics, AI and Digital Transformation.","Construido con Claude, bajo la dirección analítica de Javier Forero · Datos de demostración (ventas, embudo y CRM simulados) · Los hallazgos requieren validación operativa antes de uso en comité.":"Built with Claude, under the analytical direction of Javier Forero · Demonstration data (simulated sales, funnel and CRM) · Findings require operational validation before committee use.","Un KPI sin dueño ni decisión es un adorno. Completa aquí la casa permanente del hallazgo: quién responde, con qué umbral y qué decisión se dispara. Se refleja en las tarjetas y alertas al instante.":"A KPI with no owner and no decision is decoration. Fill in the permanent home of the finding here: who answers for it, against which threshold and which decision it triggers. It is reflected in the cards and alerts instantly.","Antes de escalar a una decisión de alto impacto (renegociar operador), descompón la causa. La IA no sabe del paro de la semana 32 ni de un cambio de fórmula: tú sí. Este panel estructura tu filtro de Contexto.":"Before escalating to a high-impact decision (renegotiating the carrier), break down the cause. The AI doesn't know about the week-32 strike or a change of formula: you do. This panel structures your Context filter.","Pregunta en lenguaje natural. Las cifras se calculan en vivo sobre tu dataset (deterministas, sin alucinación). Si hay IA generativa disponible, redacta sobre esas cifras verificadas; si no, responde el motor local.":"Ask in plain language. The figures are computed live over your dataset (deterministic, no hallucination). If generative AI is available it writes over those verified figures; if not, the local engine answers.","Adiós a los dashboards aburridos. Dos colecciones interactivas que interpretan, diagnostican y convierten datos en decisión — una construida con <b data-i18n>Claude</b> y otra con <b data-i18n>ChatGPT Work</b>, ambas bajo mi dirección analítica. Elige con cuál quieres explorar.":"Goodbye to boring dashboards. Two interactive collections that interpret, diagnose and turn data into decisions — one built with <b data-i18n>Claude</b> and the other with <b data-i18n>ChatGPT Work</b>, both under my analytical direction. Choose which one to explore.","<b data-i18n>¿Por qué dos?</b> No es una competencia de herramientas: es una demostración de que el valor está en el criterio —la pregunta de negocio, la evidencia que merece confianza y la decisión que habilita—, y de que distintas IAs pueden materializar ese criterio en productos analíticos funcionales.":"<b data-i18n>Why two?</b> This isn't a contest between tools: it's a demonstration that the value lies in the judgement —the business question, the evidence that deserves trust and the decision it enables— and that different AIs can turn that judgement into working analytical products.","Crecimiento, margen, caja y liquidez con puente precio-volumen, dos modelos predictivos validados por backtest (descomposición + Holt-Winters) y KPIs Inteligentes con incertidumbre declarada y gobernanza. <b data-i18n>Ahora acepta tus propios datos (CSV/XLSX):</b> todo se recalcula e interpreta localmente en tu navegador.":"Growth, margin, cash and liquidity with a price-volume bridge, four forecasting models validated by backtest (decomposition, Holt-Winters, Fourier and SARIMA) and Smart KPIs with stated uncertainty and governance. <b data-i18n>It now accepts your own data (CSV/XLSX):</b> everything recalculates and is interpreted locally in your browser.","Carga un CSV o Excel con tu histórico ruta×mes y todo el tablero —KPIs, alertas, narrativa, diagnóstico, predicción y Q&amp;A— se recalcula e interpreta <b data-i18n>100% en tu navegador</b>: nada se envía a ningún servidor. El quiebre se detecta automáticamente (caída ≥3 pp de un mes al siguiente en el promedio del portafolio).":"Upload a CSV or Excel with your route×month history and the entire dashboard —KPIs, alerts, narrative, diagnosis, forecast and Q&amp;A— recalculates and is interpreted <b data-i18n>100% in your browser</b>: nothing is sent to any server. The breakpoint is detected automatically (a drop of ≥3 pp from one month to the next in the portfolio average).","Monitorea la caída sistémica de SLA de un portafolio logístico. 8 capas, alertas automáticas, diagnóstico del quiebre, gobernanza (umbral·dueño·decisión), Q&amp;A conversacional y brief exportable. <b data-i18n>Ahora acepta tus propios datos (CSV/XLSX):</b> el quiebre se detecta solo y todo el tablero se recalcula en tu navegador.":"It monitors the systemic SLA decline of a logistics portfolio. 8 layers, automatic alerts, breakpoint diagnosis, governance (threshold·owner·decision), conversational Q&amp;A and an exportable brief. <b data-i18n>It now accepts your own data (CSV/XLSX):</b> the breakpoint is detected on its own and the whole dashboard recalculates in your browser.","Convierte ventas, embudo y CRM en una cartera priorizada de acciones. Cumplimiento vs. meta por vendedor y región, diagnóstico del embudo que aísla el cuello en <b data-i18n>Propuesta</b>, pipeline ponderado por la probabilidad real de cierre, predicción con backtest y Q&amp;A conversacional determinista — con gobernanza de la decisión.":"It turns sales, funnel and CRM into a prioritised portfolio of actions. Attainment vs. target by rep and region, a funnel diagnosis that isolates the bottleneck at <b data-i18n>Proposal</b>, a pipeline weighted by the real close probability, backtested forecasting and deterministic conversational Q&amp;A — with decision governance.","<div class=\"na\" style=\"margin-top:6px;\">Además: ":"<div class=\"na\" style=\"margin-top:6px;\">Also: ","<div class=\"vr vr-err\"><b>No se pudo cargar el archivo.</b><ul><li>":"<div class=\"vr vr-err\"><b>The file could not be loaded.</b><ul><li>","<p class=\"muted\" style=\"padding:20px;text-align:center;\">Sin datos para el filtro.</p>":"<p class=\"muted\" style=\"padding:20px;text-align:center;\">No data for this filter.</p>","<p style=\"color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;\">Cargando librería de gráficos…</p>":"<p style=\"color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;\">Loading the charting library…</p>","<p class=\"na\" style=\"padding:24px;text-align:center;\">El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo.</p>":"<p class=\"na\" style=\"padding:24px;text-align:center;\">The selected range is too short to project (≥ 4 months are needed). Widen the period.</p>","<p style=\"color:#b45309;font-size:.85rem;padding:22px;text-align:center;\">No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.</p>":"<p style=\"color:#b45309;font-size:.85rem;padding:22px;text-align:center;\">The charting library could not be loaded. The rest of the dashboard (KPIs, narrative, risk, diagnosis, governance and local Q&A) works offline.</p>","Idioma / Language":"Idioma / Language","Cambiar tema":"Switch theme","__title_selector":"AI Dashboards · Javier Forero","__title_hub":"Dashboards with Claude · Javier Forero","__title_sla":"Operations Dashboard · SLA Compliance · Javier Forero","__title_com":"B2B Sales Performance · Javier Forero","pasó de":"went from","</b> de":"</b> of","· Dueño:":"· Owner:","</b>: de":"</b>: from","¿Cómo va":"How is","la región":"the region","· Dueños:":"· Owners:","Último mes":"Latest month","de brecha)":"gap)","facturó <b>":"billed <b>",", la región":", the region","</b> con <b>":"</b> with <b>","¿Qué pasó en":"What happened in","en Ene 2026.":"in Jan 2026.","¿Cómo vamos en":"How are we doing in","Quiebre en <b>":"Breakpoint in <b>","</b>) está <b>":"</b>) is <b>","Cumplimiento de":"Compliance of","</b> en un mes).":"</b> in one month).","Mayor caída: <b>":"Largest drop: <b>","</b> abiertos en":"</b> open across",") y la mejor <b>":") and the best <b>","</b> de la meta (":"</b> of target (","pp</b> a favor de":"pp</b> in favour of","antes de escalar.":"before escalating.","</b>. Decisión: <b>":"</b>. Decision: <b>","</b>, con brecha <b>":"</b>, with a gap of <b>","El quiebre es en <b>":"The breakpoint is in <b>","</b>, con banda de ±":"</b>, with a band of ±","las ventas fueron <b>":"revenue was <b>","%); el más débil, <b>":"%); the weakest, <b>","es el punto más débil (":"is the weakest point (","¿Cuál es el mejor canal?":"Which is the best channel?","<b>Validar el quiebre de":"<b>Validate the breakpoint of","</b> regiones a la baja.":"</b> regions declining.","regiones, con quiebre de":"regions, with a breakpoint of","rutas en breach severo en":"routes in severe breach in","Diagnóstico focalizado en":"Diagnosis focused on","¿Cuánto vale el pipeline?":"How much is the pipeline worth?","¿Cuál es el peor vendedor?":"Who is the weakest rep?","¿Cuál es la peor región en":"Which was the worst region in","El cumplimiento promedio de":"Average compliance for","El cuello de botella es <b>":"The bottleneck is <b>","Sin rutas en breach severo.":"No routes in severe breach.","Diagnóstico aún incompleto (":"Diagnosis still incomplete (","con menor cumplimiento es <b>":"with the lowest compliance is <b>",".</b> De las cinco etapas, <b>":".</b> Of the five stages, <b>","¿Cómo se ve la proyección para":"What does the projection look like for","). Umbral: −5 pp. Decisión: <b>":"). Threshold: −5 pp. Decision: <b>",", el menor cumplimiento fue <b>":", the lowest compliance was <b>","Con la tendencia post-quiebre (":"With the post-breakpoint trend (","¿Hay algún quiebre en la serie?":"Is there a breakpoint in the series?",", el mejor cumplimiento fue <b>":", the highest compliance was <b>","El cumplimiento del último mes (":"Compliance in the latest month (","y supera tu umbral de frescura (":"and it exceeds your staleness threshold (","Línea gris = meta SLA promedio (":"Grey line = average target SLA (","· Validación humana: Correctitud":"· Human validation: Correctness","el cumplimiento agregado pasó de":"aggregate compliance went from","días.</b> El dato más reciente es":"days.</b> The most recent data point is","¿Dónde está el cuello de botella?":"Where is the bottleneck?","</b> respecto de la meta del mes (":"</b> against the monthly target (",", el cumplimiento del último mes (":", compliance in the latest month (","(últimos 6 meses), con la tendencia":"(last 6 months), with the trend","</b> bajo el promedio de 12 meses (":"</b> below the 12-month average (","</b> lidera el pipeline abierto con":"</b> leads the open pipeline with","meses. La proyección a 3 meses para":"months. The 3-month projection for","<b>Contingencia rutas críticas</b> (":"<b>Contingency for critical routes</b> (","</b> es la que más se deteriora: <b>":"</b> is the one that deteriorates most: <b>","rutas en breach severo (&lt; −5 pp) en":"routes in severe breach (&lt; −5 pp) in","¿Cuántas rutas están en breach severo?":"How many routes are in severe breach?","Exposición amplia: no es una sola ruta.":"Broad exposure: this isn't a single route.",") — un salto de <span class=\"pill-num\">":") — a jump of <span class=\"pill-num\">","): fecha común = evento único probable.":"): a common date = a single event is likely.","La caída se estabilizó, no se revierte.":"The drop has stabilised, it isn't reversing.","Diagnóstico cerrado: causa confirmada —":"Diagnosis closed: cause confirmed —","</b> ruta(s) en breach severo; peor: <b>":"</b> route(s) in severe breach; worst: <b>","</b> en breach severo (&lt; −5 pp) y <b>":"</b> in severe breach (&lt; −5 pp) and <b>","¿Qué proyección hay para el próximo mes?":"What is the projection for next month?","<b>Mesa de capacidad con el operador.</b>":"<b>Capacity review with the carrier.</b>","%), la conversión de punta a punta es de <b>":"%), end-to-end conversion is <b>","Ningún vendedor alcanzó el 90% de su meta en":"No rep reached 90% of their target in","</span> en un solo mes. La caída golpea a <b>":"</span> in a single month. The drop hits <b>","el cumplimiento de los últimos meses promedia":"compliance over the last months averages","%</b>. Sin intervención, no se recupera solo.":"%</b>. Without intervention, it won't recover on its own.","Definir intervención con meta de recuperación.":"Define an intervention with a recovery target.","<div class=\"qa-support\"><h4>Soporte de datos ·":"<div class=\"qa-support\"><h4>Data support ·","<b>Definir umbral de escalamiento</b> por ruta.":"<b>Set an escalation threshold</b> per route.","</b> en la pestaña Diagnóstico antes de comité.":"</b> in the Diagnosis tab before committee.","Posible shock sistémico + debilidad estructural.":"Possible systemic shock + structural weakness.","<option value=\"Todas\">Todas las regiones</option>":"<option value=\"Todas\">All regions</option>","frente a la base de 12 meses. Caída transversal a":"against the 12-month base. A drop cutting across","</b> regiones el <b>mismo mes</b>, en una banda de":"</b> regions in the <b>same month</b>, within a band of",". Por canal, los mejores win rates provienen de <b>":". By channel, the best win rates come from <b>","<div class=\"qa-thinking\">Analizando los datos…</div>":"<div class=\"qa-thinking\">Analysing the data…</div>","No hay suficientes meses post-quiebre para proyectar.":"There aren't enough post-breakpoint months to project.","Causas evaluadas descartadas: revisar nuevas hipótesis.":"Assessed causes ruled out: review new hypotheses.","</b> oportunidades de ticket alto (&gt;$25K) concentran":"</b> high-ticket opportunities (&gt;$25K) hold","opp), pero ponderado por probabilidad de cierre vale <b>":"opps), but weighted by close probability it is worth <b>","Priorizar contingencia por severidad; asignar dueño por ruta.":"Prioritise contingency by severity; assign an owner per route.","(post-quiebre). Causa única probable, a validar en Diagnóstico.":"(post-breakpoint). A single cause is likely, to be validated in Diagnosis.","%. Frágil (pocos puntos): señala tendencia, no compromete cifras.":"%. Fragile (few points): it indicates a trend, it doesn't commit to figures.","<div class=\"verdict block\">⛔ <b>Diagnóstico incompleto</b> — quedan":"<div class=\"verdict block\">⛔ <b>Diagnosis incomplete</b> — there are still","<div class=\"narr-block\"><p><b>Hecho:</b> el cumplimiento cae de <b>":"<div class=\"narr-block\"><p><b>Fact:</b> compliance falls from <b>",". Acción focalizada según la causa; documenta en el one-pager.</div>":". Targeted action based on the cause; document it in the one-pager.</div>","× una meta mensual: el embudo abierto no basta para cerrar la brecha.":"× one monthly target: the open funnel isn't enough to close the gap.","× una meta mensual. La brecha no se cierra solo con lo que está abierto.":"× one monthly target. The gap won't close with what is open alone.","elegidos por búsqueda en malla minimizando el error en un <i>holdout</i> de":"chosen by grid search minimising the error on a <i>holdout</i> of","<div class=\"verdict go\">✅ <b>Diagnóstico cerrado.</b> Causa(s) confirmada(s):":"<div class=\"verdict go\">✅ <b>Diagnosis closed.</b> Confirmed cause(s):","La proyección de ventas (Holt, nivel+tendencia) para los próximos 3 meses es <b>":"The revenue projection (Holt, level+trend) for the next 3 months is <b>","oportunidades, pero ponderados por la probabilidad de cierre de cada etapa valen <b>":"opportunities, but weighted by the close probability of each stage they are worth <b>","<div class=\"banner red\"><span class=\"dot\">🔴</span><div><b>Alerta roja — caída severa.</b>":"<div class=\"banner red\"><span class=\"dot\">🔴</span><div><b>Red alert — severe drop.</b>","La uniformidad y la fecha común apuntan a una causa sistémica o de medición, no a fallas aisladas.":"The uniformity and the common date point to a systemic or measurement cause, not to isolated failures.","El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo en los filtros.":"The selected range is too short to project (≥ 4 months are needed). Widen the period in the filters.","<tr><td style=\"border:none;color:var(--muted);padding:14px;\">Ninguna ruta en breach severo bajo el filtro.</td></tr>":"<tr><td style=\"border:none;color:var(--muted);padding:14px;\">No routes in severe breach under this filter.</td></tr>","causa(s) sin evaluar. <b>No escalar a renegociación de contrato</b> hasta cerrar la causa (filtro de Consecuencias).</div>":"cause(s) unassessed. <b>Do not escalate to contract renegotiation</b> until the cause is closed (Consequences filter).</div>","%</b> — que coincide con el win rate observado en el CRM. Los dos sistemas cuentan la misma historia: de cada 100 prospectos, ~":"%</b> — which matches the win rate observed in the CRM. Both systems tell the same story: out of every 100 prospects, ~","Correr el diagnóstico del quiebre antes de escalar. NO renegociar contrato sin causa confirmada. Contingencia para rutas con brecha < −10 pp.":"Run the breakpoint diagnosis before escalating. Do NOT renegotiate the contract without a confirmed cause. Contingency for routes with a gap < −10 pp.","No tengo una respuesta determinista para esa pregunta. Prueba con: cumplimiento del mes, peor/mejor vendedor o región, cuello de botella del embudo, valor del pipeline, win rate por canal, o la proyección de ventas.":"I don't have a deterministic answer for that question. Try: compliance for the month, weakest/best rep or region, the funnel bottleneck, pipeline value, win rate by channel, or the revenue projection.","No se detecta un <b>quiebre sistémico</b> (caída ≥3 pp de un mes al siguiente a nivel portafolio) en los datos cargados. El monitoreo sigue activo: si aparece, este panel lo señalará.":"No <b>systemic breakpoint</b> is detected (a drop of ≥3 pp from one month to the next at portfolio level) in the loaded data. Monitoring stays active: if one appears, this panel will flag it.","<div class=\"verdict rev\">⚠️ <b>Todas las causas descartadas.</b> El deterioro no se explica por las hipótesis evaluadas: revisa nuevas hipótesis o la calidad del dato antes de decidir.</div>":"<div class=\"verdict rev\">⚠️ <b>All causes ruled out.</b> The deterioration isn't explained by the hypotheses assessed: review new hypotheses or the data quality before deciding.</div>","× una meta mensual. La mayor parte del valor nominal está en etapas tempranas (Prospección y Propuesta), donde la probabilidad de cierre es baja.</p>":"× one monthly target. Most of the nominal value sits in early stages (Prospecting and Proposal), where the close probability is low.</p>","<div class=\"narr-block\"><p><b>Sin quiebre que diagnosticar.</b> En los datos cargados no se detecta una caída sistémica (≥3 pp de un mes al siguiente en el promedio del portafolio). Este panel se activa automáticamente cuando el monitoreo encuentre un quiebre.</p></div>":"<div class=\"narr-block\"><p><b>No breakpoint to diagnose.</b> No systemic drop is detected in the loaded data (≥3 pp from one month to the next in the portfolio average). This panel activates automatically when monitoring finds a breakpoint.</p></div>","Datos hasta: ":"Data through: ","Alerta roja — caída severa.":"Red alert — severe drop.",") está ":") is ","bajo el promedio de 12 meses (":"below the 12-month average (","). Umbral: −5 pp. Decisión: ":"). Threshold: −5 pp. Decision: ","Brecha promedio del trimestre:":"Average gap for the quarter:",". Decisión: ":". Decision: ","Dato desactualizado — ":"Stale data — "," días.":" days.","En todo el portafolio, ":"Across the whole portfolio, ","frente a la base de 12 meses (":"against the 12-month base (",") — una caída severa. El deterioro se concentra en un quiebre abrupto en ":") — a severe drop. The deterioration concentrates in an abrupt breakpoint in ","de 8 regiones y 4 tipo(s) de cliente en la misma dirección, patrón que apunta a causa ":"of 8 regions and 4 customer type(s) in the same direction, a pattern that points to a ","sistémica":"systemic",". Hipótesis a validar en la pestaña Diagnóstico.":". A hypothesis to validate in the Diagnosis tab.","— bajo el umbral.":"— below the threshold.","Cambios vs. histórico":"Changes vs. history","Último mes ":"Latest month "," vs. base ":" vs. base ",". Brecha del trimestre: ":". Quarterly gap: ",". Más bajo en Q1: ":". Lowest in Q1: ","Pacífico":"Pacific","Histórico":"Historical","Proyección lineal (3m)":"Linear projection (3m)","Demostración educativa del ejercicio “Métricas y eficiencia operativa”. Datos de ejemplo":"Educational demonstration of the “Operational metrics and efficiency” exercise. Sample data","; no representan operaciones ni clientes reales. Construido con Plotly.js. ©":"; they do not represent real operations or customers. Built with Plotly.js. ©","Región y fechas afectan ventas, cumplimiento y tendencia. El pipeline es una foto del estado actual (solo región).":"Region and dates affect revenue, attainment and trend. The pipeline is a snapshot of the current state (region only)."," meta · prob. del embudo":" target · funnel prob.","Situación.":"Situation.","En junio de 2026, el portafolio comercial facturó ":"In June 2026, the commercial portfolio billed ","ningún vendedor":"no rep","llegó al 90% de su cuota.":"reached 90% of quota.","Señal, no ruido.":"Signal, not noise.","No es un tropiezo aislado: ":"This isn't an isolated stumble: "," (semestre previo) a ":" (prior half-year) to ",", with the trend a la baja":", with the trend falling",", 3.4× la meta), pero al ponderarlo por la probabilidad real de cierre de cada etapa apenas cubre ":", 3.4× the target), but weighted by the real close probability of each stage it barely covers ","una meta mensual.":"one monthly target.","El problema no es de volumen de leads sino de ":"The problem isn't lead volume but ","conversión":"conversion",": la etapa ":": the ","es la única que se deteriora en el embudo. Agregar más prospectos sin corregir ese punto solo ensancha la boca del embudo sin mover el cierre.":"stage is the only one deteriorating in the funnel. Adding more prospects without fixing that point only widens the mouth of the funnel without moving closings.","Negociación":"Negotiation","Calificación":"Qualification","Prospección":"Prospecting","Conversión (%)":"Conversion (%)","Proyección":"Projection","Causa probable.":"Probable cause."};
+function T(s){if(LANG!=='en'||s==null)return s;const k=String(s);return TR[k]!==undefined?TR[k]:k;}
+function TH(h){if(LANG!=='en'||h==null)return h;let x=String(h);
+  for(let i=0;i<TRK.length;i++){const k=TRK[i];if(x.indexOf(k)>=0)x=x.split(k).join(TR[k]);}
+  return x;}
+const TRK=Object.keys(TR).filter(k=>k.length>14).sort((a,b)=>b.length-a.length);
+function detectLang(){try{
+  const q=new URLSearchParams(location.search).get('lang');
+  if(q==='en'||q==='es')return q;
+  if(/\/en\/?$/.test(location.pathname))return 'en';
+  const st=localStorage.getItem('jf-lang')||localStorage.getItem('iac_lang');
+  if(st==='en'||st==='es')return st;
+  if((navigator.language||'').toLowerCase().indexOf('es')!==0)return 'en';
+ }catch(e){}return 'es';}
+const LOC=()=>LANG==='en'?'en-US':'es-CO';
+function applyLang(l,silent){
+  LANG=(l==='en')?'en':'es';
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    if(el.__es===undefined)el.__es=el.innerHTML.trim().replace(/ data-i18n=""/g,' data-i18n');
+    el.innerHTML=T(el.__es);});
+  document.querySelectorAll('[aria-label],[placeholder],[title]').forEach(el=>{
+    ['aria-label','placeholder','title'].forEach(a=>{
+      if(!el.hasAttribute(a))return;const k='__o_'+a;
+      if(el[k]===undefined)el[k]=el.getAttribute(a);
+      el.setAttribute(a,T(el[k]));});});
+  document.querySelectorAll('.lang-opt').forEach(o=>o.setAttribute('aria-pressed',String(o.dataset.lang===LANG)));
+  if(LANG==='en'&&TR['__title_sla'])document.title=TR['__title_sla'];
+  else if(LANG==='es'&&window.__titleEs)document.title=window.__titleEs;
+  try{if(typeof rerenderAll==='function')rerenderAll();}catch(e){}
+  if(LANG==='en'){const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    let nd,c=0;while((nd=w.nextNode())&&c<600){const t=nd.textContent.trim();
+      if(t.length>2&&TR[t]!==undefined&&TR[t]!==t){nd.textContent=nd.textContent.replace(t,TR[t]);c++;}}}
+  if(!silent){try{
+    localStorage.setItem('jf-lang',LANG);localStorage.setItem('iac_lang',LANG);
+    const u=new URL(location.href);
+    if(LANG==='en')u.searchParams.set('lang','en');else u.searchParams.delete('lang');
+    history.replaceState(null,'',u.pathname+(u.search||'')+u.hash);}catch(e){}
+    if(typeof gtag==='function')gtag('event','lang_switch',{lang:LANG});}
+}
+
+window.__titleEs=document.title;
+(function(){var lt=document.getElementById('langToggle');
+ if(lt)lt.addEventListener('click',function(e){var o=e.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang,false);});
+ applyLang(detectLang(),true);})();
 </script>
 </body>
 </html>
