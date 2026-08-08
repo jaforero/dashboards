@@ -1,0 +1,722 @@
+id_oportunidad,fecha_creacion,cliente,industria,region,origen_lead,vendedor,etapa_actual,valor_usd,estado,fecha_cierre,dias_ciclo,dias_en_etapa_actual
+OPP-1001,2025-01-19,Cliente_252,Salud,Sur,WhatsApp,Felipe Casas,Calificación,4177.0,Perdida,2025-02-26,77,10
+OPP-1002,2025-01-20,Cliente_355,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Calificación,3164.0,Perdida,2025-02-21,65,5
+OPP-1003,2025-01-01,Cliente_113,Retail mayorista,Oriente,WhatsApp,Sergio Ibáñez,Prospección,5522.0,Perdida,2025-02-07,75,20
+OPP-1004,2025-01-11,Cliente_172,Servicios financieros,Norte,Inbound digital,Andrés Pardo,Calificación,6564.0,Perdida,2025-02-16,73,21
+OPP-1005,2025-01-20,Cliente_270,Retail mayorista,Centro,WhatsApp,Camila Restrepo,Propuesta,74035.0,Abierta,,,10
+OPP-1006,2025-01-12,Cliente_345,Salud,Sur,Evento / feria,Felipe Casas,Calificación,19508.0,Perdida,2025-02-20,79,9
+OPP-1007,2025-01-16,Cliente_220,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Prospección,18786.0,Perdida,2025-02-15,61,5
+OPP-1008,2025-01-10,Cliente_320,Salud,Norte,Outbound,Andrés Pardo,Calificación,7101.0,Perdida,2025-02-23,88,16
+OPP-1009,2025-01-21,Cliente_346,Retail mayorista,Centro,Referido,Julián Ospina,Prospección,25449.0,Perdida,2025-02-25,71,8
+OPP-1010,2025-01-07,Cliente_187,Tecnología,Sur,WhatsApp,Diana Rueda,Calificación,9974.0,Perdida,2025-02-01,50,22
+OPP-1011,2025-01-19,Cliente_204,Tecnología,Centro,Outbound,Camila Restrepo,Propuesta,41218.0,Perdida,2025-04-07,78,24
+OPP-1012,2025-01-13,Cliente_212,Manufactura,Sur,Inbound digital,Felipe Casas,Prospección,7213.0,Perdida,2025-02-16,69,23
+OPP-1013,2025-01-10,Cliente_172,Tecnología,Oriente,Referido,Marcela Quintero,Prospección,1965.0,Perdida,2025-02-10,62,9
+OPP-1014,2025-01-26,Cliente_317,Retail mayorista,Oriente,Referido,Marcela Quintero,Prospección,96735.0,Perdida,2025-02-26,63,15
+OPP-1015,2025-01-09,Cliente_143,Logística,Norte,Inbound digital,Andrés Pardo,Prospección,80162.0,Perdida,2025-02-12,68,6
+OPP-1016,2025-01-24,Cliente_243,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Propuesta,8070.0,Perdida,2025-03-17,52,8
+OPP-1017,2025-01-05,Cliente_222,Tecnología,Norte,Referido,Laura Cifuentes,Prospección,3156.0,Perdida,2025-02-16,84,11
+OPP-1018,2025-01-11,Cliente_217,Servicios financieros,Norte,WhatsApp,Andrés Pardo,Negociación,16734.0,Perdida,2025-03-14,62,24
+OPP-1019,2025-01-19,Cliente_247,Salud,Sur,WhatsApp,Felipe Casas,Calificación,2322.0,Perdida,2025-02-24,72,9
+OPP-1020,2025-01-09,Cliente_119,Manufactura,Sur,Referido,Felipe Casas,Prospección,9260.0,Perdida,2025-02-06,56,24
+OPP-1021,2025-01-07,Cliente_273,Logística,Sur,Inbound digital,Diana Rueda,Negociación,3207.0,Abierta,,,18
+OPP-1022,2025-01-10,Cliente_146,Tecnología,Centro,WhatsApp,Julián Ospina,Prospección,8230.0,Perdida,2025-02-13,69,12
+OPP-1023,2025-01-05,Cliente_212,Logística,Sur,Inbound digital,Diana Rueda,Prospección,17483.0,Perdida,2025-01-31,52,12
+OPP-1024,2025-01-27,Cliente_267,Manufactura,Oriente,Referido,Sergio Ibáñez,Calificación,10587.0,Perdida,2025-03-09,82,24
+OPP-1025,2025-01-27,Cliente_331,Salud,Sur,WhatsApp,Diana Rueda,Prospección,15822.0,Perdida,2025-02-26,60,24
+OPP-1026,2025-01-01,Cliente_301,Retail mayorista,Sur,Referido,Diana Rueda,Propuesta,11493.0,Abierta,,,18
+OPP-1027,2025-01-10,Cliente_353,Servicios financieros,Centro,Outbound,Camila Restrepo,Propuesta,8140.0,Perdida,2025-03-30,79,8
+OPP-1028,2025-01-04,Cliente_378,Logística,Centro,Outbound,Julián Ospina,Negociación,971.0,Abierta,,,14
+OPP-1029,2025-01-06,Cliente_201,Servicios financieros,Sur,WhatsApp,Diana Rueda,Calificación,10396.0,Perdida,2025-02-13,76,20
+OPP-1030,2025-01-24,Cliente_158,Logística,Oriente,Inbound digital,Marcela Quintero,Prospección,4995.0,Perdida,2025-03-01,73,19
+OPP-1031,2025-01-14,Cliente_268,Manufactura,Oriente,Referido,Marcela Quintero,Calificación,14808.0,Perdida,2025-02-17,68,10
+OPP-1032,2025-01-02,Cliente_169,Retail mayorista,Oriente,Cliente actual,Sergio Ibáñez,Prospección,74878.0,Perdida,2025-02-02,63,22
+OPP-1033,2025-01-04,Cliente_356,Logística,Centro,WhatsApp,Julián Ospina,Calificación,11583.0,Perdida,2025-01-31,54,18
+OPP-1034,2025-01-17,Cliente_322,Logística,Sur,Inbound digital,Diana Rueda,Calificación,17112.0,Perdida,2025-02-14,56,16
+OPP-1035,2025-01-01,Cliente_126,Manufactura,Sur,WhatsApp,Diana Rueda,Prospección,8625.0,Perdida,2025-01-29,57,11
+OPP-1036,2025-01-06,Cliente_140,Salud,Sur,WhatsApp,Felipe Casas,Prospección,6844.0,Perdida,2025-02-17,84,6
+OPP-1037,2025-01-17,Cliente_135,Salud,Oriente,Referido,Sergio Ibáñez,Prospección,3344.0,Perdida,2025-02-27,83,5
+OPP-1038,2025-02-05,Cliente_359,Tecnología,Oriente,Cliente actual,Sergio Ibáñez,Prospección,2530.0,Perdida,2025-03-07,60,6
+OPP-1039,2025-02-11,Cliente_263,Servicios financieros,Norte,Cliente actual,Laura Cifuentes,Calificación,11444.0,Perdida,2025-03-11,57,13
+OPP-1040,2025-02-20,Cliente_161,Logística,Oriente,Inbound digital,Sergio Ibáñez,Prospección,4236.0,Perdida,2025-03-27,71,16
+OPP-1041,2025-02-10,Cliente_102,Servicios financieros,Sur,WhatsApp,Diana Rueda,Calificación,10526.0,Perdida,2025-03-11,59,18
+OPP-1042,2025-02-05,Cliente_155,Retail mayorista,Oriente,Referido,Sergio Ibáñez,Calificación,2515.0,Perdida,2025-03-14,75,24
+OPP-1043,2025-02-28,Cliente_305,Salud,Centro,Inbound digital,Julián Ospina,Calificación,5567.0,Perdida,2025-04-02,67,19
+OPP-1044,2025-02-25,Cliente_299,Tecnología,Centro,Inbound digital,Julián Ospina,Prospección,14089.0,Perdida,2025-03-30,67,15
+OPP-1045,2025-02-03,Cliente_169,Tecnología,Centro,Referido,Julián Ospina,Calificación,7897.0,Perdida,2025-03-08,67,6
+OPP-1046,2025-02-04,Cliente_104,Salud,Norte,Inbound digital,Laura Cifuentes,Calificación,19491.0,Perdida,2025-03-05,58,13
+OPP-1047,2025-02-19,Cliente_121,Manufactura,Sur,Cliente actual,Diana Rueda,Prospección,7460.0,Perdida,2025-03-21,61,8
+OPP-1048,2025-02-24,Cliente_256,Servicios financieros,Norte,Referido,Laura Cifuentes,Propuesta,3141.0,Perdida,2025-04-28,63,11
+OPP-1049,2025-02-16,Cliente_326,Servicios financieros,Norte,WhatsApp,Laura Cifuentes,Propuesta,2137.0,Perdida,2025-04-21,64,9
+OPP-1050,2025-02-01,Cliente_373,Retail mayorista,Oriente,Evento / feria,Marcela Quintero,Calificación,39146.0,Perdida,2025-03-04,63,5
+OPP-1051,2025-02-16,Cliente_291,Salud,Sur,Cliente actual,Felipe Casas,Propuesta,19217.0,Perdida,2025-04-20,63,23
+OPP-1052,2025-02-22,Cliente_366,Manufactura,Norte,Evento / feria,Andrés Pardo,Cierre,2706.0,Ganada,2025-05-16,83,8
+OPP-1053,2025-02-26,Cliente_243,Servicios financieros,Norte,Cliente actual,Laura Cifuentes,Prospección,6618.0,Perdida,2025-03-23,51,8
+OPP-1054,2025-02-27,Cliente_375,Tecnología,Sur,WhatsApp,Diana Rueda,Calificación,7519.0,Perdida,2025-04-06,77,15
+OPP-1055,2025-02-22,Cliente_358,Retail mayorista,Oriente,WhatsApp,Sergio Ibáñez,Negociación,7635.0,Abierta,,,7
+OPP-1056,2025-02-25,Cliente_185,Manufactura,Sur,Cliente actual,Felipe Casas,Prospección,620.0,Perdida,2025-03-28,63,6
+OPP-1057,2025-02-12,Cliente_151,Retail mayorista,Norte,Outbound,Laura Cifuentes,Prospección,5287.0,Perdida,2025-03-11,55,21
+OPP-1058,2025-02-01,Cliente_131,Servicios financieros,Centro,WhatsApp,Julián Ospina,Negociación,4587.0,Perdida,2025-04-14,72,19
+OPP-1059,2025-02-24,Cliente_170,Servicios financieros,Centro,WhatsApp,Camila Restrepo,Prospección,10420.0,Perdida,2025-04-01,73,11
+OPP-1060,2025-02-28,Cliente_321,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Calificación,6668.0,Perdida,2025-03-28,57,14
+OPP-1061,2025-02-02,Cliente_144,Logística,Centro,WhatsApp,Julián Ospina,Prospección,4590.0,Perdida,2025-03-10,72,24
+OPP-1062,2025-02-08,Cliente_165,Tecnología,Oriente,Referido,Sergio Ibáñez,Calificación,1096.0,Perdida,2025-03-11,62,21
+OPP-1063,2025-02-02,Cliente_128,Servicios financieros,Norte,Cliente actual,Laura Cifuentes,Prospección,12617.0,Perdida,2025-03-06,64,20
+OPP-1064,2025-02-20,Cliente_254,Salud,Centro,Referido,Camila Restrepo,Negociación,7970.0,Abierta,,,16
+OPP-1065,2025-02-15,Cliente_146,Retail mayorista,Sur,WhatsApp,Diana Rueda,Prospección,4371.0,Perdida,2025-03-20,67,22
+OPP-1066,2025-02-28,Cliente_227,Logística,Centro,WhatsApp,Camila Restrepo,Propuesta,20045.0,Perdida,2025-05-14,75,23
+OPP-1067,2025-02-01,Cliente_119,Tecnología,Centro,Referido,Camila Restrepo,Calificación,23138.0,Perdida,2025-03-08,70,16
+OPP-1068,2025-02-24,Cliente_202,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Calificación,7957.0,Perdida,2025-03-31,71,18
+OPP-1069,2025-02-07,Cliente_295,Manufactura,Oriente,WhatsApp,Marcela Quintero,Propuesta,6392.0,Perdida,2025-04-01,53,8
+OPP-1070,2025-02-23,Cliente_305,Tecnología,Centro,WhatsApp,Julián Ospina,Propuesta,6955.0,Perdida,2025-05-05,71,20
+OPP-1071,2025-02-25,Cliente_110,Salud,Oriente,WhatsApp,Marcela Quintero,Cierre,5937.0,Ganada,2025-05-05,69,2
+OPP-1072,2025-02-05,Cliente_106,Salud,Oriente,Evento / feria,Marcela Quintero,Prospección,30115.0,Perdida,2025-03-06,58,22
+OPP-1073,2025-02-08,Cliente_270,Salud,Oriente,Evento / feria,Marcela Quintero,Prospección,6296.0,Perdida,2025-03-12,65,22
+OPP-1074,2025-02-22,Cliente_197,Tecnología,Sur,Cliente actual,Diana Rueda,Prospección,6953.0,Perdida,2025-03-31,75,13
+OPP-1075,2025-02-19,Cliente_163,Manufactura,Oriente,Outbound,Sergio Ibáñez,Prospección,5844.0,Perdida,2025-03-28,74,13
+OPP-1076,2025-03-10,Cliente_336,Manufactura,Norte,Referido,Andrés Pardo,Prospección,30342.0,Perdida,2025-04-05,53,18
+OPP-1077,2025-03-14,Cliente_335,Tecnología,Norte,WhatsApp,Andrés Pardo,Cierre,6203.0,Ganada,2025-05-21,68,6
+OPP-1078,2025-03-18,Cliente_336,Logística,Centro,Inbound digital,Julián Ospina,Prospección,6787.0,Perdida,2025-04-18,63,16
+OPP-1079,2025-03-17,Cliente_361,Tecnología,Oriente,Outbound,Marcela Quintero,Prospección,17055.0,Perdida,2025-04-22,72,19
+OPP-1080,2025-03-01,Cliente_206,Retail mayorista,Oriente,Referido,Sergio Ibáñez,Prospección,10323.0,Perdida,2025-04-10,81,15
+OPP-1081,2025-03-02,Cliente_356,Manufactura,Oriente,Cliente actual,Marcela Quintero,Prospección,34268.0,Perdida,2025-04-08,75,24
+OPP-1082,2025-03-16,Cliente_223,Retail mayorista,Sur,Outbound,Diana Rueda,Prospección,3770.0,Perdida,2025-04-24,79,20
+OPP-1083,2025-03-03,Cliente_145,Salud,Oriente,Inbound digital,Marcela Quintero,Calificación,12527.0,Perdida,2025-04-09,75,24
+OPP-1084,2025-03-03,Cliente_228,Retail mayorista,Sur,Inbound digital,Felipe Casas,Prospección,6749.0,Perdida,2025-04-06,68,24
+OPP-1085,2025-03-18,Cliente_264,Salud,Norte,Inbound digital,Laura Cifuentes,Prospección,7152.0,Perdida,2025-04-22,70,24
+OPP-1086,2025-03-03,Cliente_223,Servicios financieros,Norte,Outbound,Laura Cifuentes,Prospección,7976.0,Perdida,2025-04-07,71,23
+OPP-1087,2025-03-07,Cliente_244,Logística,Sur,Evento / feria,Diana Rueda,Calificación,3240.0,Perdida,2025-04-06,60,23
+OPP-1088,2025-03-16,Cliente_200,Tecnología,Oriente,WhatsApp,Sergio Ibáñez,Prospección,4853.0,Perdida,2025-04-12,55,23
+OPP-1089,2025-03-28,Cliente_160,Salud,Sur,Outbound,Diana Rueda,Propuesta,1457.0,Perdida,2025-06-09,73,27
+OPP-1090,2025-03-07,Cliente_369,Logística,Oriente,Referido,Marcela Quintero,Prospección,13923.0,Perdida,2025-04-08,64,7
+OPP-1091,2025-03-17,Cliente_360,Retail mayorista,Norte,Inbound digital,Andrés Pardo,Calificación,4290.0,Perdida,2025-04-16,60,6
+OPP-1092,2025-03-25,Cliente_126,Retail mayorista,Centro,WhatsApp,Julián Ospina,Prospección,4422.0,Perdida,2025-05-01,74,23
+OPP-1093,2025-03-19,Cliente_100,Servicios financieros,Sur,Evento / feria,Diana Rueda,Calificación,20345.0,Perdida,2025-04-13,50,9
+OPP-1094,2025-03-03,Cliente_190,Servicios financieros,Oriente,Evento / feria,Sergio Ibáñez,Propuesta,26236.0,Perdida,2025-05-06,64,24
+OPP-1095,2025-03-24,Cliente_309,Retail mayorista,Centro,Inbound digital,Camila Restrepo,Prospección,7780.0,Perdida,2025-04-29,72,16
+OPP-1096,2025-03-04,Cliente_391,Logística,Norte,WhatsApp,Laura Cifuentes,Calificación,3837.0,Perdida,2025-03-31,55,12
+OPP-1097,2025-03-07,Cliente_281,Retail mayorista,Norte,Evento / feria,Andrés Pardo,Propuesta,4642.0,Perdida,2025-05-24,78,26
+OPP-1098,2025-03-16,Cliente_375,Manufactura,Norte,Inbound digital,Laura Cifuentes,Calificación,5224.0,Perdida,2025-04-17,64,23
+OPP-1099,2025-03-07,Cliente_187,Manufactura,Oriente,Evento / feria,Sergio Ibáñez,Calificación,24571.0,Perdida,2025-04-05,59,13
+OPP-1100,2025-03-09,Cliente_282,Manufactura,Centro,Inbound digital,Camila Restrepo,Propuesta,6045.0,Perdida,2025-06-07,90,28
+OPP-1101,2025-03-26,Cliente_318,Manufactura,Centro,WhatsApp,Camila Restrepo,Calificación,21648.0,Perdida,2025-05-02,74,14
+OPP-1102,2025-03-08,Cliente_224,Retail mayorista,Centro,Outbound,Camila Restrepo,Prospección,6801.0,Perdida,2025-04-09,65,21
+OPP-1103,2025-03-07,Cliente_218,Salud,Oriente,Cliente actual,Sergio Ibáñez,Calificación,10024.0,Perdida,2025-04-14,76,16
+OPP-1104,2025-03-17,Cliente_387,Salud,Centro,Outbound,Camila Restrepo,Prospección,3544.0,Perdida,2025-04-23,75,12
+OPP-1105,2025-03-23,Cliente_297,Tecnología,Sur,Inbound digital,Felipe Casas,Negociación,16862.0,Perdida,2025-06-07,76,29
+OPP-1106,2025-03-28,Cliente_220,Salud,Oriente,Cliente actual,Marcela Quintero,Calificación,5840.0,Perdida,2025-05-07,81,6
+OPP-1107,2025-03-05,Cliente_106,Servicios financieros,Norte,Outbound,Andrés Pardo,Prospección,5362.0,Perdida,2025-04-14,81,17
+OPP-1108,2025-03-07,Cliente_232,Manufactura,Norte,Cliente actual,Andrés Pardo,Prospección,3200.0,Perdida,2025-04-11,71,11
+OPP-1109,2025-03-17,Cliente_318,Salud,Centro,WhatsApp,Camila Restrepo,Propuesta,13462.0,Perdida,2025-05-10,54,13
+OPP-1110,2025-03-01,Cliente_153,Tecnología,Norte,WhatsApp,Laura Cifuentes,Cierre,6026.0,Ganada,2025-04-28,58,8
+OPP-1111,2025-03-13,Cliente_378,Retail mayorista,Centro,WhatsApp,Julián Ospina,Prospección,1451.0,Perdida,2025-04-19,74,13
+OPP-1112,2025-03-15,Cliente_129,Servicios financieros,Norte,Evento / feria,Andrés Pardo,Propuesta,8257.0,Perdida,2025-05-19,65,10
+OPP-1113,2025-03-28,Cliente_251,Tecnología,Oriente,Evento / feria,Sergio Ibáñez,Prospección,6415.0,Perdida,2025-05-04,74,17
+OPP-1114,2025-03-16,Cliente_163,Retail mayorista,Norte,Inbound digital,Andrés Pardo,Prospección,2871.0,Perdida,2025-04-24,78,23
+OPP-1115,2025-03-04,Cliente_150,Logística,Oriente,WhatsApp,Marcela Quintero,Calificación,2237.0,Perdida,2025-04-07,68,24
+OPP-1116,2025-04-25,Cliente_152,Salud,Oriente,WhatsApp,Sergio Ibáñez,Prospección,5475.0,Perdida,2025-06-02,76,11
+OPP-1117,2025-04-03,Cliente_167,Manufactura,Oriente,WhatsApp,Sergio Ibáñez,Propuesta,3669.0,Perdida,2025-06-18,76,19
+OPP-1118,2025-04-09,Cliente_355,Logística,Centro,WhatsApp,Camila Restrepo,Prospección,22286.0,Perdida,2025-05-07,57,13
+OPP-1119,2025-04-11,Cliente_176,Manufactura,Centro,Evento / feria,Camila Restrepo,Calificación,4514.0,Perdida,2025-05-11,60,9
+OPP-1120,2025-04-25,Cliente_384,Logística,Norte,WhatsApp,Andrés Pardo,Calificación,41157.0,Perdida,2025-06-03,79,17
+OPP-1121,2025-04-01,Cliente_154,Manufactura,Centro,WhatsApp,Julián Ospina,Propuesta,5087.0,Abierta,,,7
+OPP-1122,2025-04-05,Cliente_248,Tecnología,Oriente,Inbound digital,Sergio Ibáñez,Prospección,2742.0,Perdida,2025-05-09,68,17
+OPP-1123,2025-04-10,Cliente_128,Servicios financieros,Sur,Referido,Diana Rueda,Prospección,53296.0,Perdida,2025-05-09,58,5
+OPP-1124,2025-04-15,Cliente_369,Servicios financieros,Norte,Referido,Andrés Pardo,Cierre,5246.0,Ganada,2025-06-13,59,7
+OPP-1125,2025-04-21,Cliente_397,Salud,Oriente,Inbound digital,Sergio Ibáñez,Calificación,5586.0,Perdida,2025-05-28,75,19
+OPP-1126,2025-04-26,Cliente_168,Retail mayorista,Oriente,WhatsApp,Sergio Ibáñez,Calificación,1840.0,Perdida,2025-06-01,73,17
+OPP-1127,2025-04-12,Cliente_221,Manufactura,Sur,Inbound digital,Diana Rueda,Propuesta,12790.0,Perdida,2025-06-20,69,26
+OPP-1128,2025-04-18,Cliente_334,Tecnología,Oriente,Evento / feria,Marcela Quintero,Prospección,15950.0,Perdida,2025-05-16,56,5
+OPP-1129,2025-04-01,Cliente_277,Tecnología,Sur,Cliente actual,Felipe Casas,Calificación,43674.0,Perdida,2025-05-05,69,10
+OPP-1130,2025-04-06,Cliente_237,Manufactura,Oriente,WhatsApp,Marcela Quintero,Calificación,14389.0,Perdida,2025-05-16,81,6
+OPP-1131,2025-04-08,Cliente_350,Manufactura,Centro,WhatsApp,Camila Restrepo,Prospección,6973.0,Perdida,2025-05-07,58,13
+OPP-1132,2025-04-17,Cliente_173,Manufactura,Norte,WhatsApp,Laura Cifuentes,Cierre,17267.0,Ganada,2025-07-01,75,5
+OPP-1133,2025-04-17,Cliente_189,Tecnología,Norte,Referido,Laura Cifuentes,Cierre,35051.0,Ganada,2025-06-14,58,5
+OPP-1134,2025-04-24,Cliente_155,Tecnología,Sur,Outbound,Diana Rueda,Prospección,15082.0,Perdida,2025-05-21,54,5
+OPP-1135,2025-04-02,Cliente_293,Salud,Oriente,Outbound,Marcela Quintero,Propuesta,41253.0,Perdida,2025-06-28,87,19
+OPP-1136,2025-04-15,Cliente_335,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Prospección,16299.0,Perdida,2025-05-23,76,7
+OPP-1137,2025-04-03,Cliente_223,Salud,Oriente,Outbound,Sergio Ibáñez,Calificación,33891.0,Perdida,2025-05-12,79,20
+OPP-1138,2025-04-06,Cliente_231,Retail mayorista,Sur,Outbound,Felipe Casas,Prospección,10753.0,Perdida,2025-05-18,84,17
+OPP-1139,2025-04-11,Cliente_208,Manufactura,Norte,Cliente actual,Laura Cifuentes,Calificación,15101.0,Perdida,2025-05-18,74,20
+OPP-1140,2025-04-19,Cliente_127,Retail mayorista,Centro,Referido,Julián Ospina,Prospección,68241.0,Perdida,2025-05-22,66,7
+OPP-1141,2025-04-22,Cliente_359,Logística,Norte,Outbound,Andrés Pardo,Prospección,9123.0,Perdida,2025-05-22,61,16
+OPP-1142,2025-04-05,Cliente_354,Manufactura,Oriente,Outbound,Marcela Quintero,Prospección,22041.0,Perdida,2025-05-19,89,10
+OPP-1143,2025-04-21,Cliente_302,Logística,Sur,Referido,Diana Rueda,Prospección,9769.0,Perdida,2025-05-15,49,14
+OPP-1144,2025-04-14,Cliente_365,Servicios financieros,Norte,Referido,Laura Cifuentes,Calificación,25498.0,Perdida,2025-05-19,70,8
+OPP-1145,2025-04-02,Cliente_144,Salud,Oriente,Evento / feria,Marcela Quintero,Calificación,5974.0,Perdida,2025-05-09,75,24
+OPP-1146,2025-04-19,Cliente_299,Manufactura,Sur,Evento / feria,Felipe Casas,Prospección,17416.0,Perdida,2025-05-18,58,16
+OPP-1147,2025-04-02,Cliente_147,Manufactura,Norte,WhatsApp,Laura Cifuentes,Calificación,10095.0,Perdida,2025-05-10,77,8
+OPP-1148,2025-04-12,Cliente_292,Logística,Norte,Inbound digital,Laura Cifuentes,Prospección,15664.0,Perdida,2025-05-09,55,12
+OPP-1149,2025-04-06,Cliente_334,Salud,Norte,Referido,Laura Cifuentes,Propuesta,4993.0,Perdida,2025-06-19,74,27
+OPP-1150,2025-04-05,Cliente_158,Tecnología,Sur,Cliente actual,Felipe Casas,Calificación,26472.0,Perdida,2025-05-03,56,13
+OPP-1151,2025-04-28,Cliente_282,Logística,Centro,Referido,Camila Restrepo,Prospección,8973.0,Perdida,2025-06-04,75,5
+OPP-1152,2025-05-18,Cliente_238,Retail mayorista,Centro,WhatsApp,Camila Restrepo,Prospección,4569.0,Perdida,2025-06-18,62,16
+OPP-1153,2025-05-23,Cliente_347,Servicios financieros,Centro,WhatsApp,Julián Ospina,Cierre,21374.0,Ganada,2025-07-24,62,9
+OPP-1154,2025-05-27,Cliente_354,Salud,Centro,Cliente actual,Julián Ospina,Cierre,8966.0,Ganada,2025-07-20,54,7
+OPP-1155,2025-05-22,Cliente_125,Servicios financieros,Oriente,Referido,Marcela Quintero,Calificación,19276.0,Perdida,2025-06-23,65,5
+OPP-1156,2025-05-17,Cliente_181,Salud,Centro,Cliente actual,Camila Restrepo,Prospección,10188.0,Perdida,2025-06-18,64,10
+OPP-1157,2025-05-22,Cliente_312,Tecnología,Sur,Evento / feria,Diana Rueda,Calificación,3114.0,Perdida,2025-06-23,65,11
+OPP-1158,2025-05-17,Cliente_141,Manufactura,Sur,Inbound digital,Diana Rueda,Prospección,6303.0,Perdida,2025-06-21,71,15
+OPP-1159,2025-05-10,Cliente_195,Logística,Oriente,WhatsApp,Marcela Quintero,Prospección,9031.0,Perdida,2025-06-05,53,16
+OPP-1160,2025-05-09,Cliente_244,Tecnología,Norte,WhatsApp,Andrés Pardo,Prospección,28432.0,Perdida,2025-06-16,77,7
+OPP-1161,2025-05-19,Cliente_245,Retail mayorista,Norte,Inbound digital,Andrés Pardo,Calificación,2441.0,Perdida,2025-06-25,75,22
+OPP-1162,2025-05-05,Cliente_282,Logística,Norte,Referido,Andrés Pardo,Calificación,6062.0,Perdida,2025-06-03,58,11
+OPP-1163,2025-05-26,Cliente_353,Retail mayorista,Sur,Outbound,Diana Rueda,Prospección,31066.0,Perdida,2025-06-28,66,15
+OPP-1164,2025-05-19,Cliente_156,Logística,Oriente,Inbound digital,Sergio Ibáñez,Prospección,2185.0,Perdida,2025-06-29,82,22
+OPP-1165,2025-05-01,Cliente_182,Salud,Centro,Referido,Camila Restrepo,Calificación,10187.0,Perdida,2025-06-08,77,16
+OPP-1166,2025-05-20,Cliente_231,Servicios financieros,Sur,WhatsApp,Diana Rueda,Prospección,18414.0,Perdida,2025-06-22,67,15
+OPP-1167,2025-05-08,Cliente_142,Tecnología,Sur,Evento / feria,Felipe Casas,Prospección,18037.0,Perdida,2025-06-13,72,19
+OPP-1168,2025-05-21,Cliente_182,Servicios financieros,Centro,Referido,Julián Ospina,Prospección,4519.0,Perdida,2025-06-22,65,22
+OPP-1169,2025-05-18,Cliente_119,Logística,Oriente,Referido,Sergio Ibáñez,Negociación,29837.0,Abierta,,,17
+OPP-1170,2025-05-10,Cliente_351,Tecnología,Norte,WhatsApp,Laura Cifuentes,Prospección,4149.0,Perdida,2025-06-13,68,9
+OPP-1171,2025-05-24,Cliente_306,Manufactura,Centro,WhatsApp,Julián Ospina,Calificación,2348.0,Perdida,2025-06-24,62,15
+OPP-1172,2025-05-26,Cliente_374,Manufactura,Centro,WhatsApp,Camila Restrepo,Propuesta,9472.0,Perdida,2025-07-31,66,18
+OPP-1173,2025-05-19,Cliente_336,Servicios financieros,Centro,Evento / feria,Julián Ospina,Prospección,10489.0,Perdida,2025-06-12,49,7
+OPP-1174,2025-05-12,Cliente_390,Manufactura,Sur,WhatsApp,Diana Rueda,Prospección,16022.0,Perdida,2025-06-14,67,15
+OPP-1175,2025-05-10,Cliente_357,Servicios financieros,Oriente,WhatsApp,Sergio Ibáñez,Calificación,2636.0,Perdida,2025-06-05,53,11
+OPP-1176,2025-05-12,Cliente_220,Tecnología,Norte,WhatsApp,Andrés Pardo,Calificación,39666.0,Perdida,2025-06-06,51,5
+OPP-1177,2025-05-19,Cliente_166,Logística,Centro,Referido,Camila Restrepo,Prospección,5759.0,Perdida,2025-06-26,77,9
+OPP-1178,2025-05-02,Cliente_175,Logística,Centro,Cliente actual,Julián Ospina,Negociación,2867.0,Perdida,2025-07-02,61,15
+OPP-1179,2025-05-24,Cliente_365,Salud,Centro,Referido,Camila Restrepo,Prospección,29267.0,Perdida,2025-06-28,70,8
+OPP-1180,2025-05-15,Cliente_246,Retail mayorista,Sur,Referido,Diana Rueda,Calificación,42292.0,Perdida,2025-06-21,74,17
+OPP-1181,2025-05-16,Cliente_343,Retail mayorista,Sur,WhatsApp,Diana Rueda,Prospección,3260.0,Perdida,2025-06-12,55,9
+OPP-1182,2025-05-24,Cliente_126,Manufactura,Centro,WhatsApp,Julián Ospina,Cierre,5408.0,Ganada,2025-08-07,75,5
+OPP-1183,2025-05-08,Cliente_304,Logística,Norte,Inbound digital,Laura Cifuentes,Cierre,12286.0,Ganada,2025-07-08,61,3
+OPP-1184,2025-05-06,Cliente_361,Retail mayorista,Sur,Cliente actual,Diana Rueda,Calificación,9841.0,Perdida,2025-06-07,65,7
+OPP-1185,2025-05-08,Cliente_366,Servicios financieros,Sur,WhatsApp,Felipe Casas,Prospección,43155.0,Perdida,2025-06-15,76,6
+OPP-1186,2025-05-25,Cliente_301,Manufactura,Oriente,WhatsApp,Sergio Ibáñez,Prospección,13129.0,Perdida,2025-07-02,76,24
+OPP-1187,2025-06-15,Cliente_123,Logística,Oriente,Inbound digital,Sergio Ibáñez,Prospección,1694.0,Perdida,2025-07-21,72,10
+OPP-1188,2025-06-11,Cliente_333,Salud,Norte,WhatsApp,Andrés Pardo,Calificación,12345.0,Perdida,2025-07-23,85,5
+OPP-1189,2025-06-07,Cliente_111,Salud,Norte,WhatsApp,Andrés Pardo,Prospección,28489.0,Perdida,2025-07-15,76,22
+OPP-1190,2025-06-26,Cliente_291,Manufactura,Oriente,Inbound digital,Sergio Ibáñez,Prospección,5809.0,Perdida,2025-07-25,59,12
+OPP-1191,2025-06-24,Cliente_145,Tecnología,Centro,Inbound digital,Camila Restrepo,Propuesta,11993.0,Perdida,2025-09-07,75,5
+OPP-1192,2025-06-11,Cliente_318,Tecnología,Centro,Inbound digital,Julián Ospina,Propuesta,3391.0,Perdida,2025-08-09,59,14
+OPP-1193,2025-06-08,Cliente_380,Servicios financieros,Oriente,Inbound digital,Sergio Ibáñez,Calificación,14183.0,Perdida,2025-07-07,58,11
+OPP-1194,2025-06-16,Cliente_288,Retail mayorista,Oriente,WhatsApp,Sergio Ibáñez,Calificación,44205.0,Perdida,2025-07-26,80,20
+OPP-1195,2025-06-06,Cliente_392,Servicios financieros,Oriente,Cliente actual,Sergio Ibáñez,Calificación,29767.0,Perdida,2025-07-09,67,17
+OPP-1196,2025-06-14,Cliente_309,Retail mayorista,Sur,Cliente actual,Felipe Casas,Calificación,1652.0,Perdida,2025-07-18,69,16
+OPP-1197,2025-06-28,Cliente_337,Logística,Centro,WhatsApp,Camila Restrepo,Cierre,13785.0,Ganada,2025-09-17,81,2
+OPP-1198,2025-06-15,Cliente_229,Manufactura,Centro,Inbound digital,Camila Restrepo,Negociación,4429.0,Perdida,2025-08-30,76,11
+OPP-1199,2025-06-24,Cliente_229,Tecnología,Sur,Cliente actual,Diana Rueda,Calificación,3445.0,Perdida,2025-08-01,77,18
+OPP-1200,2025-06-03,Cliente_368,Manufactura,Sur,Evento / feria,Diana Rueda,Prospección,20397.0,Perdida,2025-07-02,59,10
+OPP-1201,2025-06-20,Cliente_194,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Prospección,23011.0,Perdida,2025-07-28,77,11
+OPP-1202,2025-06-15,Cliente_159,Salud,Sur,Referido,Felipe Casas,Calificación,6070.0,Perdida,2025-07-18,66,13
+OPP-1203,2025-06-08,Cliente_374,Salud,Oriente,Cliente actual,Sergio Ibáñez,Propuesta,4677.0,Perdida,2025-08-25,78,8
+OPP-1204,2025-06-24,Cliente_330,Tecnología,Centro,Referido,Julián Ospina,Calificación,3067.0,Perdida,2025-07-30,72,21
+OPP-1205,2025-06-26,Cliente_250,Salud,Centro,WhatsApp,Camila Restrepo,Calificación,5024.0,Perdida,2025-07-30,69,5
+OPP-1206,2025-06-28,Cliente_263,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Propuesta,26987.0,Abierta,,,17
+OPP-1207,2025-06-19,Cliente_247,Tecnología,Oriente,Inbound digital,Sergio Ibáñez,Prospección,4331.0,Perdida,2025-07-18,58,16
+OPP-1208,2025-06-04,Cliente_235,Manufactura,Sur,Outbound,Diana Rueda,Cierre,15224.0,Ganada,2025-07-27,53,8
+OPP-1209,2025-06-24,Cliente_125,Manufactura,Norte,WhatsApp,Laura Cifuentes,Prospección,11562.0,Perdida,2025-07-23,59,17
+OPP-1210,2025-06-25,Cliente_350,Tecnología,Oriente,WhatsApp,Sergio Ibáñez,Calificación,12581.0,Perdida,2025-07-28,66,10
+OPP-1211,2025-06-12,Cliente_398,Retail mayorista,Sur,WhatsApp,Felipe Casas,Prospección,19942.0,Perdida,2025-07-20,76,16
+OPP-1212,2025-06-03,Cliente_126,Salud,Norte,WhatsApp,Laura Cifuentes,Calificación,10617.0,Perdida,2025-07-19,92,5
+OPP-1213,2025-06-08,Cliente_323,Salud,Norte,Evento / feria,Andrés Pardo,Prospección,9308.0,Perdida,2025-07-10,65,18
+OPP-1214,2025-06-26,Cliente_328,Retail mayorista,Norte,Evento / feria,Andrés Pardo,Calificación,29392.0,Perdida,2025-07-26,61,12
+OPP-1215,2025-06-05,Cliente_372,Manufactura,Norte,Referido,Andrés Pardo,Prospección,11447.0,Perdida,2025-07-10,70,5
+OPP-1216,2025-06-04,Cliente_284,Manufactura,Sur,Cliente actual,Felipe Casas,Prospección,1186.0,Perdida,2025-07-04,61,18
+OPP-1217,2025-06-18,Cliente_135,Manufactura,Centro,WhatsApp,Julián Ospina,Calificación,20723.0,Perdida,2025-07-21,67,24
+OPP-1218,2025-06-13,Cliente_289,Manufactura,Sur,Outbound,Felipe Casas,Prospección,7134.0,Perdida,2025-07-14,63,20
+OPP-1219,2025-06-26,Cliente_137,Salud,Centro,Inbound digital,Julián Ospina,Calificación,2993.0,Perdida,2025-07-25,59,12
+OPP-1220,2025-06-11,Cliente_192,Logística,Sur,Outbound,Diana Rueda,Prospección,1852.0,Perdida,2025-07-19,77,7
+OPP-1221,2025-06-20,Cliente_182,Manufactura,Sur,WhatsApp,Diana Rueda,Negociación,7803.0,Perdida,2025-08-27,68,5
+OPP-1222,2025-06-04,Cliente_216,Retail mayorista,Oriente,Outbound,Sergio Ibáñez,Prospección,1782.0,Perdida,2025-07-08,68,21
+OPP-1223,2025-06-01,Cliente_108,Salud,Centro,Referido,Julián Ospina,Prospección,5906.0,Perdida,2025-07-01,61,24
+OPP-1224,2025-06-27,Cliente_216,Salud,Sur,Inbound digital,Felipe Casas,Cierre,5931.0,Ganada,2025-09-06,71,9
+OPP-1225,2025-06-21,Cliente_350,Servicios financieros,Centro,Inbound digital,Camila Restrepo,Prospección,25670.0,Perdida,2025-07-24,67,12
+OPP-1226,2025-07-02,Cliente_332,Manufactura,Sur,Evento / feria,Diana Rueda,Prospección,831.0,Perdida,2025-08-15,89,13
+OPP-1227,2025-07-18,Cliente_132,Logística,Centro,Cliente actual,Julián Ospina,Calificación,5386.0,Perdida,2025-08-27,80,23
+OPP-1228,2025-07-15,Cliente_382,Salud,Centro,Referido,Camila Restrepo,Calificación,14793.0,Perdida,2025-08-18,68,17
+OPP-1229,2025-07-18,Cliente_349,Logística,Centro,Cliente actual,Camila Restrepo,Negociación,8518.0,Perdida,2025-09-10,54,9
+OPP-1230,2025-07-06,Cliente_363,Logística,Norte,Evento / feria,Andrés Pardo,Calificación,5478.0,Perdida,2025-08-10,70,15
+OPP-1231,2025-07-16,Cliente_229,Tecnología,Sur,Inbound digital,Felipe Casas,Prospección,9647.0,Perdida,2025-08-18,66,11
+OPP-1232,2025-07-19,Cliente_257,Manufactura,Norte,Referido,Laura Cifuentes,Prospección,11833.0,Perdida,2025-08-22,69,8
+OPP-1233,2025-07-08,Cliente_346,Salud,Oriente,Referido,Marcela Quintero,Prospección,16965.0,Perdida,2025-08-06,59,21
+OPP-1234,2025-07-18,Cliente_247,Servicios financieros,Norte,Outbound,Andrés Pardo,Calificación,8877.0,Perdida,2025-08-25,77,8
+OPP-1235,2025-07-26,Cliente_242,Manufactura,Sur,Referido,Felipe Casas,Prospección,7029.0,Perdida,2025-09-02,77,18
+OPP-1236,2025-07-08,Cliente_341,Retail mayorista,Sur,WhatsApp,Diana Rueda,Prospección,10387.0,Perdida,2025-08-10,66,12
+OPP-1237,2025-07-22,Cliente_373,Servicios financieros,Centro,Inbound digital,Julián Ospina,Calificación,18027.0,Perdida,2025-08-30,79,12
+OPP-1238,2025-07-22,Cliente_323,Servicios financieros,Norte,Referido,Andrés Pardo,Prospección,6012.0,Perdida,2025-08-23,65,7
+OPP-1239,2025-07-17,Cliente_182,Manufactura,Centro,Inbound digital,Camila Restrepo,Calificación,8518.0,Perdida,2025-08-19,66,24
+OPP-1240,2025-07-01,Cliente_294,Logística,Sur,Referido,Felipe Casas,Prospección,2468.0,Perdida,2025-07-29,57,23
+OPP-1241,2025-07-03,Cliente_300,Retail mayorista,Sur,Inbound digital,Felipe Casas,Calificación,15942.0,Perdida,2025-08-04,64,18
+OPP-1242,2025-07-28,Cliente_340,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Prospección,8493.0,Perdida,2025-08-28,63,7
+OPP-1243,2025-07-14,Cliente_200,Logística,Norte,Evento / feria,Laura Cifuentes,Negociación,10625.0,Perdida,2025-09-14,62,7
+OPP-1244,2025-07-08,Cliente_269,Manufactura,Centro,Outbound,Julián Ospina,Calificación,5710.0,Perdida,2025-08-19,85,20
+OPP-1245,2025-07-14,Cliente_231,Logística,Oriente,Cliente actual,Marcela Quintero,Cierre,31305.0,Ganada,2025-09-10,58,4
+OPP-1246,2025-07-13,Cliente_200,Retail mayorista,Oriente,Cliente actual,Sergio Ibáñez,Propuesta,9139.0,Abierta,,,12
+OPP-1247,2025-07-26,Cliente_172,Tecnología,Centro,Inbound digital,Camila Restrepo,Prospección,7307.0,Perdida,2025-09-02,76,17
+OPP-1248,2025-07-06,Cliente_371,Salud,Oriente,Inbound digital,Sergio Ibáñez,Prospección,1828.0,Perdida,2025-08-06,62,20
+OPP-1249,2025-07-14,Cliente_138,Tecnología,Oriente,Cliente actual,Sergio Ibáñez,Propuesta,7706.0,Abierta,,,7
+OPP-1250,2025-07-04,Cliente_361,Retail mayorista,Norte,Cliente actual,Andrés Pardo,Prospección,8255.0,Perdida,2025-08-11,76,8
+OPP-1251,2025-07-19,Cliente_122,Retail mayorista,Norte,Inbound digital,Andrés Pardo,Prospección,4895.0,Perdida,2025-08-21,67,23
+OPP-1252,2025-07-24,Cliente_341,Servicios financieros,Norte,Cliente actual,Laura Cifuentes,Prospección,1807.0,Perdida,2025-08-27,68,14
+OPP-1253,2025-07-17,Cliente_229,Salud,Oriente,Cliente actual,Marcela Quintero,Prospección,7969.0,Perdida,2025-08-16,61,19
+OPP-1254,2025-07-19,Cliente_309,Servicios financieros,Oriente,Cliente actual,Sergio Ibáñez,Prospección,6050.0,Perdida,2025-08-20,65,16
+OPP-1255,2025-07-11,Cliente_334,Retail mayorista,Centro,WhatsApp,Camila Restrepo,Negociación,3536.0,Abierta,,,19
+OPP-1256,2025-07-08,Cliente_274,Manufactura,Norte,Referido,Andrés Pardo,Cierre,3039.0,Ganada,2025-09-08,62,5
+OPP-1257,2025-07-18,Cliente_202,Servicios financieros,Sur,Inbound digital,Felipe Casas,Calificación,9639.0,Perdida,2025-08-30,87,8
+OPP-1258,2025-07-13,Cliente_203,Logística,Centro,Referido,Camila Restrepo,Prospección,35050.0,Perdida,2025-08-19,75,23
+OPP-1259,2025-07-06,Cliente_384,Manufactura,Sur,Referido,Diana Rueda,Prospección,6212.0,Perdida,2025-08-09,68,23
+OPP-1260,2025-07-20,Cliente_140,Servicios financieros,Centro,WhatsApp,Julián Ospina,Calificación,4223.0,Perdida,2025-08-18,58,13
+OPP-1261,2025-07-28,Cliente_106,Tecnología,Sur,Cliente actual,Felipe Casas,Prospección,3568.0,Perdida,2025-08-29,65,17
+OPP-1262,2025-07-14,Cliente_220,Salud,Sur,Evento / feria,Diana Rueda,Prospección,17141.0,Perdida,2025-08-22,79,6
+OPP-1263,2025-07-11,Cliente_267,Salud,Oriente,WhatsApp,Sergio Ibáñez,Propuesta,3573.0,Perdida,2025-09-13,64,13
+OPP-1264,2025-07-25,Cliente_250,Logística,Oriente,WhatsApp,Sergio Ibáñez,Prospección,15915.0,Perdida,2025-08-24,61,20
+OPP-1265,2025-07-22,Cliente_244,Logística,Norte,Referido,Andrés Pardo,Prospección,18162.0,Perdida,2025-08-23,65,23
+OPP-1266,2025-07-17,Cliente_390,Tecnología,Sur,Cliente actual,Felipe Casas,Prospección,5813.0,Perdida,2025-08-25,79,20
+OPP-1267,2025-07-12,Cliente_137,Salud,Norte,Cliente actual,Laura Cifuentes,Prospección,13434.0,Perdida,2025-08-12,62,19
+OPP-1268,2025-07-27,Cliente_317,Servicios financieros,Centro,Evento / feria,Julián Ospina,Calificación,3529.0,Perdida,2025-08-27,62,12
+OPP-1269,2025-07-24,Cliente_215,Retail mayorista,Oriente,Referido,Marcela Quintero,Prospección,9345.0,Perdida,2025-08-24,62,14
+OPP-1270,2025-07-12,Cliente_157,Tecnología,Centro,WhatsApp,Camila Restrepo,Calificación,17449.0,Perdida,2025-08-20,78,15
+OPP-1271,2025-07-07,Cliente_225,Servicios financieros,Centro,Referido,Julián Ospina,Prospección,4418.0,Perdida,2025-08-01,51,8
+OPP-1272,2025-07-13,Cliente_255,Servicios financieros,Norte,Evento / feria,Andrés Pardo,Prospección,14920.0,Perdida,2025-08-17,70,24
+OPP-1273,2025-07-01,Cliente_347,Retail mayorista,Sur,Evento / feria,Felipe Casas,Propuesta,11368.0,Abierta,,,22
+OPP-1274,2025-07-24,Cliente_241,Manufactura,Oriente,WhatsApp,Sergio Ibáñez,Propuesta,9442.0,Perdida,2025-09-23,61,5
+OPP-1275,2025-07-08,Cliente_216,Logística,Norte,Cliente actual,Andrés Pardo,Calificación,25049.0,Perdida,2025-08-12,71,11
+OPP-1276,2025-07-27,Cliente_108,Salud,Oriente,Cliente actual,Marcela Quintero,Prospección,18332.0,Perdida,2025-09-02,74,12
+OPP-1277,2025-08-18,Cliente_253,Manufactura,Centro,Outbound,Camila Restrepo,Prospección,9472.0,Perdida,2025-09-27,80,13
+OPP-1278,2025-08-24,Cliente_204,Retail mayorista,Norte,Cliente actual,Andrés Pardo,Propuesta,14263.0,Abierta,,,14
+OPP-1279,2025-08-18,Cliente_262,Logística,Sur,Evento / feria,Felipe Casas,Propuesta,13442.0,Perdida,2025-10-20,63,6
+OPP-1280,2025-08-24,Cliente_292,Retail mayorista,Sur,Outbound,Diana Rueda,Prospección,5193.0,Perdida,2025-09-29,73,15
+OPP-1281,2025-08-19,Cliente_220,Salud,Sur,WhatsApp,Diana Rueda,Prospección,11870.0,Perdida,2025-09-30,85,10
+OPP-1282,2025-08-18,Cliente_266,Tecnología,Sur,WhatsApp,Diana Rueda,Calificación,43043.0,Perdida,2025-09-27,81,24
+OPP-1283,2025-08-13,Cliente_208,Servicios financieros,Centro,Cliente actual,Julián Ospina,Cierre,1933.0,Ganada,2025-10-26,74,3
+OPP-1284,2025-08-23,Cliente_341,Logística,Sur,Referido,Felipe Casas,Calificación,3205.0,Perdida,2025-09-29,75,10
+OPP-1285,2025-08-10,Cliente_392,Tecnología,Sur,Cliente actual,Felipe Casas,Prospección,17445.0,Perdida,2025-09-14,71,13
+OPP-1286,2025-08-16,Cliente_368,Servicios financieros,Sur,Referido,Felipe Casas,Prospección,8086.0,Perdida,2025-09-15,61,20
+OPP-1287,2025-08-06,Cliente_245,Servicios financieros,Sur,Cliente actual,Diana Rueda,Calificación,2075.0,Perdida,2025-09-15,81,10
+OPP-1288,2025-08-02,Cliente_267,Salud,Norte,Cliente actual,Andrés Pardo,Propuesta,5386.0,Perdida,2025-10-15,74,10
+OPP-1289,2025-08-16,Cliente_138,Tecnología,Oriente,Cliente actual,Sergio Ibáñez,Cierre,31962.0,Ganada,2025-10-28,73,5
+OPP-1290,2025-08-18,Cliente_393,Retail mayorista,Norte,Evento / feria,Andrés Pardo,Prospección,8832.0,Perdida,2025-09-20,66,15
+OPP-1291,2025-08-15,Cliente_383,Logística,Sur,Referido,Felipe Casas,Calificación,3188.0,Perdida,2025-09-25,83,8
+OPP-1292,2025-08-15,Cliente_112,Manufactura,Oriente,Outbound,Marcela Quintero,Prospección,2611.0,Perdida,2025-09-11,54,7
+OPP-1293,2025-08-28,Cliente_209,Manufactura,Centro,Outbound,Julián Ospina,Prospección,9040.0,Perdida,2025-09-29,64,13
+OPP-1294,2025-08-20,Cliente_342,Retail mayorista,Centro,WhatsApp,Camila Restrepo,Prospección,8802.0,Perdida,2025-09-20,62,10
+OPP-1295,2025-08-16,Cliente_236,Manufactura,Norte,Referido,Andrés Pardo,Cierre,23256.0,Ganada,2025-10-22,67,3
+OPP-1296,2025-08-15,Cliente_136,Tecnología,Sur,Outbound,Diana Rueda,Prospección,4918.0,Perdida,2025-09-14,60,14
+OPP-1297,2025-08-11,Cliente_327,Logística,Sur,WhatsApp,Diana Rueda,Calificación,3543.0,Perdida,2025-09-22,84,5
+OPP-1298,2025-08-11,Cliente_268,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Calificación,9971.0,Perdida,2025-09-06,53,5
+OPP-1299,2025-08-27,Cliente_300,Logística,Norte,Referido,Andrés Pardo,Cierre,9776.0,Ganada,2025-11-18,83,2
+OPP-1300,2025-08-07,Cliente_255,Servicios financieros,Sur,WhatsApp,Felipe Casas,Calificación,4056.0,Perdida,2025-09-09,66,6
+OPP-1301,2025-08-06,Cliente_159,Salud,Oriente,Evento / feria,Sergio Ibáñez,Calificación,5703.0,Perdida,2025-09-07,64,5
+OPP-1302,2025-08-06,Cliente_364,Servicios financieros,Oriente,Referido,Marcela Quintero,Calificación,6010.0,Perdida,2025-09-10,70,17
+OPP-1303,2025-08-14,Cliente_359,Tecnología,Oriente,Inbound digital,Marcela Quintero,Prospección,9198.0,Perdida,2025-09-19,72,9
+OPP-1304,2025-08-21,Cliente_363,Manufactura,Centro,Cliente actual,Julián Ospina,Prospección,10007.0,Perdida,2025-09-24,68,10
+OPP-1305,2025-08-17,Cliente_211,Salud,Centro,Inbound digital,Camila Restrepo,Calificación,5733.0,Perdida,2025-09-20,68,20
+OPP-1306,2025-08-10,Cliente_289,Servicios financieros,Oriente,Cliente actual,Sergio Ibáñez,Prospección,49059.0,Perdida,2025-09-06,54,15
+OPP-1307,2025-08-01,Cliente_235,Tecnología,Oriente,Outbound,Marcela Quintero,Calificación,11338.0,Perdida,2025-09-02,65,7
+OPP-1308,2025-08-07,Cliente_240,Servicios financieros,Sur,Referido,Felipe Casas,Prospección,3237.0,Perdida,2025-09-12,72,10
+OPP-1309,2025-08-09,Cliente_177,Manufactura,Sur,WhatsApp,Felipe Casas,Prospección,12320.0,Perdida,2025-09-10,65,10
+OPP-1310,2025-08-21,Cliente_386,Manufactura,Centro,Inbound digital,Julián Ospina,Prospección,4910.0,Perdida,2025-09-14,48,23
+OPP-1311,2025-08-28,Cliente_226,Retail mayorista,Norte,Evento / feria,Laura Cifuentes,Calificación,3440.0,Perdida,2025-09-27,60,24
+OPP-1312,2025-08-17,Cliente_170,Salud,Oriente,Inbound digital,Marcela Quintero,Calificación,1196.0,Perdida,2025-09-26,80,7
+OPP-1313,2025-08-22,Cliente_343,Tecnología,Centro,Outbound,Camila Restrepo,Calificación,3287.0,Perdida,2025-09-21,61,17
+OPP-1314,2025-08-22,Cliente_140,Logística,Centro,Referido,Camila Restrepo,Prospección,1533.0,Perdida,2025-09-24,66,19
+OPP-1315,2025-08-08,Cliente_297,Servicios financieros,Norte,Inbound digital,Laura Cifuentes,Prospección,11382.0,Perdida,2025-09-08,62,7
+OPP-1316,2025-08-12,Cliente_391,Tecnología,Oriente,Referido,Sergio Ibáñez,Propuesta,8795.0,Perdida,2025-11-02,82,15
+OPP-1317,2025-08-25,Cliente_263,Salud,Sur,WhatsApp,Diana Rueda,Calificación,7112.0,Perdida,2025-10-03,78,11
+OPP-1318,2025-09-08,Cliente_313,Servicios financieros,Oriente,WhatsApp,Marcela Quintero,Prospección,17958.0,Perdida,2025-10-14,73,9
+OPP-1319,2025-09-12,Cliente_262,Logística,Oriente,Referido,Sergio Ibáñez,Calificación,22643.0,Perdida,2025-10-15,66,15
+OPP-1320,2025-09-26,Cliente_189,Servicios financieros,Norte,Evento / feria,Andrés Pardo,Prospección,6211.0,Perdida,2025-11-01,72,7
+OPP-1321,2025-09-24,Cliente_372,Servicios financieros,Sur,Referido,Diana Rueda,Cierre,4936.0,Ganada,2025-11-28,65,6
+OPP-1322,2025-09-21,Cliente_189,Tecnología,Oriente,Outbound,Sergio Ibáñez,Calificación,39347.0,Perdida,2025-10-25,68,7
+OPP-1323,2025-09-26,Cliente_389,Manufactura,Norte,WhatsApp,Laura Cifuentes,Prospección,14986.0,Perdida,2025-11-04,79,22
+OPP-1324,2025-09-21,Cliente_369,Tecnología,Norte,Outbound,Laura Cifuentes,Propuesta,10673.0,Perdida,2025-12-06,76,6
+OPP-1325,2025-09-12,Cliente_201,Tecnología,Norte,Cliente actual,Laura Cifuentes,Prospección,2761.0,Perdida,2025-10-13,63,13
+OPP-1326,2025-09-07,Cliente_399,Tecnología,Norte,Referido,Laura Cifuentes,Calificación,4999.0,Perdida,2025-10-11,68,13
+OPP-1327,2025-09-14,Cliente_350,Salud,Centro,Inbound digital,Julián Ospina,Prospección,11157.0,Perdida,2025-10-11,54,20
+OPP-1328,2025-09-21,Cliente_365,Salud,Sur,Referido,Felipe Casas,Prospección,1873.0,Perdida,2025-10-21,61,8
+OPP-1329,2025-09-23,Cliente_157,Servicios financieros,Sur,WhatsApp,Diana Rueda,Prospección,1178.0,Perdida,2025-10-28,70,10
+OPP-1330,2025-09-19,Cliente_387,Tecnología,Sur,Inbound digital,Diana Rueda,Prospección,6463.0,Perdida,2025-10-18,59,15
+OPP-1331,2025-09-07,Cliente_270,Tecnología,Centro,Evento / feria,Julián Ospina,Propuesta,13355.0,Abierta,,,2
+OPP-1332,2025-09-25,Cliente_396,Tecnología,Centro,Referido,Julián Ospina,Calificación,13128.0,Perdida,2025-10-20,51,5
+OPP-1333,2025-09-18,Cliente_224,Salud,Norte,Evento / feria,Laura Cifuentes,Calificación,3805.0,Perdida,2025-10-17,58,17
+OPP-1334,2025-09-10,Cliente_204,Logística,Sur,Inbound digital,Diana Rueda,Calificación,3863.0,Perdida,2025-10-05,51,24
+OPP-1335,2025-09-21,Cliente_279,Servicios financieros,Centro,WhatsApp,Camila Restrepo,Calificación,28002.0,Perdida,2025-11-01,83,6
+OPP-1336,2025-09-01,Cliente_260,Salud,Sur,Evento / feria,Diana Rueda,Calificación,6136.0,Perdida,2025-10-01,60,21
+OPP-1337,2025-09-03,Cliente_345,Retail mayorista,Oriente,WhatsApp,Sergio Ibáñez,Prospección,6322.0,Perdida,2025-10-07,69,10
+OPP-1338,2025-09-02,Cliente_202,Retail mayorista,Oriente,WhatsApp,Marcela Quintero,Prospección,18726.0,Perdida,2025-09-28,53,20
+OPP-1339,2025-09-03,Cliente_167,Tecnología,Norte,Cliente actual,Andrés Pardo,Prospección,22616.0,Perdida,2025-10-09,73,22
+OPP-1340,2025-09-19,Cliente_153,Servicios financieros,Sur,WhatsApp,Diana Rueda,Prospección,4575.0,Perdida,2025-10-25,73,8
+OPP-1341,2025-09-19,Cliente_348,Servicios financieros,Centro,Referido,Camila Restrepo,Prospección,19988.0,Perdida,2025-10-21,64,15
+OPP-1342,2025-09-13,Cliente_344,Retail mayorista,Oriente,Cliente actual,Sergio Ibáñez,Prospección,9807.0,Perdida,2025-10-12,59,21
+OPP-1343,2025-09-13,Cliente_202,Tecnología,Centro,Inbound digital,Julián Ospina,Prospección,9221.0,Perdida,2025-10-06,47,5
+OPP-1344,2025-09-02,Cliente_288,Manufactura,Oriente,Cliente actual,Marcela Quintero,Negociación,4032.0,Perdida,2025-11-07,66,20
+OPP-1345,2025-09-09,Cliente_321,Retail mayorista,Oriente,Outbound,Marcela Quintero,Calificación,8877.0,Perdida,2025-10-21,84,18
+OPP-1346,2025-09-04,Cliente_223,Logística,Oriente,Referido,Sergio Ibáñez,Prospección,4524.0,Perdida,2025-10-12,76,22
+OPP-1347,2025-09-19,Cliente_334,Salud,Centro,WhatsApp,Julián Ospina,Propuesta,3865.0,Perdida,2025-11-20,62,16
+OPP-1348,2025-09-25,Cliente_321,Salud,Centro,Referido,Camila Restrepo,Calificación,5927.0,Perdida,2025-10-29,68,6
+OPP-1349,2025-09-02,Cliente_143,Retail mayorista,Centro,Inbound digital,Camila Restrepo,Calificación,10920.0,Perdida,2025-10-11,79,22
+OPP-1350,2025-09-13,Cliente_269,Manufactura,Centro,WhatsApp,Julián Ospina,Calificación,10683.0,Perdida,2025-10-23,80,24
+OPP-1351,2025-09-11,Cliente_372,Retail mayorista,Sur,WhatsApp,Diana Rueda,Prospección,3843.0,Perdida,2025-10-18,75,10
+OPP-1352,2025-09-26,Cliente_223,Logística,Norte,Cliente actual,Andrés Pardo,Prospección,25588.0,Perdida,2025-10-26,61,18
+OPP-1353,2025-09-07,Cliente_123,Servicios financieros,Oriente,Cliente actual,Marcela Quintero,Prospección,4589.0,Perdida,2025-10-12,70,20
+OPP-1354,2025-09-04,Cliente_328,Tecnología,Centro,Outbound,Camila Restrepo,Propuesta,35785.0,Perdida,2025-11-09,66,5
+OPP-1355,2025-09-24,Cliente_155,Servicios financieros,Sur,Referido,Felipe Casas,Prospección,21681.0,Perdida,2025-11-03,81,16
+OPP-1356,2025-09-28,Cliente_317,Manufactura,Sur,WhatsApp,Felipe Casas,Prospección,3733.0,Perdida,2025-11-07,80,14
+OPP-1357,2025-09-19,Cliente_169,Tecnología,Oriente,Evento / feria,Marcela Quintero,Prospección,8963.0,Perdida,2025-10-23,69,22
+OPP-1358,2025-09-01,Cliente_307,Retail mayorista,Sur,WhatsApp,Felipe Casas,Negociación,23678.0,Perdida,2025-10-29,58,28
+OPP-1359,2025-09-08,Cliente_286,Retail mayorista,Sur,WhatsApp,Diana Rueda,Prospección,9027.0,Perdida,2025-10-07,59,8
+OPP-1360,2025-09-21,Cliente_255,Manufactura,Sur,Outbound,Diana Rueda,Calificación,3343.0,Perdida,2025-10-15,48,5
+OPP-1361,2025-09-18,Cliente_239,Salud,Oriente,Referido,Sergio Ibáñez,Prospección,18906.0,Perdida,2025-10-22,68,22
+OPP-1362,2025-10-01,Cliente_219,Tecnología,Norte,Outbound,Laura Cifuentes,Prospección,3614.0,Perdida,2025-11-02,64,14
+OPP-1363,2025-10-25,Cliente_165,Servicios financieros,Oriente,Referido,Marcela Quintero,Prospección,6474.0,Perdida,2025-11-27,67,8
+OPP-1364,2025-10-24,Cliente_286,Tecnología,Norte,Outbound,Andrés Pardo,Prospección,5127.0,Perdida,2025-11-24,62,11
+OPP-1365,2025-10-03,Cliente_356,Tecnología,Oriente,Referido,Sergio Ibáñez,Negociación,2948.0,Perdida,2025-12-13,71,14
+OPP-1366,2025-10-05,Cliente_346,Salud,Norte,Inbound digital,Laura Cifuentes,Prospección,5934.0,Perdida,2025-11-19,90,8
+OPP-1367,2025-10-11,Cliente_209,Salud,Oriente,WhatsApp,Marcela Quintero,Calificación,1809.0,Perdida,2025-11-18,77,6
+OPP-1368,2025-10-27,Cliente_156,Servicios financieros,Centro,WhatsApp,Camila Restrepo,Calificación,14327.0,Perdida,2025-11-29,66,13
+OPP-1369,2025-10-03,Cliente_340,Servicios financieros,Oriente,WhatsApp,Marcela Quintero,Negociación,7649.0,Perdida,2025-12-18,76,18
+OPP-1370,2025-10-11,Cliente_240,Manufactura,Norte,Referido,Andrés Pardo,Calificación,10689.0,Perdida,2025-11-20,81,20
+OPP-1371,2025-10-04,Cliente_197,Tecnología,Centro,Evento / feria,Camila Restrepo,Cierre,844.0,Ganada,2025-12-03,60,7
+OPP-1372,2025-10-19,Cliente_102,Tecnología,Norte,Inbound digital,Andrés Pardo,Prospección,9314.0,Perdida,2025-11-26,76,21
+OPP-1373,2025-10-23,Cliente_232,Manufactura,Sur,Inbound digital,Diana Rueda,Prospección,22533.0,Perdida,2025-11-22,61,15
+OPP-1374,2025-10-12,Cliente_240,Retail mayorista,Centro,Inbound digital,Julián Ospina,Calificación,7210.0,Perdida,2025-11-08,55,7
+OPP-1375,2025-10-12,Cliente_170,Tecnología,Centro,Referido,Camila Restrepo,Calificación,5542.0,Perdida,2025-11-18,74,23
+OPP-1376,2025-10-16,Cliente_360,Manufactura,Centro,Cliente actual,Julián Ospina,Prospección,10041.0,Perdida,2025-11-15,61,21
+OPP-1377,2025-10-02,Cliente_265,Servicios financieros,Norte,Referido,Laura Cifuentes,Negociación,10902.0,Perdida,2025-12-14,73,10
+OPP-1378,2025-10-21,Cliente_306,Manufactura,Sur,Referido,Diana Rueda,Propuesta,3238.0,Perdida,2025-12-26,66,21
+OPP-1379,2025-10-18,Cliente_376,Logística,Norte,WhatsApp,Andrés Pardo,Negociación,7736.0,Perdida,2025-12-22,65,29
+OPP-1380,2025-10-28,Cliente_289,Salud,Norte,Evento / feria,Laura Cifuentes,Cierre,41932.0,Ganada,2026-01-02,66,8
+OPP-1381,2025-10-13,Cliente_284,Manufactura,Sur,WhatsApp,Diana Rueda,Calificación,5073.0,Perdida,2025-11-13,63,7
+OPP-1382,2025-10-17,Cliente_182,Manufactura,Sur,Outbound,Felipe Casas,Calificación,5323.0,Perdida,2025-11-22,72,10
+OPP-1383,2025-10-15,Cliente_340,Salud,Oriente,Inbound digital,Sergio Ibáñez,Calificación,2571.0,Perdida,2025-11-18,69,10
+OPP-1384,2025-10-26,Cliente_367,Servicios financieros,Oriente,WhatsApp,Marcela Quintero,Calificación,5904.0,Perdida,2025-12-03,77,11
+OPP-1385,2025-10-22,Cliente_317,Tecnología,Norte,Evento / feria,Andrés Pardo,Prospección,4376.0,Perdida,2025-11-28,75,20
+OPP-1386,2025-10-17,Cliente_334,Manufactura,Sur,Inbound digital,Diana Rueda,Prospección,4257.0,Perdida,2025-11-18,64,15
+OPP-1387,2025-10-23,Cliente_247,Tecnología,Sur,Cliente actual,Diana Rueda,Calificación,3195.0,Perdida,2025-11-21,59,23
+OPP-1388,2025-10-15,Cliente_235,Tecnología,Sur,Inbound digital,Diana Rueda,Calificación,18155.0,Perdida,2025-11-18,69,20
+OPP-1389,2025-10-15,Cliente_184,Logística,Oriente,Referido,Sergio Ibáñez,Prospección,18340.0,Perdida,2025-11-15,63,13
+OPP-1390,2025-10-26,Cliente_316,Servicios financieros,Norte,Inbound digital,Andrés Pardo,Prospección,9134.0,Perdida,2025-11-25,60,18
+OPP-1391,2025-10-11,Cliente_262,Salud,Centro,Inbound digital,Camila Restrepo,Prospección,3345.0,Perdida,2025-11-14,68,16
+OPP-1392,2025-10-11,Cliente_335,Tecnología,Sur,Referido,Felipe Casas,Calificación,10751.0,Perdida,2025-11-12,65,16
+OPP-1393,2025-10-15,Cliente_356,Tecnología,Norte,Outbound,Laura Cifuentes,Prospección,23765.0,Perdida,2025-11-17,67,5
+OPP-1394,2025-10-20,Cliente_392,Logística,Sur,Inbound digital,Felipe Casas,Propuesta,29995.0,Perdida,2025-12-17,58,10
+OPP-1395,2025-10-13,Cliente_144,Retail mayorista,Centro,Outbound,Julián Ospina,Prospección,9696.0,Perdida,2025-11-19,75,11
+OPP-1396,2025-10-20,Cliente_105,Salud,Norte,WhatsApp,Laura Cifuentes,Calificación,10007.0,Perdida,2025-11-21,65,11
+OPP-1397,2025-10-18,Cliente_337,Tecnología,Centro,Evento / feria,Julián Ospina,Propuesta,2291.0,Abierta,,,15
+OPP-1398,2025-10-06,Cliente_101,Retail mayorista,Norte,Cliente actual,Andrés Pardo,Propuesta,5461.0,Abierta,,,20
+OPP-1399,2025-10-14,Cliente_126,Servicios financieros,Oriente,WhatsApp,Sergio Ibáñez,Prospección,24999.0,Perdida,2025-11-22,78,23
+OPP-1400,2025-10-28,Cliente_387,Logística,Centro,WhatsApp,Camila Restrepo,Prospección,2566.0,Perdida,2025-12-02,70,8
+OPP-1401,2025-10-08,Cliente_171,Logística,Norte,Inbound digital,Andrés Pardo,Prospección,8068.0,Perdida,2025-11-11,68,24
+OPP-1402,2025-10-11,Cliente_171,Tecnología,Oriente,Inbound digital,Marcela Quintero,Prospección,1669.0,Perdida,2025-11-16,73,17
+OPP-1403,2025-10-14,Cliente_139,Logística,Centro,Referido,Camila Restrepo,Prospección,19200.0,Perdida,2025-11-17,68,20
+OPP-1404,2025-11-22,Cliente_279,Manufactura,Oriente,WhatsApp,Marcela Quintero,Propuesta,5015.0,Abierta,,,17
+OPP-1405,2025-11-19,Cliente_337,Tecnología,Norte,Outbound,Laura Cifuentes,Prospección,11223.0,Perdida,2025-12-21,65,7
+OPP-1406,2025-11-18,Cliente_114,Servicios financieros,Sur,Referido,Felipe Casas,Calificación,2761.0,Perdida,2025-12-24,73,7
+OPP-1407,2025-11-26,Cliente_364,Manufactura,Oriente,WhatsApp,Sergio Ibáñez,Calificación,17844.0,Perdida,2025-12-21,51,5
+OPP-1408,2025-11-18,Cliente_315,Salud,Norte,Referido,Andrés Pardo,Prospección,4786.0,Perdida,2025-12-23,71,5
+OPP-1409,2025-11-11,Cliente_238,Servicios financieros,Sur,WhatsApp,Diana Rueda,Prospección,4050.0,Perdida,2025-12-15,69,23
+OPP-1410,2025-11-20,Cliente_231,Manufactura,Sur,Inbound digital,Diana Rueda,Propuesta,5474.0,Abierta,,,18
+OPP-1411,2025-11-13,Cliente_262,Servicios financieros,Sur,Referido,Diana Rueda,Prospección,16211.0,Perdida,2025-12-18,71,5
+OPP-1412,2025-11-26,Cliente_290,Retail mayorista,Oriente,Referido,Sergio Ibáñez,Propuesta,6939.0,Perdida,2026-02-07,73,16
+OPP-1413,2025-11-06,Cliente_302,Salud,Norte,Referido,Laura Cifuentes,Prospección,32294.0,Perdida,2025-12-09,66,14
+OPP-1414,2025-11-18,Cliente_119,Manufactura,Oriente,Outbound,Marcela Quintero,Calificación,15588.0,Perdida,2025-12-22,69,16
+OPP-1415,2025-11-26,Cliente_355,Manufactura,Sur,Inbound digital,Felipe Casas,Prospección,7552.0,Perdida,2025-12-26,60,10
+OPP-1416,2025-11-11,Cliente_100,Tecnología,Centro,WhatsApp,Julián Ospina,Prospección,3232.0,Perdida,2025-12-15,69,14
+OPP-1417,2025-11-21,Cliente_339,Servicios financieros,Norte,WhatsApp,Laura Cifuentes,Calificación,1898.0,Perdida,2025-12-23,65,11
+OPP-1418,2025-11-13,Cliente_384,Salud,Sur,Referido,Diana Rueda,Prospección,11413.0,Perdida,2025-12-26,86,11
+OPP-1419,2025-11-21,Cliente_114,Salud,Norte,Inbound digital,Laura Cifuentes,Calificación,24515.0,Perdida,2025-12-20,59,10
+OPP-1420,2025-11-07,Cliente_180,Salud,Centro,Inbound digital,Julián Ospina,Calificación,1701.0,Perdida,2025-11-30,47,17
+OPP-1421,2025-11-02,Cliente_233,Manufactura,Oriente,Referido,Sergio Ibáñez,Propuesta,23408.0,Abierta,,,22
+OPP-1422,2025-11-24,Cliente_223,Servicios financieros,Sur,Referido,Diana Rueda,Prospección,9808.0,Perdida,2025-12-22,57,6
+OPP-1423,2025-11-08,Cliente_239,Manufactura,Oriente,Referido,Sergio Ibáñez,Calificación,8956.0,Perdida,2025-12-12,69,11
+OPP-1424,2025-11-28,Cliente_151,Salud,Norte,Evento / feria,Andrés Pardo,Prospección,1619.0,Perdida,2025-12-29,63,17
+OPP-1425,2025-11-13,Cliente_199,Tecnología,Centro,WhatsApp,Julián Ospina,Prospección,5488.0,Perdida,2025-12-12,59,16
+OPP-1426,2025-11-16,Cliente_328,Servicios financieros,Sur,Inbound digital,Felipe Casas,Prospección,5321.0,Perdida,2025-12-13,55,22
+OPP-1427,2025-11-10,Cliente_177,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Prospección,21312.0,Perdida,2025-12-17,74,14
+OPP-1428,2025-11-15,Cliente_332,Manufactura,Sur,Cliente actual,Felipe Casas,Propuesta,3188.0,Abierta,,,16
+OPP-1429,2025-11-01,Cliente_284,Manufactura,Oriente,Outbound,Marcela Quintero,Prospección,11762.0,Perdida,2025-12-07,72,12
+OPP-1430,2025-11-24,Cliente_389,Retail mayorista,Oriente,WhatsApp,Marcela Quintero,Prospección,7170.0,Perdida,2026-01-06,86,5
+OPP-1431,2025-11-23,Cliente_155,Logística,Sur,Referido,Felipe Casas,Calificación,9620.0,Perdida,2025-12-31,76,21
+OPP-1432,2025-11-03,Cliente_311,Tecnología,Oriente,Inbound digital,Sergio Ibáñez,Calificación,7739.0,Perdida,2025-12-03,60,15
+OPP-1433,2025-11-25,Cliente_181,Logística,Sur,Evento / feria,Diana Rueda,Prospección,1921.0,Perdida,2026-01-05,83,19
+OPP-1434,2025-11-01,Cliente_304,Retail mayorista,Sur,Referido,Felipe Casas,Prospección,43039.0,Perdida,2025-12-02,62,21
+OPP-1435,2025-11-13,Cliente_170,Tecnología,Norte,Inbound digital,Laura Cifuentes,Cierre,13880.0,Ganada,2026-01-17,65,7
+OPP-1436,2025-11-24,Cliente_294,Logística,Centro,Inbound digital,Camila Restrepo,Propuesta,26621.0,Perdida,2026-02-01,69,7
+OPP-1437,2025-11-16,Cliente_390,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Calificación,8655.0,Perdida,2025-12-22,72,9
+OPP-1438,2025-12-09,Cliente_321,Salud,Oriente,Outbound,Marcela Quintero,Cierre,5652.0,Ganada,2026-02-08,61,3
+OPP-1439,2025-12-03,Cliente_146,Retail mayorista,Sur,Inbound digital,Felipe Casas,Calificación,2285.0,Perdida,2025-12-30,55,23
+OPP-1440,2025-12-18,Cliente_381,Servicios financieros,Centro,Referido,Julián Ospina,Cierre,18350.0,Ganada,2026-02-13,57,2
+OPP-1441,2025-12-19,Cliente_217,Retail mayorista,Oriente,Outbound,Marcela Quintero,Prospección,7078.0,Perdida,2026-01-24,73,21
+OPP-1442,2025-12-20,Cliente_368,Manufactura,Norte,Referido,Andrés Pardo,Calificación,19939.0,Perdida,2026-01-23,68,11
+OPP-1443,2025-12-23,Cliente_349,Manufactura,Centro,Inbound digital,Camila Restrepo,Prospección,8947.0,Perdida,2026-01-20,57,22
+OPP-1444,2025-12-01,Cliente_394,Retail mayorista,Oriente,Cliente actual,Marcela Quintero,Propuesta,11396.0,Perdida,2026-02-03,64,26
+OPP-1445,2025-12-16,Cliente_196,Tecnología,Sur,WhatsApp,Felipe Casas,Cierre,9610.0,Ganada,2026-02-15,61,6
+OPP-1446,2025-12-18,Cliente_169,Retail mayorista,Centro,WhatsApp,Camila Restrepo,Calificación,8952.0,Perdida,2026-01-16,58,11
+OPP-1447,2025-12-16,Cliente_241,Tecnología,Norte,Outbound,Laura Cifuentes,Prospección,11433.0,Perdida,2026-01-20,70,9
+OPP-1448,2025-12-04,Cliente_296,Retail mayorista,Sur,Referido,Diana Rueda,Prospección,17299.0,Perdida,2026-01-07,69,16
+OPP-1449,2025-12-18,Cliente_206,Logística,Centro,WhatsApp,Julián Ospina,Prospección,6408.0,Perdida,2026-01-19,64,22
+OPP-1450,2025-12-24,Cliente_207,Logística,Centro,Evento / feria,Camila Restrepo,Prospección,9102.0,Perdida,2026-02-01,78,13
+OPP-1451,2025-12-10,Cliente_231,Servicios financieros,Sur,Evento / feria,Felipe Casas,Calificación,5608.0,Perdida,2026-01-04,50,6
+OPP-1452,2025-12-05,Cliente_132,Manufactura,Centro,WhatsApp,Camila Restrepo,Negociación,26840.0,Perdida,2026-02-03,60,28
+OPP-1453,2025-12-27,Cliente_348,Logística,Centro,Inbound digital,Camila Restrepo,Prospección,3983.0,Perdida,2026-01-25,58,5
+OPP-1454,2025-12-25,Cliente_103,Tecnología,Sur,Cliente actual,Felipe Casas,Calificación,7760.0,Perdida,2026-01-30,73,11
+OPP-1455,2025-12-05,Cliente_341,Retail mayorista,Sur,Cliente actual,Diana Rueda,Negociación,4176.0,Perdida,2026-02-12,69,8
+OPP-1456,2025-12-23,Cliente_148,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Propuesta,13237.0,Perdida,2026-03-02,69,6
+OPP-1457,2025-12-05,Cliente_275,Servicios financieros,Norte,Cliente actual,Laura Cifuentes,Calificación,4609.0,Perdida,2026-01-08,69,12
+OPP-1458,2025-12-01,Cliente_321,Tecnología,Centro,Outbound,Julián Ospina,Prospección,7661.0,Perdida,2026-01-06,73,11
+OPP-1459,2025-12-03,Cliente_311,Manufactura,Norte,Cliente actual,Andrés Pardo,Cierre,2563.0,Ganada,2026-02-05,64,2
+OPP-1460,2025-12-26,Cliente_113,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Propuesta,20769.0,Perdida,2026-02-15,51,18
+OPP-1461,2025-12-13,Cliente_226,Retail mayorista,Centro,WhatsApp,Camila Restrepo,Prospección,6639.0,Perdida,2026-01-21,79,12
+OPP-1462,2025-12-06,Cliente_279,Salud,Oriente,Outbound,Sergio Ibáñez,Prospección,4483.0,Perdida,2026-01-08,66,5
+OPP-1463,2025-12-22,Cliente_158,Logística,Norte,Referido,Andrés Pardo,Calificación,8142.0,Perdida,2026-01-26,70,6
+OPP-1464,2025-12-05,Cliente_236,Retail mayorista,Sur,Outbound,Felipe Casas,Prospección,2807.0,Perdida,2026-01-13,78,22
+OPP-1465,2025-12-11,Cliente_243,Logística,Sur,Referido,Felipe Casas,Propuesta,6826.0,Perdida,2026-02-22,73,25
+OPP-1466,2025-12-10,Cliente_316,Logística,Norte,Referido,Andrés Pardo,Cierre,9742.0,Ganada,2026-02-27,79,3
+OPP-1467,2025-12-02,Cliente_113,Retail mayorista,Centro,Evento / feria,Julián Ospina,Cierre,16029.0,Ganada,2026-01-30,59,9
+OPP-1468,2025-12-17,Cliente_243,Servicios financieros,Oriente,WhatsApp,Sergio Ibáñez,Prospección,4924.0,Perdida,2026-01-20,68,12
+OPP-1469,2026-01-25,Cliente_235,Servicios financieros,Norte,Inbound digital,Andrés Pardo,Prospección,4708.0,Perdida,2026-03-04,76,22
+OPP-1470,2026-01-06,Cliente_173,Logística,Centro,WhatsApp,Camila Restrepo,Prospección,7409.0,Perdida,2026-02-03,57,17
+OPP-1471,2026-01-20,Cliente_347,Salud,Norte,Inbound digital,Andrés Pardo,Calificación,16315.0,Perdida,2026-02-17,56,19
+OPP-1472,2026-01-14,Cliente_268,Retail mayorista,Sur,Inbound digital,Felipe Casas,Calificación,12724.0,Perdida,2026-02-18,70,9
+OPP-1473,2026-01-23,Cliente_149,Servicios financieros,Oriente,Inbound digital,Sergio Ibáñez,Prospección,8259.0,Perdida,2026-03-01,75,8
+OPP-1474,2026-01-12,Cliente_295,Servicios financieros,Sur,Referido,Felipe Casas,Negociación,9754.0,Perdida,2026-03-06,53,10
+OPP-1475,2026-01-09,Cliente_224,Tecnología,Sur,Cliente actual,Diana Rueda,Propuesta,1370.0,Abierta,,,15
+OPP-1476,2026-01-16,Cliente_396,Manufactura,Oriente,Cliente actual,Sergio Ibáñez,Negociación,2203.0,Abierta,,,9
+OPP-1477,2026-01-04,Cliente_156,Logística,Oriente,WhatsApp,Sergio Ibáñez,Calificación,7964.0,Perdida,2026-02-03,60,19
+OPP-1478,2026-01-06,Cliente_110,Retail mayorista,Oriente,Referido,Marcela Quintero,Prospección,9050.0,Perdida,2026-02-16,83,18
+OPP-1479,2026-01-20,Cliente_361,Tecnología,Norte,WhatsApp,Andrés Pardo,Calificación,6255.0,Perdida,2026-02-15,52,5
+OPP-1480,2026-01-20,Cliente_154,Tecnología,Oriente,Referido,Sergio Ibáñez,Propuesta,28119.0,Perdida,2026-04-09,79,5
+OPP-1481,2026-01-10,Cliente_177,Salud,Centro,Referido,Camila Restrepo,Calificación,12676.0,Perdida,2026-02-11,64,12
+OPP-1482,2026-01-25,Cliente_348,Servicios financieros,Oriente,Outbound,Sergio Ibáñez,Calificación,9519.0,Perdida,2026-02-28,69,20
+OPP-1483,2026-01-20,Cliente_244,Manufactura,Centro,WhatsApp,Camila Restrepo,Prospección,4703.0,Perdida,2026-03-02,83,11
+OPP-1484,2026-01-10,Cliente_202,Retail mayorista,Sur,Referido,Diana Rueda,Prospección,3274.0,Perdida,2026-02-10,63,21
+OPP-1485,2026-01-07,Cliente_221,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Propuesta,2277.0,Abierta,,,6
+OPP-1486,2026-01-02,Cliente_313,Logística,Oriente,Referido,Marcela Quintero,Prospección,7082.0,Perdida,2026-02-09,76,21
+OPP-1487,2026-01-25,Cliente_102,Servicios financieros,Norte,Inbound digital,Laura Cifuentes,Cierre,37124.0,Ganada,2026-04-30,95,6
+OPP-1488,2026-01-12,Cliente_217,Logística,Norte,Evento / feria,Andrés Pardo,Prospección,16371.0,Perdida,2026-02-20,78,12
+OPP-1489,2026-01-09,Cliente_146,Manufactura,Norte,Outbound,Andrés Pardo,Calificación,5889.0,Perdida,2026-02-08,60,21
+OPP-1490,2026-01-04,Cliente_181,Retail mayorista,Oriente,WhatsApp,Sergio Ibáñez,Prospección,12944.0,Perdida,2026-02-17,88,6
+OPP-1491,2026-01-19,Cliente_286,Tecnología,Norte,Inbound digital,Laura Cifuentes,Calificación,3162.0,Perdida,2026-02-22,68,19
+OPP-1492,2026-01-19,Cliente_166,Salud,Sur,Inbound digital,Diana Rueda,Calificación,4771.0,Perdida,2026-02-21,66,17
+OPP-1493,2026-01-05,Cliente_217,Logística,Oriente,Inbound digital,Marcela Quintero,Prospección,59305.0,Perdida,2026-02-06,64,7
+OPP-1494,2026-01-08,Cliente_292,Servicios financieros,Sur,WhatsApp,Diana Rueda,Prospección,23075.0,Perdida,2026-02-15,77,22
+OPP-1495,2026-01-04,Cliente_372,Logística,Sur,Outbound,Diana Rueda,Calificación,3432.0,Perdida,2026-02-03,60,11
+OPP-1496,2026-01-25,Cliente_271,Logística,Sur,Referido,Diana Rueda,Prospección,9109.0,Perdida,2026-03-05,78,12
+OPP-1497,2026-01-13,Cliente_348,Salud,Norte,Cliente actual,Laura Cifuentes,Calificación,3117.0,Perdida,2026-02-07,50,6
+OPP-1498,2026-01-20,Cliente_380,Servicios financieros,Oriente,Referido,Sergio Ibáñez,Prospección,10262.0,Perdida,2026-02-16,55,5
+OPP-1499,2026-01-19,Cliente_256,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Calificación,2949.0,Perdida,2026-02-19,62,14
+OPP-1500,2026-01-22,Cliente_353,Logística,Sur,WhatsApp,Diana Rueda,Calificación,7987.0,Perdida,2026-02-25,69,21
+OPP-1501,2026-01-20,Cliente_220,Retail mayorista,Centro,WhatsApp,Julián Ospina,Calificación,26456.0,Perdida,2026-02-12,47,16
+OPP-1502,2026-01-25,Cliente_310,Manufactura,Sur,Evento / feria,Felipe Casas,Propuesta,40404.0,Perdida,2026-04-24,89,26
+OPP-1503,2026-01-07,Cliente_147,Salud,Centro,WhatsApp,Camila Restrepo,Prospección,7260.0,Perdida,2026-02-09,66,17
+OPP-1504,2026-01-07,Cliente_359,Salud,Centro,Referido,Camila Restrepo,Calificación,4418.0,Perdida,2026-02-12,73,15
+OPP-1505,2026-01-20,Cliente_180,Manufactura,Oriente,WhatsApp,Marcela Quintero,Prospección,2147.0,Perdida,2026-02-22,67,8
+OPP-1506,2026-01-06,Cliente_167,Logística,Centro,Inbound digital,Julián Ospina,Propuesta,9269.0,Perdida,2026-03-09,62,26
+OPP-1507,2026-01-10,Cliente_122,Manufactura,Norte,Outbound,Andrés Pardo,Cierre,7898.0,Ganada,2026-03-10,59,5
+OPP-1508,2026-02-06,Cliente_182,Retail mayorista,Oriente,Cliente actual,Sergio Ibáñez,Negociación,1250.0,Abierta,,,19
+OPP-1509,2026-02-24,Cliente_241,Logística,Norte,Referido,Andrés Pardo,Prospección,14377.0,Perdida,2026-04-01,72,9
+OPP-1510,2026-02-16,Cliente_245,Logística,Oriente,Outbound,Sergio Ibáñez,Negociación,3181.0,Abierta,,,3
+OPP-1511,2026-02-17,Cliente_277,Retail mayorista,Oriente,Cliente actual,Marcela Quintero,Prospección,4674.0,Perdida,2026-03-31,84,16
+OPP-1512,2026-02-04,Cliente_246,Tecnología,Centro,WhatsApp,Julián Ospina,Prospección,2260.0,Perdida,2026-03-09,67,16
+OPP-1513,2026-02-14,Cliente_139,Servicios financieros,Norte,Cliente actual,Laura Cifuentes,Calificación,3385.0,Perdida,2026-03-22,73,13
+OPP-1514,2026-02-05,Cliente_144,Retail mayorista,Norte,Evento / feria,Andrés Pardo,Prospección,1825.0,Perdida,2026-03-13,73,18
+OPP-1515,2026-02-07,Cliente_283,Servicios financieros,Oriente,Outbound,Marcela Quintero,Negociación,38736.0,Perdida,2026-05-02,84,20
+OPP-1516,2026-02-07,Cliente_112,Salud,Oriente,WhatsApp,Marcela Quintero,Propuesta,6903.0,Perdida,2026-04-12,64,13
+OPP-1517,2026-02-22,Cliente_228,Salud,Norte,Cliente actual,Andrés Pardo,Prospección,3681.0,Perdida,2026-03-28,69,8
+OPP-1518,2026-02-05,Cliente_223,Retail mayorista,Oriente,Inbound digital,Marcela Quintero,Prospección,7683.0,Perdida,2026-03-12,70,23
+OPP-1519,2026-02-28,Cliente_268,Tecnología,Sur,Inbound digital,Felipe Casas,Propuesta,12548.0,Perdida,2026-04-19,50,16
+OPP-1520,2026-02-06,Cliente_273,Servicios financieros,Norte,WhatsApp,Laura Cifuentes,Propuesta,8269.0,Perdida,2026-04-23,76,28
+OPP-1521,2026-02-12,Cliente_251,Tecnología,Sur,Outbound,Felipe Casas,Prospección,3808.0,Perdida,2026-03-15,62,23
+OPP-1522,2026-02-26,Cliente_150,Manufactura,Norte,Outbound,Andrés Pardo,Prospección,6284.0,Perdida,2026-04-01,69,24
+OPP-1523,2026-02-19,Cliente_278,Retail mayorista,Norte,Outbound,Andrés Pardo,Prospección,4645.0,Perdida,2026-03-28,75,24
+OPP-1524,2026-02-23,Cliente_291,Retail mayorista,Sur,Referido,Felipe Casas,Prospección,7783.0,Perdida,2026-04-02,77,6
+OPP-1525,2026-02-18,Cliente_108,Salud,Oriente,Cliente actual,Marcela Quintero,Prospección,8791.0,Perdida,2026-03-22,65,19
+OPP-1526,2026-02-02,Cliente_336,Servicios financieros,Norte,Referido,Laura Cifuentes,Calificación,10994.0,Perdida,2026-03-08,69,11
+OPP-1527,2026-02-28,Cliente_308,Salud,Sur,WhatsApp,Diana Rueda,Propuesta,7023.0,Abierta,,,13
+OPP-1528,2026-02-26,Cliente_368,Logística,Oriente,Cliente actual,Sergio Ibáñez,Calificación,5663.0,Perdida,2026-04-02,71,6
+OPP-1529,2026-02-26,Cliente_270,Salud,Sur,Inbound digital,Felipe Casas,Calificación,15182.0,Perdida,2026-03-29,63,15
+OPP-1530,2026-02-27,Cliente_210,Manufactura,Oriente,Cliente actual,Sergio Ibáñez,Prospección,8775.0,Perdida,2026-03-31,64,14
+OPP-1531,2026-02-12,Cliente_117,Servicios financieros,Centro,Inbound digital,Camila Restrepo,Prospección,16212.0,Perdida,2026-03-16,64,18
+OPP-1532,2026-02-11,Cliente_341,Logística,Norte,Referido,Laura Cifuentes,Prospección,5695.0,Perdida,2026-03-17,68,7
+OPP-1533,2026-02-07,Cliente_108,Retail mayorista,Oriente,Evento / feria,Marcela Quintero,Prospección,8742.0,Perdida,2026-03-12,67,20
+OPP-1534,2026-02-10,Cliente_147,Salud,Oriente,Evento / feria,Sergio Ibáñez,Prospección,2403.0,Perdida,2026-03-11,59,19
+OPP-1535,2026-02-13,Cliente_387,Retail mayorista,Sur,Referido,Felipe Casas,Cierre,5619.0,Ganada,2026-04-12,58,6
+OPP-1536,2026-02-25,Cliente_286,Salud,Oriente,Cliente actual,Marcela Quintero,Prospección,11442.0,Perdida,2026-04-05,78,9
+OPP-1537,2026-02-03,Cliente_216,Logística,Centro,Evento / feria,Julián Ospina,Cierre,6771.0,Ganada,2026-04-08,64,9
+OPP-1538,2026-02-17,Cliente_384,Retail mayorista,Oriente,Evento / feria,Marcela Quintero,Calificación,12699.0,Perdida,2026-03-19,61,19
+OPP-1539,2026-03-16,Cliente_211,Manufactura,Centro,WhatsApp,Camila Restrepo,Propuesta,9869.0,Abierta,,,5
+OPP-1540,2026-03-19,Cliente_361,Logística,Centro,Inbound digital,Julián Ospina,Prospección,12392.0,Perdida,2026-04-28,80,6
+OPP-1541,2026-03-03,Cliente_329,Logística,Centro,Cliente actual,Camila Restrepo,Calificación,19578.0,Perdida,2026-04-01,59,22
+OPP-1542,2026-03-13,Cliente_275,Retail mayorista,Oriente,Referido,Marcela Quintero,Calificación,5301.0,Perdida,2026-04-22,81,19
+OPP-1543,2026-03-17,Cliente_187,Retail mayorista,Sur,Referido,Diana Rueda,Calificación,6709.0,Perdida,2026-04-21,70,10
+OPP-1544,2026-03-12,Cliente_264,Salud,Oriente,WhatsApp,Marcela Quintero,Prospección,8178.0,Perdida,2026-04-16,71,16
+OPP-1545,2026-03-23,Cliente_123,Salud,Norte,Inbound digital,Andrés Pardo,Prospección,4157.0,Perdida,2026-04-29,74,23
+OPP-1546,2026-03-16,Cliente_306,Tecnología,Sur,Evento / feria,Felipe Casas,Negociación,28351.0,Perdida,2026-06-24,100,22
+OPP-1547,2026-03-21,Cliente_327,Salud,Oriente,Inbound digital,Marcela Quintero,Prospección,13982.0,Perdida,2026-04-16,53,20
+OPP-1548,2026-03-15,Cliente_306,Logística,Sur,Inbound digital,Diana Rueda,Prospección,1802.0,Perdida,2026-04-11,54,16
+OPP-1549,2026-03-19,Cliente_214,Manufactura,Centro,Outbound,Julián Ospina,Calificación,1637.0,Perdida,2026-04-20,64,6
+OPP-1550,2026-03-27,Cliente_258,Tecnología,Norte,Cliente actual,Laura Cifuentes,Calificación,7425.0,Perdida,2026-05-01,71,7
+OPP-1551,2026-03-26,Cliente_323,Servicios financieros,Centro,WhatsApp,Camila Restrepo,Prospección,3243.0,Perdida,2026-04-19,49,9
+OPP-1552,2026-03-13,Cliente_131,Logística,Centro,Cliente actual,Julián Ospina,Negociación,18883.0,Perdida,2026-05-19,67,19
+OPP-1553,2026-03-01,Cliente_271,Tecnología,Centro,WhatsApp,Camila Restrepo,Negociación,1515.0,Perdida,2026-05-10,70,16
+OPP-1554,2026-03-28,Cliente_101,Manufactura,Centro,Evento / feria,Julián Ospina,Propuesta,9868.0,Abierta,,,20
+OPP-1555,2026-03-10,Cliente_237,Salud,Centro,Evento / feria,Julián Ospina,Propuesta,9459.0,Perdida,2026-05-26,77,10
+OPP-1556,2026-03-11,Cliente_378,Servicios financieros,Sur,Referido,Felipe Casas,Prospección,5610.0,Perdida,2026-04-09,58,7
+OPP-1557,2026-03-24,Cliente_345,Servicios financieros,Sur,WhatsApp,Felipe Casas,Prospección,6407.0,Perdida,2026-05-02,78,9
+OPP-1558,2026-03-16,Cliente_285,Salud,Norte,Referido,Laura Cifuentes,Propuesta,9537.0,Perdida,2026-05-27,72,10
+OPP-1559,2026-03-22,Cliente_342,Retail mayorista,Norte,Referido,Andrés Pardo,Propuesta,3577.0,Abierta,,,12
+OPP-1560,2026-03-23,Cliente_181,Manufactura,Sur,Cliente actual,Diana Rueda,Propuesta,10555.0,Abierta,,,4
+OPP-1561,2026-03-19,Cliente_322,Tecnología,Oriente,Referido,Sergio Ibáñez,Propuesta,15646.0,Perdida,2026-05-05,47,13
+OPP-1562,2026-03-01,Cliente_124,Manufactura,Centro,WhatsApp,Camila Restrepo,Calificación,7110.0,Perdida,2026-04-07,75,21
+OPP-1563,2026-03-13,Cliente_195,Retail mayorista,Oriente,Referido,Sergio Ibáñez,Calificación,3195.0,Perdida,2026-04-14,65,17
+OPP-1564,2026-03-07,Cliente_183,Tecnología,Centro,Inbound digital,Julián Ospina,Prospección,47707.0,Perdida,2026-04-10,68,16
+OPP-1565,2026-03-10,Cliente_345,Salud,Sur,Referido,Felipe Casas,Calificación,6772.0,Perdida,2026-04-16,74,22
+OPP-1566,2026-03-02,Cliente_206,Servicios financieros,Sur,Inbound digital,Diana Rueda,Calificación,11487.0,Perdida,2026-04-03,64,24
+OPP-1567,2026-03-21,Cliente_318,Logística,Norte,WhatsApp,Laura Cifuentes,Prospección,4192.0,Perdida,2026-04-22,64,10
+OPP-1568,2026-03-16,Cliente_264,Servicios financieros,Centro,Referido,Julián Ospina,Calificación,865.0,Perdida,2026-04-13,57,15
+OPP-1569,2026-03-11,Cliente_361,Logística,Norte,Cliente actual,Andrés Pardo,Negociación,15070.0,Perdida,2026-05-05,55,9
+OPP-1570,2026-03-25,Cliente_173,Retail mayorista,Sur,Cliente actual,Felipe Casas,Prospección,5806.0,Perdida,2026-04-22,56,19
+OPP-1571,2026-03-10,Cliente_142,Salud,Oriente,WhatsApp,Sergio Ibáñez,Cierre,1259.0,Ganada,2026-05-22,73,8
+OPP-1572,2026-03-05,Cliente_291,Manufactura,Norte,Cliente actual,Laura Cifuentes,Prospección,16721.0,Perdida,2026-04-20,92,10
+OPP-1573,2026-03-24,Cliente_112,Servicios financieros,Norte,Referido,Laura Cifuentes,Cierre,5598.0,Ganada,2026-05-09,46,6
+OPP-1574,2026-03-06,Cliente_197,Servicios financieros,Norte,Referido,Laura Cifuentes,Negociación,4655.0,Abierta,,,17
+OPP-1575,2026-03-20,Cliente_389,Salud,Centro,Referido,Camila Restrepo,Negociación,8054.0,Abierta,,,17
+OPP-1576,2026-03-07,Cliente_200,Retail mayorista,Centro,Cliente actual,Julián Ospina,Calificación,16386.0,Perdida,2026-04-09,67,14
+OPP-1577,2026-03-03,Cliente_172,Retail mayorista,Sur,Cliente actual,Felipe Casas,Prospección,30509.0,Perdida,2026-04-03,62,12
+OPP-1578,2026-03-03,Cliente_322,Salud,Centro,Inbound digital,Camila Restrepo,Propuesta,31602.0,Perdida,2026-05-16,74,27
+OPP-1579,2026-03-23,Cliente_353,Salud,Sur,Referido,Felipe Casas,Prospección,20249.0,Perdida,2026-04-18,52,15
+OPP-1580,2026-03-09,Cliente_350,Logística,Sur,Cliente actual,Felipe Casas,Propuesta,4422.0,Abierta,,,9
+OPP-1581,2026-03-17,Cliente_256,Tecnología,Centro,Inbound digital,Camila Restrepo,Prospección,8582.0,Perdida,2026-04-24,76,8
+OPP-1582,2026-04-23,Cliente_236,Manufactura,Oriente,Referido,Sergio Ibáñez,Negociación,12161.0,Abierta,,,14
+OPP-1583,2026-04-24,Cliente_215,Manufactura,Sur,Outbound,Felipe Casas,Calificación,2104.0,Abierta,,,9
+OPP-1584,2026-04-06,Cliente_155,Salud,Oriente,WhatsApp,Marcela Quintero,Calificación,19804.0,Perdida,2026-05-16,81,16
+OPP-1585,2026-04-08,Cliente_186,Logística,Norte,Inbound digital,Laura Cifuentes,Calificación,9730.0,Perdida,2026-05-04,52,20
+OPP-1586,2026-04-06,Cliente_219,Tecnología,Oriente,Referido,Sergio Ibáñez,Propuesta,2800.0,Perdida,2026-06-25,80,17
+OPP-1587,2026-04-09,Cliente_236,Servicios financieros,Norte,Outbound,Andrés Pardo,Calificación,1473.0,Perdida,2026-05-15,73,17
+OPP-1588,2026-04-04,Cliente_294,Retail mayorista,Oriente,Cliente actual,Sergio Ibáñez,Prospección,4475.0,Perdida,2026-05-08,69,21
+OPP-1589,2026-04-01,Cliente_176,Manufactura,Centro,Inbound digital,Julián Ospina,Propuesta,8703.0,Abierta,,,13
+OPP-1590,2026-04-19,Cliente_131,Logística,Sur,Referido,Diana Rueda,Prospección,6652.0,Perdida,2026-05-21,65,5
+OPP-1591,2026-04-25,Cliente_239,Salud,Centro,Referido,Julián Ospina,Prospección,55759.0,Abierta,,,17
+OPP-1592,2026-04-24,Cliente_393,Tecnología,Norte,Referido,Andrés Pardo,Prospección,14984.0,Abierta,,,11
+OPP-1593,2026-04-10,Cliente_319,Manufactura,Oriente,Inbound digital,Sergio Ibáñez,Propuesta,1862.0,Abierta,,,14
+OPP-1594,2026-04-06,Cliente_354,Logística,Norte,WhatsApp,Laura Cifuentes,Prospección,5215.0,Perdida,2026-05-08,65,19
+OPP-1595,2026-04-18,Cliente_119,Tecnología,Oriente,Inbound digital,Marcela Quintero,Calificación,14970.0,Perdida,2026-05-16,56,14
+OPP-1596,2026-04-25,Cliente_363,Retail mayorista,Oriente,Inbound digital,Sergio Ibáñez,Calificación,3171.0,Perdida,2026-05-21,53,19
+OPP-1597,2026-04-09,Cliente_250,Manufactura,Centro,Referido,Julián Ospina,Calificación,14613.0,Perdida,2026-05-04,50,24
+OPP-1598,2026-04-15,Cliente_216,Tecnología,Oriente,Inbound digital,Marcela Quintero,Prospección,5355.0,Perdida,2026-05-17,65,12
+OPP-1599,2026-04-13,Cliente_329,Logística,Norte,Outbound,Andrés Pardo,Propuesta,5058.0,Perdida,2026-06-14,62,8
+OPP-1600,2026-04-18,Cliente_326,Manufactura,Oriente,Outbound,Marcela Quintero,Calificación,16017.0,Perdida,2026-05-23,71,20
+OPP-1601,2026-04-27,Cliente_155,Retail mayorista,Sur,Outbound,Diana Rueda,Prospección,11790.0,Perdida,2026-05-23,52,21
+OPP-1602,2026-04-20,Cliente_271,Manufactura,Norte,Referido,Andrés Pardo,Calificación,9967.0,Perdida,2026-05-21,63,16
+OPP-1603,2026-04-09,Cliente_328,Servicios financieros,Sur,Referido,Felipe Casas,Calificación,2664.0,Perdida,2026-05-12,66,18
+OPP-1604,2026-04-17,Cliente_397,Logística,Norte,WhatsApp,Laura Cifuentes,Prospección,4062.0,Perdida,2026-05-19,64,6
+OPP-1605,2026-04-24,Cliente_216,Retail mayorista,Centro,Evento / feria,Camila Restrepo,Prospección,15176.0,Abierta,,,8
+OPP-1606,2026-04-16,Cliente_231,Manufactura,Sur,Inbound digital,Diana Rueda,Calificación,19758.0,Perdida,2026-05-15,59,12
+OPP-1607,2026-04-24,Cliente_145,Salud,Oriente,WhatsApp,Sergio Ibáñez,Calificación,14769.0,Perdida,2026-05-23,59,13
+OPP-1608,2026-04-05,Cliente_266,Manufactura,Oriente,Evento / feria,Marcela Quintero,Calificación,2694.0,Perdida,2026-05-07,65,5
+OPP-1609,2026-04-05,Cliente_374,Tecnología,Sur,Evento / feria,Diana Rueda,Calificación,12704.0,Perdida,2026-05-05,61,15
+OPP-1610,2026-04-05,Cliente_290,Retail mayorista,Centro,Inbound digital,Julián Ospina,Negociación,3237.0,Abierta,,,10
+OPP-1611,2026-04-04,Cliente_205,Logística,Oriente,Referido,Sergio Ibáñez,Propuesta,8279.0,Perdida,2026-06-16,73,11
+OPP-1612,2026-04-14,Cliente_378,Servicios financieros,Sur,Inbound digital,Diana Rueda,Prospección,1378.0,Perdida,2026-05-19,70,5
+OPP-1613,2026-04-21,Cliente_233,Logística,Norte,Referido,Laura Cifuentes,Prospección,4083.0,Abierta,,,12
+OPP-1614,2026-04-07,Cliente_320,Tecnología,Norte,Referido,Laura Cifuentes,Prospección,8324.0,Perdida,2026-05-16,78,22
+OPP-1615,2026-04-05,Cliente_256,Tecnología,Sur,Referido,Felipe Casas,Propuesta,9417.0,Perdida,2026-06-18,74,12
+OPP-1616,2026-04-20,Cliente_185,Servicios financieros,Oriente,Referido,Sergio Ibáñez,Prospección,4941.0,Perdida,2026-05-24,69,14
+OPP-1617,2026-04-04,Cliente_311,Retail mayorista,Sur,Outbound,Diana Rueda,Prospección,18674.0,Perdida,2026-05-09,70,19
+OPP-1618,2026-04-07,Cliente_279,Tecnología,Centro,Cliente actual,Camila Restrepo,Prospección,9412.0,Perdida,2026-05-10,66,22
+OPP-1619,2026-04-08,Cliente_287,Tecnología,Norte,WhatsApp,Laura Cifuentes,Propuesta,15054.0,Perdida,2026-06-26,79,5
+OPP-1620,2026-04-14,Cliente_104,Retail mayorista,Sur,Referido,Felipe Casas,Prospección,2380.0,Perdida,2026-05-21,74,24
+OPP-1621,2026-04-28,Cliente_259,Retail mayorista,Centro,Outbound,Julián Ospina,Prospección,9991.0,Abierta,,,2
+OPP-1622,2026-04-16,Cliente_279,Servicios financieros,Sur,Outbound,Felipe Casas,Prospección,1493.0,Perdida,2026-05-14,57,19
+OPP-1623,2026-04-09,Cliente_184,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Calificación,8475.0,Perdida,2026-05-07,56,12
+OPP-1624,2026-04-18,Cliente_268,Retail mayorista,Sur,Inbound digital,Diana Rueda,Propuesta,14549.0,Perdida,2026-06-25,68,13
+OPP-1625,2026-04-03,Cliente_260,Salud,Oriente,WhatsApp,Marcela Quintero,Propuesta,14920.0,Abierta,,,12
+OPP-1626,2026-04-20,Cliente_271,Servicios financieros,Oriente,WhatsApp,Marcela Quintero,Prospección,14568.0,Perdida,2026-05-21,62,15
+OPP-1627,2026-05-11,Cliente_337,Manufactura,Norte,Outbound,Andrés Pardo,Prospección,7380.0,Abierta,,,8
+OPP-1628,2026-05-27,Cliente_218,Manufactura,Norte,Outbound,Laura Cifuentes,Prospección,14130.0,Abierta,,,12
+OPP-1629,2026-05-17,Cliente_347,Retail mayorista,Sur,Inbound digital,Felipe Casas,Prospección,7325.0,Abierta,,,6
+OPP-1630,2026-05-23,Cliente_210,Servicios financieros,Norte,Evento / feria,Laura Cifuentes,Calificación,5787.0,Abierta,,,13
+OPP-1631,2026-05-22,Cliente_354,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Negociación,51525.0,Abierta,,,27
+OPP-1632,2026-05-02,Cliente_280,Tecnología,Sur,WhatsApp,Felipe Casas,Prospección,24679.0,Abierta,,,7
+OPP-1633,2026-05-02,Cliente_251,Salud,Centro,Evento / feria,Julián Ospina,Prospección,20635.0,Perdida,2026-05-30,56,15
+OPP-1634,2026-05-22,Cliente_382,Retail mayorista,Centro,Referido,Camila Restrepo,Prospección,25002.0,Abierta,,,13
+OPP-1635,2026-05-21,Cliente_364,Tecnología,Centro,Cliente actual,Julián Ospina,Prospección,8324.0,Abierta,,,9
+OPP-1636,2026-05-25,Cliente_128,Manufactura,Sur,WhatsApp,Diana Rueda,Calificación,13312.0,Abierta,,,15
+OPP-1637,2026-05-18,Cliente_235,Servicios financieros,Norte,Referido,Andrés Pardo,Prospección,2328.0,Abierta,,,26
+OPP-1638,2026-05-27,Cliente_113,Servicios financieros,Centro,Inbound digital,Julián Ospina,Calificación,9154.0,Abierta,,,16
+OPP-1639,2026-05-08,Cliente_360,Salud,Norte,Referido,Andrés Pardo,Prospección,12933.0,Abierta,,,11
+OPP-1640,2026-05-17,Cliente_245,Servicios financieros,Sur,WhatsApp,Felipe Casas,Calificación,13729.0,Abierta,,,13
+OPP-1641,2026-05-11,Cliente_322,Logística,Sur,Inbound digital,Felipe Casas,Calificación,5963.0,Abierta,,,9
+OPP-1642,2026-05-20,Cliente_377,Logística,Norte,Referido,Andrés Pardo,Calificación,1805.0,Abierta,,,9
+OPP-1643,2026-05-17,Cliente_169,Servicios financieros,Norte,WhatsApp,Andrés Pardo,Prospección,10487.0,Abierta,,,19
+OPP-1644,2026-05-12,Cliente_102,Tecnología,Oriente,Inbound digital,Marcela Quintero,Prospección,9349.0,Abierta,,,13
+OPP-1645,2026-05-22,Cliente_305,Tecnología,Sur,Inbound digital,Diana Rueda,Prospección,5707.0,Abierta,,,4
+OPP-1646,2026-05-01,Cliente_251,Retail mayorista,Oriente,Evento / feria,Sergio Ibáñez,Negociación,2402.0,Abierta,,,16
+OPP-1647,2026-05-15,Cliente_276,Salud,Sur,Inbound digital,Felipe Casas,Calificación,6017.0,Abierta,,,18
+OPP-1648,2026-05-28,Cliente_284,Logística,Norte,Outbound,Andrés Pardo,Prospección,3054.0,Abierta,,,13
+OPP-1649,2026-05-25,Cliente_150,Retail mayorista,Sur,Inbound digital,Diana Rueda,Prospección,2837.0,Abierta,,,15
+OPP-1650,2026-05-03,Cliente_378,Logística,Oriente,Cliente actual,Marcela Quintero,Prospección,5913.0,Abierta,,,16
+OPP-1651,2026-05-21,Cliente_336,Salud,Sur,Evento / feria,Diana Rueda,Prospección,13663.0,Abierta,,,14
+OPP-1652,2026-05-22,Cliente_247,Tecnología,Norte,Referido,Laura Cifuentes,Negociación,562.0,Abierta,,,16
+OPP-1653,2026-05-01,Cliente_349,Tecnología,Sur,WhatsApp,Felipe Casas,Prospección,7160.0,Abierta,,,8
+OPP-1654,2026-05-08,Cliente_335,Salud,Centro,Referido,Camila Restrepo,Prospección,11716.0,Abierta,,,14
+OPP-1655,2026-05-22,Cliente_125,Salud,Norte,Referido,Laura Cifuentes,Prospección,4878.0,Abierta,,,18
+OPP-1656,2026-05-12,Cliente_399,Servicios financieros,Sur,Cliente actual,Felipe Casas,Propuesta,11006.0,Abierta,,,4
+OPP-1657,2026-05-08,Cliente_240,Logística,Oriente,Inbound digital,Sergio Ibáñez,Propuesta,6786.0,Abierta,,,15
+OPP-1658,2026-05-15,Cliente_392,Tecnología,Sur,WhatsApp,Felipe Casas,Propuesta,2578.0,Abierta,,,5
+OPP-1659,2026-05-27,Cliente_371,Tecnología,Sur,Referido,Diana Rueda,Prospección,22037.0,Abierta,,,7
+OPP-1660,2026-05-20,Cliente_315,Manufactura,Centro,Cliente actual,Julián Ospina,Calificación,90053.0,Abierta,,,20
+OPP-1661,2026-05-09,Cliente_231,Retail mayorista,Centro,WhatsApp,Julián Ospina,Prospección,125174.0,Abierta,,,12
+OPP-1662,2026-05-26,Cliente_266,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Propuesta,10856.0,Abierta,,,20
+OPP-1663,2026-05-17,Cliente_265,Manufactura,Oriente,Referido,Sergio Ibáñez,Calificación,11912.0,Abierta,,,17
+OPP-1664,2026-05-25,Cliente_373,Salud,Centro,WhatsApp,Julián Ospina,Prospección,4483.0,Abierta,,,5
+OPP-1665,2026-05-25,Cliente_170,Retail mayorista,Norte,WhatsApp,Laura Cifuentes,Negociación,3187.0,Abierta,,,9
+OPP-1666,2026-05-15,Cliente_232,Retail mayorista,Sur,Inbound digital,Felipe Casas,Negociación,7900.0,Abierta,,,5
+OPP-1667,2026-05-24,Cliente_270,Manufactura,Norte,Evento / feria,Andrés Pardo,Prospección,4683.0,Abierta,,,10
+OPP-1668,2026-05-12,Cliente_216,Retail mayorista,Oriente,WhatsApp,Marcela Quintero,Prospección,9416.0,Abierta,,,13
+OPP-1669,2026-05-14,Cliente_335,Servicios financieros,Oriente,Referido,Marcela Quintero,Prospección,47499.0,Abierta,,,11
+OPP-1670,2026-05-03,Cliente_249,Salud,Oriente,WhatsApp,Sergio Ibáñez,Calificación,3792.0,Abierta,,,24
+OPP-1671,2026-05-12,Cliente_326,Manufactura,Centro,WhatsApp,Julián Ospina,Prospección,7655.0,Abierta,,,9
+OPP-1672,2026-05-25,Cliente_317,Servicios financieros,Sur,Inbound digital,Felipe Casas,Prospección,4325.0,Abierta,,,17
+OPP-1673,2026-05-27,Cliente_116,Logística,Centro,Cliente actual,Camila Restrepo,Propuesta,8289.0,Abierta,,,10
+OPP-1674,2026-05-16,Cliente_137,Salud,Centro,Inbound digital,Camila Restrepo,Prospección,9102.0,Abierta,,,14
+OPP-1675,2026-05-04,Cliente_362,Logística,Centro,Referido,Camila Restrepo,Prospección,10505.0,Perdida,2026-05-30,53,18
+OPP-1676,2026-05-28,Cliente_327,Salud,Centro,WhatsApp,Camila Restrepo,Propuesta,11509.0,Abierta,,,17
+OPP-1677,2026-05-09,Cliente_270,Manufactura,Centro,Referido,Camila Restrepo,Prospección,2977.0,Abierta,,,6
+OPP-1678,2026-05-14,Cliente_264,Logística,Oriente,Referido,Marcela Quintero,Prospección,1963.0,Abierta,,,21
+OPP-1679,2026-05-02,Cliente_167,Logística,Oriente,WhatsApp,Marcela Quintero,Negociación,14250.0,Abierta,,,17
+OPP-1680,2026-06-12,Cliente_352,Retail mayorista,Oriente,Evento / feria,Marcela Quintero,Negociación,1160.0,Abierta,,,15
+OPP-1681,2026-06-05,Cliente_304,Servicios financieros,Centro,Referido,Camila Restrepo,Propuesta,17434.0,Abierta,,,12
+OPP-1682,2026-06-09,Cliente_291,Retail mayorista,Norte,Referido,Andrés Pardo,Propuesta,30096.0,Abierta,,,38
+OPP-1683,2026-06-11,Cliente_262,Logística,Centro,Referido,Camila Restrepo,Prospección,5285.0,Abierta,,,22
+OPP-1684,2026-06-09,Cliente_127,Servicios financieros,Norte,WhatsApp,Laura Cifuentes,Calificación,12385.0,Abierta,,,19
+OPP-1685,2026-06-25,Cliente_101,Logística,Centro,WhatsApp,Camila Restrepo,Calificación,6496.0,Abierta,,,20
+OPP-1686,2026-06-05,Cliente_325,Manufactura,Centro,Inbound digital,Camila Restrepo,Propuesta,11915.0,Abierta,,,10
+OPP-1687,2026-06-24,Cliente_349,Retail mayorista,Centro,Inbound digital,Julián Ospina,Calificación,13233.0,Abierta,,,18
+OPP-1688,2026-06-14,Cliente_310,Retail mayorista,Norte,Inbound digital,Laura Cifuentes,Calificación,1180.0,Abierta,,,16
+OPP-1689,2026-06-20,Cliente_343,Manufactura,Centro,Cliente actual,Camila Restrepo,Negociación,1372.0,Abierta,,,11
+OPP-1690,2026-06-01,Cliente_289,Salud,Norte,Cliente actual,Laura Cifuentes,Calificación,3306.0,Abierta,,,21
+OPP-1691,2026-06-21,Cliente_349,Servicios financieros,Oriente,Inbound digital,Marcela Quintero,Prospección,4821.0,Abierta,,,12
+OPP-1692,2026-06-23,Cliente_262,Servicios financieros,Oriente,Referido,Marcela Quintero,Negociación,909.0,Abierta,,,23
+OPP-1693,2026-06-22,Cliente_378,Retail mayorista,Centro,Referido,Julián Ospina,Prospección,9408.0,Abierta,,,12
+OPP-1694,2026-06-11,Cliente_180,Logística,Centro,Cliente actual,Camila Restrepo,Calificación,25403.0,Abierta,,,8
+OPP-1695,2026-06-10,Cliente_309,Salud,Oriente,Referido,Sergio Ibáñez,Prospección,9346.0,Abierta,,,21
+OPP-1696,2026-06-08,Cliente_129,Retail mayorista,Centro,WhatsApp,Julián Ospina,Calificación,32042.0,Abierta,,,11
+OPP-1697,2026-06-16,Cliente_196,Retail mayorista,Centro,Cliente actual,Julián Ospina,Calificación,6851.0,Abierta,,,16
+OPP-1698,2026-06-22,Cliente_307,Salud,Oriente,Referido,Marcela Quintero,Negociación,2866.0,Abierta,,,19
+OPP-1699,2026-06-06,Cliente_228,Servicios financieros,Sur,Outbound,Diana Rueda,Prospección,4786.0,Abierta,,,18
+OPP-1700,2026-06-27,Cliente_152,Logística,Norte,WhatsApp,Laura Cifuentes,Propuesta,9146.0,Abierta,,,19
+OPP-1701,2026-06-04,Cliente_366,Retail mayorista,Oriente,WhatsApp,Marcela Quintero,Negociación,2479.0,Abierta,,,6
+OPP-1702,2026-06-04,Cliente_113,Servicios financieros,Oriente,Evento / feria,Marcela Quintero,Negociación,4552.0,Abierta,,,14
+OPP-1703,2026-06-13,Cliente_270,Retail mayorista,Oriente,Cliente actual,Marcela Quintero,Calificación,4566.0,Abierta,,,15
+OPP-1704,2026-06-25,Cliente_238,Tecnología,Sur,Referido,Diana Rueda,Prospección,5106.0,Abierta,,,15
+OPP-1705,2026-06-01,Cliente_105,Manufactura,Centro,Referido,Camila Restrepo,Calificación,6216.0,Abierta,,,16
+OPP-1706,2026-06-01,Cliente_158,Salud,Oriente,Cliente actual,Sergio Ibáñez,Prospección,23749.0,Abierta,,,13
+OPP-1707,2026-06-22,Cliente_121,Manufactura,Norte,Referido,Andrés Pardo,Negociación,10320.0,Abierta,,,20
+OPP-1708,2026-06-07,Cliente_191,Retail mayorista,Norte,WhatsApp,Andrés Pardo,Calificación,2474.0,Abierta,,,18
+OPP-1709,2026-06-11,Cliente_352,Logística,Oriente,Referido,Sergio Ibáñez,Negociación,9075.0,Abierta,,,3
+OPP-1710,2026-06-17,Cliente_355,Logística,Sur,Cliente actual,Felipe Casas,Propuesta,5833.0,Abierta,,,9
+OPP-1711,2026-06-16,Cliente_292,Manufactura,Sur,Referido,Felipe Casas,Prospección,43426.0,Abierta,,,2
+OPP-1712,2026-06-07,Cliente_355,Servicios financieros,Oriente,Cliente actual,Marcela Quintero,Propuesta,9632.0,Abierta,,,8
+OPP-1713,2026-06-04,Cliente_276,Logística,Centro,Inbound digital,Camila Restrepo,Calificación,20178.0,Abierta,,,11
+OPP-1714,2026-06-18,Cliente_224,Logística,Sur,Referido,Diana Rueda,Prospección,6202.0,Abierta,,,17
+OPP-1715,2026-06-20,Cliente_301,Retail mayorista,Oriente,Referido,Sergio Ibáñez,Negociación,8877.0,Abierta,,,9
+OPP-1716,2026-06-23,Cliente_136,Salud,Oriente,Inbound digital,Sergio Ibáñez,Prospección,5086.0,Abierta,,,13
+OPP-1717,2026-06-07,Cliente_345,Logística,Oriente,Outbound,Marcela Quintero,Prospección,5328.0,Abierta,,,2
+OPP-1718,2026-06-17,Cliente_341,Tecnología,Oriente,Outbound,Sergio Ibáñez,Prospección,10336.0,Abierta,,,13
+OPP-1719,2026-06-01,Cliente_268,Logística,Norte,WhatsApp,Andrés Pardo,Prospección,6938.0,Abierta,,,6
+OPP-1720,2026-06-08,Cliente_319,Tecnología,Norte,Referido,Andrés Pardo,Prospección,10730.0,Abierta,,,16
+OPP-1721,2026-06-08,Cliente_295,Logística,Oriente,Referido,Sergio Ibáñez,Calificación,16557.0,Abierta,,,13

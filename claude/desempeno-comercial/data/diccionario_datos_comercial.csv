@@ -1,0 +1,26 @@
+archivo,campo,tipo,descripcion
+pipeline_crm_demo.csv,id_oportunidad,texto,Identificador único de la oportunidad en el CRM.
+pipeline_crm_demo.csv,fecha_creacion,fecha,Fecha de creación de la oportunidad.
+pipeline_crm_demo.csv,cliente,texto,Cuenta o cliente (anonimizado).
+pipeline_crm_demo.csv,industria,categoría,Sector del cliente.
+pipeline_crm_demo.csv,region,categoría,"Zona comercial: Norte, Centro, Sur, Oriente."
+pipeline_crm_demo.csv,origen_lead,categoría,"Canal de origen: Referido, WhatsApp, Outbound, Inbound digital, Evento / feria, Cliente actual."
+pipeline_crm_demo.csv,vendedor,texto,Ejecutivo comercial dueño de la oportunidad.
+pipeline_crm_demo.csv,etapa_actual,categoría,Etapa del embudo: Prospección → Calificación → Propuesta → Negociación → Cierre.
+pipeline_crm_demo.csv,valor_usd,numérico,Valor estimado de la oportunidad en USD. Ticket alto: > 25.000.
+pipeline_crm_demo.csv,estado,categoría,"Abierta, Ganada o Perdida."
+pipeline_crm_demo.csv,fecha_cierre,fecha,Fecha real de cierre (vacía si sigue abierta).
+pipeline_crm_demo.csv,dias_ciclo,numérico,Días entre creación y cierre (vacío si abierta).
+pipeline_crm_demo.csv,dias_en_etapa_actual,numérico,Días que lleva la oportunidad en su etapa actual.
+funnel_conversion_mensual.csv,mes,periodo,Mes calendario (2025-01 a 2026-06).
+funnel_conversion_mensual.csv,etapa,categoría,Etapa del embudo comercial.
+funnel_conversion_mensual.csv,oportunidades,numérico,Oportunidades que estuvieron en la etapa ese mes.
+funnel_conversion_mensual.csv,avanzaron,numérico,Oportunidades que avanzaron a la siguiente etapa.
+funnel_conversion_mensual.csv,tasa_conversion_pct,numérico,avanzaron / oportunidades × 100. KPI central de la clase.
+ventas_vendedor_mensual.csv,mes,periodo,Mes calendario.
+ventas_vendedor_mensual.csv,vendedor,texto,Ejecutivo comercial.
+ventas_vendedor_mensual.csv,region,categoría,Zona comercial.
+ventas_vendedor_mensual.csv,meta_usd,numérico,Cuota mensual en USD.
+ventas_vendedor_mensual.csv,ventas_usd,numérico,Venta cerrada del mes en USD.
+ventas_vendedor_mensual.csv,cumplimiento_pct,numérico,ventas / meta × 100.
+ventas_vendedor_mensual.csv,oportunidades_ganadas,numérico,Número de negocios ganados en el mes.
