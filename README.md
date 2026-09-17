@@ -15,11 +15,12 @@ Todo el sitio es **bilingüe ES/EN** con un selector único en la barra superior
 /claude/sla-operaciones/     → Cumplimiento de SLA · Operaciones B2B
 /claude/pulso-financiero/    → Pulso Financiero · Finanzas Corporativas
 /claude/desempeno-comercial/ → Desempeño Comercial · Dirección B2B
+/costo-vida-colombia/        → Divulgación · Costo de vida por ciudad en Colombia (DANE 2025)
 /ia-compute/                 → Divulgación · La aceleración del cómputo en IA (1958–2026)
 ```
 El portafolio de **ChatGPT Work** vive en un sitio externo: `https://javier-dashboards.jforero.chatgpt.site/` (su versión inglesa, en `/en`).
 
-> Las URLs antiguas `/(sla-operaciones|pulso-financiero)/` redirigen automáticamente a su nueva ruta bajo `/claude/`, para no romper enlaces compartidos.
+> Las URLs antiguas `/(sla-operaciones|pulso-financiero)/` redirigen automáticamente a su nueva ruta bajo `/claude/`, para no romper enlaces compartidos. Los stubs usan rutas absolutas (`/claude/<caso>/`), nunca relativas: una ruta relativa reintroduce el bug de anidamiento `claude/claude/<caso>/`.
 
 ## Dos tipos de contenido — no confundirlos
 
@@ -48,6 +49,7 @@ Datos reales de fuentes citadas. Cada cifra declara su nivel de evidencia.
 
 | Pieza | Descripción | Fuente | Enlace |
 |---|---|---|---|
+| **Costo de Vida en Colombia · 23 ciudades** | Qué tan cara es la canasta básica en cada ciudad frente a la ciudad promedio. Mapa georreferenciado sobre el Marco Geoestadístico Nacional: el color cubre el territorio medido —municipio o área metropolitana completa— y el tamaño del círculo, la población urbana; el tono suave del departamento es solo contexto y los nueve departamentos sin ciudad medida quedan en gris. Tooltip con 36 meses de IPC. **Declara su propio límite**: el índice es un proxy construido sobre la línea de pobreza monetaria y dispersa 62 % entre extremos frente al 20 % del Deflactor Espacial de Precios del DANE, así que comunica orden y no magnitud. | [DANE](https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf) · Pobreza monetaria 2025, IPC, CNPV 2018, DIVIPOLA, MGN 2018 | [`/costo-vida-colombia/`](./costo-vida-colombia/) |
 | **La aceleración del cómputo en IA · 1958–2026** | 68 años de cómputo de entrenamiento, de la neurona artificial de Rosenblatt a los modelos frontera de 2026. 72 modelos, cada uno con su **nivel de evidencia declarado** (publicado · confirmado · probable · especulativo · tendencia). Escala logarítmica, umbral de riesgo sistémico de la EU AI Act (10²⁶ FLOP) y contraste explícito con la Ley de Moore. | [Epoch AI](https://epoch.ai/data/ai-models) · CC BY | [`/ia-compute/`](./ia-compute/) |
 
 ## Metodología predictiva (Pulso Financiero)
@@ -90,7 +92,7 @@ No existe un modelo bueno para todas las series: existe el que menos se equivoca
 - **Cero alucinación en métricas**: toda cifra publicada debe ser trazable a una fuente citada. Un objetivo nunca se presenta como logro.
 
 ## Publicar (GitHub Pages)
-Settings → Pages → *Deploy from a branch* → `main` / `/ (root)`. El `.nojekyll` y el `CNAME` ya están incluidos en la raíz.
+Settings → Pages → *Deploy from a branch* → `main` / `/ (root)`. El `CNAME` está en la raíz. **No hay `.nojekyll`**: hoy no hace falta porque ninguna ruta empieza por `_`, pero conviene agregarlo antes de crear una que sí.
 
 ## Autor
 **Javier Forero** — [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/) · [GitHub](https://github.com/jaforero)

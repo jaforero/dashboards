@@ -15,6 +15,7 @@ The whole site is **bilingual ES/EN** with a single switcher in the top bar. The
 /claude/sla-operaciones/     → SLA Compliance · B2B Operations
 /claude/pulso-financiero/    → Financial Pulse · Corporate Finance
 /claude/desempeno-comercial/ → Sales Performance · B2B Leadership
+/costo-vida-colombia/        → Explainer · Cost of living by city in Colombia (DANE 2025)
 /ia-compute/                 → Explainer · The acceleration of AI compute (1958–2026)
 ```
 The **ChatGPT Work** portfolio lives on an external site: `https://javier-dashboards.jforero.chatgpt.site/` (its English version at `/en`).
@@ -48,6 +49,7 @@ Real data from cited sources. Every figure states its level of evidence.
 
 | Piece | Description | Source | Link |
 |---|---|---|---|
+| **Cost of Living in Colombia · 23 cities** | How expensive the basic basket is in each city against the average city. A georeferenced map over the National Geostatistical Framework: color covers the territory actually measured —the municipality or the full metro area— and circle size the urban population; the department's soft tone is context only, and the nine departments with no measured city stay grey. Tooltip with 36 months of CPI. **It states its own limit**: the index is a proxy built on the monetary poverty line and spreads 62 % between extremes against 20 % for DANE's Spatial Price Deflator, so it communicates ranking, not magnitude. | [DANE](https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf) · Monetary poverty 2025, CPI, 2018 census, DIVIPOLA, MGN 2018 | [`/costo-vida-colombia/`](./costo-vida-colombia/) |
 | **The acceleration of AI compute · 1958–2026** | 68 years of training compute, from Rosenblatt's artificial neuron to the frontier models of 2026. 72 models, each with its **stated level of evidence** (published · confirmed · likely · speculative · trend). Logarithmic scale, the EU AI Act systemic-risk threshold (10²⁶ FLOP) and an explicit contrast with Moore's Law. | [Epoch AI](https://epoch.ai/data/ai-models) · CC BY | [`/ia-compute/`](./ia-compute/) |
 
 ## Forecasting methodology (Financial Pulse)
