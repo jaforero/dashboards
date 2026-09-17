@@ -1,0 +1,37 @@
+codigo_divipola,ciudad,en_fuente_nivel,en_ipc_publicado,estado,detalle
+05001,Medellín,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+05615,Rionegro,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+08001,Barranquilla,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+11001,Bogotá,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+13001,Cartagena,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+15001,Tunja,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+17001,Manizales,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+18001,Florencia,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+19001,Popayán,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+20001,Valledupar,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+23001,Montería,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+27001,Quibdó,si,no,solo_nivel,en la muestra del IPC pero agregada en 'otras áreas urbanas'; sin serie publicada por separado
+41001,Neiva,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+44001,Riohacha,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+47001,Santa Marta,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+50001,Villavicencio,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+52001,Pasto,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+52835,San Andrés de Tumaco,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+54001,Cúcuta,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+63001,Armenia,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+66001,Pereira,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+68001,Bucaramanga,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+68081,Barrancabermeja,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+70001,Sincelejo,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+73001,Ibagué,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+76001,Cali,si,si,ambas,línea de pobreza 2025 + serie IPC publicada
+76109,Buenaventura,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+81001,Arauca,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+85001,Yopal,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+86001,Mocoa,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+88001,San Andrés,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+91001,Leticia,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+94001,Inírida,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+95001,San José del Guaviare,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+97001,Mitú,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"
+99001,Puerto Carreño,no,no,solo_ipc,"en la muestra del IPC, agregada en 'otras áreas urbanas'; sin serie publicada ni línea de pobreza propia"

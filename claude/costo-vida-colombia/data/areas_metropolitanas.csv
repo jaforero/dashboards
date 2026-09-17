@@ -1,0 +1,24 @@
+ciudad,codigo_divipola,es_area_metropolitana,n_municipios,codigos_incluidos,poblacion_cabecera_nucleo,poblacion_cabecera_dominio,incremento_relativo,fuente_composicion_url
+Armenia,63001,no,1,63001,298425,298425,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Barranquilla,08001,si,2,08001 08758,1278651,2000421,0.5645,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Bogotá,11001,no,1,11001,7912359,7912359,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Bucaramanga,68001,si,4,68001 68307 68547 68276,607060,1222019,1.013,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Cali,76001,si,2,76001 76892,2224562,2323097,0.0443,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Cartagena,13001,no,1,13001,903881,903881,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Cúcuta,54001,si,5,54001 54874 54405 54553 54261,762256,1013148,0.3291,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Florencia,18001,no,1,18001,163675,163675,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Ibagué,73001,no,1,73001,514685,514685,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Manizales,17001,si,2,17001 17873,445953,511105,0.1461,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Medellín,05001,si,10,05001 05129 05380 05631 05360 05266 05088 05212 05308 05079,2479683,3955810,0.5953,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Montería,23001,no,1,23001,450188,450188,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Neiva,41001,no,1,41001,376767,376767,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Pasto,52001,no,1,52001,315662,315662,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Pereira,66001,si,3,66001 66170 66400,408608,668314,0.6356,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Popayán,19001,no,1,19001,289308,289308,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Quibdó,27001,no,1,27001,121595,121595,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Riohacha,44001,no,1,44001,153756,153756,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Santa Marta,47001,no,1,47001,521897,521897,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Sincelejo,70001,no,1,70001,289318,289318,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Tunja,15001,no,1,15001,181551,181551,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Valledupar,20001,no,1,20001,540530,540530,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
+Villavicencio,50001,no,1,50001,537605,537605,0.0,https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIHMLS-ago-oct2025.pdf
