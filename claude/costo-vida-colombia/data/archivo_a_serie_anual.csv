@@ -1,0 +1,116 @@
+anio,ciudad,codigo_divipola,departamento,valor_pesos,indice_base100,poblacion_dominio,poblacion_nucleo,es_area_metropolitana,base_pesos_anio,fuente_url
+2021,Bucaramanga,68001,Santander,481836,119.79,1191784,596738,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Bogotá,11001,"Bogotá, D.C.",477217,118.64,7777174,7777174,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Popayán,19001,Cauca,461665,114.77,278480,278480,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Tunja,15001,Boyacá,459403,114.21,173621,173621,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Medellín,05001,Antioquia,438599,109.04,3844732,2459249,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Neiva,41001,Huila,438521,109.02,354311,354311,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Quibdó,27001,Chocó,431594,107.30,116754,116754,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Pereira,66001,Risaralda,430620,107.06,646417,400608,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Armenia,63001,Quindío,429892,106.87,294093,294093,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Pasto,52001,Nariño,427803,106.36,311908,311908,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Manizales,17001,Caldas,410211,101.98,487350,426589,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Ibagué,73001,Tolima,407790,101.38,503277,503277,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Villavicencio,50001,Meta,397579,98.84,518043,518043,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Florencia,18001,Caquetá,393613,97.86,155196,155196,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Cali,76001,Valle del Cauca,376796,93.67,2326348,2229795,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Cartagena,13001,Bolívar,376426,93.58,901144,901144,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Santa Marta,47001,Magdalena,368154,91.53,492743,492743,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Barranquilla,08001,Atlántico,359394,89.35,1940403,1271047,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Valledupar,20001,Cesar,353150,87.80,487350,487350,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Montería,23001,Córdoba,350058,87.03,415847,415847,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Cúcuta,54001,Norte de Santander,349507,86.89,984707,748409,si,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Sincelejo,70001,Sucre,329776,81.99,268457,268457,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2021,Riohacha,44001,La Guajira,301888,75.05,145050,145050,no,402239,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2022.pdf
+2022,Bucaramanga,68001,Santander,547356,120.02,1200097,599666,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Bogotá,11001,"Bogotá, D.C.",536108,117.56,7820740,7820740,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Tunja,15001,Boyacá,528245,115.83,175752,175752,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Popayán,19001,Cauca,514788,112.88,281495,281495,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Neiva,41001,Huila,492824,108.06,359970,359970,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Medellín,05001,Antioquia,492104,107.91,3875338,2466239,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Quibdó,27001,Chocó,489409,107.32,117981,117981,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Armenia,63001,Quindío,486223,106.62,295538,295538,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Pereira,66001,Risaralda,484845,106.31,652632,403115,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Pasto,52001,Nariño,477793,104.77,312979,312979,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Ibagué,73001,Tolima,460796,101.04,506425,506425,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Manizales,17001,Caldas,458430,100.52,493878,431887,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Villavicencio,50001,Meta,447311,98.08,523322,523322,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Florencia,18001,Caquetá,441514,96.81,157471,157471,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Cartagena,13001,Bolívar,427667,93.78,902522,902522,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Cali,76001,Valle del Cauca,427199,93.67,2327812,2230667,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Santa Marta,47001,Magdalena,421746,92.48,500646,500646,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Barranquilla,08001,Atlántico,409913,89.88,1956825,1274152,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Cúcuta,54001,Norte de Santander,409770,89.85,993386,753123,si,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Valledupar,20001,Cesar,404148,88.62,500903,500903,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Montería,23001,Córdoba,403385,88.45,424540,424540,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Sincelejo,70001,Sucre,381707,83.70,273757,273757,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2022,Riohacha,44001,La Guajira,345787,75.82,147446,147446,no,456046,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2023.pdf
+2023,Bucaramanga,68001,Santander,599865,119.80,1207329,602080,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Bogotá,11001,"Bogotá, D.C.",592369,118.30,7854783,7854783,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Tunja,15001,Boyacá,575440,114.92,177672,177672,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Popayán,19001,Cauca,563429,112.52,283978,283978,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Medellín,05001,Antioquia,540939,108.03,3900923,2469958,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Neiva,41001,Huila,539393,107.72,365394,365394,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Quibdó,27001,Chocó,536366,107.12,119144,119144,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Armenia,63001,Quindío,533420,106.53,296198,296198,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Pereira,66001,Risaralda,529764,105.80,657140,404531,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Pasto,52001,Nariño,527071,105.26,313894,313894,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Ibagué,73001,Tolima,501026,100.06,508954,508954,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Manizales,17001,Caldas,498558,99.57,499104,436099,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Florencia,18001,Caquetá,484165,96.69,159628,159628,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Villavicencio,50001,Meta,482855,96.43,528106,528106,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Cartagena,13001,Bolívar,473838,94.63,903072,903072,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Cali,76001,Valle del Cauca,467350,93.34,2325407,2227822,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Santa Marta,47001,Magdalena,464466,92.76,508115,508115,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Cúcuta,54001,Norte de Santander,452516,90.37,1001237,757159,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Barranquilla,08001,Atlántico,451714,90.21,1972389,1276498,si,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Valledupar,20001,Cesar,448300,89.53,514277,514277,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Montería,23001,Córdoba,448025,89.48,433199,433199,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Sincelejo,70001,Sucre,429856,85.85,278938,278938,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2023,Riohacha,44001,La Guajira,375831,75.06,149689,149689,no,500720,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Bucaramanga,68001,Santander,638918,120.96,1215301,604881,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Bogotá,11001,"Bogotá, D.C.",628604,119.01,7888813,7888813,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Tunja,15001,Boyacá,603972,114.34,179666,179666,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Popayán,19001,Cauca,591022,111.89,286806,286806,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Medellín,05001,Antioquia,574786,108.82,3930427,2476134,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Neiva,41001,Huila,570381,107.98,371176,371176,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Armenia,63001,Quindío,563159,106.62,297493,297493,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Pereira,66001,Risaralda,562627,106.51,663119,406831,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Quibdó,27001,Chocó,562264,106.45,120397,120397,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Pasto,52001,Nariño,553942,104.87,314869,314869,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Ibagué,73001,Tolima,534082,101.11,512022,512022,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Manizales,17001,Caldas,525083,99.41,505412,441288,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Florencia,18001,Caquetá,514847,97.47,161733,161733,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Villavicencio,50001,Meta,505721,95.74,533088,533088,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Cartagena,13001,Bolívar,501919,95.02,903895,903895,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Cali,76001,Valle del Cauca,492236,93.19,2325572,2227444,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Santa Marta,47001,Magdalena,478195,90.53,515343,515343,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Cúcuta,54001,Norte de Santander,477637,90.42,1008020,760344,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Barranquilla,08001,Atlántico,474571,89.84,1987599,1278419,si,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Montería,23001,Córdoba,472680,89.49,441790,441790,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Valledupar,20001,Cesar,468612,88.72,527636,527636,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Sincelejo,70001,Sucre,459238,86.94,284215,284215,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2024,Riohacha,44001,La Guajira,394463,74.68,151834,151834,no,528216,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Bucaramanga,68001,Santander,670169,121.69,1222019,607060,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Bogotá,11001,"Bogotá, D.C.",660533,119.94,7912359,7912359,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Tunja,15001,Boyacá,620017,112.58,181551,181551,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Popayán,19001,Cauca,617310,112.09,289308,289308,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Medellín,05001,Antioquia,600972,109.13,3955810,2479683,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Pereira,66001,Risaralda,590723,107.26,668314,408608,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Neiva,41001,Huila,590023,107.14,376767,376767,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Armenia,63001,Quindío,588462,106.85,298425,298425,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Quibdó,27001,Chocó,585168,106.26,121595,121595,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Pasto,52001,Nariño,575607,104.52,315662,315662,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Ibagué,73001,Tolima,555608,100.89,514685,514685,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Manizales,17001,Caldas,548137,99.53,511105,445953,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Florencia,18001,Caquetá,540401,98.13,163675,163675,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Villavicencio,50001,Meta,531554,96.52,537605,537605,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Cartagena,13001,Bolívar,524805,95.30,903881,903881,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Cali,76001,Valle del Cauca,511638,92.90,2323097,2224562,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Barranquilla,08001,Atlántico,498721,90.56,2000421,1278651,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Cúcuta,54001,Norte de Santander,498198,90.46,1013148,762256,si,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Montería,23001,Córdoba,490431,89.05,450188,450188,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Santa Marta,47001,Magdalena,490202,89.01,521897,521897,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Valledupar,20001,Cesar,488369,88.68,540530,540530,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Sincelejo,70001,Sucre,475951,86.42,289318,289318,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf
+2025,Riohacha,44001,La Guajira,413433,75.07,153756,153756,no,550714,https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf

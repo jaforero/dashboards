@@ -1,57 +1,29 @@
-PAQUETE ÚNICO · dashboards.javierforero.co
-==========================================
+ACTUALIZACIÓN DEL TABLERO · Costo de Vida en Colombia
+=====================================================
 
-CÓMO SUBIRLO
-------------
-Descomprime este zip en la RAÍZ del repositorio jaforero/dashboards.
-Las rutas de adentro ya son las definitivas; no muevas nada de sitio.
+Descomprime en la RAÍZ del repositorio jaforero/dashboards.
+Solo toca una carpeta: claude/costo-vida-colombia/
 
-Contenido:
-  README.md                              (reemplaza)
-  README.en.md                           (reemplaza)
-  sitemap.xml                            (reemplaza)
-  claude/index.html                      (reemplaza)
-  claude/costo-vida-colombia/            (carpeta completa del tablero)
+  claude/costo-vida-colombia/index.html        (tablero actualizado)
+  claude/costo-vida-colombia/README.md
+  claude/costo-vida-colombia/README.en.md
+  claude/costo-vida-colombia/screenshot.png
+  claude/costo-vida-colombia/data/             (8 archivos)
 
-Este paquete NO contiene ningún archivo llamado sla-operaciones.
-Es deliberado: ver abajo.
+No modifica el hub, ni los README de la raíz, ni el sitemap: esos ya quedaron
+correctos en el paquete anterior.
 
 
-DOS COSAS QUE HAY QUE HACER A MANO EN GITHUB
---------------------------------------------
+QUÉ CAMBIÓ
+----------
+1. El gráfico del IPC muestra el valor al pasar el cursor o el dedo: mes,
+   número índice y variación de ese mes, con guía vertical y punto.
+2. La barra de colores pasó a estar debajo del mapa, dentro del mismo panel.
+3. El encabezado se redujo: el mapa entra completo en el primer scroll.
+4. Filtro de año 2021-2025. Cambia el mapa, la lista, las tarjetas y la escala.
+   La línea del IPC NO cambia con el filtro: siempre son los últimos 36 meses.
 
-1) RESTAURAR claude/sla-operaciones/index.html   ← URGENTE
-
-   Ese archivo hoy es un stub de redirección que apunta a sí mismo: el
-   dashboard de SLA no carga. Se dañó al descomprimir el paquete anterior
-   dentro de claude/ en vez de la raíz.
-
-   El archivo NO se perdió; está en el historial de Git. Para recuperarlo:
-
-     github.com/jaforero/dashboards/blob/main/claude/sla-operaciones/index.html
-       -> botón "History"
-       -> abre el commit ANTERIOR a "Add files via upload" (hace 2 días)
-       -> botón "View file" / "Raw" -> guarda el HTML
-       -> súbelo de nuevo a claude/sla-operaciones/index.html
-
-   Alternativa en tu máquina, si tienes el repo clonado:
-     git log --oneline -- claude/sla-operaciones/index.html
-     git checkout <sha_anterior> -- claude/sla-operaciones/index.html
-     git commit -m "Restaura dashboard SLA" && git push
-
-   Los demás archivos de esa carpeta (README.md, README.en.md, data/) están
-   intactos. Solo se dañó index.html.
-
-2) BORRAR claude/sitemap.xml
-
-   Es un duplicado que creó el mismo error de descompresión. El sitemap del
-   sitio es el de la raíz, que va corregido en este paquete.
-
-
-QUÉ SE CORRIGIÓ AQUÍ
---------------------
-El tablero quedó desplegado en /claude/costo-vida-colombia/, pero el hub, los
-dos README y el sitemap lo anunciaban en /costo-vida-colombia/ (raíz), que no
-existe. Las tres referencias ahora apuntan a la ruta real.
+Datos nuevos: data/archivo_a_serie_anual.csv (115 filas, 5 años x 23 ciudades,
+con la fuente DANE por fila).
 
 Javier Forero · javierforero.co

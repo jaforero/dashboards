@@ -1,6 +1,6 @@
 # Notas metodológicas — Dataset comparativo de costo de vida por ciudad, Colombia
 
-**Fecha de corte:** 17 de septiembre de 2026 (v3 — áreas metropolitanas, geometría y mapa)
+**Fecha de corte:** 18 de septiembre de 2026 (v4 — serie anual 2021-2025 y mejoras del mapa)
 **Unidad de análisis:** municipio (llave: `codigo_divipola`)
 **Uso previsto:** mapa de símbolos georreferenciados. Color = índice de costo; tamaño = población.
 **Audiencia:** público general con alfabetización de datos.
@@ -397,6 +397,42 @@ para medir áreas o distancias, no sirve — hay que volver al MGN sin simplific
    tooltip debe decirlo, porque un lector general las suma sin pensarlo.
 6. **Poner la salvedad de la sección 6 en la interfaz**, no solo en este archivo. Un mapa
    público sin ella afirma una precisión que el dato no tiene.
+
+---
+
+## 10 ante. Serie anual 2021-2025
+
+El mapa trae un filtro de año con **cinco años de líneas de pobreza**, tomados de las
+presentaciones de resultados del DANE:
+
+| Año del dato | Presentación | Contraste |
+|---|---|---|
+| 2021 | `pres-PM-2022.pdf` | — |
+| 2022 | `pres-PM-2023.pdf` | coincide con `pres-PM-2022.pdf` |
+| 2023 | `pres-PM-2025.pdf` | coincide con `pres-PM-2023.pdf` y `pres-PM-2024.pdf` |
+| 2024 | `pres-PM-2025.pdf` | coincide con `pres-PM-2024.pdf` |
+| 2025 | `pres-PM-2025.pdf` | — |
+
+Cada año que aparece en dos presentaciones se contrastó y coincide. La **única** discrepancia
+en los 115 valores de la serie es Florencia 2024: 514.847 en una y 514.848 en otra — un peso,
+redondeo. Se usó 514.847.
+
+**El índice se recalcula dentro de cada año.** La base 100 es el promedio simple de las 23
+ciudades *de ese año*, y la población es la proyección de cabecera *de ese año*. Por eso el
+filtro responde "¿cambió el orden relativo?", no "¿subieron los precios?". Para lo segundo está
+la serie del IPC, que es independiente del filtro y siempre muestra los últimos 36 meses.
+
+**Lo que muestra la serie.** El orden es notablemente estable: en cinco años ninguna ciudad se
+mueve más de tres puestos (Santa Marta baja tres, Cúcuta sube tres). Bucaramanga A.M. es la más
+cara y Riohacha la más barata en los cinco años, sin excepción. El índice ponderado por
+población sube despacio y de forma sostenida —105,90 en 2021 a 106,42 en 2025—: las ciudades más
+pobladas se encarecen algo más rápido que el promedio.
+
+**Límite de la serie.** No es una serie deflactada ni comparable con años anteriores a 2021: la
+metodología de las líneas de pobreza se actualizó en 2019-2020, así que los valores previos
+pertenecen a otra medición. Tampoco cubre 2020, año atípico por la pandemia.
+
+`archivo_a_serie_anual.csv` trae las 115 filas con su fuente por fila.
 
 ---
 
