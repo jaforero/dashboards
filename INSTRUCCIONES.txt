@@ -1,0 +1,57 @@
+PAQUETE ÚNICO · dashboards.javierforero.co
+==========================================
+
+CÓMO SUBIRLO
+------------
+Descomprime este zip en la RAÍZ del repositorio jaforero/dashboards.
+Las rutas de adentro ya son las definitivas; no muevas nada de sitio.
+
+Contenido:
+  README.md                              (reemplaza)
+  README.en.md                           (reemplaza)
+  sitemap.xml                            (reemplaza)
+  claude/index.html                      (reemplaza)
+  claude/costo-vida-colombia/            (carpeta completa del tablero)
+
+Este paquete NO contiene ningún archivo llamado sla-operaciones.
+Es deliberado: ver abajo.
+
+
+DOS COSAS QUE HAY QUE HACER A MANO EN GITHUB
+--------------------------------------------
+
+1) RESTAURAR claude/sla-operaciones/index.html   ← URGENTE
+
+   Ese archivo hoy es un stub de redirección que apunta a sí mismo: el
+   dashboard de SLA no carga. Se dañó al descomprimir el paquete anterior
+   dentro de claude/ en vez de la raíz.
+
+   El archivo NO se perdió; está en el historial de Git. Para recuperarlo:
+
+     github.com/jaforero/dashboards/blob/main/claude/sla-operaciones/index.html
+       -> botón "History"
+       -> abre el commit ANTERIOR a "Add files via upload" (hace 2 días)
+       -> botón "View file" / "Raw" -> guarda el HTML
+       -> súbelo de nuevo a claude/sla-operaciones/index.html
+
+   Alternativa en tu máquina, si tienes el repo clonado:
+     git log --oneline -- claude/sla-operaciones/index.html
+     git checkout <sha_anterior> -- claude/sla-operaciones/index.html
+     git commit -m "Restaura dashboard SLA" && git push
+
+   Los demás archivos de esa carpeta (README.md, README.en.md, data/) están
+   intactos. Solo se dañó index.html.
+
+2) BORRAR claude/sitemap.xml
+
+   Es un duplicado que creó el mismo error de descompresión. El sitemap del
+   sitio es el de la raíz, que va corregido en este paquete.
+
+
+QUÉ SE CORRIGIÓ AQUÍ
+--------------------
+El tablero quedó desplegado en /claude/costo-vida-colombia/, pero el hub, los
+dos README y el sitemap lo anunciaban en /costo-vida-colombia/ (raíz), que no
+existe. Las tres referencias ahora apuntan a la ruta real.
+
+Javier Forero · javierforero.co

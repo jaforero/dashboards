@@ -15,12 +15,12 @@ Todo el sitio es **bilingüe ES/EN** con un selector único en la barra superior
 /claude/sla-operaciones/     → Cumplimiento de SLA · Operaciones B2B
 /claude/pulso-financiero/    → Pulso Financiero · Finanzas Corporativas
 /claude/desempeno-comercial/ → Desempeño Comercial · Dirección B2B
-/costo-vida-colombia/        → Divulgación · Costo de vida por ciudad en Colombia (DANE 2025)
+/claude/costo-vida-colombia/ → Divulgación · Costo de vida por ciudad en Colombia (DANE 2025)
 /ia-compute/                 → Divulgación · La aceleración del cómputo en IA (1958–2026)
 ```
 El portafolio de **ChatGPT Work** vive en un sitio externo: `https://javier-dashboards.jforero.chatgpt.site/` (su versión inglesa, en `/en`).
 
-> Las URLs antiguas `/(sla-operaciones|pulso-financiero)/` redirigen automáticamente a su nueva ruta bajo `/claude/`, para no romper enlaces compartidos. Los stubs usan rutas absolutas (`/claude/<caso>/`), nunca relativas: una ruta relativa reintroduce el bug de anidamiento `claude/claude/<caso>/`.
+> La URL antigua `/pulso-financiero/` redirige automáticamente a `/claude/pulso-financiero/`. El stub usa ruta absoluta, nunca relativa: una ruta relativa reintroduce el bug de anidamiento `claude/claude/<caso>/`. **`/sla-operaciones/` en la raíz ya no existe**: si quieres conservar los enlaces viejos de ese tablero, hay que volver a crear su stub.
 
 ## Dos tipos de contenido — no confundirlos
 
@@ -45,11 +45,13 @@ Datos de demostración, salvo donde se declara lo contrario. Ninguna cifra corre
 | **Desempeño Comercial · Dirección B2B** | Ventas vs. meta por vendedor y región, diagnóstico del embudo que aísla el cuello de botella en Propuesta, pipeline ponderado por probabilidad empírica de cierre, predicción con backtest y Q&A conversacional determinista, con gobernanza de la decisión. | [`/claude/desempeno-comercial/`](./claude/desempeno-comercial/) |
 
 ## Divulgación · datos públicos verificables
+
+> **Excepción declarada.** Por la regla de arriba, una pieza de divulgación iría en la raíz. *Costo de Vida en Colombia* vive bajo `/claude/` por decisión editorial: se construyó con Claude y se publicó en ese hub. Sus datos siguen siendo públicos y trazables, y la tarjeta del hub la muestra en la sección de divulgación, separada de las demos.
 Datos reales de fuentes citadas. Cada cifra declara su nivel de evidencia.
 
 | Pieza | Descripción | Fuente | Enlace |
 |---|---|---|---|
-| **Costo de Vida en Colombia · 23 ciudades** | Qué tan cara es la canasta básica en cada ciudad frente a la ciudad promedio. Mapa georreferenciado sobre el Marco Geoestadístico Nacional: el color cubre el territorio medido —municipio o área metropolitana completa— y el tamaño del círculo, la población urbana; el tono suave del departamento es solo contexto y los nueve departamentos sin ciudad medida quedan en gris. Tooltip con 36 meses de IPC. **Declara su propio límite**: el índice es un proxy construido sobre la línea de pobreza monetaria y dispersa 62 % entre extremos frente al 20 % del Deflactor Espacial de Precios del DANE, así que comunica orden y no magnitud. | [DANE](https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf) · Pobreza monetaria 2025, IPC, CNPV 2018, DIVIPOLA, MGN 2018 | [`/costo-vida-colombia/`](./costo-vida-colombia/) |
+| **Costo de Vida en Colombia · 23 ciudades** | Qué tan cara es la canasta básica en cada ciudad frente a la ciudad promedio. Mapa georreferenciado sobre el Marco Geoestadístico Nacional: el color cubre el territorio medido —municipio o área metropolitana completa— y el tamaño del círculo, la población urbana; el tono suave del departamento es solo contexto y los nueve departamentos sin ciudad medida quedan en gris. Tooltip con 36 meses de IPC. **Declara su propio límite**: el índice es un proxy construido sobre la línea de pobreza monetaria y dispersa 62 % entre extremos frente al 20 % del Deflactor Espacial de Precios del DANE, así que comunica orden y no magnitud. | [DANE](https://www.dane.gov.co/files/operaciones/PM/pres-PM-2025.pdf) · Pobreza monetaria 2025, IPC, CNPV 2018, DIVIPOLA, MGN 2018 | [`/claude/costo-vida-colombia/`](./claude/costo-vida-colombia/) |
 | **La aceleración del cómputo en IA · 1958–2026** | 68 años de cómputo de entrenamiento, de la neurona artificial de Rosenblatt a los modelos frontera de 2026. 72 modelos, cada uno con su **nivel de evidencia declarado** (publicado · confirmado · probable · especulativo · tendencia). Escala logarítmica, umbral de riesgo sistémico de la EU AI Act (10²⁶ FLOP) y contraste explícito con la Ley de Moore. | [Epoch AI](https://epoch.ai/data/ai-models) · CC BY | [`/ia-compute/`](./ia-compute/) |
 
 ## Metodología predictiva (Pulso Financiero)
