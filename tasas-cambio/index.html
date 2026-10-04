@@ -44,6 +44,10 @@
   gtag('config', 'G-MQ3K8EVKV0', {content_group:'tasas-cambio',page_title:'Tasas de cambio oficiales · bancos centrales'});
   function track(name, params){try{if(typeof gtag==='function')gtag('event',name,params||{});}catch(e){}}
 </script>
+<script>
+  /* Tema antes del primer pintado: evita parpadeo y desplazamientos (jf-theme, como el hub) */
+  (function(){try{var t=localStorage.getItem('jf-theme');if(t!=='dark'&&t!=='light')t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset",
@@ -188,7 +192,13 @@
   .kpi-delta .vs{color:var(--text-muted);}
   .kpi-next{font-size:.76rem;color:var(--primary);background:color-mix(in srgb,var(--primary) 7%,transparent);border-radius:8px;padding:4px 8px;}
   .kpi-f{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px;}
-  .kpi-src{font-size:.72rem;color:var(--text-muted);border-top:1px dashed var(--border);padding-top:7px;margin-top:2px;}
+  .kpi-src{font-size:.72rem;color:var(--text-muted);border-top:1px dashed var(--border);padding-top:7px;margin-top:auto;}
+  /* Altura uniforme y esqueletos del mismo tamaño: las tarjetas llegan sin mover la página (CLS) */
+  .kpi,.kpi-skel{min-height:282px;}
+  .kpi-skel{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);position:relative;overflow:hidden;}
+  .kpi-skel::before{content:'';position:absolute;left:16px;right:40%;top:18px;height:14px;border-radius:7px;background:var(--bg2);}
+  .kpi-skel::after{content:'';position:absolute;left:16px;right:30%;top:70px;height:34px;border-radius:8px;background:var(--bg2);}
+  #asOfPill,#statusPill{min-width:176px;justify-content:center;}
   .chip{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:100px;padding:3px 9px;white-space:nowrap;border:1px solid var(--border);color:var(--text-soft);background:var(--bg2);}
   .chip.calc{color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 8%,transparent);}
   .badge{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;border-radius:100px;padding:3px 9px;border:1px solid;}
@@ -264,6 +274,7 @@
     .jf-topbar-tag{display:none;}
     .chart{height:310px;}
     .kpi-v .num{font-size:1.6rem;}
+    .kpi,.kpi-skel{min-height:272px;}
   }
 </style>
 </head>
@@ -291,8 +302,8 @@
     <h1 data-i18n>Tasas de cambio oficiales de bancos centrales</h1>
     <p class="deck" data-i18n>¿Cuánto vale hoy cada moneda frente a las otras y qué tan lejos está de su comportamiento reciente?</p>
     <div class="meta-row">
-      <span class="pill" id="asOfPill" aria-live="polite"></span>
-      <span class="pill" id="statusPill" aria-live="polite"></span>
+      <span class="pill" id="asOfPill" aria-live="polite">Cargando datos…</span>
+      <span class="pill" id="statusPill" aria-live="polite">Verificando fuentes…</span>
       <span class="pill" data-i18n>Javier Forero · Estadístico con alma de narrador</span>
     </div>
     <p class="limit" data-i18n>Son tasas de referencia oficiales, no tasas de transacción: un banco o una casa de cambio aplicará su propio margen.</p>
@@ -303,7 +314,7 @@
   <section class="section" id="sec-kpis" aria-labelledby="h-kpis">
     <div class="sh"><span class="snum" aria-hidden="true">01</span><h2 id="h-kpis" data-i18n>Hoy: el último valor oficial de cada tasa</h2></div>
     <p class="sdek" data-i18n>Cada tarjeta lleva su propia fecha: las fuentes publican en días distintos.</p>
-    <div class="kpis" id="kpis"><div class="panel msg" data-i18n>Cargando tasas oficiales…</div></div>
+    <div class="kpis" id="kpis" aria-busy="true"><p class="sr-only">Cargando tasas oficiales…</p><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div></div>
   </section>
 
   <!-- 02 · Histórico -->
@@ -411,7 +422,6 @@
   </footer>
 </main>
 
-<script src="fx-data.js"></script>
 <script>
 'use strict';
 /* =====================================================================
@@ -551,6 +561,7 @@ const TR={
 "Calculada a partir de {f}":"Calculated from {f}",
 "Contrato de datos: schema_version {v} · fecha de corte {date}.":"Data contract: schema_version {v} · cut-off date {date}.",
 "documentación":"documentation",
+"Cargando datos…":"Loading data…","Verificando fuentes…":"Checking sources…",
 "Valor oficial: {v}":"Official value: {v}",
 "El cálculo usa la tasa oficial con todos sus decimales.":"The calculation uses the official rate with all its decimals.",
 "Las tasas se muestran con un decimal. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.":"Rates are shown with one decimal place. The full official value appears when you hover over the figure and is the one used in every calculation."
@@ -672,6 +683,8 @@ function stateOf(id){
   return {level:'ok',text:T('Al día'),tip:''};
 }
 const ICON={ok:'✓',stale:'!',error:'✕'};
+/* Marcadores de espacio mientras llega latest.json (no muestran datos; solo reservan el alto para evitar CLS) */
+const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(6);
 function badge(st){return '<span class="badge '+st.level+'"'+(st.tip?' title="'+esc(st.tip)+'"':'')+'><span aria-hidden="true">'+ICON[st.level]+'</span> '+esc(st.text)+'</span>';}
 function methodChip(e){return isOfficial(e)?'<span class="chip">'+esc(T('Oficial'))+'</span>':'<span class="chip calc">'+esc(T('Calculada'))+'</span>';}
 
@@ -681,7 +694,7 @@ function isContractError(msg){return /no soportado|falta schema_version/.test(ms
 
 function renderHeader(){
   const L=S.latest, ap=$('asOfPill'), sp=$('statusPill'), bn=$('banner');
-  if(!L){ap.textContent='—';sp.textContent='';sp.className='pill';}
+  if(!L){ap.textContent=S.latestErr?'—':T('Cargando datos…');sp.textContent=S.latestErr?'':T('Verificando fuentes…');sp.className='pill';}
   else{
     ap.textContent=F('Datos al {date}',{date:fmtD(L.as_of)});
     const ids=orderIds(L);let ok=0,st=0,er=0;
@@ -727,7 +740,8 @@ function renderFooter(){
 /* ===================== 01 · KPIs ===================== */
 function renderKpis(){
   const box=$('kpis'),L=S.latest;
-  if(!L){box.innerHTML=S.latestErr?'':'<div class="panel msg">'+esc(T('Cargando tasas oficiales…'))+'</div>';return;}
+  if(!L){box.setAttribute('aria-busy',String(!S.latestErr));box.innerHTML=S.latestErr?'':'<p class="sr-only">'+esc(T('Cargando tasas oficiales…'))+'</p>'+SKELETON;return;}
+  box.setAttribute('aria-busy','false');
   box.innerHTML=orderIds(L).map(kpiCard).join('');
 }
 function kpiCard(id){
@@ -1113,17 +1127,21 @@ function bindUI(){
     loadLatest().then(()=>{if(S.latest&&(S.latest.as_of!==prevAsOf||!S.daily||S.daily.as_of!==S.latest.as_of))loadDaily();});
   });
 }
-async function boot(){
+function initUI(){
   window.__titleEs=document.title;
   applyTheme(initialTheme(),true);
   bindUI();
   applyLang(detectLang(),true);
+}
+async function boot(){
   if(!window.FxData){S.latestErr=new Error('fx-data.js');renderHeader();return;}
   await loadLatest();                 // 1) KPIs primero (§5)
   ensurePlotly();                     // 2) Plotly diferido: no bloquea el primer pintado
   loadDaily();                        // 3) Histórico en paralelo
 }
-boot();
+initUI();                             // idioma y tema antes del primer pintado (sin esperar a fx-data.js)
 </script>
+<script src="fx-data.js"></script>
+<script>boot();</script>
 </body>
 </html>
