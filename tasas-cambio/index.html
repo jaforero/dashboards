@@ -390,6 +390,7 @@
           <li data-i18n>Las cruzadas usan el último día con ambos insumos oficiales; por eso su fecha puede ser anterior a la de la TRM. No es un error.</li>
           <li data-i18n>Los fines de semana y festivos repiten el último valor oficial: en el gráfico aparecen punteados y no entran en las variaciones.</li>
           <li data-i18n>Cuando una fuente ya publicó el valor de un día futuro, la tarjeta lo indica como «Publicada para…».</li>
+          <li data-i18n>Las tasas se muestran con un decimal. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.</li>
         </ul>
       </div>
       <div class="panel full">
@@ -549,7 +550,10 @@ const TR={
 "Tipo":"Type","Identificador":"Identifier","Documentación":"Documentation",
 "Calculada a partir de {f}":"Calculated from {f}",
 "Contrato de datos: schema_version {v} · fecha de corte {date}.":"Data contract: schema_version {v} · cut-off date {date}.",
-"documentación":"documentation"
+"documentación":"documentation",
+"Valor oficial: {v}":"Official value: {v}",
+"El cálculo usa la tasa oficial con todos sus decimales.":"The calculation uses the official rate with all its decimals.",
+"Las tasas se muestran con un decimal. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.":"Rates are shown with one decimal place. The full official value appears when you hover over the figure and is the one used in every calculation."
 };
 
 /* ---------- Motor de idioma (mismo contrato del sitio: jf-lang / iac_lang, ?lang=en) ---------- */
@@ -605,6 +609,11 @@ function initialTheme(){const t=safeStore.get('jf-theme');if(t==='dark'||t==='li
 /* ---------- Formato ---------- */
 const fmtV=(v,d)=>FxData.formatValue(v,d,LANG);
 const fmtD=iso=>iso?FxData.formatDay(iso,LANG):'—';
+/* Decisión de Javier (2026-10-04): las tasas se muestran con un solo decimal (reemplaza la regla 9 del §4.2).
+   El valor oficial con todos sus decimales queda en el tooltip y se usa en todos los cálculos. */
+const RATE_DEC=1;
+const fmtR=v=>fmtV(v,RATE_DEC);
+const exactTip=(v,d)=>F('Valor oficial: {v}',{v:fmtV(v,d)});
 function roundTo(v,d){const f=Math.pow(10,d);return Math.round(v*f)/f;}
 function sgn(p,dec){const r=roundTo(p,dec);return r>0?1:(r<0?-1:0);}
 function fmtPct(p,dec){
@@ -727,11 +736,11 @@ function kpiCard(id){
   const ago=(e.date==null||n==null)?'':(n===0?T('al corte'):(n===1?T('hace 1 día'):F('hace {n} días',{n:n})));
   let delta;
   if(e.change_pct!=null&&e.prev_date){
-    delta='<div class="kpi-delta" title="'+esc(F('Antes: {v} el {date}',{v:fmtV(e.prev_value,e.decimals),date:fmtD(e.prev_date)}))+'">'
+    delta='<div class="kpi-delta" title="'+esc(F('Antes: {v} el {date}',{v:fmtR(e.prev_value),date:fmtD(e.prev_date)}))+'">'
       +'<span aria-hidden="true">'+arrow(e.change_pct)+'</span> <b>'+esc(fmtPct(e.change_pct))+'</b> <span class="vs">'+esc(F('vs. {date}',{date:fmtD(e.prev_date)}))+'</span></div>';
   }else delta='<div class="kpi-delta"><span class="vs">'+esc(T('Sin registro oficial anterior'))+'</span></div>';
   const next=(e.next&&e.next.value!=null&&e.next.date)
-    ?'<div class="kpi-next" data-next="'+esc(e.next.date)+'">'+esc(F('Publicada para el {day}: {v}',{day:fmtWeekday(e.next.date),v:fmtV(e.next.value,e.decimals)}))+'</div>':'';
+    ?'<div class="kpi-next" data-next="'+esc(e.next.date)+'">'+esc(F('Publicada para el {day}: {v}',{day:fmtWeekday(e.next.date),v:fmtR(e.next.value)}))+'</div>':'';
   let src;
   if(isOfficial(e)&&e.source){
     const s=e.source;
@@ -744,7 +753,7 @@ function kpiCard(id){
   return '<article class="kpi" data-id="'+esc(id)+'" data-level="'+st.level+'" data-date="'+esc(e.date||'')+'" aria-labelledby="kt-'+esc(id)+'">'
     +'<div class="kpi-h"><h3 id="kt-'+esc(id)+'">'+esc(sname(id))+'</h3>'+methodChip(e)+'</div>'
     +'<div class="kpi-pair">'+esc(e.pair)+'</div>'
-    +'<div class="kpi-v"><span class="num">'+esc(fmtV(e.value,e.decimals))+'</span><span class="unit">'+esc(unitOf(e))+'</span></div>'
+    +'<div class="kpi-v"><span class="num" title="'+esc(exactTip(e.value,e.decimals))+'">'+esc(fmtR(e.value))+'</span><span class="unit">'+esc(unitOf(e))+'</span></div>'
     +'<div class="kpi-d"><time datetime="'+esc(e.date||'')+'">'+esc(fmtD(e.date))+'</time>'
       +(ago?' · <span title="'+esc(F('Días entre este dato oficial y la fecha de corte ({date})',{date:fmtD(L.as_of)}))+'">'+esc(ago)+'</span>':'')+'</div>'
     +delta+next
@@ -850,7 +859,7 @@ function renderHistory(){
   const evs=eventsFor(id).map(ev=>({ev:ev,st:eventStats(id,ev)})).filter(x=>x.st);
   $('histEvents').innerHTML=evs.length?'<h3>'+esc(T('Eventos con contexto'))+'</h3><ul>'+evs.map(x=>{
     const out=x.ev.date<from;
-    return '<li>'+esc(fmtD(x.ev.date))+' · '+esc(T(x.ev.long))+': '+esc(F('de {a} a {b} ({p})',{a:fmtV(x.st.from.value,e.decimals),b:fmtV(x.st.to.value,e.decimals),p:fmtPct(x.st.pct,1)}))
+    return '<li>'+esc(fmtD(x.ev.date))+' · '+esc(T(x.ev.long))+': '+esc(F('de {a} a {b} ({p})',{a:fmtR(x.st.from.value),b:fmtR(x.st.to.value),p:fmtPct(x.st.pct,1)}))
       +(out?' <span class="muted">'+esc(T('(fuera del rango visible)'))+'</span>':'')+'</li>';}).join('')
     +'</ul><p class="small muted">'+esc(T('Variación calculada sobre rates_daily.json frente al registro oficial anterior.'))+'</p>':'';
 
@@ -873,7 +882,7 @@ function renderHistory(){
     {type:'scatter',mode:showMk?'lines+markers':'lines',x:fx,y:fy,connectgaps:false,line:{color:c1,width:1.5,dash:'dot'},
       marker:{symbol:'circle-open',size:7,color:c1,line:{width:1.5}},hoverinfo:'skip',name:'filled'},
     {type:'scatter',mode:'markers',x:pts.map(p=>p.date),y:pts.map(p=>p.value),marker:{size:9,color:c1,opacity:0},
-      customdata:pts.map(p=>[fmtD(p.date),fmtV(p.value,e.decimals),p.filled?kindFill:kindOff]),
+      customdata:pts.map(p=>[fmtD(p.date),fmtR(p.value),p.filled?kindFill:kindOff]),
       hovertemplate:'<b>%{customdata[1]}</b> '+esc(unitOf(e))+'<br>%{customdata[0]} · %{customdata[2]}<extra></extra>',name:'hover'}
   ];
   const L=baseLayout();
@@ -890,7 +899,7 @@ function renderHistory(){
 }
 function dataTable(rows,e,caption){
   return '<table><caption>'+esc(caption)+'</caption><thead><tr><th scope="col">'+esc(T('Fecha'))+'</th><th scope="col" class="n">'+esc(T('Valor'))+'</th><th scope="col">'+esc(T('Tipo de día'))+'</th></tr></thead><tbody>'
-    +rows.map(p=>'<tr><td>'+esc(fmtD(p.date))+'</td><td class="n">'+esc(fmtV(p.value,e.decimals))+'</td><td>'+esc(p.filled?T('repite el último valor oficial'):T('oficial'))+'</td></tr>').join('')
+    +rows.map(p=>'<tr><td>'+esc(fmtD(p.date))+'</td><td class="n" title="'+esc(exactTip(p.value,e.decimals))+'">'+esc(fmtR(p.value))+'</td><td>'+esc(p.filled?T('repite el último valor oficial'):T('oficial'))+'</td></tr>').join('')
     +'</tbody></table>';
 }
 
@@ -973,7 +982,7 @@ function renderB100(){
 
 /* ===================== 04 · Variaciones ===================== */
 function pctCell(c,dec){if(!c)return '<td class="n">—</td>';
-  return '<td class="n" title="'+esc(fmtV(c.from.value,dec)+' ('+fmtD(c.from.date)+') → '+fmtV(c.to.value,dec)+' ('+fmtD(c.to.date)+')')+'">'
+  return '<td class="n" title="'+esc(fmtR(c.from.value)+' ('+fmtD(c.from.date)+') → '+fmtR(c.to.value)+' ('+fmtD(c.to.date)+')')+'">'
     +'<span aria-hidden="true">'+arrow(c.pct)+'</span> '+esc(fmtPct(c.pct))+'<span class="sub">'+esc(F('desde {date}',{date:fmtD(c.from.date)}))+'</span></td>';}
 function renderVariations(){
   const box=$('varTable');
@@ -987,9 +996,9 @@ function renderVariations(){
     const m30=endDate?FxData.changeOver(d,id,30,endDate):null;
     const ytd=FxData.ytdChange(d,id);
     const last=L&&L.series[id]&&L.series[id].value!=null?{v:L.series[id].value,date:L.series[id].date}:(endDate?{v:off[off.length-1].value,date:endDate}:null);
-    const prev=(e.change_pct!=null&&e.prev_date)?'<td class="n" title="'+esc(F('Antes: {v} el {date}',{v:fmtV(e.prev_value,de.decimals),date:fmtD(e.prev_date)}))+'"><span aria-hidden="true">'+arrow(e.change_pct)+'</span> '+esc(fmtPct(e.change_pct))+'<span class="sub">'+esc(F('vs. {date}',{date:fmtD(e.prev_date)}))+'</span></td>':'<td class="n">—</td>';
+    const prev=(e.change_pct!=null&&e.prev_date)?'<td class="n" title="'+esc(F('Antes: {v} el {date}',{v:fmtR(e.prev_value),date:fmtD(e.prev_date)}))+'"><span aria-hidden="true">'+arrow(e.change_pct)+'</span> '+esc(fmtPct(e.change_pct))+'<span class="sub">'+esc(F('vs. {date}',{date:fmtD(e.prev_date)}))+'</span></td>':'<td class="n">—</td>';
     return '<tr data-id="'+esc(id)+'"><th scope="row">'+esc(sname(id))+'<span class="sub">'+esc(de.pair)+(isOfficial(de)?'':' · '+esc(T('Calculada')))+'</span></th>'
-      +'<td class="n">'+(last?esc(fmtV(last.v,de.decimals))+' <span class="muted small">'+esc(unitOf(de))+'</span><span class="sub">'+esc(fmtD(last.date))+'</span>':'—')+'</td>'
+      +'<td class="n">'+(last?'<span title="'+esc(exactTip(last.v,de.decimals))+'">'+esc(fmtR(last.v))+'</span> <span class="muted small">'+esc(unitOf(de))+'</span><span class="sub">'+esc(fmtD(last.date))+'</span>':'—')+'</td>'
       +prev+pctCell(m30,de.decimals)+pctCell(ytd,de.decimals)+'</tr>';
   });
   box.innerHTML='<table><thead><tr><th scope="col">'+esc(T('Serie'))+'</th><th scope="col" class="n">'+esc(T('Último valor oficial'))+'</th><th scope="col" class="n">'+esc(T('Vs. registro anterior'))+'</th><th scope="col" class="n">'+esc(T('30 días'))+'</th><th scope="col" class="n">'+esc(F('En lo que va de {y}',{y:year}))+'</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';
@@ -1024,13 +1033,13 @@ function computeConversion(){
   if(r.via==='identidad'){out.innerHTML='<div class="conv-big">'+esc(fmtV(r.value,2))+' '+esc(to)+'</div><p class="conv-eq">'+esc(T('Es la misma moneda.'))+'</p>';return;}
   const e=L.series[r.via],direct=e.pair===from+'-'+to,st=stateOf(r.via);
   const rateLine=F(direct?'Tasa usada: {name} ({pair}) = {v} {unit}, del {date}.':'Tasa usada: inverso de {name} ({pair}) = {v} {unit}, del {date}.',
-    {name:sname(r.via),pair:e.pair,v:fmtV(e.value,e.decimals),unit:unitOf(e),date:fmtD(r.date)});
+    {name:sname(r.via),pair:e.pair,v:fmtR(e.value),unit:unitOf(e),date:fmtD(r.date)});
   const kind=r.official?T('El resultado usa una tasa oficial.'):T('El resultado usa una tasa calculada, no publicada por ningún banco central.');
   const srcTxt=r.official&&e.source?F('Fuente: {s}',{s:shortInst(e.source)}):F('Calculada: {f}',{f:formulaOf(e)});
   out.innerHTML='<div class="conv-big" data-value="'+esc(String(r.value))+'">'+esc(fmtV(r.value,2))+' '+esc(to)+'</div>'
     +'<p class="conv-eq">'+esc(amtTxt+' '+from+' = '+fmtV(r.value,2)+' '+to)+'</p>'
     +'<div class="kpi-f" style="margin-top:8px">'+methodChip(e)+badge(st)+'</div>'
-    +'<p class="conv-rate">'+esc(rateLine)+' '+esc(kind)+' '+esc(srcTxt)+'.</p>';
+    +'<p class="conv-rate" title="'+esc(exactTip(e.value,e.decimals))+'">'+esc(rateLine)+' '+esc(T('El cálculo usa la tasa oficial con todos sus decimales.'))+' '+esc(kind)+' '+esc(srcTxt)+'.</p>';
   clearTimeout(convTimer);convTimer=setTimeout(()=>track('fx_convert',{from:from,to:to,via:r.via,official:r.official}),900);
 }
 
