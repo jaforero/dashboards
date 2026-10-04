@@ -41,7 +41,7 @@
   gtag('config', 'G-MQ3K8EVKV0');
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" charset="utf-8"></script>
 <style>
 :root{
@@ -970,7 +970,7 @@ function initTheme(){let t=safeStore.get("jf-theme");if(!t)t=(window.matchMedia&
 /* ==================== PLOTLY LOADER ==================== */
 function ensurePlotly(cb){
   if(typeof Plotly!=="undefined"){cb();return;}
-  const cdns=["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js","https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js","https://cdn.plot.ly/plotly-2.35.2.min.js"];
+  const cdns=["https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js","https://cdn.plot.ly/plotly-2.35.2.min.js"];
   (function next(i){ if(typeof Plotly!=="undefined"){cb();return;} if(i>=cdns.length){cb();return;}
     const s=document.createElement("script");s.src=cdns[i];s.charset="utf-8";
     s.onload=()=>{cb();};s.onerror=()=>next(i+1);document.head.appendChild(s);

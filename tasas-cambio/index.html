@@ -754,8 +754,8 @@ function kpiCard(id){
 }
 
 /* ===================== Plotly (diferido, con respaldo multi-CDN como el sitio) ===================== */
-const PLOTLY_SRC=['https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js',
-                  'https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js',
+/* cdnjs lista la 2.35.2 pero sin archivos (404, verificado 2026-10-04): jsDelivr va primero */
+const PLOTLY_SRC=['https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js',
                   'https://cdn.plot.ly/plotly-2.35.2.min.js'];
 let plotlyPromise=null;
 function ensurePlotly(){
