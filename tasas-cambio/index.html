@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tasas de cambio oficiales · México, Colombia y Argentina · Javier Forero</title>
+<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), la Superintendencia Financiera de Colombia (TRM) y el BCRA (Comunicación A 3500), con cruzadas MXN-COP, MXN-ARS y ARS-COP rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
+<meta name="author" content="Javier Forero">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://dashboards.javierforero.co/tasas-cambio/">
+<link rel="alternate" hreflang="es" href="https://dashboards.javierforero.co/tasas-cambio/">
+<link rel="alternate" hreflang="en" href="https://dashboards.javierforero.co/tasas-cambio/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://dashboards.javierforero.co/tasas-cambio/">
+<meta name="theme-color" content="#041c59">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Javier Forero">
+<meta property="og:locale" content="es_CO">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:url" content="https://dashboards.javierforero.co/tasas-cambio/">
+<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia y Argentina">
+<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, la SFC y el BCRA, leídas en vivo, con la fecha y la fuente de cada cifra.">
+<meta property="og:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tasas de cambio oficiales de bancos centrales: USD, MXN, COP y ARS.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia y Argentina">
+<meta name="twitter:description" content="Tasas oficiales de Banxico, la SFC y el BCRA con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
+<meta name="twitter:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ3K8EVKV0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-MQ3K8EVKV0', {content_group:'tasas-cambio',page_title:'Tasas de cambio oficiales · bancos centrales'});
+  function track(name, params){try{if(typeof gtag==='function')gtag('event',name,params||{});}catch(e){}}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Dataset",
+ "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia y Argentina",
+ "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Superintendencia Financiera de Colombia, TRM) y USD-ARS (BCRA, Comunicación A 3500), y cruzadas calculadas MXN-COP, MXN-ARS y ARS-COP del mismo día de mercado.",
+ "url":"https://dashboards.javierforero.co/tasas-cambio/",
+ "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
+ "isBasedOn":"https://github.com/jaforero/fx-bancos-centrales","inLanguage":["es","en"],
+ "distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://raw.githubusercontent.com/jaforero/fx-bancos-centrales/main/data/rates_daily.json"}}
+</script>
+
+<style>
+  @font-face{
+    font-family:'Igra Sans';
+    src:url('../assets/fonts/IgraSans.otf') format('opentype'),
+        url('/assets/fonts/IgraSans.otf')   format('opentype'),
+        url('../fonts/IgraSans.otf')        format('opentype'),
+        url('/fonts/IgraSans.otf')          format('opentype');
+    font-weight:100 900;font-style:normal;font-display:swap;
+  }
+  /* ---------- Tokens · claro ---------- */
+  :root{
+    color-scheme:light;
+    --primary:#4e00ff;--primary-lt:#7c4dff;--navy:#041c59;--blue:#0048ff;
+    --bg:#f5f4ff;--bg2:#edeaff;--surface:#ffffff;--border:#ddd6ff;--border-soft:#ebe7ff;
+    --heading:#041c59;--text:#0d0a1e;--text-soft:#4a4568;--text-muted:#625a86;
+    --grid:#eceaf7;--topbar:#041c59;
+    --ok:#086a47;--ok-bg:rgba(8,106,71,.07);--ok-bd:rgba(8,106,71,.28);
+    --stale:#8f5200;--stale-bg:#fff6e5;--stale-bd:#f1cf8d;
+    --err:#b3123b;--err-bg:#fdecef;--err-bd:#f4b4c3;
+    --note-bg:#fffbeb;--note-bd:#fde68a;--note-tx:#78350f;
+    /* Serie categórica (validada: CVD ΔE ≥ 9,2 todas las parejas) */
+    --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--sx:#625a86;
+    --shadow:0 10px 28px rgba(4,28,89,.07);
+    --r:14px;
+    --font:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-micro:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  /* ---------- Tokens · oscuro (sistema y selector) ---------- */
+  @media (prefers-color-scheme: dark){
+    :root:where(:not([data-theme="light"])){
+      color-scheme:dark;
+      --primary:#9a78ff;--primary-lt:#b59cff;--navy:#dfe6ff;--blue:#7a98ff;
+      --bg:#070c1c;--bg2:#121a38;--surface:#101732;--border:#243057;--border-soft:#1b2447;
+      --heading:#dfe6ff;--text:#eaeef9;--text-soft:#c3c9dc;--text-muted:#9aa4bf;
+      --grid:#1d2748;--topbar:#050a1a;
+      --ok:#4cc9a0;--ok-bg:rgba(76,201,160,.10);--ok-bd:rgba(76,201,160,.35);
+      --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
+      --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
+      --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
+      --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--sx:#9aa4bf;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --primary:#9a78ff;--primary-lt:#b59cff;--navy:#dfe6ff;--blue:#7a98ff;
+    --bg:#070c1c;--bg2:#121a38;--surface:#101732;--border:#243057;--border-soft:#1b2447;
+    --heading:#dfe6ff;--text:#eaeef9;--text-soft:#c3c9dc;--text-muted:#9aa4bf;
+    --grid:#1d2748;--topbar:#050a1a;
+    --ok:#4cc9a0;--ok-bg:rgba(76,201,160,.10);--ok-bd:rgba(76,201,160,.35);
+    --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
+    --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
+    --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
+    --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--sx:#9aa4bf;
+    --shadow:0 10px 28px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background-color .25s ease,color .25s ease;}
+  a{color:var(--blue);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .kpi-src a,.method p a,.foot a,td a{text-decoration:underline;text-underline-offset:2px;}
+  :focus-visible{outline:3px solid var(--primary-lt);outline-offset:2px;border-radius:6px;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
+
+  /* ---------- Barra superior ---------- */
+  .jf-topbar{width:100%;background:var(--topbar);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .jf-topbar-left,.jf-topbar-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .jf-topbar-logo{font-size:1.02rem;color:#fff;letter-spacing:.03em;font-weight:600;}
+  .jf-topbar-logo span{color:#b9a6ff;}
+  .jf-topbar-logo:hover{text-decoration:none;}
+  .jf-topbar-back{font-size:.72rem;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:5px 13px;white-space:nowrap;}
+  .jf-topbar-back:hover{background:rgba(255,255,255,.12);color:#fff;text-decoration:none;}
+  .jf-topbar-tag{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62);}
+  .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:3px;gap:2px;user-select:none;}
+  .lang-opt{font-family:var(--font);display:flex;align-items:center;gap:5px;padding:6px 12px;border:none;background:none;border-radius:100px;font-size:.66rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.7);cursor:pointer;}
+  .lang-opt[aria-pressed="true"]{background:#4e00ff;color:#fff;box-shadow:0 2px 10px rgba(78,0,255,.45);}
+  .theme-btn{font-family:var(--font);font-size:.95rem;width:38px;height:34px;border-radius:100px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;}
+  .theme-btn:hover{background:rgba(255,255,255,.16);}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 16px 56px;}
+
+  /* ---------- Encabezado ---------- */
+  .header{text-align:center;padding:26px 0 6px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);background:color-mix(in srgb,var(--primary) 9%,transparent);border:1px solid color-mix(in srgb,var(--primary) 25%,transparent);padding:4px 14px;border-radius:100px;margin-bottom:12px;}
+  h1{font-size:clamp(1.4rem,3.4vw,2.2rem);font-weight:700;line-height:1.18;color:var(--heading);letter-spacing:-.01em;max-width:900px;margin:0 auto 10px;}
+  .deck{font-size:clamp(.92rem,1.8vw,1.06rem);color:var(--text-soft);max-width:720px;margin:0 auto;}
+  .meta-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:600;padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);}
+  .pill.ok{color:var(--ok);background:var(--ok-bg);border-color:var(--ok-bd);}
+  .pill.stale{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd);}
+  .pill.error{color:var(--err);background:var(--err-bg);border-color:var(--err-bd);}
+  .limit{max-width:760px;margin:16px auto 0;font-size:.8rem;color:var(--note-tx);background:var(--note-bg);border:1px solid var(--note-bd);border-radius:12px;padding:9px 14px;text-align:left;}
+  .banner{max-width:900px;margin:14px auto 0;font-size:.84rem;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;text-align:left;}
+  .banner.stale{color:var(--stale);background:var(--stale-bg);border:1px solid var(--stale-bd);}
+  .banner.error{color:var(--err);background:var(--err-bg);border:1px solid var(--err-bd);}
+  .banner[hidden]{display:none;}
+
+  /* ---------- Secciones ---------- */
+  .section{margin-top:34px;}
+  .sh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  .snum{font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:var(--primary);}
+  h2{font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:700;color:var(--heading);line-height:1.25;}
+  .sdek{color:var(--text-soft);font-size:.86rem;margin:0 0 14px;max-width:820px;}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;}
+  .muted{color:var(--text-muted);}
+  .small{font-size:.76rem;}
+  .msg{padding:22px 10px;text-align:center;color:var(--text-soft);font-size:.88rem;}
+  .msg.error{color:var(--err);}
+  .btn{font-family:var(--font);font-size:.76rem;font-weight:700;border-radius:100px;padding:7px 14px;border:1.5px solid var(--primary);background:var(--surface);color:var(--primary);cursor:pointer;}
+  .btn:hover{background:var(--primary);color:#fff;}
+
+  /* ---------- KPIs ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+  .kpis>*,.method>*,.conv>*{min-width:0;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px 13px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;}
+  .kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border);}
+  .kpi[data-level="stale"]::before{background:var(--stale);}
+  .kpi[data-level="error"]::before{background:var(--err);}
+  .kpi-h{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .kpi h3{font-size:.9rem;font-weight:700;color:var(--heading);line-height:1.25;}
+  .kpi-pair{font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);letter-spacing:.02em;}
+  .kpi-v{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;}
+  .kpi-v .num{font-size:1.85rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.1;}
+  .kpi-v .unit{font-size:.78rem;color:var(--text-soft);font-weight:600;}
+  .kpi-d{font-size:.78rem;color:var(--text-soft);}
+  .kpi-delta{font-size:.8rem;color:var(--text);font-variant-numeric:tabular-nums;}
+  .kpi-delta .vs{color:var(--text-muted);}
+  .kpi-next{font-size:.76rem;color:var(--primary);background:color-mix(in srgb,var(--primary) 7%,transparent);border-radius:8px;padding:4px 8px;}
+  .kpi-f{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px;}
+  .kpi-src{font-size:.72rem;color:var(--text-muted);border-top:1px dashed var(--border);padding-top:7px;margin-top:2px;}
+  .chip{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:100px;padding:3px 9px;white-space:nowrap;border:1px solid var(--border);color:var(--text-soft);background:var(--bg2);}
+  .chip.calc{color:var(--primary);border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 8%,transparent);}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;border-radius:100px;padding:3px 9px;border:1px solid;}
+  .badge.ok{color:var(--ok);background:var(--ok-bg);border-color:var(--ok-bd);}
+  .badge.stale{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd);}
+  .badge.error{color:var(--err);background:var(--err-bg);border-color:var(--err-bd);}
+
+  /* ---------- Controles ---------- */
+  .controls{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;}
+  .ctl{display:flex;flex-direction:column;gap:5px;}
+  .ctl-l{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+  .seg{display:flex;flex-wrap:wrap;gap:5px;}
+  .seg button{font-family:var(--font);font-size:.74rem;font-weight:600;color:var(--text-soft);background:var(--surface);border:1.5px solid var(--border);border-radius:100px;padding:6px 12px;cursor:pointer;min-height:34px;}
+  .seg button:hover{border-color:var(--primary);color:var(--primary);}
+  .seg button[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff;}
+  [data-theme="dark"] .seg button[aria-pressed="true"]{color:#0b0f1e;}
+  .seg button .tc{font-size:.58rem;font-weight:700;opacity:.8;margin-left:4px;text-transform:uppercase;}
+  .chk{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;color:var(--text-soft);cursor:pointer;min-height:34px;}
+  .chk input{width:16px;height:16px;accent-color:var(--primary);}
+  input[type="date"],input[type="number"],select{font-family:var(--font);font-size:.86rem;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:7px 10px;min-height:38px;}
+  input:focus,select:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent);}
+
+  .chart-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;margin:2px 0 4px;}
+  .chart-t{font-size:.95rem;font-weight:700;color:var(--heading);}
+  .chart-s{font-size:.74rem;color:var(--text-muted);}
+  .chart{width:100%;height:380px;}
+  .legend-note{display:flex;gap:16px;flex-wrap:wrap;font-size:.72rem;color:var(--text-soft);margin-top:6px;}
+  .ln{display:inline-flex;align-items:center;gap:6px;}
+  .ln i{display:inline-block;width:22px;height:0;border-top:2px solid var(--s1);}
+  .ln i.dot{border-top:2px dotted var(--s1);}
+  .events{margin-top:12px;font-size:.78rem;color:var(--text-soft);}
+  .events h3{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+  .events li{margin:2px 0 2px 18px;}
+  .reading{margin-top:10px;font-size:.86rem;color:var(--text);background:var(--bg2);border-radius:10px;padding:10px 12px;}
+  details.alt{margin-top:12px;font-size:.8rem;}
+  details.alt summary{cursor:pointer;color:var(--blue);font-weight:600;}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .tbl-wrap.scroll{max-height:320px;overflow-y:auto;margin-top:8px;border:1px solid var(--border-soft);border-radius:10px;}
+  table{border-collapse:collapse;width:100%;font-size:.8rem;}
+  caption{text-align:left;font-size:.74rem;color:var(--text-muted);padding:6px 4px;}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--border-soft);text-align:left;vertical-align:top;}
+  th{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);background:var(--surface);position:sticky;top:0;}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  th.n{text-align:right;}
+  tbody th{font-size:.82rem;font-weight:700;letter-spacing:0;text-transform:none;color:var(--heading);position:static;}
+  td .sub,th .sub{display:block;font-size:.68rem;font-weight:400;color:var(--text-muted);}
+  .foot{font-size:.74rem;color:var(--text-muted);margin-top:8px;}
+
+  /* ---------- Conversor ---------- */
+  .conv{display:grid;grid-template-columns:minmax(140px,1fr) minmax(150px,1.2fr) auto minmax(150px,1.2fr);gap:10px;align-items:end;}
+  .conv label{display:flex;flex-direction:column;gap:5px;}
+  .conv .ctl-l{display:block;}
+  .swap{font-family:var(--font);font-size:1.05rem;width:42px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--primary);cursor:pointer;}
+  .swap:hover{border-color:var(--primary);}
+  .conv-out{margin-top:14px;}
+  .conv-big{font-size:1.7rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}
+  .conv-eq{font-size:.86rem;color:var(--text-soft);}
+  .conv-rate{font-size:.78rem;color:var(--text-soft);margin-top:6px;}
+  @media(max-width:720px){.conv{grid-template-columns:1fr 1fr;}.conv .amt{grid-column:1/-1;}.swap{justify-self:center;grid-column:1/-1;order:3;}.conv .to{order:4;}}
+
+  /* ---------- Metodología ---------- */
+  .method{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .method .panel h3{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--primary);margin-bottom:6px;}
+  .method p,.method li{font-size:.84rem;color:var(--text-soft);}
+  .method ul{margin-left:18px;display:flex;flex-direction:column;gap:5px;}
+  .method .full{grid-column:1/-1;}
+  @media(max-width:820px){.method{grid-template-columns:1fr;}}
+
+  .jf-footer{margin-top:40px;border-top:1px solid var(--border);padding:18px 0 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.74rem;color:var(--text-muted);}
+  .jf-footer a{font-weight:700;color:var(--primary);}
+  @media(max-width:640px){
+    .jf-topbar{padding:10px 14px;}
+    .jf-topbar-tag{display:none;}
+    .chart{height:310px;}
+    .kpi-v .num{font-size:1.6rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="jf-topbar">
+  <div class="jf-topbar-left">
+    <a class="jf-topbar-logo" href="https://javierforero.co">Javier<span>Forero</span>.co</a>
+    <a class="jf-topbar-back" href="https://dashboards.javierforero.co/claude/">&larr; Dashboards</a>
+  </div>
+  <div class="jf-topbar-right">
+    <span class="jf-topbar-tag" data-i18n>Divulgación · datos públicos verificables</span>
+    <div class="lang-toggle" id="langToggle" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-opt" data-lang="es" aria-pressed="true" lang="es"><span aria-hidden="true">🇨🇴</span> ES</button>
+      <button type="button" class="lang-opt" data-lang="en" aria-pressed="false" lang="en"><span aria-hidden="true">🇺🇸</span> EN</button>
+    </div>
+    <button type="button" class="theme-btn" id="themeToggle" aria-pressed="false" aria-label="Cambiar a tema oscuro">🌙</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header class="header">
+    <span class="eyebrow" data-i18n>Divulgación · Tasas oficiales de bancos centrales</span>
+    <h1 data-i18n>Tasas de cambio oficiales de bancos centrales</h1>
+    <p class="deck" data-i18n>¿Cuánto vale hoy cada moneda frente a las otras y qué tan lejos está de su comportamiento reciente?</p>
+    <div class="meta-row">
+      <span class="pill" id="asOfPill" aria-live="polite"></span>
+      <span class="pill" id="statusPill" aria-live="polite"></span>
+      <span class="pill" data-i18n>Javier Forero · Estadístico con alma de narrador</span>
+    </div>
+    <p class="limit" data-i18n>Son tasas de referencia oficiales, no tasas de transacción: un banco o una casa de cambio aplicará su propio margen.</p>
+    <div class="banner" id="banner" role="status" hidden></div>
+  </header>
+
+  <!-- 01 · KPIs -->
+  <section class="section" id="sec-kpis" aria-labelledby="h-kpis">
+    <div class="sh"><span class="snum" aria-hidden="true">01</span><h2 id="h-kpis" data-i18n>Hoy: el último valor oficial de cada tasa</h2></div>
+    <p class="sdek" data-i18n>Cada tarjeta lleva su propia fecha: las fuentes publican en días distintos.</p>
+    <div class="kpis" id="kpis"><div class="panel msg" data-i18n>Cargando tasas oficiales…</div></div>
+  </section>
+
+  <!-- 02 · Histórico -->
+  <section class="section" id="sec-hist" aria-labelledby="h-hist">
+    <div class="sh"><span class="snum" aria-hidden="true">02</span><h2 id="h-hist" data-i18n>Histórico: ¿cómo llegó hasta aquí?</h2></div>
+    <p class="sdek" data-i18n>Elige un par y un rango. La línea continua son días con publicación oficial; la punteada, fines de semana y festivos que repiten el último valor oficial.</p>
+    <div class="panel">
+      <div class="controls">
+        <div class="ctl"><span class="ctl-l" id="lbl-pair" data-i18n>Par</span><div class="seg" id="pairSeg" role="group" aria-labelledby="lbl-pair"></div></div>
+        <div class="ctl"><span class="ctl-l" id="lbl-range" data-i18n>Rango</span><div class="seg" id="rangeSeg" role="group" aria-labelledby="lbl-range"></div></div>
+        <label class="chk"><input type="checkbox" id="histLog"><span data-i18n>Escala logarítmica</span></label>
+      </div>
+      <div class="chart-h"><div class="chart-t" id="histTitle"></div><div class="chart-s" id="histSub"></div></div>
+      <div class="chart" id="histChart" role="img" aria-label=""><div class="msg" data-i18n>Cargando el histórico…</div></div>
+      <div class="legend-note">
+        <span class="ln"><i aria-hidden="true"></i><span data-i18n>Día con publicación oficial</span></span>
+        <span class="ln"><i class="dot" aria-hidden="true"></i><span data-i18n>Fin de semana o festivo: repite el último valor oficial</span></span>
+      </div>
+      <div class="events" id="histEvents"></div>
+      <details class="alt" id="histAlt"><summary data-i18n>Ver los datos del gráfico en una tabla</summary><div class="tbl-wrap scroll" id="histTable"></div></details>
+    </div>
+  </section>
+
+  <!-- 03 · Base 100 -->
+  <section class="section" id="sec-b100" aria-labelledby="h-b100">
+    <div class="sh"><span class="snum" aria-hidden="true">03</span><h2 id="h-b100" data-i18n>Comparación base 100: ¿qué moneda se depreció más?</h2></div>
+    <p class="sdek" data-i18n>Cada serie vale 100 en su primer día oficial desde la fecha elegida. Así se comparan monedas con escalas muy distintas.</p>
+    <div class="panel">
+      <div class="controls">
+        <label class="ctl"><span class="ctl-l" data-i18n>Desde</span><input type="date" id="b100From"></label>
+        <div class="ctl"><span class="ctl-l" id="lbl-b100q" data-i18n>Atajos</span><div class="seg" id="b100Quick" role="group" aria-labelledby="lbl-b100q"></div></div>
+        <label class="chk"><input type="checkbox" id="b100Log"><span data-i18n>Escala logarítmica</span></label>
+      </div>
+      <div class="chart-h"><div class="chart-t" id="b100Title"></div><div class="chart-s" id="b100Sub"></div></div>
+      <div class="chart" id="b100Chart" role="img" aria-label=""><div class="msg" data-i18n>Cargando el histórico…</div></div>
+      <div class="reading" id="b100Reading" aria-live="polite"></div>
+      <p class="foot" id="b100Foot"></p>
+      <details class="alt" id="b100Alt"><summary data-i18n>Ver los datos del gráfico en una tabla</summary><div class="tbl-wrap scroll" id="b100Table"></div></details>
+    </div>
+  </section>
+
+  <!-- 04 · Variaciones -->
+  <section class="section" id="sec-var" aria-labelledby="h-var">
+    <div class="sh"><span class="snum" aria-hidden="true">04</span><h2 id="h-var" data-i18n>Variaciones: ¿qué tan lejos está de su comportamiento reciente?</h2></div>
+    <p class="sdek" data-i18n>Solo con valores oficiales: los días repetidos no cuentan.</p>
+    <div class="panel">
+      <div class="tbl-wrap" id="varTable"><div class="msg" data-i18n>Cargando el histórico…</div></div>
+      <p class="foot" id="varFoot"></p>
+    </div>
+  </section>
+
+  <!-- 05 · Conversor -->
+  <section class="section" id="sec-conv" aria-labelledby="h-conv">
+    <div class="sh"><span class="snum" aria-hidden="true">05</span><h2 id="h-conv" data-i18n>Conversor</h2></div>
+    <p class="sdek" data-i18n>Convierte un monto con la tasa oficial o calculada más reciente. Indica la fecha y el tipo de tasa usada.</p>
+    <div class="panel">
+      <form class="conv" id="convForm" autocomplete="off" onsubmit="return false">
+        <label class="amt"><span class="ctl-l" data-i18n>Monto</span><input type="number" id="convAmt" min="0" step="any" inputmode="decimal" value="1000"></label>
+        <label class="from"><span class="ctl-l" data-i18n>De</span><select id="convFrom"></select></label>
+        <button type="button" class="swap" id="convSwap" aria-label="Intercambiar monedas" data-i18n-attr="aria-label">⇄</button>
+        <label class="to"><span class="ctl-l" data-i18n>A</span><select id="convTo"></select></label>
+      </form>
+      <output class="conv-out" id="convOut" for="convAmt convFrom convTo" aria-live="polite"></output>
+    </div>
+  </section>
+
+  <!-- 06 · Metodología y fuentes -->
+  <section class="section" id="sec-method" aria-labelledby="h-method">
+    <div class="sh"><span class="snum" aria-hidden="true">06</span><h2 id="h-method" data-i18n>Metodología y fuentes</h2></div>
+    <div class="method">
+      <div class="panel">
+        <h3 data-i18n>Fuentes</h3>
+        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Superintendencia Financiera de Colombia vía datos.gov.co (TRM) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
+      </div>
+      <div class="panel">
+        <h3 data-i18n>Metodología</h3>
+        <p data-i18n>Las tasas MXN-COP, MXN-ARS y ARS-COP no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.</p>
+      </div>
+      <div class="panel full">
+        <h3 data-i18n>Cómo leer las tasas</h3>
+        <ul>
+          <li data-i18n>El par se lee BASE-COTIZADA: MXN-COP indica cuántos pesos colombianos vale 1 peso mexicano. La unidad aparece siempre junto al valor.</li>
+          <li data-i18n>Cada tasa lleva su propia fecha. La TRM rige por fecha de vigencia y puede corresponder a un domingo; el FIX y la A 3500 corresponden al día de mercado en que se determinaron.</li>
+          <li data-i18n>Las cruzadas usan el último día con ambos insumos oficiales; por eso su fecha puede ser anterior a la de la TRM. No es un error.</li>
+          <li data-i18n>Los fines de semana y festivos repiten el último valor oficial: en el gráfico aparecen punteados y no entran en las variaciones.</li>
+          <li data-i18n>Cuando una fuente ya publicó el valor de un día futuro, la tarjeta lo indica como «Publicada para…».</li>
+        </ul>
+      </div>
+      <div class="panel full">
+        <h3 data-i18n>Fuente de cada serie</h3>
+        <div class="tbl-wrap" id="srcTable"></div>
+        <p class="foot" id="contractLine"></p>
+      </div>
+      <div class="panel full">
+        <h3 data-i18n>Aviso</h3>
+        <p data-i18n>Tasas de referencia oficiales con fines informativos. No son tasas de compra o venta de ninguna entidad ni constituyen asesoría financiera.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="jf-footer">
+    <div><span id="footData"></span><br><span id="footOrigin"></span></div>
+    <div><a href="https://javierforero.co">javierforero.co</a> · <span data-i18n>© Javier Forero · Estadístico con alma de narrador</span></div>
+  </footer>
+</main>
+
+<script src="fx-data.js"></script>
+<script>
+'use strict';
+/* =====================================================================
+   Tasas de cambio de bancos centrales · dashboards.javierforero.co
+   Datos: jaforero/fx-bancos-centrales vía fx-data.js (sin servidor).
+   Ninguna cifra visible está escrita a mano: todas salen de latest.json
+   o rates_daily.json. Las únicas listas fijas son SERIES_TR y EVENTS.
+   ===================================================================== */
+
+/* ---------- Almacenamiento seguro (mismo patrón del sitio) ---------- */
+const safeStore=(()=>{const mem={};let ok=false;try{const k='__jf__';localStorage.setItem(k,'1');localStorage.removeItem(k);ok=true;}catch(e){}
+  return{get:k=>{try{return ok?localStorage.getItem(k):(k in mem?mem[k]:null);}catch(e){return k in mem?mem[k]:null;}},
+         set:(k,v)=>{try{ok?localStorage.setItem(k,v):(mem[k]=v);}catch(e){mem[k]=v;}}};})();
+
+/* ---------- Lista fija 1/2 · Nombres cortos por id de serie (Anexo A.4) ---------- */
+const SERIES_TR={
+  usd_mxn_fix:{es:'Dólar en México · FIX',en:'US dollar in Mexico · FIX'},
+  usd_cop_trm:{es:'Dólar en Colombia · TRM',en:'US dollar in Colombia · TRM'},
+  usd_ars_a3500:{es:'Dólar en Argentina · A 3500',en:'US dollar in Argentina · A 3500'},
+  mxn_cop_cross:{es:'Peso mexicano en pesos colombianos',en:'Mexican peso in Colombian pesos'},
+  mxn_ars_cross:{es:'Peso mexicano en pesos argentinos',en:'Mexican peso in Argentine pesos'},
+  ars_cop_cross:{es:'Peso argentino en pesos colombianos',en:'Argentine peso in Colombian pesos'}
+};
+/* ---------- Lista fija 2/2 · Eventos con contexto (§8). Solo fecha, serie y texto:
+   las variaciones y los valores se calculan sobre rates_daily.json. ---------- */
+const EVENTS=[
+  {date:'2020-03-10',id:'usd_cop_trm',  short:'COVID-19 y petróleo',long:'Choque COVID-19 y petróleo'},
+  {date:'2023-08-14',id:'usd_ars_a3500',short:'PASO',               long:'Devaluación posterior a las PASO'},
+  {date:'2023-12-13',id:'usd_ars_a3500',short:'Devaluación',        long:'Devaluación del peso argentino'},
+  {date:'2025-04-14',id:'usd_ars_a3500',short:'Bandas',             long:'Inicio del esquema de bandas'}
+];
+
+/* ---------- Diccionario ES→EN (clave en español, convención del sitio) ---------- */
+const TR={
+"__title":"Official exchange rates · Mexico, Colombia and Argentina · Javier Forero",
+"Divulgación · datos públicos verificables":"Explainers · verifiable public data",
+"Divulgación · Tasas oficiales de bancos centrales":"Explainer · Official central-bank exchange rates",
+"Tasas de cambio oficiales de bancos centrales":"Official central-bank exchange rates",
+"¿Cuánto vale hoy cada moneda frente a las otras y qué tan lejos está de su comportamiento reciente?":"How much is each currency worth against the others today, and how far is it from its recent behaviour?",
+"Javier Forero · Estadístico con alma de narrador":"Javier Forero · Statistician with a storyteller's soul",
+"© Javier Forero · Estadístico con alma de narrador":"© Javier Forero · Statistician with a storyteller's soul",
+"Son tasas de referencia oficiales, no tasas de transacción: un banco o una casa de cambio aplicará su propio margen.":"These are official reference rates, not transaction rates: a bank or an exchange bureau will apply its own margin.",
+"Hoy: el último valor oficial de cada tasa":"Today: the latest official value of each rate",
+"Cada tarjeta lleva su propia fecha: las fuentes publican en días distintos.":"Each card carries its own date: the sources publish on different days.",
+"Cargando tasas oficiales…":"Loading official rates…",
+"Histórico: ¿cómo llegó hasta aquí?":"History: how did it get here?",
+"Elige un par y un rango. La línea continua son días con publicación oficial; la punteada, fines de semana y festivos que repiten el último valor oficial.":"Choose a pair and a range. The solid line shows days with an official publication; the dotted line, weekends and holidays that repeat the last official value.",
+"Par":"Pair","Rango":"Range","Escala logarítmica":"Logarithmic scale","Desde":"From","Atajos":"Shortcuts",
+"1M":"1M","3M":"3M","1A":"1Y","5A":"5Y","Todo":"All",
+"Día con publicación oficial":"Day with an official publication",
+"Fin de semana o festivo: repite el último valor oficial":"Weekend or holiday: repeats the last official value",
+"Ver los datos del gráfico en una tabla":"View the chart data as a table",
+"Cargando el histórico…":"Loading history…",
+"Comparación base 100: ¿qué moneda se depreció más?":"Base-100 comparison: which currency depreciated the most?",
+"Cada serie vale 100 en su primer día oficial desde la fecha elegida. Así se comparan monedas con escalas muy distintas.":"Each series equals 100 on its first official day from the chosen date, so currencies on very different scales can be compared.",
+"Inicio del año":"Start of year","Hace 1 año":"1 year ago","Hace 5 años":"5 years ago","Primer dato":"First data point",
+"Variaciones: ¿qué tan lejos está de su comportamiento reciente?":"Changes: how far is it from its recent behaviour?",
+"Solo con valores oficiales: los días repetidos no cuentan.":"Official values only: repeated days are excluded.",
+"Conversor":"Converter",
+"Convierte un monto con la tasa oficial o calculada más reciente. Indica la fecha y el tipo de tasa usada.":"Convert an amount with the latest official or calculated rate. It shows the date and the type of rate used.",
+"Monto":"Amount","De":"From","A":"To","Intercambiar monedas":"Swap currencies",
+"Metodología y fuentes":"Methodology and sources","Fuentes":"Sources","Metodología":"Methodology","Aviso":"Notice",
+"Banco de México (SIE, tipo de cambio FIX) · Superintendencia Financiera de Colombia vía datos.gov.co (TRM) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500).":"Bank of Mexico (SIE, FIX exchange rate) · Financial Superintendence of Colombia via datos.gov.co (TRM) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500).",
+"Datos procesados en":"Data processed at",
+"Las tasas MXN-COP, MXN-ARS y ARS-COP no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.":"The MXN-COP, MXN-ARS and ARS-COP rates are not published by any central bank: they are calculated by dividing two official US-dollar rates formed on the same market day. Weekends and holidays repeat the last official value and are flagged as such.",
+"Tasas de referencia oficiales con fines informativos. No son tasas de compra o venta de ninguna entidad ni constituyen asesoría financiera.":"Official reference rates for information purposes only. They are not buy or sell rates of any institution and do not constitute financial advice.",
+"Cómo leer las tasas":"How to read the rates",
+"El par se lee BASE-COTIZADA: MXN-COP indica cuántos pesos colombianos vale 1 peso mexicano. La unidad aparece siempre junto al valor.":"Pairs read BASE-QUOTE: MXN-COP tells how many Colombian pesos 1 Mexican peso is worth. The unit always appears next to the value.",
+"Cada tasa lleva su propia fecha. La TRM rige por fecha de vigencia y puede corresponder a un domingo; el FIX y la A 3500 corresponden al día de mercado en que se determinaron.":"Each rate carries its own date. The TRM applies by validity date and may fall on a Sunday; the FIX and the A 3500 correspond to the market day on which they were set.",
+"Las cruzadas usan el último día con ambos insumos oficiales; por eso su fecha puede ser anterior a la de la TRM. No es un error.":"Cross rates use the latest day with both official inputs, so their date may be earlier than the TRM's. This is not an error.",
+"Los fines de semana y festivos repiten el último valor oficial: en el gráfico aparecen punteados y no entran en las variaciones.":"Weekends and holidays repeat the last official value: they are dotted in the chart and excluded from the changes.",
+"Cuando una fuente ya publicó el valor de un día futuro, la tarjeta lo indica como «Publicada para…».":"When a source has already published the value for a future day, the card shows it as “Published for…”.",
+"Fuente de cada serie":"Source of each series",
+"Cambiar a tema oscuro":"Switch to dark theme","Cambiar a tema claro":"Switch to light theme",
+/* dinámicos */
+"Oficial":"Official","Calculada":"Calculated","Al día":"Up to date","Sin datos":"No data",
+"Sin publicación desde {date}":"No publication since {date}",
+"Fuente no disponible":"Source unavailable",
+"Insumo no disponible: {pairs}":"Input unavailable: {pairs}",
+"al corte":"on the cut-off date","hace 1 día":"1 day ago","hace {n} días":"{n} days ago",
+"Días entre este dato oficial y la fecha de corte ({date})":"Days between this official value and the cut-off date ({date})",
+"vs. {date}":"vs. {date}","Antes: {v} el {date}":"Before: {v} on {date}",
+"Sin registro oficial anterior":"No previous official record",
+"Publicada para el {day}: {v}":"Published for {day}: {v}",
+"Fuente":"Source","serie":"series",
+"Calculada: {f}":"Calculated: {f}","insumos de {inst}":"inputs from {inst}",
+"Datos al {date}":"Data as of {date}",
+"{ok} de {n} series al día":"{ok} of {n} series up to date",
+"{k} con retraso":"{k} delayed","{k} con fuente no disponible":"{k} with source unavailable",
+"Estado del pipeline: degradado":"Pipeline status: degraded",
+"No fue posible conectar con las fuentes de datos. Mostrando datos guardados del {ts}.":"Could not reach the data sources. Showing data saved on {ts}.",
+"La fuente publicó un formato de datos que esta página no reconoce (contrato {v}). Mostrando datos guardados del {ts}.":"The source published a data format this page does not recognise (contract {v}). Showing data saved on {ts}.",
+"La fuente publicó un formato de datos que esta página no reconoce (contrato {v}) y no hay datos guardados en este navegador.":"The source published a data format this page does not recognise (contract {v}) and there is no saved data in this browser.",
+"No fue posible cargar las tasas y no hay datos guardados en este navegador.":"The rates could not be loaded and there is no saved data in this browser.",
+"Reintentar":"Retry",
+"Cargando gráficos…":"Loading charts…",
+"No fue posible cargar el histórico. Las tarjetas de arriba siguen vigentes.":"The history could not be loaded. The cards above remain valid.",
+"El histórico publicó un formato de datos que esta página no reconoce (contrato {v}). Las tarjetas de arriba siguen vigentes.":"The history was published in a data format this page does not recognise (contract {v}). The cards above remain valid.",
+"No se pudo cargar la librería de gráficos. Los datos siguen disponibles en las tablas.":"The charting library could not be loaded. The data remain available in the tables.",
+"Datos al {asof} · actualizado {ts}":"Data as of {asof} · updated {ts}",
+"Origen: {o}":"Origin: {o}","respaldo jsDelivr":"jsDelivr fallback","caché local de este navegador":"this browser's local cache",
+"Histórico al {date} · origen: {o}":"History as of {date} · origin: {o}",
+"Fuente: {s}":"Source: {s}","Datos hasta el {date}":"Data through {date}",
+"Sin datos para esta serie.":"No data for this series.",
+"oficial":"official","repite el último valor oficial":"repeats the last official value",
+"COVID-19 y petróleo":"COVID-19 and oil","PASO":"PASO primaries","Devaluación":"Devaluation","Bandas":"Bands",
+"Choque COVID-19 y petróleo":"COVID-19 and oil shock",
+"Devaluación posterior a las PASO":"Devaluation after the PASO primaries",
+"Devaluación del peso argentino":"Devaluation of the Argentine peso",
+"Inicio del esquema de bandas":"Start of the exchange-rate band scheme",
+"Eventos con contexto":"Events in context",
+"de {a} a {b} ({p})":"from {a} to {b} ({p})","(fuera del rango visible)":"(outside the visible range)",
+"Variación calculada sobre rates_daily.json frente al registro oficial anterior.":"Change calculated on rates_daily.json against the previous official record.",
+"Fecha":"Date","Valor":"Value","Tipo de día":"Day type",
+"Datos de {pair} en el rango elegido ({unit})":"Data for {pair} in the selected range ({unit})",
+"Gráfico de línea de {name} ({pair}) entre el {a} y el {b}.":"Line chart of {name} ({pair}) between {a} and {b}.",
+"Base 100 frente al {base}":"Base 100 against the {base}",
+"Fecha base por serie: {list}.":"Base date per series: {list}.",
+"Solo días con publicación oficial. Fuente: {s}; índice de cálculo propio.":"Official publication days only. Source: {s}; index calculated by the author.",
+"Variación del índice desde el {date}: {list}.":"Change in the index since {date}: {list}.",
+"La moneda que más se depreció frente al {base}: {q} ({p}).":"The currency that depreciated most against the {base}: {q} ({p}).",
+"Ninguna moneda se depreció frente al {base} en este periodo; la que menos se apreció: {q} ({p}).":"No currency depreciated against the {base} in this period; the one that appreciated least: {q} ({p}).",
+"Una subida del índice indica que hacen falta más unidades de esa moneda para comprar 1 {base}, es decir, que se depreció.":"A rise in the index means more units of that currency are needed to buy 1 {base}, i.e., it depreciated.",
+"Gráfico base 100 de {list} desde el {date}.":"Base-100 chart of {list} since {date}.",
+"Serie":"Series","Último valor oficial":"Latest official value","Vs. registro anterior":"Vs. previous record",
+"30 días":"30 days","En lo que va de {y}":"Year to date {y}","desde {date}":"since {date}",
+"«Vs. registro anterior» compara con la publicación oficial previa (latest.json). Las columnas de 30 días y año corrido se calculan sobre rates_daily.json, solo con días de publicación oficial, hasta la última fecha oficial de cada serie.":"“Vs. previous record” compares with the previous official publication (latest.json). The 30-day and year-to-date columns are calculated on rates_daily.json, official publication days only, up to each series' latest official date.",
+"Una subida de {pair} significa que 1 {b} compra más {q}.":"A rise in {pair} means 1 {b} buys more {q}.",
+"Escribe un monto válido.":"Enter a valid amount.",
+"No hay una tasa publicada entre {a} y {b}.":"There is no published rate between {a} and {b}.",
+"Es la misma moneda.":"Same currency.",
+"Tasa usada: {name} ({pair}) = {v} {unit}, del {date}.":"Rate used: {name} ({pair}) = {v} {unit}, dated {date}.",
+"Tasa usada: inverso de {name} ({pair}) = {v} {unit}, del {date}.":"Rate used: inverse of {name} ({pair}) = {v} {unit}, dated {date}.",
+"El resultado usa una tasa calculada, no publicada por ningún banco central.":"The result uses a calculated rate, not published by any central bank.",
+"El resultado usa una tasa oficial.":"The result uses an official rate.",
+"Tipo":"Type","Identificador":"Identifier","Documentación":"Documentation",
+"Calculada a partir de {f}":"Calculated from {f}",
+"Contrato de datos: schema_version {v} · fecha de corte {date}.":"Data contract: schema_version {v} · cut-off date {date}.",
+"documentación":"documentation"
+};
+
+/* ---------- Motor de idioma (mismo contrato del sitio: jf-lang / iac_lang, ?lang=en) ---------- */
+let LANG='es';
+const T=s=>{if(LANG!=='en'||s==null)return s;const v=TR[s];return v!==undefined?v:s;};
+const F=(s,o)=>T(s).replace(/\{(\w+)\}/g,(m,k)=>(o&&o[k]!==undefined)?o[k]:m);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const LOC=()=>LANG==='en'?'en-US':'es-CO';
+
+function detectLang(){try{
+  const q=new URLSearchParams(location.search).get('lang');
+  if(q==='en'||q==='es')return q;
+  const st=safeStore.get('jf-lang')||safeStore.get('iac_lang');
+  if(st==='en'||st==='es')return st;
+  if((navigator.language||'').toLowerCase().indexOf('es')!==0)return 'en';
+}catch(e){}return 'es';}
+
+function applyLang(l,silent){
+  LANG=(l==='en')?'en':'es';
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    if(el.__es===undefined)el.__es=el.innerHTML.trim();
+    el.innerHTML=T(el.__es);});
+  document.querySelectorAll('[data-i18n-attr]').forEach(el=>{
+    el.getAttribute('data-i18n-attr').split(',').forEach(a=>{a=a.trim();const k='__o_'+a;
+      if(el[k]===undefined)el[k]=el.getAttribute(a);el.setAttribute(a,T(el[k]));});});
+  document.querySelectorAll('.lang-opt').forEach(o=>o.setAttribute('aria-pressed',String(o.dataset.lang===LANG)));
+  document.title=LANG==='en'?TR.__title:window.__titleEs;
+  applyTheme(currentTheme(),true);
+  rerenderAll();
+  if(!silent){
+    safeStore.set('jf-lang',LANG);safeStore.set('iac_lang',LANG);
+    try{const u=new URL(location.href);
+      if(LANG==='en')u.searchParams.set('lang','en');else u.searchParams.delete('lang');
+      history.replaceState(null,'',u.pathname+(u.search||'')+u.hash);}catch(e){}
+    track('lang_switch',{lang:LANG});
+  }
+}
+
+/* ---------- Tema claro/oscuro (jf-theme, como el hub) ---------- */
+function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';}
+function applyTheme(t,noRender){
+  document.documentElement.setAttribute('data-theme',t);
+  const b=$('themeToggle');
+  if(b){b.textContent=t==='dark'?'☀️':'🌙';b.setAttribute('aria-pressed',String(t==='dark'));
+    b.setAttribute('aria-label',T(t==='dark'?'Cambiar a tema claro':'Cambiar a tema oscuro'));}
+  if(!noRender)renderCharts();
+}
+function initialTheme(){const t=safeStore.get('jf-theme');if(t==='dark'||t==='light')return t;
+  return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}
+
+/* ---------- Formato ---------- */
+const fmtV=(v,d)=>FxData.formatValue(v,d,LANG);
+const fmtD=iso=>iso?FxData.formatDay(iso,LANG):'—';
+function roundTo(v,d){const f=Math.pow(10,d);return Math.round(v*f)/f;}
+function sgn(p,dec){const r=roundTo(p,dec);return r>0?1:(r<0?-1:0);}
+function fmtPct(p,dec){
+  if(p==null||!isFinite(p))return '—';
+  dec=dec==null?2:dec;const s=sgn(p,dec);
+  return (s>0?'+':(s<0?'−':''))+FxData.formatValue(Math.abs(p),dec,LANG)+(LANG==='en'?'%':'\u00a0%');
+}
+function arrow(p,dec){if(p==null||!isFinite(p))return '';const s=sgn(p,dec==null?2:dec);return s>0?'▲':(s<0?'▼':'=');}
+function fmtWeekday(iso){try{return new Intl.DateTimeFormat(LOC(),{weekday:'long',day:'numeric',month:'short',year:'numeric'}).format(FxData.parseDay(iso));}catch(e){return fmtD(iso);}}
+function fmtInstant(ts){if(!ts)return '—';try{return new Intl.DateTimeFormat(LOC(),{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(new Date(ts));}catch(e){return ts;}}
+function curName(code){try{const n=new Intl.DisplayNames([LOC()],{type:'currency'}).of(code);return n&&n!==code?n:'';}catch(e){return '';}}
+/* Aritmética de fechas ISO en UTC: independiente de la zona horaria del visitante */
+function isoShift(iso,o){const p=iso.split('-').map(Number);const y=p[0]+(o.years||0),m=p[1]-1+(o.months||0);
+  const last=new Date(Date.UTC(y,m+1,0)).getUTCDate();
+  return new Date(Date.UTC(y,m,Math.min(p[2],last)+(o.days||0))).toISOString().slice(0,10);}
+
+/* ---------- Estado ---------- */
+const S={latest:null,meta:null,latestErr:null,daily:null,dailySrc:null,dailyErr:null,
+  pair:null,range:'1A',logOverride:{},b100From:null,b100Log:null,conv:null,
+  plotly:'pending',lastAttempt:0,loadingLatest:false,loadingDaily:false};
+const RANGES=[['1M',{months:-1}],['3M',{months:-3}],['1A',{years:-1}],['5A',{years:-5}],['Todo',null]];
+const LOG_RATIO=3; // escala log por defecto si max/min histórico ≥ 3 (hoy: exactamente los pares con ARS)
+
+/* ---------- Acceso al contrato ---------- */
+function entryOf(id){return (S.latest&&S.latest.series&&S.latest.series[id])||(S.daily&&S.daily.series&&S.daily.series[id])||null;}
+function sname(id){const e=entryOf(id);return (SERIES_TR[id]&&SERIES_TR[id][LANG])||(e&&e.label)||id;}
+function unitOf(e){const q=(e&&e.quote_unit)||'';return LANG==='en'?q.replace(/\bpor\b/g,'per'):q;}
+function isOfficial(e){return !!e&&e.method==='official';}
+function pairParts(e){return String((e&&e.pair)||'-').split('-');}
+function formulaOf(e){
+  if(!e||isOfficial(e))return '';
+  const m=/:\s*([\w.-]+)\s*\/\s*([\w.-]+)/.exec(e.method||'');
+  const ids=m?[m[1],m[2]]:(e.inputs||[]);
+  const parts=ids.map(i=>{const x=entryOf(i);return x&&x.pair?x.pair:i;});
+  return parts.join(m?' ÷ ':' · ');
+}
+function shortInst(src){return src&&src.institution?String(src.institution).split(' (')[0]:'';}
+function inputSources(e){const out=[];(e&&e.inputs||[]).forEach(i=>{const x=entryOf(i);if(x&&x.source){const n=shortInst(x.source);if(out.indexOf(n)<0)out.push(n);}});return out;}
+function orderIds(doc){const ids=FxData.primarySeriesIds(doc);
+  return ids.filter(i=>isOfficial(doc.series[i])).concat(ids.filter(i=>!isOfficial(doc.series[i])));}
+
+/* Estado de cada serie: propio + dependencia de insumos (§7) */
+function stateOf(id){
+  const e=S.latest&&S.latest.series[id];
+  const f=FxData.freshness(e);
+  if(f.level==='error'){
+    const isEmpty=!e||e.value==null;
+    return {level:'error',text:T(isEmpty&&e&&e.status==='error:empty'?'Sin datos':'Fuente no disponible'),tip:(e&&(e.error||e.status))||f.reason};
+  }
+  if(f.level==='stale')return {level:'stale',text:F('Sin publicación desde {date}',{date:fmtD(e.date)}),tip:e.status};
+  if(e&&e.inputs){
+    const bad=e.inputs.filter(i=>{const x=S.latest.series[i];return x&&FxData.freshness(x).level==='error';});
+    if(bad.length)return {level:'error',text:F('Insumo no disponible: {pairs}',{pairs:bad.map(i=>S.latest.series[i].pair).join(', ')}),
+      tip:bad.map(i=>{const x=S.latest.series[i];return x.pair+': '+(x.error||x.status);}).join(' | ')};
+  }
+  return {level:'ok',text:T('Al día'),tip:''};
+}
+const ICON={ok:'✓',stale:'!',error:'✕'};
+function badge(st){return '<span class="badge '+st.level+'"'+(st.tip?' title="'+esc(st.tip)+'"':'')+'><span aria-hidden="true">'+ICON[st.level]+'</span> '+esc(st.text)+'</span>';}
+function methodChip(e){return isOfficial(e)?'<span class="chip">'+esc(T('Oficial'))+'</span>':'<span class="chip calc">'+esc(T('Calculada'))+'</span>';}
+
+/* ===================== Encabezado, avisos y pie ===================== */
+function versionFromError(msg){const m=/contrato (\S+) no soportado/.exec(msg||'');return m?m[1]:'?';}
+function isContractError(msg){return /no soportado|falta schema_version/.test(msg||'');}
+
+function renderHeader(){
+  const L=S.latest, ap=$('asOfPill'), sp=$('statusPill'), bn=$('banner');
+  if(!L){ap.textContent='—';sp.textContent='';sp.className='pill';}
+  else{
+    ap.textContent=F('Datos al {date}',{date:fmtD(L.as_of)});
+    const ids=orderIds(L);let ok=0,st=0,er=0;
+    ids.forEach(i=>{const s=stateOf(i).level;if(s==='ok')ok++;else if(s==='stale')st++;else er++;});
+    let txt=F('{ok} de {n} series al día',{ok:ok,n:ids.length});
+    if(st)txt+=' · '+F('{k} con retraso',{k:st});
+    if(er)txt+=' · '+F('{k} con fuente no disponible',{k:er});
+    if(L.overall_status&&L.overall_status!=='ok'&&!st&&!er)txt+=' · '+T('Estado del pipeline: degradado');
+    sp.textContent=txt;
+    sp.className='pill '+(er?'error':((st||L.overall_status!=='ok')?'stale':'ok'));
+  }
+  /* Avisos de degradación (§7) */
+  let html='',cls='';
+  if(S.meta&&S.meta.fromCache){
+    const ts=fmtInstant(S.meta.fetchedAt);
+    html=isContractError(S.meta.error)
+      ?F('La fuente publicó un formato de datos que esta página no reconoce (contrato {v}). Mostrando datos guardados del {ts}.',{v:versionFromError(S.meta.error),ts:ts})
+      :F('No fue posible conectar con las fuentes de datos. Mostrando datos guardados del {ts}.',{ts:ts});
+    cls='stale';
+  }else if(!L&&S.latestErr){
+    html=isContractError(S.latestErr.message)
+      ?F('La fuente publicó un formato de datos que esta página no reconoce (contrato {v}) y no hay datos guardados en este navegador.',{v:versionFromError(S.latestErr.message)})
+      :T('No fue posible cargar las tasas y no hay datos guardados en este navegador.');
+    cls='error';
+  }
+  if(html){bn.hidden=false;bn.className='banner '+cls;
+    bn.innerHTML='<span>'+esc(html)+'</span><button type="button" class="btn" id="retryLatest">'+esc(T('Reintentar'))+'</button>';
+    $('retryLatest').onclick=()=>{loadLatest(true);loadDaily();};}
+  else{bn.hidden=true;bn.innerHTML='';}
+}
+function originLabel(src){if(!src)return '—';if(src==='cache')return T('caché local de este navegador');
+  if(/jsdelivr/.test(src))return T('respaldo jsDelivr');try{return new URL(src).host;}catch(e){return src;}}
+function renderFooter(){
+  const L=S.latest;
+  $('footData').textContent=L?F('Datos al {asof} · actualizado {ts}',{asof:fmtD(L.as_of),ts:fmtInstant(S.meta&&S.meta.fetchedAt)}):'';
+  let o=S.meta?F('Origen: {o}',{o:originLabel(S.meta.source)}):'';
+  if(S.daily)o+=(o?' · ':'')+F('Histórico al {date} · origen: {o}',{date:fmtD(S.daily.as_of),o:originLabel(S.dailySrc)});
+  $('footOrigin').textContent=o;
+  const doc=L||S.daily;
+  $('contractLine').textContent=doc?F('Contrato de datos: schema_version {v} · fecha de corte {date}.',{v:doc.schema_version,date:fmtD(doc.as_of)}):'';
+}
+
+/* ===================== 01 · KPIs ===================== */
+function renderKpis(){
+  const box=$('kpis'),L=S.latest;
+  if(!L){box.innerHTML=S.latestErr?'':'<div class="panel msg">'+esc(T('Cargando tasas oficiales…'))+'</div>';return;}
+  box.innerHTML=orderIds(L).map(kpiCard).join('');
+}
+function kpiCard(id){
+  const L=S.latest,e=L.series[id],st=stateOf(id);
+  const n=e.days_since_official;
+  const ago=(e.date==null||n==null)?'':(n===0?T('al corte'):(n===1?T('hace 1 día'):F('hace {n} días',{n:n})));
+  let delta;
+  if(e.change_pct!=null&&e.prev_date){
+    delta='<div class="kpi-delta" title="'+esc(F('Antes: {v} el {date}',{v:fmtV(e.prev_value,e.decimals),date:fmtD(e.prev_date)}))+'">'
+      +'<span aria-hidden="true">'+arrow(e.change_pct)+'</span> <b>'+esc(fmtPct(e.change_pct))+'</b> <span class="vs">'+esc(F('vs. {date}',{date:fmtD(e.prev_date)}))+'</span></div>';
+  }else delta='<div class="kpi-delta"><span class="vs">'+esc(T('Sin registro oficial anterior'))+'</span></div>';
+  const next=(e.next&&e.next.value!=null&&e.next.date)
+    ?'<div class="kpi-next" data-next="'+esc(e.next.date)+'">'+esc(F('Publicada para el {day}: {v}',{day:fmtWeekday(e.next.date),v:fmtV(e.next.value,e.decimals)}))+'</div>':'';
+  let src;
+  if(isOfficial(e)&&e.source){
+    const s=e.source;
+    src=esc(T('Fuente'))+': '+(s.docs_url?'<a href="'+esc(s.docs_url)+'" target="_blank" rel="noopener">'+esc(shortInst(s))+'</a>':esc(shortInst(s)))
+      +(s.series_id?' · '+esc(T('serie'))+' <code>'+esc(s.series_id)+'</code>':'');
+  }else{
+    const ins=inputSources(e);
+    src=esc(F('Calculada: {f}',{f:formulaOf(e)}))+(ins.length?' · '+esc(F('insumos de {inst}',{inst:ins.join(' · ')})):'');
+  }
+  return '<article class="kpi" data-id="'+esc(id)+'" data-level="'+st.level+'" data-date="'+esc(e.date||'')+'" aria-labelledby="kt-'+esc(id)+'">'
+    +'<div class="kpi-h"><h3 id="kt-'+esc(id)+'">'+esc(sname(id))+'</h3>'+methodChip(e)+'</div>'
+    +'<div class="kpi-pair">'+esc(e.pair)+'</div>'
+    +'<div class="kpi-v"><span class="num">'+esc(fmtV(e.value,e.decimals))+'</span><span class="unit">'+esc(unitOf(e))+'</span></div>'
+    +'<div class="kpi-d"><time datetime="'+esc(e.date||'')+'">'+esc(fmtD(e.date))+'</time>'
+      +(ago?' · <span title="'+esc(F('Días entre este dato oficial y la fecha de corte ({date})',{date:fmtD(L.as_of)}))+'">'+esc(ago)+'</span>':'')+'</div>'
+    +delta+next
+    +'<div class="kpi-f">'+badge(st)+'</div>'
+    +'<div class="kpi-src">'+src+'</div>'
+    +'</article>';
+}
+
+/* ===================== Plotly (diferido, con respaldo multi-CDN como el sitio) ===================== */
+const PLOTLY_SRC=['https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js',
+                  'https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js',
+                  'https://cdn.plot.ly/plotly-2.35.2.min.js'];
+let plotlyPromise=null;
+function ensurePlotly(){
+  if(plotlyPromise)return plotlyPromise;
+  plotlyPromise=new Promise(res=>{
+    if(window.Plotly){res(true);return;}
+    (function next(i){
+      if(window.Plotly){res(true);return;}
+      if(i>=PLOTLY_SRC.length){res(false);return;}
+      const s=document.createElement('script');s.src=PLOTLY_SRC[i];s.charset='utf-8';s.async=true;
+      s.onload=()=>res(!!window.Plotly);s.onerror=()=>next(i+1);document.head.appendChild(s);
+    })(0);
+  }).then(ok=>{S.plotly=ok?'ok':'failed';if(ok)registerLocale();renderCharts();return ok;});
+  return plotlyPromise;
+}
+function registerLocale(){try{Plotly.register({moduleType:'locale',name:'es',dictionary:{},format:{
+  days:['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],shortDays:['dom','lun','mar','mié','jue','vie','sáb'],
+  months:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+  shortMonths:['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],date:'%d/%m/%Y',decimal:',',thousands:'.'}});}catch(e){}}
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function baseLayout(){
+  const text=cssv('--text'),muted=cssv('--text-muted'),grid=cssv('--grid'),border=cssv('--border'),surface=cssv('--surface');
+  const font="'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',sans-serif";
+  return {font:{family:font,color:text,size:12},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+    separators:LANG==='en'?'.,':',.',margin:{l:62,r:18,t:10,b:40},showlegend:false,
+    hoverlabel:{bgcolor:surface,bordercolor:border,font:{family:font,color:text,size:12}},
+    xaxis:{type:'date',showgrid:false,linecolor:border,tickcolor:border,tickfont:{color:muted},
+      showspikes:true,spikemode:'across',spikesnap:'data',spikethickness:1,spikecolor:muted,spikedash:'dot',hoverformat:'%d %b %Y'},
+    yaxis:{gridcolor:grid,zeroline:false,linecolor:border,tickfont:{color:muted},automargin:true}};
+}
+function narrow(el){return (el&&el.clientWidth||900)<560;}
+function yLog(L,log){L.yaxis.type=log?'log':'linear';if(log)L.yaxis.dtick='D2';}
+function plotConfig(){return {displayModeBar:false,responsive:true,locale:LANG==='en'?'en-US':'es',scrollZoom:false};}
+function purge(el){try{if(window.Plotly&&el&&el.classList.contains('js-plotly-plot'))Plotly.purge(el);}catch(e){}}
+function clearMsg(el){Array.prototype.slice.call(el.children).forEach(c=>{if(c.classList.contains('msg'))c.remove();});}
+function chartMsg(id,html,cls){const el=$(id);purge(el);el.innerHTML='<div class="msg '+(cls||'')+'">'+html+'</div>';}
+
+function renderCharts(){
+  const ids=['histChart','b100Chart'];
+  if(S.dailyErr){
+    const m=isContractError(S.dailyErr.message)
+      ?F('El histórico publicó un formato de datos que esta página no reconoce (contrato {v}). Las tarjetas de arriba siguen vigentes.',{v:versionFromError(S.dailyErr.message)})
+      :T('No fue posible cargar el histórico. Las tarjetas de arriba siguen vigentes.');
+    ids.forEach(id=>chartMsg(id,esc(m)+'<br><br><button type="button" class="btn" data-retry="daily">'+esc(T('Reintentar'))+'</button>','error'));
+    ['histTitle','histSub','b100Title','b100Sub','b100Reading','b100Foot','histEvents','histTable','b100Table'].forEach(i=>{$(i).innerHTML='';});
+    $('b100Reading').style.display='none';
+    renderVariations();return;
+  }
+  if(!S.daily){ids.forEach(id=>chartMsg(id,esc(T('Cargando el histórico…'))));renderVariations();return;}
+  renderVariations();
+  renderPairControls();
+  if(S.plotly==='pending'){ids.forEach(id=>chartMsg(id,esc(T('Cargando gráficos…'))));}
+  else if(S.plotly==='failed'){ids.forEach(id=>chartMsg(id,esc(T('No se pudo cargar la librería de gráficos. Los datos siguen disponibles en las tablas.')),'error'));}
+  renderHistory();
+  renderB100();
+}
+
+/* ===================== 02 · Histórico ===================== */
+function autoLog(pts){let mn=Infinity,mx=-Infinity;pts.forEach(p=>{if(p.value>0){if(p.value<mn)mn=p.value;if(p.value>mx)mx=p.value;}});return isFinite(mn)&&mx/mn>=LOG_RATIO;}
+function renderPairControls(){
+  const ids=orderIds(S.daily);
+  if(!S.pair||ids.indexOf(S.pair)<0)S.pair=ids[0];
+  $('pairSeg').innerHTML=ids.map(id=>{const e=S.daily.series[id];
+    return '<button type="button" data-pair="'+esc(id)+'" aria-pressed="'+(id===S.pair)+'" title="'+esc(sname(id))+'">'+esc(e.pair)
+      +(isOfficial(e)?'':'<span class="tc">'+esc(T('Calculada'))+'</span>')+'</button>';}).join('');
+  $('rangeSeg').innerHTML=RANGES.map(r=>'<button type="button" data-range="'+r[0]+'" aria-pressed="'+(r[0]===S.range)+'">'+esc(T(r[0]))+'</button>').join('');
+}
+function eventStats(id,ev){
+  const pts=FxData.seriesPoints(S.daily,id,{until:ev.date,officialOnly:true});
+  if(pts.length<2)return null;const b=pts[pts.length-1];if(b.date!==ev.date)return null;
+  const a=pts[pts.length-2];return {from:a,to:b,pct:(b.value/a.value-1)*100};
+}
+function eventsFor(id){const e=S.daily.series[id];return EVENTS.filter(ev=>ev.id===id||((e&&e.inputs)||[]).indexOf(ev.id)>=0);}
+function renderHistory(){
+  if(!S.daily||!S.pair)return;
+  const id=S.pair,e=S.daily.series[id];
+  const all=FxData.seriesPoints(S.daily,id);              // recortado en as_of (regla 5), sin nulos (regla 6)
+  const off=all.filter(p=>!p.filled);
+  const log=S.logOverride[id]!=null?S.logOverride[id]:autoLog(off);
+  $('histLog').checked=log;
+  $('histTitle').textContent=sname(id)+' · '+e.pair;
+  const srcTxt=isOfficial(e)&&e.source?shortInst(e.source):F('Calculada: {f}',{f:formulaOf(e)});
+  if(!all.length){$('histSub').textContent='';chartMsg('histChart',esc(T('Sin datos para esta serie.')));$('histEvents').innerHTML='';$('histTable').innerHTML='';return;}
+  const end=all[all.length-1].date;
+  const rg=RANGES.find(r=>r[0]===S.range);const from=rg&&rg[1]?isoShift(end,rg[1]):all[0].date;
+  const pts=all.filter(p=>p.date>=from);
+  $('histSub').textContent=unitOf(e)+' · '+F('Fuente: {s}',{s:srcTxt})+' · '+F('Datos hasta el {date}',{date:fmtD(end)});
+  const el=$('histChart');
+  el.setAttribute('aria-label',F('Gráfico de línea de {name} ({pair}) entre el {a} y el {b}.',{name:sname(id),pair:e.pair,a:fmtD(pts[0].date),b:fmtD(end)}));
+
+  /* Eventos (texto accesible, siempre visible aunque el gráfico falle) */
+  const evs=eventsFor(id).map(ev=>({ev:ev,st:eventStats(id,ev)})).filter(x=>x.st);
+  $('histEvents').innerHTML=evs.length?'<h3>'+esc(T('Eventos con contexto'))+'</h3><ul>'+evs.map(x=>{
+    const out=x.ev.date<from;
+    return '<li>'+esc(fmtD(x.ev.date))+' · '+esc(T(x.ev.long))+': '+esc(F('de {a} a {b} ({p})',{a:fmtV(x.st.from.value,e.decimals),b:fmtV(x.st.to.value,e.decimals),p:fmtPct(x.st.pct,1)}))
+      +(out?' <span class="muted">'+esc(T('(fuera del rango visible)'))+'</span>':'')+'</li>';}).join('')
+    +'</ul><p class="small muted">'+esc(T('Variación calculada sobre rates_daily.json frente al registro oficial anterior.'))+'</p>':'';
+
+  /* Tabla alternativa (se construye al abrir) */
+  const tbl=$('histTable');tbl.innerHTML='';
+  const det=$('histAlt');det.ontoggle=()=>{if(det.open&&!tbl.innerHTML)tbl.innerHTML=dataTable(pts.slice().reverse(),e,F('Datos de {pair} en el rango elegido ({unit})',{pair:e.pair,unit:unitOf(e)}));};
+  if(det.open)tbl.innerHTML=dataTable(pts.slice().reverse(),e,F('Datos de {pair} en el rango elegido ({unit})',{pair:e.pair,unit:unitOf(e)}));
+
+  if(S.plotly!=='ok')return;
+  const c1=cssv('--s1'),muted=cssv('--text-muted'),surface=cssv('--surface'),border=cssv('--border'),text=cssv('--text');
+  const offR=pts.filter(p=>!p.filled);
+  /* Tramos rellenados: del último oficial a los días repetidos, cortados con null */
+  const fx=[],fy=[];let prev=null,inRun=false;
+  pts.forEach(p=>{if(p.filled){if(!inRun){if(prev&&!prev.filled){fx.push(prev.date);fy.push(prev.value);}inRun=true;}fx.push(p.date);fy.push(p.value);}
+    else{if(inRun){fx.push(null);fy.push(null);inRun=false;}}prev=p;});
+  const showMk=S.range==='1M'||S.range==='3M';
+  const kindOff=T('oficial'),kindFill=T('repite el último valor oficial');
+  const traces=[
+    {type:'scatter',mode:'lines',x:offR.map(p=>p.date),y:offR.map(p=>p.value),line:{color:c1,width:2},hoverinfo:'skip',name:e.pair},
+    {type:'scatter',mode:showMk?'lines+markers':'lines',x:fx,y:fy,connectgaps:false,line:{color:c1,width:1.5,dash:'dot'},
+      marker:{symbol:'circle-open',size:7,color:c1,line:{width:1.5}},hoverinfo:'skip',name:'filled'},
+    {type:'scatter',mode:'markers',x:pts.map(p=>p.date),y:pts.map(p=>p.value),marker:{size:9,color:c1,opacity:0},
+      customdata:pts.map(p=>[fmtD(p.date),fmtV(p.value,e.decimals),p.filled?kindFill:kindOff]),
+      hovertemplate:'<b>%{customdata[1]}</b> '+esc(unitOf(e))+'<br>%{customdata[0]} · %{customdata[2]}<extra></extra>',name:'hover'}
+  ];
+  const L=baseLayout();
+  const nw=narrow($('histChart'));
+  yLog(L,log);
+  if(nw){L.margin.l=8;L.xaxis.nticks=5;}else L.yaxis.title={text:esc(unitOf(e)),font:{size:11,color:muted}};
+  L.hovermode='x';
+  L.xaxis.range=[from,end];
+  L.annotations=evs.filter(x=>x.ev.date>=from).map((x,i)=>({x:x.ev.date,y:log?Math.log10(x.st.to.value):x.st.to.value,xref:'x',yref:'y',
+    text:esc(fmtPct(x.st.pct,1)+' · '+T(x.ev.short)),showarrow:true,arrowhead:0,arrowwidth:1,arrowcolor:muted,ax:0,ay:i%2?-58:-34,
+    font:{size:11,color:text},bgcolor:surface,bordercolor:border,borderpad:3}));
+  const el2=$('histChart');clearMsg(el2);
+  Plotly.react(el2,traces,L,plotConfig());
+}
+function dataTable(rows,e,caption){
+  return '<table><caption>'+esc(caption)+'</caption><thead><tr><th scope="col">'+esc(T('Fecha'))+'</th><th scope="col" class="n">'+esc(T('Valor'))+'</th><th scope="col">'+esc(T('Tipo de día'))+'</th></tr></thead><tbody>'
+    +rows.map(p=>'<tr><td>'+esc(fmtD(p.date))+'</td><td class="n">'+esc(fmtV(p.value,e.decimals))+'</td><td>'+esc(p.filled?T('repite el último valor oficial'):T('oficial'))+'</td></tr>').join('')
+    +'</tbody></table>';
+}
+
+/* ===================== 03 · Base 100 ===================== */
+function b100Set(){
+  const ids=orderIds(S.daily).filter(i=>isOfficial(S.daily.series[i]));
+  const cnt={};ids.forEach(i=>{const b=pairParts(S.daily.series[i])[0];cnt[b]=(cnt[b]||0)+1;});
+  let base=null;ids.forEach(i=>{const b=pairParts(S.daily.series[i])[0];if(base===null||cnt[b]>cnt[base])base=b;});
+  return {base:base,ids:ids.filter(i=>pairParts(S.daily.series[i])[0]===base)};
+}
+function renderB100(){
+  if(!S.daily)return;
+  const d=S.daily,first=d.rows.length?d.rows[0].date:d.as_of;
+  if(!S.b100From)S.b100From=d.as_of.slice(0,4)+'-01-01';
+  if(S.b100From<first)S.b100From=first;if(S.b100From>d.as_of)S.b100From=d.as_of;
+  const inp=$('b100From');inp.min=first;inp.max=d.as_of;inp.value=S.b100From;
+  const quick=[['Inicio del año',d.as_of.slice(0,4)+'-01-01'],['Hace 1 año',isoShift(d.as_of,{years:-1})],['Hace 5 años',isoShift(d.as_of,{years:-5})],['Primer dato',first]]
+    .filter(q=>q[1]>=first);
+  $('b100Quick').innerHTML=quick.map(q=>'<button type="button" data-from="'+q[1]+'" aria-pressed="'+(q[1]===S.b100From)+'">'+esc(T(q[0]))+'</button>').join('');
+  const set=b100Set();
+  const series=set.ids.map(id=>{const e=d.series[id];const pts=FxData.rebase(FxData.seriesPoints(d,id,{from:S.b100From})).filter(p=>!p.filled);
+    return {id:id,e:e,quote:pairParts(e)[1],pts:pts};}).filter(s=>s.pts.length);
+  $('b100Title').textContent=F('Base 100 frente al {base}',{base:set.base||''});
+  const fromTxt=fmtD(S.b100From);
+  $('b100Sub').textContent=series.map(s=>s.e.pair).join(' · ');
+  const rd=$('b100Reading');
+  if(!series.length){rd.style.display='none';chartMsg('b100Chart',esc(T('Sin datos para esta serie.')));$('b100Foot').textContent='';return;}
+  /* Lectura calculada (sin cifras escritas a mano) */
+  const res=series.map(s=>({q:s.quote,pct:s.pts[s.pts.length-1].value-100,s:s})).sort((a,b)=>b.pct-a.pct);
+  const top=res[0];
+  const concl=top.pct>0?F('La moneda que más se depreció frente al {base}: {q} ({p}).',{base:set.base,q:top.q,p:fmtPct(top.pct,1)})
+    :F('Ninguna moneda se depreció frente al {base} en este periodo; la que menos se apreció: {q} ({p}).',{base:set.base,q:top.q,p:fmtPct(top.pct,1)});
+  rd.style.display='';
+  rd.innerHTML=esc(F('Variación del índice desde el {date}: {list}.',{date:fromTxt,list:res.map(r=>r.q+' '+fmtPct(r.pct,1)).join(' · ')}))+' <b>'+esc(concl)+'</b><br><span class="small muted">'
+    +esc(F('Una subida del índice indica que hacen falta más unidades de esa moneda para comprar 1 {base}, es decir, que se depreció.',{base:set.base}))+'</span>';
+  const insts=[];series.forEach(s=>{const n=shortInst(s.e.source);if(n&&insts.indexOf(n)<0)insts.push(n);});
+  $('b100Foot').textContent=F('Fecha base por serie: {list}.',{list:series.map(s=>s.e.pair+' '+fmtD(s.pts[0].date)).join(' · ')})+' '
+    +F('Solo días con publicación oficial. Fuente: {s}; índice de cálculo propio.',{s:insts.join(' · ')});
+  const allPts=[];series.forEach(s=>s.pts.forEach(p=>allPts.push(p)));
+  const log=S.b100Log!=null?S.b100Log:autoLog(allPts);$('b100Log').checked=log;
+  const el=$('b100Chart');
+  el.setAttribute('aria-label',F('Gráfico base 100 de {list} desde el {date}.',{list:series.map(s=>s.e.pair).join(', '),date:fromTxt}));
+  /* Tabla alternativa */
+  const tbl=$('b100Table'),det=$('b100Alt');tbl.innerHTML='';
+  const build=()=>{const dates=[];const map={};series.forEach(s=>s.pts.forEach(p=>{if(!map[p.date]){map[p.date]={};dates.push(p.date);}map[p.date][s.id]=p.value;}));
+    dates.sort().reverse();
+    return '<table><caption>'+esc(F('Base 100 frente al {base}',{base:set.base}))+'</caption><thead><tr><th scope="col">'+esc(T('Fecha'))+'</th>'
+      +series.map(s=>'<th scope="col" class="n">'+esc(s.e.pair)+'</th>').join('')+'</tr></thead><tbody>'
+      +dates.map(dt=>'<tr><td>'+esc(fmtD(dt))+'</td>'+series.map(s=>'<td class="n">'+(map[dt][s.id]!=null?esc(fmtV(map[dt][s.id],1)):'—')+'</td>').join('')+'</tr>').join('')
+      +'</tbody></table>';};
+  det.ontoggle=()=>{if(det.open&&!tbl.innerHTML)tbl.innerHTML=build();};if(det.open)tbl.innerHTML=build();
+
+  if(S.plotly!=='ok')return;
+  const pal=[cssv('--s1'),cssv('--s2'),cssv('--s3')],sx=cssv('--sx'),dashes=['dash','dot','dashdot','longdash'];
+  const text=cssv('--text'),muted=cssv('--text-muted'),surface=cssv('--surface');
+  const traces=[],ann=[];
+  series.forEach((s,i)=>{
+    const col=i<pal.length?pal[i]:sx,dash=i<pal.length?'solid':dashes[(i-pal.length)%dashes.length];
+    traces.push({type:'scatter',mode:'lines',name:s.e.pair,x:s.pts.map(p=>p.date),y:s.pts.map(p=>p.value),line:{color:col,width:2,dash:dash},
+      customdata:s.pts.map(p=>fmtV(p.value,1)),hovertemplate:esc(s.e.pair)+': <b>%{customdata}</b><extra></extra>'});
+    const lp=s.pts[s.pts.length-1];
+    traces.push({type:'scatter',mode:'markers',x:[lp.date],y:[lp.value],marker:{size:8,color:col,line:{color:surface,width:2}},hoverinfo:'skip',showlegend:false});
+    ann.push({x:lp.date,y:log?Math.log10(lp.value):lp.value,xref:'x',yref:'y',xanchor:'left',xshift:8,showarrow:false,
+      text:esc(s.quote+' '+fmtV(lp.value,1)),font:{size:11,color:text}});
+  });
+  const L=baseLayout();
+  const nw=narrow(el);
+  L.showlegend=true;L.legend={orientation:'h',x:0,xanchor:'left',y:1.02,yanchor:'bottom',font:{color:text,size:11}};
+  L.margin={l:nw?8:52,r:nw?78:92,t:nw?56:34,b:40};
+  if(nw)L.xaxis.nticks=4;
+  L.xaxis.range=[series.reduce((m,s)=>s.pts[0].date<m?s.pts[0].date:m,'9999'),series.reduce((m,s)=>s.pts[s.pts.length-1].date>m?s.pts[s.pts.length-1].date:m,'0000')];
+  L.hovermode='x unified';
+  yLog(L,log);
+  if(!nw)L.yaxis.title={text:esc(T('Base 100 frente al {base}').replace('{base}',set.base)),font:{size:11,color:muted}};
+  L.shapes=[{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:100,y1:100,line:{color:muted,width:1,dash:'dot'}}];
+  L.annotations=ann;
+  clearMsg(el);
+  Plotly.react(el,traces,L,plotConfig());
+}
+
+/* ===================== 04 · Variaciones ===================== */
+function pctCell(c,dec){if(!c)return '<td class="n">—</td>';
+  return '<td class="n" title="'+esc(fmtV(c.from.value,dec)+' ('+fmtD(c.from.date)+') → '+fmtV(c.to.value,dec)+' ('+fmtD(c.to.date)+')')+'">'
+    +'<span aria-hidden="true">'+arrow(c.pct)+'</span> '+esc(fmtPct(c.pct))+'<span class="sub">'+esc(F('desde {date}',{date:fmtD(c.from.date)}))+'</span></td>';}
+function renderVariations(){
+  const box=$('varTable');
+  if(S.dailyErr){box.innerHTML='<div class="msg error">'+esc(T('No fue posible cargar el histórico. Las tarjetas de arriba siguen vigentes.'))+'<br><br><button type="button" class="btn" data-retry="daily">'+esc(T('Reintentar'))+'</button></div>';$('varFoot').textContent='';return;}
+  if(!S.daily){box.innerHTML='<div class="msg">'+esc(T('Cargando el histórico…'))+'</div>';return;}
+  const d=S.daily,L=S.latest,ids=orderIds(L||d),year=d.as_of.slice(0,4);
+  const rows=ids.filter(id=>d.series[id]).map(id=>{
+    const e=(L&&L.series[id])||d.series[id],de=d.series[id];
+    const off=FxData.seriesPoints(d,id,{officialOnly:true});
+    const endDate=off.length?off[off.length-1].date:null;
+    const m30=endDate?FxData.changeOver(d,id,30,endDate):null;
+    const ytd=FxData.ytdChange(d,id);
+    const last=L&&L.series[id]&&L.series[id].value!=null?{v:L.series[id].value,date:L.series[id].date}:(endDate?{v:off[off.length-1].value,date:endDate}:null);
+    const prev=(e.change_pct!=null&&e.prev_date)?'<td class="n" title="'+esc(F('Antes: {v} el {date}',{v:fmtV(e.prev_value,de.decimals),date:fmtD(e.prev_date)}))+'"><span aria-hidden="true">'+arrow(e.change_pct)+'</span> '+esc(fmtPct(e.change_pct))+'<span class="sub">'+esc(F('vs. {date}',{date:fmtD(e.prev_date)}))+'</span></td>':'<td class="n">—</td>';
+    return '<tr data-id="'+esc(id)+'"><th scope="row">'+esc(sname(id))+'<span class="sub">'+esc(de.pair)+(isOfficial(de)?'':' · '+esc(T('Calculada')))+'</span></th>'
+      +'<td class="n">'+(last?esc(fmtV(last.v,de.decimals))+' <span class="muted small">'+esc(unitOf(de))+'</span><span class="sub">'+esc(fmtD(last.date))+'</span>':'—')+'</td>'
+      +prev+pctCell(m30,de.decimals)+pctCell(ytd,de.decimals)+'</tr>';
+  });
+  box.innerHTML='<table><thead><tr><th scope="col">'+esc(T('Serie'))+'</th><th scope="col" class="n">'+esc(T('Último valor oficial'))+'</th><th scope="col" class="n">'+esc(T('Vs. registro anterior'))+'</th><th scope="col" class="n">'+esc(T('30 días'))+'</th><th scope="col" class="n">'+esc(F('En lo que va de {y}',{y:year}))+'</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';
+  const ex=ids.map(i=>d.series[i]).filter(Boolean)[0];
+  const pp=pairParts(ex);
+  $('varFoot').textContent=T('«Vs. registro anterior» compara con la publicación oficial previa (latest.json). Las columnas de 30 días y año corrido se calculan sobre rates_daily.json, solo con días de publicación oficial, hasta la última fecha oficial de cada serie.')
+    +(ex?' '+F('Una subida de {pair} significa que 1 {b} compra más {q}.',{pair:ex.pair,b:pp[0],q:pp[1]}):'');
+}
+
+/* ===================== 05 · Conversor ===================== */
+function currencies(){const out=[];if(!S.latest)return out;orderIds(S.latest).forEach(id=>pairParts(S.latest.series[id]).forEach(c=>{if(c&&out.indexOf(c)<0)out.push(c);}));return out;}
+let convTimer=null;
+function renderConverter(){
+  const L=S.latest,out=$('convOut');
+  if(!L){out.innerHTML='';return;}
+  const cs=currencies();
+  if(!S.conv){const ids=orderIds(L);const firstCalc=ids.find(i=>!isOfficial(L.series[i]))||ids[0];const p=pairParts(L.series[firstCalc]);S.conv={from:p[0],to:p[1]};}
+  if(cs.indexOf(S.conv.from)<0)S.conv.from=cs[0];if(cs.indexOf(S.conv.to)<0)S.conv.to=cs[1]||cs[0];
+  const opt=c=>{const n=curName(c);return '<option value="'+esc(c)+'">'+esc(c+(n?' — '+n:''))+'</option>';};
+  $('convFrom').innerHTML=cs.map(opt).join('');$('convTo').innerHTML=cs.map(opt).join('');
+  $('convFrom').value=S.conv.from;$('convTo').value=S.conv.to;
+  computeConversion();
+}
+function computeConversion(){
+  const L=S.latest,out=$('convOut');if(!L)return;
+  const raw=$('convAmt').value,amt=raw===''?NaN:Number(raw),from=$('convFrom').value,to=$('convTo').value;
+  S.conv={from:from,to:to};
+  if(!isFinite(amt)||amt<0){out.innerHTML='<p class="conv-eq">'+esc(T('Escribe un monto válido.'))+'</p>';return;}
+  const r=FxData.convert(L,amt,from,to);
+  const amtTxt=fmtV(amt,amt%1?2:0);
+  if(!r){out.innerHTML='<p class="conv-eq">'+esc(F('No hay una tasa publicada entre {a} y {b}.',{a:from,b:to}))+'</p>';return;}
+  if(r.via==='identidad'){out.innerHTML='<div class="conv-big">'+esc(fmtV(r.value,2))+' '+esc(to)+'</div><p class="conv-eq">'+esc(T('Es la misma moneda.'))+'</p>';return;}
+  const e=L.series[r.via],direct=e.pair===from+'-'+to,st=stateOf(r.via);
+  const rateLine=F(direct?'Tasa usada: {name} ({pair}) = {v} {unit}, del {date}.':'Tasa usada: inverso de {name} ({pair}) = {v} {unit}, del {date}.',
+    {name:sname(r.via),pair:e.pair,v:fmtV(e.value,e.decimals),unit:unitOf(e),date:fmtD(r.date)});
+  const kind=r.official?T('El resultado usa una tasa oficial.'):T('El resultado usa una tasa calculada, no publicada por ningún banco central.');
+  const srcTxt=r.official&&e.source?F('Fuente: {s}',{s:shortInst(e.source)}):F('Calculada: {f}',{f:formulaOf(e)});
+  out.innerHTML='<div class="conv-big" data-value="'+esc(String(r.value))+'">'+esc(fmtV(r.value,2))+' '+esc(to)+'</div>'
+    +'<p class="conv-eq">'+esc(amtTxt+' '+from+' = '+fmtV(r.value,2)+' '+to)+'</p>'
+    +'<div class="kpi-f" style="margin-top:8px">'+methodChip(e)+badge(st)+'</div>'
+    +'<p class="conv-rate">'+esc(rateLine)+' '+esc(kind)+' '+esc(srcTxt)+'.</p>';
+  clearTimeout(convTimer);convTimer=setTimeout(()=>track('fx_convert',{from:from,to:to,via:r.via,official:r.official}),900);
+}
+
+/* ===================== 06 · Fuente de cada serie ===================== */
+function renderSources(){
+  const doc=S.latest||S.daily,box=$('srcTable');if(!doc){box.innerHTML='';return;}
+  const ids=orderIds(doc);
+  box.innerHTML='<table><thead><tr><th scope="col">'+esc(T('Serie'))+'</th><th scope="col">'+esc(T('Par'))+'</th><th scope="col">'+esc(T('Tipo'))+'</th><th scope="col">'+esc(T('Fuente'))+'</th><th scope="col">'+esc(T('Identificador'))+'</th><th scope="col">'+esc(T('Documentación'))+'</th></tr></thead><tbody>'
+    +ids.map(id=>{const e=doc.series[id];
+      if(isOfficial(e)&&e.source){const s=e.source;
+        return '<tr><th scope="row">'+esc(sname(id))+'</th><td>'+esc(e.pair)+'</td><td>'+esc(T('Oficial'))+'</td><td>'+esc(s.institution||'')+'</td><td><code>'+esc(s.series_id||'')+'</code></td><td>'+(s.docs_url?'<a href="'+esc(s.docs_url)+'" target="_blank" rel="noopener">'+esc(T('documentación'))+'</a>':'—')+'</td></tr>';}
+      const ins=inputSources(e);
+      return '<tr><th scope="row">'+esc(sname(id))+'</th><td>'+esc(e.pair)+'</td><td>'+esc(T('Calculada'))+'</td><td>'+esc(F('Calculada a partir de {f}',{f:formulaOf(e)}))+(ins.length?' · '+esc(ins.join(' · ')):'')+'</td><td><code>'+esc(id)+'</code></td><td>—</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+/* ===================== Orquestación ===================== */
+function rerenderAll(){
+  renderHeader();renderKpis();renderConverter();renderSources();renderFooter();renderCharts();
+}
+async function loadLatest(isRetry){
+  if(S.loadingLatest)return;S.loadingLatest=true;S.lastAttempt=Date.now();
+  try{
+    const r=await FxData.loadLatest();
+    S.latest=r.latest;S.meta=r;S.latestErr=null;
+    if(r.fromCache){
+      if(isContractError(r.error))track('fx_contract_error',{file:'latest.json',detail:String(r.error).slice(0,90)});
+      track('fx_load_error',{file:'latest.json',from_cache:true});
+    }
+  }catch(err){
+    S.latestErr=err;
+    if(isContractError(err.message))track('fx_contract_error',{file:'latest.json',detail:String(err.message).slice(0,90)});
+    track('fx_load_error',{file:'latest.json',from_cache:false});
+  }finally{S.loadingLatest=false;}
+  renderHeader();renderKpis();renderConverter();renderSources();renderFooter();
+  if(S.daily)renderVariations();
+  /* Marca de rendimiento: KPIs con datos en pantalla (performance.getEntriesByName('fx_kpis_rendered')) */
+  if(S.latest&&!window.__fxMarked){window.__fxMarked=true;try{performance.mark('fx_kpis_rendered');}catch(e){}}
+}
+async function loadDaily(){
+  if(S.loadingDaily)return;S.loadingDaily=true;
+  if(S.dailyErr){S.dailyErr=null;renderCharts();}
+  try{const r=await FxData.loadDaily();S.daily=r.daily;S.dailySrc=r.source;S.dailyErr=null;}
+  catch(err){S.dailyErr=err;
+    if(isContractError(err.message))track('fx_contract_error',{file:'rates_daily.json',detail:String(err.message).slice(0,90)});
+    track('fx_load_error',{file:'rates_daily.json'});}
+  finally{S.loadingDaily=false;}
+  renderCharts();renderFooter();if(!S.latest)renderSources();
+}
+function bindUI(){
+  $('langToggle').addEventListener('click',ev=>{const o=ev.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang,false);});
+  $('themeToggle').addEventListener('click',()=>{const n=currentTheme()==='dark'?'light':'dark';safeStore.set('jf-theme',n);applyTheme(n);track('theme_switch',{theme:n});});
+  $('pairSeg').addEventListener('click',ev=>{const b=ev.target.closest('[data-pair]');if(!b||b.dataset.pair===S.pair)return;S.pair=b.dataset.pair;
+    $('histAlt').open=false;renderPairControls();renderHistory();track('fx_pair_select',{series:S.pair});});
+  $('rangeSeg').addEventListener('click',ev=>{const b=ev.target.closest('[data-range]');if(!b||b.dataset.range===S.range)return;S.range=b.dataset.range;
+    $('histAlt').open=false;renderPairControls();renderHistory();track('fx_range_select',{range:S.range,series:S.pair});});
+  $('histLog').addEventListener('change',ev=>{S.logOverride[S.pair]=ev.target.checked;renderHistory();});
+  $('b100Log').addEventListener('change',ev=>{S.b100Log=ev.target.checked;renderB100();});
+  $('b100From').addEventListener('change',ev=>{if(/^\d{4}-\d{2}-\d{2}$/.test(ev.target.value)){S.b100From=ev.target.value;$('b100Alt').open=false;renderB100();track('fx_range_select',{range:'b100_custom'});}});
+  $('b100Quick').addEventListener('click',ev=>{const b=ev.target.closest('[data-from]');if(!b)return;S.b100From=b.dataset.from;$('b100Alt').open=false;renderB100();track('fx_range_select',{range:'b100_quick'});});
+  ['input','change'].forEach(t=>{$('convAmt').addEventListener(t,computeConversion);});
+  $('convFrom').addEventListener('change',computeConversion);$('convTo').addEventListener('change',computeConversion);
+  $('convSwap').addEventListener('click',()=>{const f=$('convFrom').value;$('convFrom').value=$('convTo').value;$('convTo').value=f;computeConversion();});
+  document.addEventListener('click',ev=>{const b=ev.target.closest('[data-retry="daily"]');if(b)loadDaily();});
+  let rz=null,wasNarrow=narrow($('histChart'));
+  window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const n=narrow($('histChart'));if(n!==wasNarrow){wasNarrow=n;if(S.daily&&S.plotly==='ok'){renderHistory();renderB100();}}},200);});
+  /* §6: sin polling; recargar latest.json al volver a la pestaña si pasó más de 1 hora */
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState!=='visible'||Date.now()-S.lastAttempt<3600e3)return;
+    const prevAsOf=S.latest&&S.latest.as_of;
+    loadLatest().then(()=>{if(S.latest&&(S.latest.as_of!==prevAsOf||!S.daily||S.daily.as_of!==S.latest.as_of))loadDaily();});
+  });
+}
+async function boot(){
+  window.__titleEs=document.title;
+  applyTheme(initialTheme(),true);
+  bindUI();
+  applyLang(detectLang(),true);
+  if(!window.FxData){S.latestErr=new Error('fx-data.js');renderHeader();return;}
+  await loadLatest();                 // 1) KPIs primero (§5)
+  ensurePlotly();                     // 2) Plotly diferido: no bloquea el primer pintado
+  loadDaily();                        // 3) Histórico en paralelo
+}
+boot();
+</script>
+</body>
+</html>
