@@ -23,7 +23,7 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 
 ## Decisiones de diseño
 - **Sin servidor y sin copia de los datos.** La página lee `latest.json` y `rates_daily.json` directamente del repositorio de datos: `raw.githubusercontent.com` es el origen principal y `cdn.jsdelivr.net` el respaldo. Cada visita hace dos peticiones de datos con la cuota de cada visitante.
-- **Primero los KPIs.** `latest.json` (unos 6 KB) pinta las tarjetas; Plotly y `rates_daily.json` cargan después, en paralelo, y no bloquean el primer pintado.
+- **Primero los KPIs.** `latest.json` (unos 6 KB) pinta las tarjetas y `rates_daily.json` carga después. Plotly (paquete *cartesian*, un tercio del tamaño del completo) se descarga solo cuando el lector se acerca a los gráficos: quien solo consulta las tarjetas no paga la librería.
 - **Ninguna cifra escrita a mano.** Valores, fechas, variaciones, eventos y textos de lectura salen de los JSON. Las únicas listas fijas son los nombres bilingües por id de serie (`SERIES_TR`) y la fecha y la serie de los cuatro eventos.
 - **Un país nuevo aparece solo.** Las tarjetas, el selector, la base 100, la tabla y el conversor se construyen con `primarySeriesIds()` y el campo `pair`. La escala log por defecto se decide con los datos (rango histórico ≥ 3×); hoy coincide exactamente con los pares que incluyen ARS.
 - **Tasas con un decimal.** Las cifras de tasas se muestran con un solo decimal para facilitar la lectura. El valor oficial con todos sus decimales aparece en el tooltip de cada cifra y es el que usan el conversor y todas las variaciones.

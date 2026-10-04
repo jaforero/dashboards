@@ -777,9 +777,10 @@ function kpiCard(id){
 }
 
 /* ===================== Plotly (diferido, con respaldo multi-CDN como el sitio) ===================== */
-/* cdnjs lista la 2.35.2 pero sin archivos (404, verificado 2026-10-04): jsDelivr va primero */
-const PLOTLY_SRC=['https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js',
-                  'https://cdn.plot.ly/plotly-2.35.2.min.js'];
+/* Plotly 2.35.2, paquete «cartesian» (scatter, ejes de fecha y log, anotaciones): un tercio del tamaño del completo.
+   cdnjs lista la 2.35.2 sin archivos (404, verificado 2026-10-04), por eso jsDelivr va primero. */
+const PLOTLY_SRC=['https://cdn.jsdelivr.net/npm/plotly.js-cartesian-dist-min@2.35.2/plotly-cartesian.min.js',
+                  'https://cdn.plot.ly/plotly-cartesian-2.35.2.min.js'];
 let plotlyPromise=null;
 function ensurePlotly(){
   if(plotlyPromise)return plotlyPromise;
@@ -793,6 +794,14 @@ function ensurePlotly(){
     })(0);
   }).then(ok=>{S.plotly=ok?'ok':'failed';if(ok)registerLocale();renderCharts();return ok;});
   return plotlyPromise;
+}
+/* Decisión de Javier (2026-10-04, opción C): Plotly se descarga solo cuando el lector se acerca a los gráficos.
+   Quien solo consulta las tarjetas no paga la librería; en escritorio los gráficos quedan cerca y se cargan de inmediato. */
+function watchCharts(){
+  const targets=[$('sec-hist'),$('sec-b100')].filter(Boolean);
+  if(!('IntersectionObserver' in window)||!targets.length){ensurePlotly();return;}
+  const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();ensurePlotly();}},{rootMargin:'800px 0px'});
+  targets.forEach(t=>io.observe(t));
 }
 function registerLocale(){try{Plotly.register({moduleType:'locale',name:'es',dictionary:{},format:{
   days:['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],shortDays:['dom','lun','mar','mié','jue','vie','sáb'],
@@ -1136,7 +1145,7 @@ function initUI(){
 async function boot(){
   if(!window.FxData){S.latestErr=new Error('fx-data.js');renderHeader();return;}
   await loadLatest();                 // 1) KPIs primero (§5)
-  ensurePlotly();                     // 2) Plotly diferido: no bloquea el primer pintado
+  watchCharts();                      // 2) Plotly solo al acercarse a los gráficos (opción C)
   loadDaily();                        // 3) Histórico en paralelo
 }
 initUI();                             // idioma y tema antes del primer pintado (sin esperar a fx-data.js)

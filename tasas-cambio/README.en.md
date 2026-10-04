@@ -23,7 +23,7 @@ The question it answers: **how much is each currency worth against the others to
 
 ## Design decisions
 - **No server and no copy of the data.** The page reads `latest.json` and `rates_daily.json` straight from the data repository: `raw.githubusercontent.com` is the primary origin and `cdn.jsdelivr.net` the fallback. Each visit makes two data requests against the visitor's own quota.
-- **KPIs first.** `latest.json` (about 6 KB) paints the cards; Plotly and `rates_daily.json` load afterwards, in parallel, without blocking the first paint.
+- **KPIs first.** `latest.json` (about 6 KB) paints the cards and `rates_daily.json` loads afterwards. Plotly (the *cartesian* bundle, a third of the full size) downloads only when the reader approaches the charts: anyone who only checks the cards never pays for the library.
 - **No hand-written figures.** Values, dates, changes, events and reading notes all come from the JSON files. The only fixed lists are the bilingual names by series id (`SERIES_TR`) and the date and series of the four events.
 - **A new country appears on its own.** Cards, selector, base 100, table and converter are built from `primarySeriesIds()` and the `pair` field. The default log scale is decided from the data (historical range ≥ 3×); today that matches exactly the pairs that include ARS.
 - **Rates with one decimal place.** Rate figures are shown with a single decimal place for readability. The full official value appears in each figure's tooltip and is the one used by the converter and every change calculation.
