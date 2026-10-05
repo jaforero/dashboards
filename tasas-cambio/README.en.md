@@ -1,15 +1,15 @@
 [Español](README.md) · **English**
 
-# Official exchange rates · Mexico, Colombia and Argentina
+# Official exchange rates · Mexico, Colombia, Argentina and Brazil
 
 [![Live explainer](https://img.shields.io/badge/explainer-live-4e00ff)](https://dashboards.javierforero.co/tasas-cambio/?lang=en)
 [![MIT licence](https://img.shields.io/badge/licence-MIT-041c59)](../LICENSE)
 [![Plotly.js](https://img.shields.io/badge/Plotly.js-2.35.2-0048ff)](https://plotly.com/javascript/)
 [![Bilingual](https://img.shields.io/badge/ES%20%C2%B7%20EN-bilingual-7c4dff)](https://dashboards.javierforero.co/tasas-cambio/?lang=en)
 
-The question it answers: **how much is each currency worth against the others today, and how far is it from its recent behaviour?** It is built for anyone who converts money or invoices between Mexico, Colombia and Argentina.
+The question it answers: **how much is each currency worth against the others today, and how far is it from its recent behaviour?** It is built for anyone who converts money or invoices between Mexico, Colombia, Argentina and Brazil.
 
-> **Real data.** These are official rates from the Bank of Mexico, Colombia's Financial Superintendence and Argentina's central bank (BCRA), read live from [`jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales). They are reference rates, not transaction rates: a bank or an exchange bureau will apply its own margin. They do not constitute financial advice.
+> **Real data.** These are official rates from the Bank of Mexico, Colombia's Banco de la República, Argentina's central bank (BCRA) and the Central Bank of Brazil, read live from [`jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales). They are reference rates, not transaction rates: a bank or an exchange bureau will apply its own margin. They do not constitute financial advice.
 
 ![Official central-bank exchange rates](assets/og-image.png)
 
@@ -26,7 +26,7 @@ The question it answers: **how much is each currency worth against the others to
 - **KPIs first.** `latest.json` (about 6 KB) paints the cards and `rates_daily.json` loads afterwards. Plotly (the *cartesian* bundle, a third of the full size) downloads only when the reader approaches the charts: anyone who only checks the cards never pays for the library.
 - **No hand-written figures.** Values, dates, changes, events and reading notes all come from the JSON files. The only fixed lists are the bilingual names by series id (`SERIES_TR`) and the date and series of the four events.
 - **A new country appears on its own.** Cards, selector, base 100, table and converter are built from `primarySeriesIds()` and the `pair` field. The default log scale is decided from the data (historical range ≥ 3×); today that matches exactly the pairs that include ARS.
-- **Rates with one decimal place.** Rate figures are shown with a single decimal place for readability. The full official value appears in each figure's tooltip and is the one used by the converter and every change calculation.
+- **Rates with two decimal places.** Rate figures show two decimals; in cards and tables the decimals are smaller so the integer part reads first. The full official value appears in each figure's tooltip and is the one used by the converter and every change calculation.
 - **Never hide a figure.** A series with an error shows its last value with a red notice, and the cross rates that depend on it are flagged too.
 
 ## States
@@ -47,9 +47,9 @@ The question it answers: **how much is each currency worth against the others to
 | `assets/og-image.png` | 1200×630 social image |
 
 ## Sources
-Bank of Mexico (SIE, FIX exchange rate) · Financial Superintendence of Colombia via datos.gov.co (TRM) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500). Data processed at [`github.com/jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales).
+Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (SDMX service, TRM certified by the Financial Superintendence; datos.gov.co for verification and fallback) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500) · Central Bank of Brazil (PTAX API, selling rate). Data processed at [`github.com/jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales).
 
-No central bank publishes the MXN-COP, MXN-ARS and ARS-COP rates: they are calculated by dividing two official US-dollar rates formed on the same market day.
+No central bank publishes rates between currencies other than the US dollar (MXN-COP, MXN-ARS, ARS-COP and the BRL pairs): they are calculated by dividing two official US-dollar rates formed on the same market day.
 
 ## Analytics
 GA4 `G-MQ3K8EVKV0` with `content_group: 'tasas-cambio'`. Events: `fx_pair_select`, `fx_range_select`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `lang_switch` and `theme_switch`.

@@ -1,15 +1,15 @@
 **Español** · [English](README.en.md)
 
-# Tasas de cambio oficiales · México, Colombia y Argentina
+# Tasas de cambio oficiales · México, Colombia, Argentina y Brasil
 
 [![Pieza en vivo](https://img.shields.io/badge/pieza-en%20vivo-4e00ff)](https://dashboards.javierforero.co/tasas-cambio/)
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-041c59)](../LICENSE)
 [![Plotly.js](https://img.shields.io/badge/Plotly.js-2.35.2-0048ff)](https://plotly.com/javascript/)
 [![Bilingüe](https://img.shields.io/badge/ES%20%C2%B7%20EN-biling%C3%BCe-7c4dff)](https://dashboards.javierforero.co/tasas-cambio/?lang=en)
 
-La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y qué tan lejos está de su comportamiento reciente?** Está pensada para quien convierte o factura entre México, Colombia y Argentina.
+La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y qué tan lejos está de su comportamiento reciente?** Está pensada para quien convierte o factura entre México, Colombia, Argentina y Brasil.
 
-> **Datos reales.** Son tasas oficiales de Banco de México, la Superintendencia Financiera de Colombia y el BCRA, leídas en vivo desde [`jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales). Son tasas de referencia, no de transacción: un banco o una casa de cambio aplicará su propio margen. No constituyen asesoría financiera.
+> **Datos reales.** Son tasas oficiales de Banco de México, el Banco de la República de Colombia, el BCRA y el Banco Central do Brasil, leídas en vivo desde [`jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales). Son tasas de referencia, no de transacción: un banco o una casa de cambio aplicará su propio margen. No constituyen asesoría financiera.
 
 ![Tasas de cambio oficiales de bancos centrales](assets/og-image.png)
 
@@ -26,7 +26,7 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 - **Primero los KPIs.** `latest.json` (unos 6 KB) pinta las tarjetas y `rates_daily.json` carga después. Plotly (paquete *cartesian*, un tercio del tamaño del completo) se descarga solo cuando el lector se acerca a los gráficos: quien solo consulta las tarjetas no paga la librería.
 - **Ninguna cifra escrita a mano.** Valores, fechas, variaciones, eventos y textos de lectura salen de los JSON. Las únicas listas fijas son los nombres bilingües por id de serie (`SERIES_TR`) y la fecha y la serie de los cuatro eventos.
 - **Un país nuevo aparece solo.** Las tarjetas, el selector, la base 100, la tabla y el conversor se construyen con `primarySeriesIds()` y el campo `pair`. La escala log por defecto se decide con los datos (rango histórico ≥ 3×); hoy coincide exactamente con los pares que incluyen ARS.
-- **Tasas con un decimal.** Las cifras de tasas se muestran con un solo decimal para facilitar la lectura. El valor oficial con todos sus decimales aparece en el tooltip de cada cifra y es el que usan el conversor y todas las variaciones.
+- **Tasas con dos decimales.** Las cifras de tasas se muestran con dos decimales; en tarjetas y tablas los decimales van en tamaño menor para leer primero la parte entera. El valor oficial con todos sus decimales aparece en el tooltip de cada cifra y es el que usan el conversor y todas las variaciones.
 - **Nunca ocultar un dato.** Una serie con error muestra su último valor con un aviso rojo, y las cruzadas que dependen de ella también quedan marcadas.
 
 ## Estados
@@ -47,9 +47,9 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 | `assets/og-image.png` | Imagen social 1200×630 |
 
 ## Fuentes
-Banco de México (SIE, tipo de cambio FIX) · Superintendencia Financiera de Colombia vía datos.gov.co (TRM) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500). Datos procesados en [`github.com/jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales).
+Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta). Datos procesados en [`github.com/jaforero/fx-bancos-centrales`](https://github.com/jaforero/fx-bancos-centrales).
 
-Las tasas MXN-COP, MXN-ARS y ARS-COP no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado.
+Las tasas entre monedas distintas del dólar (MXN-COP, MXN-ARS, ARS-COP y las de BRL) no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado.
 
 ## Analítica
 GA4 `G-MQ3K8EVKV0` con `content_group: 'tasas-cambio'`. Eventos: `fx_pair_select`, `fx_range_select`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `lang_switch` y `theme_switch`.

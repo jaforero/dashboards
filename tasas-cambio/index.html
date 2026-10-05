@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Tasas de cambio oficiales · México, Colombia y Argentina · Javier Forero</title>
-<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), la Superintendencia Financiera de Colombia (TRM) y el BCRA (Comunicación A 3500), con cruzadas MXN-COP, MXN-ARS y ARS-COP rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
+<title>Tasas de cambio oficiales · México, Colombia, Argentina y Brasil · Javier Forero</title>
+<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), el Banco de la República de Colombia (TRM), el BCRA (Comunicación A 3500) y el Banco Central do Brasil (PTAX), con cruzadas entre MXN, COP, ARS y BRL rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
 <meta name="author" content="Javier Forero">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dashboards.javierforero.co/tasas-cambio/">
@@ -18,15 +18,15 @@
 <meta property="og:locale" content="es_CO">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://dashboards.javierforero.co/tasas-cambio/">
-<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia y Argentina">
-<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, la SFC y el BCRA, leídas en vivo, con la fecha y la fuente de cada cifra.">
+<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia, Argentina y Brasil">
+<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, el Banco de la República, el BCRA y el Banco Central do Brasil, leídas en vivo, con la fecha y la fuente de cada cifra.">
 <meta property="og:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Tasas de cambio oficiales de bancos centrales: USD, MXN, COP y ARS.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia y Argentina">
-<meta name="twitter:description" content="Tasas oficiales de Banxico, la SFC y el BCRA con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
+<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia, Argentina y Brasil">
+<meta name="twitter:description" content="Tasas oficiales de Banxico, el Banco de la República, el BCRA y el Banco Central do Brasil con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
 <meta name="twitter:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -51,8 +51,8 @@
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset",
- "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia y Argentina",
- "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Superintendencia Financiera de Colombia, TRM) y USD-ARS (BCRA, Comunicación A 3500), y cruzadas calculadas MXN-COP, MXN-ARS y ARS-COP del mismo día de mercado.",
+ "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia, Argentina y Brasil",
+ "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Banco de la República, TRM), USD-ARS (BCRA, Comunicación A 3500) y USD-BRL (Banco Central do Brasil, PTAX), y cruzadas calculadas entre MXN, COP, ARS y BRL del mismo día de mercado.",
  "url":"https://dashboards.javierforero.co/tasas-cambio/",
  "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
  "isBasedOn":"https://github.com/jaforero/fx-bancos-centrales","inLanguage":["es","en"],
@@ -186,6 +186,7 @@
   .kpi-pair{font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);letter-spacing:.02em;}
   .kpi-v{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;}
   .kpi-v .num{font-size:1.85rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.1;}
+  .num .dec,td .dec{font-size:.62em;font-weight:600;opacity:.8;letter-spacing:0;}
   .kpi-v .unit{font-size:.78rem;color:var(--text-soft);font-weight:600;}
   .kpi-d{font-size:.78rem;color:var(--text-soft);}
   .kpi-delta{font-size:.8rem;color:var(--text);font-variant-numeric:tabular-nums;}
@@ -314,7 +315,7 @@
   <section class="section" id="sec-kpis" aria-labelledby="h-kpis">
     <div class="sh"><span class="snum" aria-hidden="true">01</span><h2 id="h-kpis" data-i18n>Hoy: el último valor oficial de cada tasa</h2></div>
     <p class="sdek" data-i18n>Cada tarjeta lleva su propia fecha: las fuentes publican en días distintos.</p>
-    <div class="kpis" id="kpis" aria-busy="true"><p class="sr-only">Cargando tasas oficiales…</p><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div></div>
+    <div class="kpis" id="kpis" aria-busy="true"><p class="sr-only">Cargando tasas oficiales…</p><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div></div>
   </section>
 
   <!-- 02 · Histórico -->
@@ -387,11 +388,11 @@
     <div class="method">
       <div class="panel">
         <h3 data-i18n>Fuentes</h3>
-        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Superintendencia Financiera de Colombia vía datos.gov.co (TRM) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
+        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
       </div>
       <div class="panel">
         <h3 data-i18n>Metodología</h3>
-        <p data-i18n>Las tasas MXN-COP, MXN-ARS y ARS-COP no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.</p>
+        <p data-i18n>Las tasas entre monedas distintas del dólar (por ejemplo MXN-COP o BRL-ARS) no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.</p>
       </div>
       <div class="panel full">
         <h3 data-i18n>Cómo leer las tasas</h3>
@@ -401,7 +402,7 @@
           <li data-i18n>Las cruzadas usan el último día con ambos insumos oficiales; por eso su fecha puede ser anterior a la de la TRM. No es un error.</li>
           <li data-i18n>Los fines de semana y festivos repiten el último valor oficial: en el gráfico aparecen punteados y no entran en las variaciones.</li>
           <li data-i18n>Cuando una fuente ya publicó el valor de un día futuro, la tarjeta lo indica como «Publicada para…».</li>
-          <li data-i18n>Las tasas se muestran con un decimal. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.</li>
+          <li data-i18n>Las tasas se muestran con dos decimales. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.</li>
         </ul>
       </div>
       <div class="panel full">
@@ -443,7 +444,11 @@ const SERIES_TR={
   usd_ars_a3500:{es:'Dólar en Argentina · A 3500',en:'US dollar in Argentina · A 3500'},
   mxn_cop_cross:{es:'Peso mexicano en pesos colombianos',en:'Mexican peso in Colombian pesos'},
   mxn_ars_cross:{es:'Peso mexicano en pesos argentinos',en:'Mexican peso in Argentine pesos'},
-  ars_cop_cross:{es:'Peso argentino en pesos colombianos',en:'Argentine peso in Colombian pesos'}
+  ars_cop_cross:{es:'Peso argentino en pesos colombianos',en:'Argentine peso in Colombian pesos'},
+  usd_brl_ptax:{es:'Dólar en Brasil · PTAX',en:'US dollar in Brazil · PTAX'},
+  brl_mxn_cross:{es:'Real brasileño en pesos mexicanos',en:'Brazilian real in Mexican pesos'},
+  brl_cop_cross:{es:'Real brasileño en pesos colombianos',en:'Brazilian real in Colombian pesos'},
+  brl_ars_cross:{es:'Real brasileño en pesos argentinos',en:'Brazilian real in Argentine pesos'}
 };
 /* ---------- Lista fija 2/2 · Eventos con contexto (§8). Solo fecha, serie y texto:
    las variaciones y los valores se calculan sobre rates_daily.json. ---------- */
@@ -456,7 +461,7 @@ const EVENTS=[
 
 /* ---------- Diccionario ES→EN (clave en español, convención del sitio) ---------- */
 const TR={
-"__title":"Official exchange rates · Mexico, Colombia and Argentina · Javier Forero",
+"__title":"Official exchange rates · Mexico, Colombia, Argentina and Brazil · Javier Forero",
 "Divulgación · datos públicos verificables":"Explainers · verifiable public data",
 "Divulgación · Tasas oficiales de bancos centrales":"Explainer · Official central-bank exchange rates",
 "Tasas de cambio oficiales de bancos centrales":"Official central-bank exchange rates",
@@ -484,9 +489,9 @@ const TR={
 "Convierte un monto con la tasa oficial o calculada más reciente. Indica la fecha y el tipo de tasa usada.":"Convert an amount with the latest official or calculated rate. It shows the date and the type of rate used.",
 "Monto":"Amount","De":"From","A":"To","Intercambiar monedas":"Swap currencies",
 "Metodología y fuentes":"Methodology and sources","Fuentes":"Sources","Metodología":"Methodology","Aviso":"Notice",
-"Banco de México (SIE, tipo de cambio FIX) · Superintendencia Financiera de Colombia vía datos.gov.co (TRM) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500).":"Bank of Mexico (SIE, FIX exchange rate) · Financial Superintendence of Colombia via datos.gov.co (TRM) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500).",
+"Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta).":"Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (SDMX service, TRM certified by the Financial Superintendence; datos.gov.co for verification and fallback) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500) · Central Bank of Brazil (PTAX API, selling rate).",
 "Datos procesados en":"Data processed at",
-"Las tasas MXN-COP, MXN-ARS y ARS-COP no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.":"The MXN-COP, MXN-ARS and ARS-COP rates are not published by any central bank: they are calculated by dividing two official US-dollar rates formed on the same market day. Weekends and holidays repeat the last official value and are flagged as such.",
+"Las tasas entre monedas distintas del dólar (por ejemplo MXN-COP o BRL-ARS) no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.":"Rates between currencies other than the US dollar (for example MXN-COP or BRL-ARS) are not published by any central bank: they are calculated by dividing two official US-dollar rates formed on the same market day. Weekends and holidays repeat the last official value and are flagged as such.",
 "Tasas de referencia oficiales con fines informativos. No son tasas de compra o venta de ninguna entidad ni constituyen asesoría financiera.":"Official reference rates for information purposes only. They are not buy or sell rates of any institution and do not constitute financial advice.",
 "Cómo leer las tasas":"How to read the rates",
 "El par se lee BASE-COTIZADA: MXN-COP indica cuántos pesos colombianos vale 1 peso mexicano. La unidad aparece siempre junto al valor.":"Pairs read BASE-QUOTE: MXN-COP tells how many Colombian pesos 1 Mexican peso is worth. The unit always appears next to the value.",
@@ -561,10 +566,11 @@ const TR={
 "Calculada a partir de {f}":"Calculated from {f}",
 "Contrato de datos: schema_version {v} · fecha de corte {date}.":"Data contract: schema_version {v} · cut-off date {date}.",
 "documentación":"documentation",
+"Fuente de respaldo: {i}":"Fallback source: {i}",
 "Cargando datos…":"Loading data…","Verificando fuentes…":"Checking sources…",
 "Valor oficial: {v}":"Official value: {v}",
 "El cálculo usa la tasa oficial con todos sus decimales.":"The calculation uses the official rate with all its decimals.",
-"Las tasas se muestran con un decimal. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.":"Rates are shown with one decimal place. The full official value appears when you hover over the figure and is the one used in every calculation."
+"Las tasas se muestran con dos decimales. El valor oficial completo aparece al pasar el cursor sobre la cifra y es el que se usa en todos los cálculos.":"Rates are shown with two decimal places. The full official value appears when you hover over the figure and is the one used in every calculation."
 };
 
 /* ---------- Motor de idioma (mismo contrato del sitio: jf-lang / iac_lang, ?lang=en) ---------- */
@@ -620,10 +626,12 @@ function initialTheme(){const t=safeStore.get('jf-theme');if(t==='dark'||t==='li
 /* ---------- Formato ---------- */
 const fmtV=(v,d)=>FxData.formatValue(v,d,LANG);
 const fmtD=iso=>iso?FxData.formatDay(iso,LANG):'—';
-/* Decisión de Javier (2026-10-04): las tasas se muestran con un solo decimal (reemplaza la regla 9 del §4.2).
+/* Decisión de Javier (2026-10-05): las tasas se muestran con dos decimales, los decimales en tamaño menor en tarjetas y tablas (reemplaza la regla 9 del §4.2).
    El valor oficial con todos sus decimales queda en el tooltip y se usa en todos los cálculos. */
-const RATE_DEC=1;
+const RATE_DEC=2;
 const fmtR=v=>fmtV(v,RATE_DEC);
+/* HTML con la parte decimal más pequeña: facilita leer la cifra completa */
+function fmtRH(v){const t=fmtR(v),sep=LANG==='en'?'.':',',i=t.lastIndexOf(sep);return i<0?esc(t):esc(t.slice(0,i))+'<span class="dec">'+esc(t.slice(i))+'</span>';}
 const exactTip=(v,d)=>F('Valor oficial: {v}',{v:fmtV(v,d)});
 function roundTo(v,d){const f=Math.pow(10,d);return Math.round(v*f)/f;}
 function sgn(p,dec){const r=roundTo(p,dec);return r>0?1:(r<0?-1:0);}
@@ -684,7 +692,7 @@ function stateOf(id){
 }
 const ICON={ok:'✓',stale:'!',error:'✕'};
 /* Marcadores de espacio mientras llega latest.json (no muestran datos; solo reservan el alto para evitar CLS) */
-const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(6);
+const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(10);
 function badge(st){return '<span class="badge '+st.level+'"'+(st.tip?' title="'+esc(st.tip)+'"':'')+'><span aria-hidden="true">'+ICON[st.level]+'</span> '+esc(st.text)+'</span>';}
 function methodChip(e){return isOfficial(e)?'<span class="chip">'+esc(T('Oficial'))+'</span>':'<span class="chip calc">'+esc(T('Calculada'))+'</span>';}
 
@@ -759,7 +767,8 @@ function kpiCard(id){
   if(isOfficial(e)&&e.source){
     const s=e.source;
     src=esc(T('Fuente'))+': '+(s.docs_url?'<a href="'+esc(s.docs_url)+'" target="_blank" rel="noopener">'+esc(shortInst(s))+'</a>':esc(shortInst(s)))
-      +(s.series_id?' · '+esc(T('serie'))+' <code>'+esc(s.series_id)+'</code>':'');
+      +(s.series_id?' · '+esc(T('serie'))+' <code>'+esc(s.series_id)+'</code>':'')
+      +(s.fallback_used?'<br><b>'+esc(F('Fuente de respaldo: {i}',{i:shortInst(s.verified_against||{})||'—'}))+'</b>':'');
   }else{
     const ins=inputSources(e);
     src=esc(F('Calculada: {f}',{f:formulaOf(e)}))+(ins.length?' · '+esc(F('insumos de {inst}',{inst:ins.join(' · ')})):'');
@@ -767,7 +776,7 @@ function kpiCard(id){
   return '<article class="kpi" data-id="'+esc(id)+'" data-level="'+st.level+'" data-date="'+esc(e.date||'')+'" aria-labelledby="kt-'+esc(id)+'">'
     +'<div class="kpi-h"><h3 id="kt-'+esc(id)+'">'+esc(sname(id))+'</h3>'+methodChip(e)+'</div>'
     +'<div class="kpi-pair">'+esc(e.pair)+'</div>'
-    +'<div class="kpi-v"><span class="num" title="'+esc(exactTip(e.value,e.decimals))+'">'+esc(fmtR(e.value))+'</span><span class="unit">'+esc(unitOf(e))+'</span></div>'
+    +'<div class="kpi-v"><span class="num" title="'+esc(exactTip(e.value,e.decimals))+'">'+fmtRH(e.value)+'</span><span class="unit">'+esc(unitOf(e))+'</span></div>'
     +'<div class="kpi-d"><time datetime="'+esc(e.date||'')+'">'+esc(fmtD(e.date))+'</time>'
       +(ago?' · <span title="'+esc(F('Días entre este dato oficial y la fecha de corte ({date})',{date:fmtD(L.as_of)}))+'">'+esc(ago)+'</span>':'')+'</div>'
     +delta+next
@@ -922,7 +931,7 @@ function renderHistory(){
 }
 function dataTable(rows,e,caption){
   return '<table><caption>'+esc(caption)+'</caption><thead><tr><th scope="col">'+esc(T('Fecha'))+'</th><th scope="col" class="n">'+esc(T('Valor'))+'</th><th scope="col">'+esc(T('Tipo de día'))+'</th></tr></thead><tbody>'
-    +rows.map(p=>'<tr><td>'+esc(fmtD(p.date))+'</td><td class="n" title="'+esc(exactTip(p.value,e.decimals))+'">'+esc(fmtR(p.value))+'</td><td>'+esc(p.filled?T('repite el último valor oficial'):T('oficial'))+'</td></tr>').join('')
+    +rows.map(p=>'<tr><td>'+esc(fmtD(p.date))+'</td><td class="n" title="'+esc(exactTip(p.value,e.decimals))+'">'+fmtRH(p.value)+'</td><td>'+esc(p.filled?T('repite el último valor oficial'):T('oficial'))+'</td></tr>').join('')
     +'</tbody></table>';
 }
 
@@ -1021,7 +1030,7 @@ function renderVariations(){
     const last=L&&L.series[id]&&L.series[id].value!=null?{v:L.series[id].value,date:L.series[id].date}:(endDate?{v:off[off.length-1].value,date:endDate}:null);
     const prev=(e.change_pct!=null&&e.prev_date)?'<td class="n" title="'+esc(F('Antes: {v} el {date}',{v:fmtR(e.prev_value),date:fmtD(e.prev_date)}))+'"><span aria-hidden="true">'+arrow(e.change_pct)+'</span> '+esc(fmtPct(e.change_pct))+'<span class="sub">'+esc(F('vs. {date}',{date:fmtD(e.prev_date)}))+'</span></td>':'<td class="n">—</td>';
     return '<tr data-id="'+esc(id)+'"><th scope="row">'+esc(sname(id))+'<span class="sub">'+esc(de.pair)+(isOfficial(de)?'':' · '+esc(T('Calculada')))+'</span></th>'
-      +'<td class="n">'+(last?'<span title="'+esc(exactTip(last.v,de.decimals))+'">'+esc(fmtR(last.v))+'</span> <span class="muted small">'+esc(unitOf(de))+'</span><span class="sub">'+esc(fmtD(last.date))+'</span>':'—')+'</td>'
+      +'<td class="n">'+(last?'<span title="'+esc(exactTip(last.v,de.decimals))+'">'+fmtRH(last.v)+'</span> <span class="muted small">'+esc(unitOf(de))+'</span><span class="sub">'+esc(fmtD(last.date))+'</span>':'—')+'</td>'
       +prev+pctCell(m30,de.decimals)+pctCell(ytd,de.decimals)+'</tr>';
   });
   box.innerHTML='<table><thead><tr><th scope="col">'+esc(T('Serie'))+'</th><th scope="col" class="n">'+esc(T('Último valor oficial'))+'</th><th scope="col" class="n">'+esc(T('Vs. registro anterior'))+'</th><th scope="col" class="n">'+esc(T('30 días'))+'</th><th scope="col" class="n">'+esc(F('En lo que va de {y}',{y:year}))+'</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';
