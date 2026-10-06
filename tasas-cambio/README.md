@@ -14,8 +14,8 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 ![Tasas de cambio oficiales de bancos centrales](assets/og-image.png)
 
 ## Qué muestra
-1. **Hoy.** Una tarjeta por cada serie marcada `primary` en el contrato de datos. Cada tarjeta trae el valor con su unidad (`quote_unit`), su propia fecha, la variación frente al registro oficial anterior, el estado de la fuente y la fuente citada. Las cruzadas se rotulan *calculadas*.
-2. **Histórico.** Selector de par; rangos 1M · 3M · 1A · 5A · Todo; escala logarítmica activable. Los fines de semana y festivos se dibujan punteados y cuatro eventos aparecen anotados con su variación calculada sobre los datos.
+1. **Hoy.** Una lista compacta con una fila por cada serie marcada `primary` en el contrato de datos, en dos grupos: tasas oficiales y cruzadas *calculadas*. Cada fila trae la bandera del país, el valor con su unidad (`quote_unit`), la variación frente al registro oficial anterior y su propia fecha; si la fuente está atrasada o caída, el aviso aparece en la misma fila. Al elegir una fila, el panel de al lado muestra el detalle: fecha completa, días desde el dato, estado de la fuente, fuente citada (o fórmula de la cruzada) y el valor ya publicado para un día futuro, si existe. En móvil, las cruzadas se despliegan con un botón.
+2. **Histórico.** Debajo del detalle de la tasa elegida: rangos 1M · 3M · 1A · 5A · Todo; escala logarítmica activable. Los fines de semana y festivos se dibujan punteados y cuatro eventos aparecen anotados con su variación calculada sobre los datos.
 3. **Base 100.** Las series oficiales contra el dólar parten de 100 desde la fecha elegida, para comparar cuál moneda se depreció más sin el problema de escalas distintas.
 4. **Variaciones.** Frente al registro anterior, a 30 días y en lo que va del año, siempre solo con valores oficiales.
 5. **Conversor.** Entre las monedas que aparecen en los pares. Indica la fecha de la tasa usada y si es oficial o calculada.
@@ -23,10 +23,12 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 
 ## Decisiones de diseño
 - **Sin servidor y sin copia de los datos.** La página lee `latest.json` y `rates_daily.json` directamente del repositorio de datos: `raw.githubusercontent.com` es el origen principal y `cdn.jsdelivr.net` el respaldo. Cada visita hace dos peticiones de datos con la cuota de cada visitante.
-- **Primero los KPIs.** `latest.json` (unos 6 KB) pinta las tarjetas y `rates_daily.json` carga después. Plotly (paquete *cartesian*, un tercio del tamaño del completo) se descarga solo cuando el lector se acerca a los gráficos: quien solo consulta las tarjetas no paga la librería.
+- **El gráfico en el primer pantallazo.** La lista de tasas va a la izquierda y el detalle con su histórico a la derecha. En una pantalla de 1440×900 se ven las 10 tasas y el gráfico completo sin desplazarse; en 1280×800, casi todo el gráfico. En móvil, las 4 tasas oficiales caben en la primera pantalla.
+- **Banderas para ubicar cada tasa.** Una tasa oficial lleva la bandera del país que la publica (`source.country` del contrato); una cruzada lleva las dos, en el orden del par (MXN-COP: México y Colombia). Son SVG simplificados en línea, sin descargas; la única equivalencia fija es USD → Estados Unidos, y un país sin dibujo se muestra con su código ISO.
+- **Primero los KPIs.** `latest.json` (unos 6 KB) pinta la lista y `rates_daily.json` carga después. Plotly (paquete *cartesian*, un tercio del tamaño del completo) se descarga solo cuando el gráfico entra en pantalla: en escritorio, de inmediato; en móvil, al bajar. Quien solo consulta las tasas no paga la librería.
 - **Ninguna cifra escrita a mano.** Valores, fechas, variaciones, eventos y textos de lectura salen de los JSON. Las únicas listas fijas son los nombres bilingües por id de serie (`SERIES_TR`) y la fecha y la serie de los cuatro eventos.
-- **Un país nuevo aparece solo.** Las tarjetas, el selector, la base 100, la tabla y el conversor se construyen con `primarySeriesIds()` y el campo `pair`. La escala log por defecto se decide con los datos (rango histórico ≥ 3×); hoy coincide exactamente con los pares que incluyen ARS.
-- **Tasas con dos decimales.** Las cifras de tasas se muestran con dos decimales; en tarjetas y tablas los decimales van en tamaño menor para leer primero la parte entera. El valor oficial con todos sus decimales aparece en el tooltip de cada cifra y es el que usan el conversor y todas las variaciones.
+- **Un país nuevo aparece solo.** La lista, el detalle, la base 100, la tabla y el conversor se construyen con `primarySeriesIds()` y el campo `pair`. La escala log por defecto se decide con los datos (rango histórico ≥ 3×); hoy coincide exactamente con los pares que incluyen ARS.
+- **Tasas con dos decimales.** Las cifras de tasas se muestran con dos decimales; en la lista, el detalle y las tablas los decimales van en tamaño menor para leer primero la parte entera. El valor oficial con todos sus decimales aparece en el tooltip de cada cifra y es el que usan el conversor y todas las variaciones.
 - **Nunca ocultar un dato.** Una serie con error muestra su último valor con un aviso rojo, y las cruzadas que dependen de ella también quedan marcadas.
 
 ## Estados
@@ -37,7 +39,7 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 | Origen principal caído | Carga desde jsDelivr; el pie indica el origen |
 | Sin red | Último dato guardado en el navegador con el aviso «Mostrando datos guardados del {fecha}» |
 | Contrato distinto de `schema_version` 1.x | Se rechaza; caché con aviso y evento GA4 `fx_contract_error` |
-| `rates_daily.json` falla | Las tarjetas siguen visibles; los gráficos muestran un mensaje y un botón Reintentar |
+| `rates_daily.json` falla | La lista sigue visible; los gráficos muestran un mensaje y un botón Reintentar |
 
 ## Archivos
 | Archivo | Rol |
