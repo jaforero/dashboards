@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Tasas de cambio oficiales · México, Colombia, Argentina y Brasil · Javier Forero</title>
-<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), el Banco de la República de Colombia (TRM), el BCRA (Comunicación A 3500) y el Banco Central do Brasil (PTAX), con cruzadas entre MXN, COP, ARS y BRL rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
+<title>Tasas de cambio oficiales · México, Colombia, Argentina, Brasil y Chile · Javier Forero</title>
+<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), el Banco de la República de Colombia (TRM), el BCRA (Comunicación A 3500), el Banco Central do Brasil (PTAX) y el Banco Central de Chile (dólar observado), con cruzadas entre MXN, COP, ARS, BRL y CLP rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
 <meta name="author" content="Javier Forero">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dashboards.javierforero.co/tasas-cambio/">
@@ -18,15 +18,15 @@
 <meta property="og:locale" content="es_CO">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://dashboards.javierforero.co/tasas-cambio/">
-<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia, Argentina y Brasil">
-<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, el Banco de la República, el BCRA y el Banco Central do Brasil, leídas en vivo, con la fecha y la fuente de cada cifra.">
+<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia, Argentina, Brasil y Chile">
+<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, el Banco de la República, el BCRA, el Banco Central do Brasil y el Banco Central de Chile, leídas en vivo, con la fecha y la fuente de cada cifra.">
 <meta property="og:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Tasas de cambio oficiales de bancos centrales: USD, MXN, COP y ARS.">
+<meta property="og:image:alt" content="Tasas de cambio oficiales de bancos centrales: USD, MXN, COP, ARS, BRL y CLP.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia, Argentina y Brasil">
-<meta name="twitter:description" content="Tasas oficiales de Banxico, el Banco de la República, el BCRA y el Banco Central do Brasil con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
+<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia, Argentina, Brasil y Chile">
+<meta name="twitter:description" content="Tasas oficiales de Banxico, el Banco de la República, el BCRA, el Banco Central do Brasil y el Banco Central de Chile con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
 <meta name="twitter:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -51,8 +51,8 @@
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset",
- "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia, Argentina y Brasil",
- "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Banco de la República, TRM), USD-ARS (BCRA, Comunicación A 3500) y USD-BRL (Banco Central do Brasil, PTAX), y cruzadas calculadas entre MXN, COP, ARS y BRL del mismo día de mercado.",
+ "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia, Argentina, Brasil y Chile",
+ "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Banco de la República, TRM), USD-ARS (BCRA, Comunicación A 3500) USD-BRL (Banco Central do Brasil, PTAX) y USD-CLP (Banco Central de Chile, dólar observado), y cruzadas calculadas entre MXN, COP, ARS, BRL y CLP del mismo día de mercado.",
  "url":"https://dashboards.javierforero.co/tasas-cambio/",
  "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
  "isBasedOn":"https://github.com/jaforero/fx-bancos-centrales","inLanguage":["es","en"],
@@ -80,7 +80,7 @@
     --err:#b3123b;--err-bg:#fdecef;--err-bd:#f4b4c3;
     --note-bg:#fffbeb;--note-bd:#fde68a;--note-tx:#78350f;
     /* Serie categórica (validada: CVD ΔE ≥ 9,2 todas las parejas) */
-    --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--sx:#625a86;
+    --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--sx:#625a86;
     --shadow:0 10px 28px rgba(4,28,89,.07);
     --r:14px;
     --font:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
@@ -99,7 +99,7 @@
       --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
       --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
       --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
-      --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--sx:#9aa4bf;
+      --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--sx:#9aa4bf;
       --shadow:0 10px 28px rgba(0,0,0,.35);
     }
   }
@@ -113,7 +113,7 @@
     --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
     --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
     --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
-    --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--sx:#9aa4bf;
+    --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--sx:#9aa4bf;
     --shadow:0 10px 28px rgba(0,0,0,.35);
   }
 
@@ -180,7 +180,8 @@
   .btn:hover{background:var(--primary);color:#fff;}
 
   /* ---------- Hoy: lista de tasas (KPIs) + historia de la tasa elegida ---------- */
-  .today{display:grid;grid-template-columns:minmax(350px,460px) minmax(0,1fr);gap:14px;align-items:stretch;}
+  .today{display:grid;grid-template-columns:minmax(350px,460px) minmax(0,1fr);gap:14px;align-items:start;}
+  @media(min-width:981px){#sec-hist{position:sticky;top:12px;}}
   .today>*,.method>*,.conv>*{min-width:0;}
   .watch{padding:8px;display:flex;flex-direction:column;}
   .watch .wfoot{margin-top:auto;}
@@ -249,12 +250,12 @@
   .hctl .seg{min-height:30px;min-width:250px;}
   .hctl .chk{min-height:30px;}
   #histChart{height:360px;}
-  /* Reserva de alto mientras llega latest.json (evita CLS): calibrada con las 10 series primary actuales; no muestra datos */
-  #kpis[aria-busy="true"]{min-height:600px;}
-  @media(max-width:980px){.today{grid-template-columns:minmax(0,1fr);}.detail{min-height:140px;}}
+  /* Reserva de alto mientras llega latest.json (evita CLS): calibrada con las 15 series primary (5 oficiales + 10 cruzadas); no muestra datos */
+  #kpis[aria-busy="true"]{min-height:853px;}
+  @media(max-width:980px){.today{grid-template-columns:minmax(0,1fr);}.detail{min-height:140px;}#kpis[aria-busy="true"]{min-height:824px;}}
   @media(max-width:720px){
     .wg.cross.collapsed .kpi{display:none;}
-    #kpis[aria-busy="true"]{min-height:372px;}
+    #kpis[aria-busy="true"]{min-height:436px;}
     .kpi{grid-template-columns:34px minmax(0,1fr) auto 60px;gap:0 8px;padding:4px 6px;}
     .kpi .name{font-size:.66rem;}
     .kpi .num{font-size:1rem;}
@@ -396,7 +397,7 @@
     <div class="sh"><span class="snum" aria-hidden="true">01</span><h2 id="h-kpis" data-i18n>Hoy: el último valor oficial de cada tasa</h2></div>
     <p class="sdek" data-i18n>Elige una tasa para ver su historia. Cada una lleva su propia fecha: las fuentes publican en días distintos.</p>
     <div class="today">
-      <div class="panel watch" id="kpis" aria-busy="true"><p class="sr-only">Cargando tasas oficiales…</p><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div></div>
+      <div class="panel watch" id="kpis" aria-busy="true"><p class="sr-only">Cargando tasas oficiales…</p><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div><div class="kpi-skel" aria-hidden="true"></div></div>
       <div class="panel" id="sec-hist" aria-labelledby="histTitle">
         <div class="detail" id="detail" aria-live="polite"></div>
         <div class="controls hctl">
@@ -463,7 +464,7 @@
     <div class="method">
       <div class="panel">
         <h3 data-i18n>Fuentes</h3>
-        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
+        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta) · Banco Central de Chile (API de la Base de Datos Estadísticos, dólar observado).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
       </div>
       <div class="panel">
         <h3 data-i18n>Metodología</h3>
@@ -523,7 +524,12 @@ const SERIES_TR={
   usd_brl_ptax:{es:'Dólar en Brasil · PTAX',en:'US dollar in Brazil · PTAX'},
   brl_mxn_cross:{es:'Real brasileño en pesos mexicanos',en:'Brazilian real in Mexican pesos'},
   brl_cop_cross:{es:'Real brasileño en pesos colombianos',en:'Brazilian real in Colombian pesos'},
-  brl_ars_cross:{es:'Real brasileño en pesos argentinos',en:'Brazilian real in Argentine pesos'}
+  brl_ars_cross:{es:'Real brasileño en pesos argentinos',en:'Brazilian real in Argentine pesos'},
+  usd_clp_obs:{es:'Dólar en Chile · Observado',en:'US dollar in Chile · Observed rate'},
+  mxn_clp_cross:{es:'Peso mexicano en pesos chilenos',en:'Mexican peso in Chilean pesos'},
+  clp_cop_cross:{es:'Peso chileno en pesos colombianos',en:'Chilean peso in Colombian pesos'},
+  clp_ars_cross:{es:'Peso chileno en pesos argentinos',en:'Chilean peso in Argentine pesos'},
+  brl_clp_cross:{es:'Real brasileño en pesos chilenos',en:'Brazilian real in Chilean pesos'}
 };
 /* ---------- Lista fija 2/2 · Eventos con contexto (§8). Solo fecha, serie y texto:
    las variaciones y los valores se calculan sobre rates_daily.json. ---------- */
@@ -536,7 +542,7 @@ const EVENTS=[
 
 /* ---------- Diccionario ES→EN (clave en español, convención del sitio) ---------- */
 const TR={
-"__title":"Official exchange rates · Mexico, Colombia, Argentina and Brazil · Javier Forero",
+"__title":"Official exchange rates · Mexico, Colombia, Argentina, Brazil and Chile · Javier Forero",
 "Divulgación · datos públicos verificables":"Explainers · verifiable public data",
 "Divulgación · Tasas oficiales de bancos centrales":"Explainer · Official central-bank exchange rates",
 "Tasas de cambio oficiales de bancos centrales":"Official central-bank exchange rates",
@@ -563,7 +569,7 @@ const TR={
 "Convierte un monto con la tasa oficial o calculada más reciente. Indica la fecha y el tipo de tasa usada.":"Convert an amount with the latest official or calculated rate. It shows the date and the type of rate used.",
 "Monto":"Amount","De":"From","A":"To","Intercambiar monedas":"Swap currencies",
 "Metodología y fuentes":"Methodology and sources","Fuentes":"Sources","Metodología":"Methodology","Aviso":"Notice",
-"Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta).":"Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (SDMX service, TRM certified by the Financial Superintendence; datos.gov.co for verification and fallback) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500) · Central Bank of Brazil (PTAX API, selling rate).",
+"Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta) · Banco Central de Chile (API de la Base de Datos Estadísticos, dólar observado).":"Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (SDMX service, TRM certified by the Financial Superintendence; datos.gov.co for verification and fallback) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500) · Central Bank of Brazil (PTAX API, selling rate) · Central Bank of Chile (Statistics Database API, observed dollar).",
 "Datos procesados en":"Data processed at",
 "Las tasas entre monedas distintas del dólar (por ejemplo MXN-COP o BRL-ARS) no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.":"Rates between currencies other than the US dollar (for example MXN-COP or BRL-ARS) are not published by any central bank: they are calculated by dividing two official US-dollar rates formed on the same market day. Weekends and holidays repeat the last official value and are flagged as such.",
 "Tasas de referencia oficiales con fines informativos. No son tasas de compra o venta de ninguna entidad ni constituyen asesoría financiera.":"Official reference rates for information purposes only. They are not buy or sell rates of any institution and do not constitute financial advice.",
@@ -709,7 +715,9 @@ const fmtD=iso=>iso?FxData.formatDay(iso,LANG):'—';
 /* Decisión de Javier (2026-10-05): las tasas se muestran con dos decimales, los decimales en tamaño menor en tarjetas y tablas (reemplaza la regla 9 del §4.2).
    El valor oficial con todos sus decimales queda en el tooltip y se usa en todos los cálculos. */
 const RATE_DEC=2;
-const fmtR=v=>fmtV(v,RATE_DEC);
+/* Decisión de Javier (2026-10-12): cuatro decimales si la tasa es menor que 1 (p. ej. CLP-ARS en 2020 ≈ 0,0751) */
+const rateDec=v=>(v!=null&&isFinite(v)&&Math.abs(v)<1)?4:RATE_DEC;
+const fmtR=v=>fmtV(v,rateDec(v));
 /* HTML con la parte decimal más pequeña: facilita leer la cifra completa */
 function fmtRH(v){const t=fmtR(v),sep=LANG==='en'?'.':',',i=t.lastIndexOf(sep);return i<0?esc(t):esc(t.slice(0,i))+'<span class="dec">'+esc(t.slice(i))+'</span>';}
 const exactTip=(v,d)=>F('Valor oficial: {v}',{v:fmtV(v,d)});
@@ -772,6 +780,8 @@ function stateOf(id){
 }
 const ICON={ok:'✓',stale:'!',error:'✕'};
 /* Banderas en SVG simplificado, por código ISO de país (recurso gráfico, no datos).
+   Se muestran siempre recortadas en círculo al centro (x 5..25 del viewBox 30×20);
+   la de Chile ubica cantón y estrella para ese recorte.
    El país de cada moneda sale del contrato (source.country de cada serie oficial);
    un país sin dibujo aquí se muestra con su código. */
 const FLAG_SVG={
@@ -779,6 +789,7 @@ const FLAG_SVG={
   MX:'<rect width="10" height="20" fill="#006847"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#ce1126"/><circle cx="15" cy="10" r="2.6" fill="#8c5a2b"/><path d="M12.6 11.6q2.4 2 4.8 0" stroke="#3a7d22" stroke-width=".7" fill="none"/>',
   CO:'<rect width="30" height="10" fill="#fcd116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#ce1126"/>',
   AR:'<rect width="30" height="20" fill="#74acdf"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e" stroke="#85340a" stroke-width=".3"/>',
+  CL:'<rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#d52b1e"/><rect width="15" height="10" fill="#0039a6"/><path d="M10 2.2l.66 2.03h2.13l-1.72 1.25.66 2.03L10 6.26 8.27 7.51l.66-2.03-1.72-1.25h2.13z" fill="#fff"/>',
   BR:'<rect width="30" height="20" fill="#009c3b"/><path d="M3 10 15 2.3 27 10 15 17.7Z" fill="#ffdf00"/><circle cx="15" cy="10" r="4.3" fill="#002776"/><path d="M10.9 9.1q4.3-1.3 8.3 1.3" stroke="#fff" stroke-width=".7" fill="none"/>'
 };
 function regionName(cc){try{return new Intl.DisplayNames([LOC()],{type:'region'}).of(cc)||cc;}catch(e){return cc;}}
@@ -808,7 +819,7 @@ function fmtShort(iso){
     return new Intl.DateTimeFormat(LOC(),o).format(FxData.parseDay(iso));}catch(e){return fmtD(iso);}
 }
 /* Marcadores de espacio mientras llega latest.json (no muestran datos; solo reservan el alto para evitar CLS) */
-const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(10);
+const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(15);
 function badge(st){return '<span class="badge '+st.level+'"'+(st.tip?' title="'+esc(st.tip)+'"':'')+'><span aria-hidden="true">'+ICON[st.level]+'</span> '+esc(st.text)+'</span>';}
 function methodChip(e){return isOfficial(e)?'<span class="chip">'+esc(T('Oficial'))+'</span>':'<span class="chip calc">'+esc(T('Calculada'))+'</span>';}
 
@@ -1130,11 +1141,13 @@ function renderB100(){
   det.ontoggle=()=>{if(det.open&&!tbl.innerHTML)tbl.innerHTML=build();};if(det.open)tbl.innerHTML=build();
 
   if(S.plotly!=='ok')return;
-  const pal=[cssv('--s1'),cssv('--s2'),cssv('--s3')],sx=cssv('--sx'),dashes=['dash','dot','dashdot','longdash'];
+  /* 5 tonos en orden fijo (color por entidad: el orden del contrato). Desde la 4.ª serie se suma
+     un trazo como codificación secundaria, porque algunos pares no se separan para daltonismo. */
+  const pal=[cssv('--s1'),cssv('--s2'),cssv('--s3'),cssv('--s4'),cssv('--s5')],sx=cssv('--sx'),dashes=['dash','dot','dashdot','longdash'];
   const text=cssv('--text'),muted=cssv('--text-muted'),surface=cssv('--surface');
   const traces=[],ann=[];
   series.forEach((s,i)=>{
-    const col=i<pal.length?pal[i]:sx,dash=i<pal.length?'solid':dashes[(i-pal.length)%dashes.length];
+    const col=i<pal.length?pal[i]:sx,dash=i<3?'solid':dashes[(i-3)%dashes.length];
     traces.push({type:'scatter',mode:'lines',name:s.e.pair,x:s.pts.map(p=>p.date),y:s.pts.map(p=>p.value),line:{color:col,width:2,dash:dash},
       customdata:s.pts.map(p=>fmtV(p.value,1)),hovertemplate:esc(s.e.pair)+': <b>%{customdata}</b><extra></extra>'});
     const lp=s.pts[s.pts.length-1];
@@ -1154,7 +1167,25 @@ function renderB100(){
   L.shapes=[{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:100,y1:100,line:{color:muted,width:1,dash:'dot'}}];
   L.annotations=ann;
   clearMsg(el);
-  Plotly.react(el,traces,L,plotConfig());
+  Plotly.react(el,traces,L,plotConfig()).then(()=>declutterEndLabels(el)).catch(()=>{});
+}
+/* Etiquetas al final de cada línea: si dos quedan a menos de 14 px (p. ej. dos monedas con
+   índice casi igual), se separan verticalmente sin mover el punto; el valor no cambia. */
+function declutterEndLabels(el){
+  try{
+    const fl=el._fullLayout,ya=fl&&fl.yaxis,anns=(el.layout&&el.layout.annotations)||[];
+    if(!ya||anns.length<2)return;
+    const GAP=14,items=anns.map((a,i)=>({i,py:ya.l2p(a.y)})).sort((p,q)=>p.py-q.py);
+    let changed=false;
+    for(let k=1;k<items.length;k++){
+      const want=items[k-1].py+GAP;
+      if(items[k].py<want){items[k].py=want;changed=true;}
+    }
+    if(!changed)return;
+    const upd={};
+    items.forEach(it=>{const shift=-(it.py-ya.l2p(anns[it.i].y));if(Math.abs(shift)>0.5)upd['annotations['+it.i+'].yshift']=shift;});
+    if(Object.keys(upd).length)Plotly.relayout(el,upd);
+  }catch(e){}
 }
 
 /* ===================== 04 · Variaciones ===================== */
