@@ -26,10 +26,11 @@ The question it answers: **how much is each currency worth against the others to
 6. **Methodology and sources.** Sources, cross-rate methodology, how to read the rates, the source of each series and the legal notice.
 
 ## Design decisions
-- **No server and no copy of the data.** The page reads `latest.json` and `rates_daily.json` straight from the data repository: `raw.githubusercontent.com` is the primary origin and `cdn.jsdelivr.net` the fallback. Each visit makes two data requests against the visitor's own quota.
+- **No server and no copy of the data.** The page reads `latest.json` and `rates_daily_compact.json` straight from the data repository: `raw.githubusercontent.com` is the primary origin and `cdn.jsdelivr.net` the fallback. Each visit makes two data requests against the visitor's own quota.
 - **The chart on the first screen.** The list of rates sits on the left and the detail with its history on the right. On a 1440×900 screen the whole chart, the 7 official rates and the cross-rate filter are visible without scrolling; at 1280×800, nearly all of the chart. While scrolling down the list, the detail and the chart stay in view. On mobile, the 7 official rates fit on the first screen.
 - **Flags to place each rate.** An official rate carries the flag of the country that publishes it (`source.country` in the contract); a cross rate carries both, in pair order (MXN-COP: Mexico and Colombia). They are simplified inline SVGs with no downloads; the only fixed mapping is USD → United States, and a country without a drawing shows its ISO code.
-- **KPIs first.** `latest.json` (about 3 KB compressed) paints the list and `rates_daily.json` loads afterwards. Plotly (the *cartesian* bundle, a third of the full size) downloads only when the chart comes into view: immediately on desktop, on scroll on mobile. Anyone who only checks the rates never pays for the library.
+- **KPIs first.** `latest.json` (about 3 KB compressed) paints the list and `rates_daily_compact.json` loads afterwards. Plotly (the *cartesian* bundle, a third of the full size) downloads only when the chart comes into view: immediately on desktop, on scroll on mobile. Anyone who only checks the rates never pays for the library.
+- **The history travels without the cross rates.** `rates_daily_compact.json` carries only the official series (and the inputs of the cross rates) in columns: about 56 KB compressed against ~252 KB for `rates_daily.json`, growing ~6 KB per country instead of ~6 KB per new cross rate. The cross rates are recalculated in the browser with the backend's own rule, `Number((numerator / denominator).toFixed(decimals))`, and on load the latest official value of each one is compared with the one in `latest.json`: if any differs, the page discards the compact file and loads `rates_daily.json`.
 - **No hand-written figures.** Values, dates, changes, events and reading notes all come from the JSON files. The only fixed lists are the bilingual names by series id (`SERIES_TR`) and the date and series of the four events.
 - **A new country appears on its own.** The list, the detail, base 100, table and converter are built from `primarySeriesIds()` and the `pair` field. The default log scale is decided from the data (historical range ≥ 3×); today that matches exactly the pairs that include ARS.
 - **Rates with two decimal places.** Rate figures show two decimals, or four when the rate is below 1 (CLP-ARS was ≈ 0.08 in 2020); in the list, the detail and the tables the decimals are smaller so the integer part reads first. The full official value appears in each figure's tooltip and is the one used by the converter and every change calculation.
@@ -43,7 +44,8 @@ The question it answers: **how much is each currency worth against the others to
 | Primary origin down | Loads from jsDelivr; the footer shows the origin |
 | No network | The last data saved in the browser, with the notice “Showing data saved on {date}” |
 | A contract other than `schema_version` 1.x | Rejected; cached data with a notice and a GA4 `fx_contract_error` event |
-| `rates_daily.json` fails | The list stays visible; the charts show a message and a Retry button |
+| `rates_daily_compact.json` cannot be read, has another contract or a cross rate does not match `latest.json` | Loads `rates_daily.json` (all rates, heavier) and logs the GA4 event `fx_compact_fallback` |
+| `rates_daily.json` fails too | The list stays visible; the charts show a message and a Retry button |
 
 ## Files
 | File | Role |
@@ -58,7 +60,7 @@ Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (S
 No central bank publishes rates between currencies other than the US dollar (MXN-COP, MXN-ARS, ARS-COP and the BRL, CLP, UYU and PEN pairs): they are calculated by dividing two official US-dollar rates formed on the same market day.
 
 ## Analytics
-GA4 `G-MQ3K8EVKV0` with `content_group: 'tasas-cambio'`. Events: `fx_pair_select`, `fx_range_select`, `fx_cross_filter`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `lang_switch` and `theme_switch`.
+GA4 `G-MQ3K8EVKV0` with `content_group: 'tasas-cambio'`. Events: `fx_pair_select`, `fx_range_select`, `fx_cross_filter`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `fx_compact_fallback`, `lang_switch` and `theme_switch`.
 
 ## Usage
 Open `https://dashboards.javierforero.co/tasas-cambio/?lang=en`. The language (`jf-lang`) and the light or dark theme (`jf-theme`) are shared with the rest of the portfolio.

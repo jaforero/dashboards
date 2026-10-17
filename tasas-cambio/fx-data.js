@@ -60,7 +60,7 @@
   }
 
   /**
-   * Carga latest.json (KPIs). Rápido: ~6 KB.
+   * Carga latest.json (KPIs). Rápido: ~3 KB comprimidos.
    * Devuelve { latest, source, fromCache, fetchedAt }.
    */
   function loadLatest(opts) {
@@ -83,14 +83,102 @@
   }
 
   /**
-   * Carga rates_daily.json (histórico completo, ~675 KB; ~66 KB comprimido).
+   * Carga el histórico diario. Lo normal es rates_daily_compact.json (series oficiales en
+   * columnas, ~56 KB comprimidos): las cruzadas se recalculan aquí con la misma regla del
+   * backend (ver columnOf). Si el compacto no se puede leer, el contrato no es el esperado o
+   * alguna cruzada recalculada no coincide con latest.json, se carga rates_daily.json
+   * (todas las tasas, ~252 KB comprimidos): una cifra nunca se muestra sin respaldo.
    * Cárgalo después de pintar los KPIs. No se guarda en localStorage (tamaño).
+   *
+   * opts.latest: el latest.json ya cargado, para la verificación de las cruzadas.
+   * Devuelve { daily, source, layout: "compact" | "rows", fallback: null | { reason, detail } }.
    */
   function loadDaily(opts) {
     opts = opts || {};
-    return fetchWithFallback("rates_daily.json", opts).then(function (r) {
-      return { daily: assertContract(r.json, "rates_daily.json"), source: r.source };
+    function full(fallback) {
+      return fetchWithFallback("rates_daily.json", opts).then(function (r) {
+        return { daily: assertContract(r.json, "rates_daily.json"), source: r.source,
+                 layout: "rows", fallback: fallback };
+      });
+    }
+    function why(e) { return String(e && e.message || e).slice(0, 120); }
+    return fetchWithFallback("rates_daily_compact.json", opts)
+      .then(function (r) {
+        try {
+          var daily = fromCompact(assertContract(r.json, "rates_daily_compact.json"));
+          var check = verifyCrosses(daily, opts.latest);
+          if (check.ok) return { daily: daily, source: r.source, layout: "compact", fallback: null };
+          return { fallback: { reason: "mismatch", detail: check.detail } };
+        } catch (e) {
+          // Un contrato no soportado también cae al completo: si ese tampoco lo es, el error se propaga igual.
+          return { fallback: { reason: "unavailable", detail: why(e) } };
+        }
+      }, function (e) { return { fallback: { reason: "unavailable", detail: why(e) } }; })
+      .then(function (res) { return res.daily ? res : full(res.fallback); });
+  }
+
+  /* ---------- Formato en columnas (rates_daily_compact.json) ---------- */
+  function fromCompact(doc) {
+    if (doc.layout !== "columnar" || !Array.isArray(doc.dates) || !doc.columns)
+      throw new Error("rates_daily_compact.json: formato no reconocido");
+    var n = doc.dates.length, cols = {};
+    Object.keys(doc.columns).forEach(function (id) {
+      var c = doc.columns[id];
+      if (!c || c.values.length !== n) throw new Error("rates_daily_compact.json: columna " + id + " desalineada");
+      var flags = new Uint8Array(n);
+      for (var k = 0; k < c.filled.length; k++) flags[c.filled[k]] = 1;
+      cols[id] = { values: c.values, filled: flags };
     });
+    return { schema_version: doc.schema_version, as_of: doc.as_of, series: doc.series,
+             dates: doc.dates, cols: cols, derived: {} };
+  }
+
+  /**
+   * Columna de una serie. Las oficiales vienen en el archivo; una cruzada (series[id].inputs =
+   * [numerador, denominador]) se calcula igual que el backend, día por día: si los dos insumos
+   * tienen valor y el denominador no es 0, Number((num / den).toFixed(decimals)), y es relleno
+   * si cualquiera de los dos lo es; si no, no hay dato. toFixed redondea sobre el valor binario
+   * exacto, como transform.round_js del backend.
+   */
+  function columnOf(daily, id) {
+    if (daily.cols[id]) return daily.cols[id];
+    if (daily.derived[id]) return daily.derived[id];
+    var m = daily.series[id];
+    if (!m || !m.inputs || m.inputs.length !== 2) return null;
+    var a = columnOf(daily, m.inputs[0]), b = columnOf(daily, m.inputs[1]);
+    if (!a || !b) return null;
+    var n = daily.dates.length, vals = new Array(n), flags = new Uint8Array(n);
+    for (var i = 0; i < n; i++) {
+      var x = a.values[i], y = b.values[i];
+      if (x === null || y === null || y === 0) { vals[i] = null; continue; }
+      vals[i] = Number((x / y).toFixed(m.decimals));
+      flags[i] = a.filled[i] | b.filled[i];
+    }
+    return (daily.derived[id] = { values: vals, filled: flags });
+  }
+
+  /**
+   * Guarda de producción: el último valor oficial de cada cruzada visible recalculada debe ser
+   * idéntico (valor y fecha) al de latest.json. Solo se compara si ambos son del mismo as_of.
+   */
+  function verifyCrosses(daily, latest) {
+    if (!latest || !latest.series || latest.as_of !== daily.as_of) return { ok: true, skipped: true };
+    var ids = primarySeriesIds(daily);
+    for (var i = 0; i < ids.length; i++) {
+      var id = ids[i], m = daily.series[id], e = latest.series[id];
+      if (!m.inputs || !e || e.value === null || e.value === undefined) continue;
+      var pts = seriesPoints(daily, id, { officialOnly: true });
+      var last = pts.length ? pts[pts.length - 1] : null;
+      if (!last || last.date !== e.date || last.value !== e.value)
+        return { ok: false, detail: id + ": " + (last ? last.date + " " + last.value : "sin dato") + " ≠ " + e.date + " " + e.value };
+    }
+    return { ok: true };
+  }
+
+  /** Primera fecha del histórico, sea cual sea el formato. */
+  function firstDate(daily) {
+    if (daily.dates) return daily.dates.length ? daily.dates[0] : daily.as_of;
+    return daily.rows && daily.rows.length ? daily.rows[0].date : daily.as_of;
   }
 
   /* ---------- Fechas: SIEMPRE como fecha local, nunca UTC ---------- */
@@ -113,9 +201,10 @@
   }
 
   /**
-   * Puntos de una serie desde rates_daily.
+   * Puntos de una serie del histórico diario (formato en columnas o en filas).
    * opts.until (default daily.as_of): recorta filas futuras (la TRM y el FIX
    *   de liquidación publican vigencias posteriores a as_of).
+   * opts.from: fecha inicial (inclusive).
    * opts.officialOnly: excluye días rellenados (fines de semana/festivos).
    * Devuelve [{date, value, filled}] sin nulos.
    */
@@ -123,8 +212,22 @@
     opts = opts || {};
     var until = opts.until || daily.as_of;
     var from = opts.from || "0000-00-00";
-    var out = [];
-    for (var i = 0; i < daily.rows.length; i++) {
+    var out = [], i;
+    if (daily.dates) {
+      var col = columnOf(daily, id);
+      if (!col) return out;
+      for (i = 0; i < daily.dates.length; i++) {
+        var d = daily.dates[i];
+        if (d < from || d > until) continue;
+        var cv = col.values[i];
+        if (cv === null || cv === undefined) continue;
+        var cf = col.filled[i] === 1;
+        if (opts.officialOnly && cf) continue;
+        out.push({ date: d, value: cv, filled: cf });
+      }
+      return out;
+    }
+    for (i = 0; i < daily.rows.length; i++) {
       var r = daily.rows[i];
       if (r.date < from || r.date > until) continue;
       var v = r[id];
@@ -206,7 +309,7 @@
 
   return {
     SOURCES: SOURCES, loadLatest: loadLatest, loadDaily: loadDaily,
-    primarySeriesIds: primarySeriesIds, seriesPoints: seriesPoints, rebase: rebase,
+    primarySeriesIds: primarySeriesIds, seriesPoints: seriesPoints, firstDate: firstDate, rebase: rebase,
     changeOver: changeOver, ytdChange: ytdChange, freshness: freshness,
     formatValue: formatValue, formatDay: formatDay, parseDay: parseDay, convert: convert
   };

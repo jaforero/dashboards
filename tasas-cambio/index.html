@@ -516,7 +516,7 @@
    Tasas de cambio de bancos centrales · dashboards.javierforero.co
    Datos: jaforero/fx-bancos-centrales vía fx-data.js (sin servidor).
    Ninguna cifra visible está escrita a mano: todas salen de latest.json
-   o rates_daily.json. Las únicas listas fijas son SERIES_TR y EVENTS.
+   o el histórico diario. Las únicas listas fijas son SERIES_TR y EVENTS.
    ===================================================================== */
 
 /* ---------- Almacenamiento seguro (mismo patrón del sitio) ---------- */
@@ -556,7 +556,7 @@ const SERIES_TR={
   pen_uyu_cross:{es:'Sol peruano en pesos uruguayos',en:'Peruvian sol in Uruguayan pesos'}
 };
 /* ---------- Lista fija 2/2 · Eventos con contexto (§8). Solo fecha, serie y texto:
-   las variaciones y los valores se calculan sobre rates_daily.json. ---------- */
+   las variaciones y los valores se calculan sobre el histórico diario. ---------- */
 const EVENTS=[
   {date:'2020-03-10',id:'usd_cop_trm',  short:'COVID-19 y petróleo',long:'Choque COVID-19 y petróleo'},
   {date:'2023-08-14',id:'usd_ars_a3500',short:'PASO',               long:'Devaluación posterior a las PASO'},
@@ -643,7 +643,7 @@ const TR={
 "Inicio del esquema de bandas":"Start of the exchange-rate band scheme",
 "Eventos con contexto":"Events in context",
 "de {a} a {b} ({p})":"from {a} to {b} ({p})","(fuera del rango visible)":"(outside the visible range)",
-"Variación calculada sobre rates_daily.json frente al registro oficial anterior.":"Change calculated on rates_daily.json against the previous official record.",
+"Variación calculada sobre el histórico diario frente al registro oficial anterior.":"Change calculated on the daily history against the previous official record.",
 "Fecha":"Date","Valor":"Value","Tipo de día":"Day type",
 "Datos de {pair} en el rango elegido ({unit})":"Data for {pair} in the selected range ({unit})",
 "Gráfico de línea de {name} ({pair}) entre el {a} y el {b}.":"Line chart of {name} ({pair}) between {a} and {b}.",
@@ -657,7 +657,7 @@ const TR={
 "Gráfico base 100 de {list} desde el {date}.":"Base-100 chart of {list} since {date}.",
 "Serie":"Series","Último valor oficial":"Latest official value","Vs. registro anterior":"Vs. previous record",
 "30 días":"30 days","En lo que va de {y}":"Year to date {y}","desde {date}":"since {date}",
-"«Vs. registro anterior» compara con la publicación oficial previa (latest.json). Las columnas de 30 días y año corrido se calculan sobre rates_daily.json, solo con días de publicación oficial, hasta la última fecha oficial de cada serie.":"“Vs. previous record” compares with the previous official publication (latest.json). The 30-day and year-to-date columns are calculated on rates_daily.json, official publication days only, up to each series' latest official date.",
+"«Vs. registro anterior» compara con la publicación oficial previa (latest.json). Las columnas de 30 días y año corrido se calculan sobre el histórico diario, solo con días de publicación oficial, hasta la última fecha oficial de cada serie.":"“Vs. previous record” compares with the previous official publication (latest.json). The 30-day and year-to-date columns are calculated on the daily history, official publication days only, up to each series' latest official date.",
 "Una subida de {pair} significa que 1 {b} compra más {q}.":"A rise in {pair} means 1 {b} buys more {q}.",
 "Escribe un monto válido.":"Enter a valid amount.",
 "No hay una tasa publicada entre {a} y {b}.":"There is no published rate between {a} and {b}.",
@@ -1082,7 +1082,7 @@ function renderHistory(){
     const out=x.ev.date<from;
     return '<li>'+esc(fmtD(x.ev.date))+' · '+esc(T(x.ev.long))+': '+esc(F('de {a} a {b} ({p})',{a:fmtR(x.st.from.value),b:fmtR(x.st.to.value),p:fmtPct(x.st.pct,1)}))
       +(out?' <span class="muted">'+esc(T('(fuera del rango visible)'))+'</span>':'')+'</li>';}).join('')
-    +'</ul><p class="small muted">'+esc(T('Variación calculada sobre rates_daily.json frente al registro oficial anterior.'))+'</p>':'';
+    +'</ul><p class="small muted">'+esc(T('Variación calculada sobre el histórico diario frente al registro oficial anterior.'))+'</p>':'';
 
   /* Tabla alternativa (se construye al abrir) */
   const tbl=$('histTable');tbl.innerHTML='';
@@ -1133,7 +1133,7 @@ function b100Set(){
 }
 function renderB100(){
   if(!S.daily)return;
-  const d=S.daily,first=d.rows.length?d.rows[0].date:d.as_of;
+  const d=S.daily,first=FxData.firstDate(d);
   if(!S.b100From)S.b100From=d.as_of.slice(0,4)+'-01-01';
   if(S.b100From<first)S.b100From=first;if(S.b100From>d.as_of)S.b100From=d.as_of;
   const inp=$('b100From');inp.min=first;inp.max=d.as_of;inp.value=S.b100From;
@@ -1245,7 +1245,7 @@ function renderVariations(){
   box.innerHTML='<table><thead><tr><th scope="col">'+esc(T('Serie'))+'</th><th scope="col" class="n">'+esc(T('Último valor oficial'))+'</th><th scope="col" class="n">'+esc(T('Vs. registro anterior'))+'</th><th scope="col" class="n">'+esc(T('30 días'))+'</th><th scope="col" class="n">'+esc(F('En lo que va de {y}',{y:year}))+'</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';
   const ex=ids.map(i=>d.series[i]).filter(Boolean)[0];
   const pp=pairParts(ex);
-  $('varFoot').textContent=T('«Vs. registro anterior» compara con la publicación oficial previa (latest.json). Las columnas de 30 días y año corrido se calculan sobre rates_daily.json, solo con días de publicación oficial, hasta la última fecha oficial de cada serie.')
+  $('varFoot').textContent=T('«Vs. registro anterior» compara con la publicación oficial previa (latest.json). Las columnas de 30 días y año corrido se calculan sobre el histórico diario, solo con días de publicación oficial, hasta la última fecha oficial de cada serie.')
     +(ex?' '+F('Una subida de {pair} significa que 1 {b} compra más {q}.',{pair:ex.pair,b:pp[0],q:pp[1]}):'');
 }
 
@@ -1324,7 +1324,9 @@ async function loadLatest(isRetry){
 async function loadDaily(){
   if(S.loadingDaily)return;S.loadingDaily=true;
   if(S.dailyErr){S.dailyErr=null;renderCharts();}
-  try{const r=await FxData.loadDaily();S.daily=r.daily;S.dailySrc=r.source;S.dailyErr=null;}
+  try{const r=await FxData.loadDaily({latest:S.latest});S.daily=r.daily;S.dailySrc=r.source;S.dailyLayout=r.layout;S.dailyErr=null;
+    /* El compacto no sirvió (red, contrato o una cruzada que no cuadra con latest.json): se usó rates_daily.json. */
+    if(r.fallback)track('fx_compact_fallback',{reason:r.fallback.reason,detail:String(r.fallback.detail).slice(0,90)});}
   catch(err){S.dailyErr=err;
     if(isContractError(err.message))track('fx_contract_error',{file:'rates_daily.json',detail:String(err.message).slice(0,90)});
     track('fx_load_error',{file:'rates_daily.json'});}
