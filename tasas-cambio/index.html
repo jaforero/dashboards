@@ -36,6 +36,7 @@
 
 <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preload" href="/assets/fonts/IgraSans.otf" as="font" type="font/otf" crossorigin>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ3K8EVKV0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -68,6 +69,25 @@
         url('/fonts/IgraSans.otf')          format('opentype');
     font-weight:100 900;font-style:normal;font-display:swap;
   }
+  /* Respaldo con el ancho de Igra Sans. Mientras la fuente de marca (100 KB) no llega, el texto se pinta con Arial (o Roboto
+     en Android) escalado para ocupar lo mismo; así el cambio de fuente no reacomoda la barra superior, los títulos ni las filas.
+     Igra Sans es ~10-12 % más ancha que Arial y ~13-15 % más que Roboto (según el texto), y no mantiene la misma proporción en
+     todas las cadenas, por eso el factor no es el promedio sino el que menos desplazamiento dejó en un barrido de 14 anchos de
+     pantalla (320-1280 px) × español/inglés con la fuente retrasada 1,5 s: Arial 113 %, Roboto 114,5 %. ascent/descent
+     = métricas hhea de Igra Sans (750/250, line-gap 0) divididas por el factor. Roboto va primero porque en Android «Arial»
+     también se resuelve a Roboto; local() acepta el nombre completo y el PostScript. */
+  @font-face{
+    font-family:'Igra Sans Fallback Roboto';
+    src:local('Roboto'),local('Roboto Regular'),local('Roboto-Regular');
+    size-adjust:114.5%;ascent-override:65.5%;descent-override:21.8%;line-gap-override:0%;
+    font-weight:100 900;font-style:normal;
+  }
+  @font-face{
+    font-family:'Igra Sans Fallback';
+    src:local('Arial'),local('Liberation Sans'),local('Arimo');
+    size-adjust:113%;ascent-override:66.4%;descent-override:22.1%;line-gap-override:0%;
+    font-weight:100 900;font-style:normal;
+  }
   /* ---------- Tokens · claro ---------- */
   :root{
     color-scheme:light;
@@ -84,7 +104,7 @@
     --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#821779;--sx:#625a86;
     --shadow:0 10px 28px rgba(4,28,89,.07);
     --r:14px;
-    --font:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font:'Igra Sans','IgraSans','Igra Sans Fallback Roboto','Igra Sans Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
     --font-micro:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
     --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
@@ -129,14 +149,20 @@
   @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
 
   /* ---------- Barra superior ---------- */
-  .jf-topbar{width:100%;background:var(--topbar);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  .jf-topbar-left,.jf-topbar-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  /* La barra no se reacomoda según el ancho del texto: a partir de 561 px siempre es una sola fila y la etiqueta de la derecha se
+     recorta con puntos suspensivos si no cabe (el recorte no mueve nada); por debajo, siempre dos filas. Antes envolvía cuando
+     la suma de los grupos superaba el ancho, y al llegar la fuente de marca bastaban unos píxeles para pasar de una fila a dos
+     y desplazar toda la página 41 px (CLS 0,3 en 760-830 px y a 480 px). */
+  .jf-topbar{width:100%;background:var(--topbar);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap;}
+  .jf-topbar-left,.jf-topbar-right{display:flex;align-items:center;gap:12px;flex-wrap:nowrap;}
+  .jf-topbar-right{min-width:0;}
+  .jf-topbar-left>*,.lang-toggle,.theme-btn{flex:0 0 auto;}
   .jf-topbar-logo{font-size:1.02rem;color:#fff;letter-spacing:.03em;font-weight:600;}
   .jf-topbar-logo span{color:#b9a6ff;}
   .jf-topbar-logo:hover{text-decoration:none;}
   .jf-topbar-back{font-size:.72rem;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:5px 13px;white-space:nowrap;}
   .jf-topbar-back:hover{background:rgba(255,255,255,.12);color:#fff;text-decoration:none;}
-  .jf-topbar-tag{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62);}
+  .jf-topbar-tag{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
   .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:3px;gap:2px;user-select:none;}
   .lang-opt{font-family:var(--font);display:flex;align-items:center;gap:5px;padding:6px 12px;border:none;background:none;border-radius:100px;font-size:.66rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.7);cursor:pointer;}
   .lang-opt[aria-pressed="true"]{background:#4e00ff;color:#fff;box-shadow:0 2px 10px rgba(78,0,255,.45);}
@@ -148,7 +174,12 @@
   /* ---------- Encabezado ---------- */
   .header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:end;padding:16px 0 0;}
   .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);background:color-mix(in srgb,var(--primary) 9%,transparent);border:1px solid color-mix(in srgb,var(--primary) 25%,transparent);padding:3px 12px;border-radius:100px;margin-bottom:6px;}
+  /* Etiqueta y firma: de 1000 px en adelante van en una fila (suman ~690 px y la columna mide ≥768); por debajo, la firma baja
+     siempre a su propia línea. Antes pasaban de una a dos filas cuando la suma igualaba la columna (~930 px) y el cambio de
+     fuente movía todo lo de abajo 22 px (CLS 0,4 entre 920 y 940 px). */
   .kick{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;margin-bottom:6px;}
+  .kick .byline{flex:1 1 100%;}
+  @media(min-width:1000px){.kick{flex-wrap:nowrap;}.kick .byline{flex:0 1 auto;}}
   .kick .eyebrow{margin-bottom:0;}
   .byline{font-size:.68rem;font-weight:600;color:var(--text-muted);}
   h1{font-size:clamp(1.25rem,2.4vw,1.7rem);font-weight:700;line-height:1.18;color:var(--heading);letter-spacing:-.01em;margin:0 0 4px;}
@@ -351,6 +382,7 @@
   .method .full{grid-column:1/-1;}
   @media(max-width:820px){.method{grid-template-columns:1fr;}}
 
+  @media(max-width:560px){.jf-topbar{flex-wrap:wrap;}.jf-topbar-left{flex:1 1 100%;flex-wrap:wrap;}}
   .jf-footer{margin-top:40px;border-top:1px solid var(--border);padding:18px 0 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.74rem;color:var(--text-muted);}
   .jf-footer a{font-weight:700;color:var(--primary);}
   @media(max-width:640px){
@@ -367,6 +399,9 @@
     .hctl .ctl{flex-direction:column;align-items:flex-start;gap:5px;}
     #histChart{height:300px;}
     .meta-row{flex-direction:row;flex-wrap:wrap;align-items:center;}
+    /* A 390 px (iPhone) el ancho útil es 358 = 2 × 176 + 6: con 12 px de relleno el texto de «Datos al…» (150,5 px en español)
+       sumaba 176,5 y bastaba medio píxel de diferencia entre fuentes para pasar las dos píldoras a dos filas. */
+    #asOfPill,#statusPill{padding-inline:10px;}
   }
 </style>
 </head>
