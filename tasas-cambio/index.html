@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Tasas de cambio oficiales · México, Colombia, Argentina, Brasil, Chile y Uruguay · Javier Forero</title>
-<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), el Banco de la República de Colombia (TRM), el BCRA (Comunicación A 3500), el Banco Central do Brasil (PTAX), el Banco Central de Chile (dólar observado) y el Banco Central del Uruguay (interbancario), con cruzadas entre MXN, COP, ARS, BRL, CLP y UYU rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
+<title>Tasas de cambio oficiales · México, Colombia, Argentina, Brasil, Chile, Uruguay y Perú · Javier Forero</title>
+<meta name="description" content="Tasas de cambio oficiales de Banco de México (FIX), el Banco de la República de Colombia (TRM), el BCRA (Comunicación A 3500), el Banco Central do Brasil (PTAX), el Banco Central de Chile (dólar observado), el Banco Central del Uruguay (interbancario) y el Banco Central de Reserva del Perú (interbancario), con cruzadas entre MXN, COP, ARS, BRL, CLP, UYU y PEN rotuladas como calculadas. Cada cifra lleva su fecha y su fuente.">
 <meta name="author" content="Javier Forero">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dashboards.javierforero.co/tasas-cambio/">
@@ -18,15 +18,15 @@
 <meta property="og:locale" content="es_CO">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://dashboards.javierforero.co/tasas-cambio/">
-<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia, Argentina, Brasil, Chile y Uruguay">
-<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, el Banco de la República, el BCRA y los bancos centrales de Brasil, Chile y Uruguay, leídas en vivo, con la fecha y la fuente de cada cifra.">
+<meta property="og:title" content="Tasas de cambio oficiales · México, Colombia, Argentina, Brasil, Chile, Uruguay y Perú">
+<meta property="og:description" content="¿Cuánto vale hoy cada moneda frente a las otras? Tasas oficiales de Banxico, el Banco de la República, el BCRA y los bancos centrales de Brasil, Chile, Uruguay y Perú, leídas en vivo, con la fecha y la fuente de cada cifra.">
 <meta property="og:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Tasas de cambio oficiales de bancos centrales: USD, MXN, COP, ARS, BRL, CLP y UYU.">
+<meta property="og:image:alt" content="Tasas de cambio oficiales de bancos centrales: USD, MXN, COP, ARS, BRL, CLP, UYU y PEN.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia, Argentina, Brasil, Chile y Uruguay">
-<meta name="twitter:description" content="Tasas oficiales de Banxico, el Banco de la República, el BCRA y los bancos centrales de Brasil, Chile y Uruguay con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
+<meta name="twitter:title" content="Tasas de cambio oficiales · México, Colombia, Argentina, Brasil, Chile, Uruguay y Perú">
+<meta name="twitter:description" content="Tasas oficiales de Banxico, el Banco de la República, el BCRA y los bancos centrales de Brasil, Chile, Uruguay y Perú con fecha y fuente por cifra; cruzadas rotuladas como calculadas.">
 <meta name="twitter:image" content="https://dashboards.javierforero.co/tasas-cambio/assets/og-image.png">
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -51,8 +51,8 @@
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset",
- "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia, Argentina, Brasil, Chile y Uruguay",
- "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Banco de la República, TRM), USD-ARS (BCRA, Comunicación A 3500) USD-BRL (Banco Central do Brasil, PTAX) y USD-CLP (Banco Central de Chile, dólar observado) y USD-UYU (Banco Central del Uruguay, interbancario), y cruzadas calculadas entre MXN, COP, ARS, BRL, CLP y UYU del mismo día de mercado.",
+ "name":"Tasas de cambio oficiales de bancos centrales: México, Colombia, Argentina, Brasil, Chile, Uruguay y Perú",
+ "description":"Tasas oficiales USD-MXN (Banco de México, FIX), USD-COP (Banco de la República, TRM), USD-ARS (BCRA, Comunicación A 3500), USD-BRL (Banco Central do Brasil, PTAX), USD-CLP (Banco Central de Chile, dólar observado), USD-UYU (Banco Central del Uruguay, interbancario) y USD-PEN (Banco Central de Reserva del Perú, interbancario venta), y cruzadas calculadas entre MXN, COP, ARS, BRL, CLP, UYU y PEN del mismo día de mercado.",
  "url":"https://dashboards.javierforero.co/tasas-cambio/",
  "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
  "isBasedOn":"https://github.com/jaforero/fx-bancos-centrales","inLanguage":["es","en"],
@@ -79,8 +79,9 @@
     --stale:#8f5200;--stale-bg:#fff6e5;--stale-bd:#f1cf8d;
     --err:#b3123b;--err-bg:#fdecef;--err-bd:#f4b4c3;
     --note-bg:#fffbeb;--note-bd:#fde68a;--note-tx:#78350f;
-    /* Serie categórica (validada: CVD ΔE ≥ 9,2 todas las parejas) */
-    --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--sx:#625a86;
+    /* Serie categórica, validada con validate_palette.js: parejas contiguas con CVD ΔE ≥ 9,1 (claro) y ≥ 8,4 (oscuro);
+       la 7.ª frente a cada una de las seis anteriores, CVD ≥ 19,8 (claro) y ≥ 13,5 (oscuro), visión normal ≥ 24,7 y ≥ 16,6 */
+    --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#821779;--sx:#625a86;
     --shadow:0 10px 28px rgba(4,28,89,.07);
     --r:14px;
     --font:'Igra Sans','IgraSans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
@@ -99,7 +100,7 @@
       --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
       --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
       --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
-      --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--sx:#9aa4bf;
+      --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#a12eb8;--sx:#9aa4bf;
       --shadow:0 10px 28px rgba(0,0,0,.35);
     }
   }
@@ -113,7 +114,7 @@
     --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
     --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
     --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
-    --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--sx:#9aa4bf;
+    --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#a12eb8;--sx:#9aa4bf;
     --shadow:0 10px 28px rgba(0,0,0,.35);
   }
 
@@ -260,12 +261,12 @@
   .hctl .seg{min-height:30px;min-width:250px;}
   .hctl .chk{min-height:30px;}
   #histChart{height:360px;}
-  /* Reserva de alto mientras llega latest.json (evita CLS): calibrada con las 21 series primary (6 oficiales + 15 cruzadas); no muestra datos */
-  #kpis[aria-busy="true"]{min-height:1204px;}
-  @media(max-width:980px){.today{grid-template-columns:minmax(0,1fr);}.detail{min-height:140px;}#kpis[aria-busy="true"]{min-height:1157px;}}
+  /* Reserva de alto mientras llega latest.json (evita CLS): calibrada con las 28 series primary (7 oficiales + 21 cruzadas); no muestra datos */
+  #kpis[aria-busy="true"]{min-height:1547px;}
+  @media(max-width:980px){.today{grid-template-columns:minmax(0,1fr);}.detail{min-height:140px;}#kpis[aria-busy="true"]{min-height:1486px;}}
   @media(max-width:720px){
     .wg.cross.collapsed .kpi,.wg.cross.collapsed .xf{display:none;}
-    #kpis[aria-busy="true"]{min-height:490px;}
+    #kpis[aria-busy="true"]{min-height:552px;}
     .kpi{grid-template-columns:34px minmax(0,1fr) auto 60px;gap:0 8px;padding:4px 6px;}
     .kpi .name{font-size:.66rem;}
     .kpi .num{font-size:1rem;}
@@ -474,7 +475,7 @@
     <div class="method">
       <div class="panel">
         <h3 data-i18n>Fuentes</h3>
-        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta) · Banco Central de Chile (API de la Base de Datos Estadísticos, dólar observado) · Banco Central del Uruguay (web service de cotizaciones, dólar interbancario).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
+        <p><span data-i18n>Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta) · Banco Central de Chile (API de la Base de Datos Estadísticos, dólar observado) · Banco Central del Uruguay (web service de cotizaciones, dólar interbancario) · Banco Central de Reserva del Perú (API de series estadísticas BCRPData, tipo de cambio interbancario venta).</span> <span data-i18n>Datos procesados en</span> <a href="https://github.com/jaforero/fx-bancos-centrales" target="_blank" rel="noopener">github.com/jaforero/fx-bancos-centrales</a>.</p>
       </div>
       <div class="panel">
         <h3 data-i18n>Metodología</h3>
@@ -545,7 +546,14 @@ const SERIES_TR={
   uyu_cop_cross:{es:'Peso uruguayo en pesos colombianos',en:'Uruguayan peso in Colombian pesos'},
   uyu_ars_cross:{es:'Peso uruguayo en pesos argentinos',en:'Uruguayan peso in Argentine pesos'},
   brl_uyu_cross:{es:'Real brasileño en pesos uruguayos',en:'Brazilian real in Uruguayan pesos'},
-  uyu_clp_cross:{es:'Peso uruguayo en pesos chilenos',en:'Uruguayan peso in Chilean pesos'}
+  uyu_clp_cross:{es:'Peso uruguayo en pesos chilenos',en:'Uruguayan peso in Chilean pesos'},
+  usd_pen_interbank:{es:'Dólar en Perú · Interbancario',en:'US dollar in Peru · Interbank rate'},
+  pen_mxn_cross:{es:'Sol peruano en pesos mexicanos',en:'Peruvian sol in Mexican pesos'},
+  pen_cop_cross:{es:'Sol peruano en pesos colombianos',en:'Peruvian sol in Colombian pesos'},
+  pen_ars_cross:{es:'Sol peruano en pesos argentinos',en:'Peruvian sol in Argentine pesos'},
+  pen_brl_cross:{es:'Sol peruano en reales brasileños',en:'Peruvian sol in Brazilian reais'},
+  pen_clp_cross:{es:'Sol peruano en pesos chilenos',en:'Peruvian sol in Chilean pesos'},
+  pen_uyu_cross:{es:'Sol peruano en pesos uruguayos',en:'Peruvian sol in Uruguayan pesos'}
 };
 /* ---------- Lista fija 2/2 · Eventos con contexto (§8). Solo fecha, serie y texto:
    las variaciones y los valores se calculan sobre rates_daily.json. ---------- */
@@ -558,7 +566,7 @@ const EVENTS=[
 
 /* ---------- Diccionario ES→EN (clave en español, convención del sitio) ---------- */
 const TR={
-"__title":"Official exchange rates · Mexico, Colombia, Argentina, Brazil, Chile and Uruguay · Javier Forero",
+"__title":"Official exchange rates · Mexico, Colombia, Argentina, Brazil, Chile, Uruguay and Peru · Javier Forero",
 "Divulgación · datos públicos verificables":"Explainers · verifiable public data",
 "Divulgación · Tasas oficiales de bancos centrales":"Explainer · Official central-bank exchange rates",
 "Tasas de cambio oficiales de bancos centrales":"Official central-bank exchange rates",
@@ -585,7 +593,7 @@ const TR={
 "Convierte un monto con la tasa oficial o calculada más reciente. Indica la fecha y el tipo de tasa usada.":"Convert an amount with the latest official or calculated rate. It shows the date and the type of rate used.",
 "Monto":"Amount","De":"From","A":"To","Intercambiar monedas":"Swap currencies",
 "Metodología y fuentes":"Methodology and sources","Fuentes":"Sources","Metodología":"Methodology","Aviso":"Notice",
-"Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta) · Banco Central de Chile (API de la Base de Datos Estadísticos, dólar observado) · Banco Central del Uruguay (web service de cotizaciones, dólar interbancario).":"Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (SDMX service, TRM certified by the Financial Superintendence; datos.gov.co for verification and fallback) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500) · Central Bank of Brazil (PTAX API, selling rate) · Central Bank of Chile (Statistics Database API, observed dollar) · Central Bank of Uruguay (exchange-rate web service, interbank dollar).",
+"Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia (servicio SDMX, TRM certificada por la Superintendencia Financiera; datos.gov.co como verificación y respaldo) · Banco Central de la República Argentina (API Estadísticas Cambiarias, Comunicación A 3500) · Banco Central do Brasil (API PTAX, tasa de venta) · Banco Central de Chile (API de la Base de Datos Estadísticos, dólar observado) · Banco Central del Uruguay (web service de cotizaciones, dólar interbancario) · Banco Central de Reserva del Perú (API de series estadísticas BCRPData, tipo de cambio interbancario venta).":"Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (SDMX service, TRM certified by the Financial Superintendence; datos.gov.co for verification and fallback) · Central Bank of the Argentine Republic (Exchange Statistics API, Communication A 3500) · Central Bank of Brazil (PTAX API, selling rate) · Central Bank of Chile (Statistics Database API, observed dollar) · Central Bank of Uruguay (exchange-rate web service, interbank dollar) · Central Reserve Bank of Peru (BCRPData statistical series API, interbank selling rate).",
 "Datos procesados en":"Data processed at",
 "Las tasas entre monedas distintas del dólar (por ejemplo MXN-COP o BRL-ARS) no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado. Los fines de semana y festivos repiten el último valor oficial y se marcan como tales.":"Rates between currencies other than the US dollar (for example MXN-COP or BRL-ARS) are not published by any central bank: they are calculated by dividing two official US-dollar rates formed on the same market day. Weekends and holidays repeat the last official value and are flagged as such.",
 "Tasas de referencia oficiales con fines informativos. No son tasas de compra o venta de ninguna entidad ni constituyen asesoría financiera.":"Official reference rates for information purposes only. They are not buy or sell rates of any institution and do not constitute financial advice.",
@@ -807,7 +815,8 @@ const FLAG_SVG={
   AR:'<rect width="30" height="20" fill="#74acdf"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><circle cx="15" cy="10" r="2.3" fill="#f6b40e" stroke="#85340a" stroke-width=".3"/>',
   CL:'<rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#d52b1e"/><rect width="15" height="10" fill="#0039a6"/><path d="M10 2.2l.66 2.03h2.13l-1.72 1.25.66 2.03L10 6.26 8.27 7.51l.66-2.03-1.72-1.25h2.13z" fill="#fff"/>',
   UY:'<rect width="30" height="20" fill="#fff"/><rect y="2.222" width="30" height="2.222" fill="#0038a8"/><rect y="6.667" width="30" height="2.222" fill="#0038a8"/><rect y="11.111" width="30" height="2.222" fill="#0038a8"/><rect y="15.556" width="30" height="2.222" fill="#0038a8"/><rect width="15" height="11.111" fill="#fff"/><circle cx="10" cy="5.556" r="3.6" fill="none" stroke="#fcd116" stroke-width="1.1" stroke-dasharray="0.9 0.7"/><circle cx="10" cy="5.556" r="2.3" fill="#fcd116" stroke="#7b3f00" stroke-width=".3"/>',
-  BR:'<rect width="30" height="20" fill="#009c3b"/><path d="M3 10 15 2.3 27 10 15 17.7Z" fill="#ffdf00"/><circle cx="15" cy="10" r="4.3" fill="#002776"/><path d="M10.9 9.1q4.3-1.3 8.3 1.3" stroke="#fff" stroke-width=".7" fill="none"/>'
+  BR:'<rect width="30" height="20" fill="#009c3b"/><path d="M3 10 15 2.3 27 10 15 17.7Z" fill="#ffdf00"/><circle cx="15" cy="10" r="4.3" fill="#002776"/><path d="M10.9 9.1q4.3-1.3 8.3 1.3" stroke="#fff" stroke-width=".7" fill="none"/>',
+  PE:'<rect width="10" height="20" fill="#d91023"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#d91023"/>'
 };
 function regionName(cc){try{return new Intl.DisplayNames([LOC()],{type:'region'}).of(cc)||cc;}catch(e){return cc;}}
 function flagEl(cc,cls){
@@ -836,7 +845,7 @@ function fmtShort(iso){
     return new Intl.DateTimeFormat(LOC(),o).format(FxData.parseDay(iso));}catch(e){return fmtD(iso);}
 }
 /* Marcadores de espacio mientras llega latest.json (no muestran datos; solo reservan el alto para evitar CLS) */
-const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(21);
+const SKELETON='<div class="kpi-skel" aria-hidden="true"></div>'.repeat(28);
 function badge(st){return '<span class="badge '+st.level+'"'+(st.tip?' title="'+esc(st.tip)+'"':'')+'><span aria-hidden="true">'+ICON[st.level]+'</span> '+esc(st.text)+'</span>';}
 function methodChip(e){return isOfficial(e)?'<span class="chip">'+esc(T('Oficial'))+'</span>':'<span class="chip calc">'+esc(T('Calculada'))+'</span>';}
 
@@ -1165,9 +1174,9 @@ function renderB100(){
   det.ontoggle=()=>{if(det.open&&!tbl.innerHTML)tbl.innerHTML=build();};if(det.open)tbl.innerHTML=build();
 
   if(S.plotly!=='ok')return;
-  /* 6 tonos en orden fijo (color por entidad: el orden del contrato). Desde la 4.ª serie se suma
-     un trazo como codificación secundaria, porque algunos pares no se separan para daltonismo. */
-  const pal=[cssv('--s1'),cssv('--s2'),cssv('--s3'),cssv('--s4'),cssv('--s5'),cssv('--s6')],sx=cssv('--sx'),dashes=['dash','dot','dashdot','longdash'];
+  /* 7 tonos en orden fijo (color por entidad: el orden del contrato); de la 8.ª serie en adelante, gris neutro con trazo.
+     Desde la 4.ª serie se suma un trazo como codificación secundaria, porque algunos pares no se separan para daltonismo. */
+  const pal=[cssv('--s1'),cssv('--s2'),cssv('--s3'),cssv('--s4'),cssv('--s5'),cssv('--s6'),cssv('--s7')],sx=cssv('--sx'),dashes=['dash','dot','dashdot','longdash'];
   const text=cssv('--text'),muted=cssv('--text-muted'),surface=cssv('--surface');
   const traces=[],ann=[];
   series.forEach((s,i)=>{
