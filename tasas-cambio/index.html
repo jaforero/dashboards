@@ -102,6 +102,9 @@
     /* Serie categórica, validada con validate_palette.js: parejas contiguas con CVD ΔE ≥ 9,1 (claro) y ≥ 8,4 (oscuro);
        la 7.ª frente a cada una de las seis anteriores, CVD ≥ 19,8 (claro) y ≥ 13,5 (oscuro), visión normal ≥ 24,7 y ≥ 16,6 */
     --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#821779;--sx:#625a86;
+    /* Zonas de la base 100 (par divergente cálido/frío, neutro en 100): fondo muy suave + tinta para la cinta y la llave.
+       Calculado (claro): COP, ARS, BRL y CLP, las series más justas, pierden ≤ 0,18 de contraste (COP queda en 3,02); en oscuro, ≤ 0,32 (PEN queda en 2,83) */
+    --zone-up:#fdf7f6;--zone-dn:#f5f9fd;--zone-up-ink:#c8452f;--zone-dn-ink:#2a78d6;
     --shadow:0 10px 28px rgba(4,28,89,.07);
     --r:14px;
     --font:'Igra Sans','IgraSans','Igra Sans Fallback Roboto','Igra Sans Fallback',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
@@ -121,6 +124,7 @@
       --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
       --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
       --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#a12eb8;--sx:#9aa4bf;
+      --zone-up:#251933;--zone-dn:#101d40;--zone-up-ink:#e66767;--zone-dn-ink:#3987e5;
       --shadow:0 10px 28px rgba(0,0,0,.35);
     }
   }
@@ -135,6 +139,7 @@
     --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
     --note-bg:rgba(253,230,138,.08);--note-bd:rgba(253,230,138,.30);--note-tx:#f6dc9a;
     --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#a12eb8;--sx:#9aa4bf;
+      --zone-up:#251933;--zone-dn:#101d40;--zone-up-ink:#e66767;--zone-dn-ink:#3987e5;
     --shadow:0 10px 28px rgba(0,0,0,.35);
   }
 
@@ -348,6 +353,17 @@
   .events h3{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
   .events li{margin:2px 0 2px 18px;}
   .reading{margin-top:10px;font-size:.86rem;color:var(--text);background:var(--bg2);border-radius:10px;padding:10px 12px;}
+  .reading .rd{margin:0 0 7px;}
+  .reading .rd:last-child{margin-bottom:0;}
+  .reading .rd-c{font-weight:700;}
+  /* Llave de zonas de la base 100: la misma cinta y el mismo fondo que el gráfico; el significado va en el texto */
+  .zone-key{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;}
+  .zk{display:inline-flex;align-items:center;gap:7px;padding:3px 10px 3px 7px;border-radius:8px;font-size:.76rem;color:var(--text-soft);line-height:1.3;}
+  .zk i{flex:none;width:4px;height:15px;border-radius:2px;}
+  .zk b{color:var(--text);font-weight:700;}
+  .zk.up{background:var(--zone-up);}.zk.up i{background:var(--zone-up-ink);}
+  .zk.dn{background:var(--zone-dn);}.zk.dn i{background:var(--zone-dn-ink);}
+  .reading .zk{font-size:.84rem;color:var(--text);padding:2px 9px 2px 7px;}
   details.alt{margin-top:12px;font-size:.8rem;}
   details.alt summary{cursor:pointer;color:var(--blue);font-weight:600;}
   .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -464,14 +480,14 @@
   <!-- 02 · Base 100 -->
   <section class="section" id="sec-b100" aria-labelledby="h-b100">
     <div class="sh"><span class="snum" aria-hidden="true">02</span><h2 id="h-b100" data-i18n>Comparación base 100: ¿qué moneda se depreció más?</h2></div>
-    <p class="sdek" data-i18n>Cada serie vale 100 en su primer día oficial desde la fecha elegida. Así se comparan monedas con escalas muy distintas.</p>
+    <p class="sdek" data-i18n>Cada serie vale 100 en su primer día oficial desde la fecha elegida. Así se comparan monedas con escalas muy distintas. Sobre 100, la moneda se depreció frente al USD; bajo 100, se apreció.</p>
     <div class="panel">
       <div class="controls">
         <label class="ctl"><span class="ctl-l" data-i18n>Desde</span><input type="date" id="b100From"></label>
         <div class="ctl"><span class="ctl-l" id="lbl-b100q" data-i18n>Atajos</span><div class="seg" id="b100Quick" role="group" aria-labelledby="lbl-b100q"></div></div>
         <label class="chk"><input type="checkbox" id="b100Log"><span data-i18n>Escala logarítmica</span></label>
       </div>
-      <div class="chart-h"><div class="chart-t" id="b100Title"></div><div class="chart-s" id="b100Sub"></div></div>
+      <div class="chart-h"><div class="chart-t" id="b100Title"></div><div class="chart-s zone-key" id="b100Sub"></div></div>
       <div class="chart" id="b100Chart" role="img" aria-label=""><div class="msg" data-i18n>Cargando el histórico…</div></div>
       <div class="reading" id="b100Reading" aria-live="polite"></div>
       <p class="foot" id="b100Foot"></p>
@@ -620,7 +636,7 @@ const TR={
 "Ver los datos del gráfico en una tabla":"View the chart data as a table",
 "Cargando el histórico…":"Loading history…",
 "Comparación base 100: ¿qué moneda se depreció más?":"Base-100 comparison: which currency depreciated the most?",
-"Cada serie vale 100 en su primer día oficial desde la fecha elegida. Así se comparan monedas con escalas muy distintas.":"Each series equals 100 on its first official day from the chosen date, so currencies on very different scales can be compared.",
+"Cada serie vale 100 en su primer día oficial desde la fecha elegida. Así se comparan monedas con escalas muy distintas. Sobre 100, la moneda se depreció frente al USD; bajo 100, se apreció.":"Each series equals 100 on its first official day from the chosen date, so currencies on very different scales can be compared. Above 100, the currency depreciated against the USD; below 100, it appreciated.",
 "Inicio del año":"Start of year","Hace 1 año":"1 year ago","Hace 5 años":"5 years ago","Primer dato":"First data point",
 "Variaciones: ¿qué tan lejos está de su comportamiento reciente?":"Changes: how far is it from its recent behaviour?",
 "Solo con valores oficiales: los días repetidos no cuentan.":"Official values only: repeated days are excluded.",
@@ -685,10 +701,28 @@ const TR={
 "Base 100 frente al {base}":"Base 100 against the {base}",
 "Fecha base por serie: {list}.":"Base date per series: {list}.",
 "Solo días con publicación oficial. Fuente: {s}; índice de cálculo propio.":"Official publication days only. Source: {s}; index calculated by the author.",
-"Variación del índice desde el {date}: {list}.":"Change in the index since {date}: {list}.",
+"Variación del índice desde el {date}:":"Change in the index since {date}:",
+"Se depreciaron":"Depreciated",
+"frente al {base} (índice sobre 100): {list}":"against the {base} (index above 100): {list}",
+"Se apreciaron":"Appreciated",
+"frente al {base} (índice bajo 100): {list}":"against the {base} (index below 100): {list}",
+"Sin cambio apreciable: {list}":"No noticeable change: {list}",
 "La moneda que más se depreció frente al {base}: {q} ({p}).":"The currency that depreciated most against the {base}: {q} ({p}).",
-"Ninguna moneda se depreció frente al {base} en este periodo; la que menos se apreció: {q} ({p}).":"No currency depreciated against the {base} in this period; the one that appreciated least: {q} ({p}).",
-"Una subida del índice indica que hacen falta más unidades de esa moneda para comprar 1 {base}, es decir, que se depreció.":"A rise in the index means more units of that currency are needed to buy 1 {base}, i.e., it depreciated.",
+"Ninguna moneda se depreció frente al {base} en este periodo.":"No currency depreciated against the {base} in this period.",
+"La que más se apreció: {q} ({p}).":"The one that appreciated most: {q} ({p}).",
+"Ninguna se apreció.":"None appreciated.",
+"Cómo leerlo: sobre 100, hacen falta más unidades de esa moneda para comprar 1 {base}: perdió valor, se depreció. Bajo 100, hacen falta menos: ganó valor, se apreció.":"How to read it: above 100, more units of that currency are needed to buy 1 {base}: it lost value, it depreciated. Below 100, fewer are needed: it gained value, it appreciated.",
+"Sobre 100":"Above 100",
+"Bajo 100":"Below 100",
+"se depreció":"depreciated",
+"se apreció":"appreciated",
+"Sobre 100: la moneda perdió valor frente al {base} (se depreció)":"Above 100: the currency lost value against the {base} (depreciated)",
+"Bajo 100: la moneda ganó valor frente al {base} (se apreció)":"Below 100: the currency gained value against the {base} (appreciated)",
+"Se depreció":"Depreciated",
+"Se apreció":"Appreciated",
+"Sin cambio":"No change",
+"Sobre 100: la moneda se depreció; bajo 100: se apreció.":"Above 100: the currency depreciated; below 100: it appreciated.",
+"Sobre 100, la moneda se depreció; bajo 100, se apreció.":"Above 100, the currency depreciated; below 100, it appreciated.",
 "Gráfico base 100 de {list} desde el {date}.":"Base-100 chart of {list} since {date}.",
 "Serie":"Series","Último valor oficial":"Latest official value","Vs. registro anterior":"Vs. previous record",
 "30 días":"30 days","En lo que va de {y}":"Year to date {y}","desde {date}":"since {date}",
@@ -1059,6 +1093,26 @@ function baseLayout(){
 }
 function narrow(el){return (el&&el.clientWidth||900)<560;}
 function yLog(L,log){L.yaxis.type=log?'log':'linear';if(log)L.yaxis.dtick='D2';}
+/* Marcas del eje logarítmico con cifras redondas y legibles (50 · 100 · 200 · 500 · 1.000…). El rotulado automático de Plotly
+   deja en rangos angostos una sola marca ("100") y en rangos amplios etiquetas ambiguas ("2", "5"). Siempre incluye 100. */
+function niceLinTicks(lo,hi){
+  const raw=(hi-lo)/6,p=Math.pow(10,Math.floor(Math.log10(raw)));let st=p;
+  [1,2,2.5,5,10].some(m=>{st=m*p;return st>=raw;});
+  const t=[];for(let v=Math.ceil(lo/st-1e-9)*st;v<=hi+st*1e-9;v+=st)t.push(+v.toPrecision(12));return t;
+}
+function logTicks(lo,hi){
+  const sets=[[1,1.2,1.5,2,2.5,3,4,5,6,7,8,9],[1,1.5,2,3,4,5,7],[1,2,3,5,7],[1,2,5],[1,3],[1]];
+  const e0=Math.floor(Math.log10(lo))-1,e1=Math.ceil(Math.log10(hi));
+  const gen=set=>{const t=[];for(let e=e0;e<=e1;e++)set.forEach(m=>{const v=+(m*Math.pow(10,e)).toPrecision(12);if(v>=lo&&v<=hi)t.push(v);});return t;};
+  let t=gen(sets[0]);
+  if(t.length<4)t=niceLinTicks(lo,hi);
+  else for(let k=0;k<sets.length;k++){t=gen(sets[k]);if(t.length<=8)break;}
+  return t;
+}
+function tickLabels(vals){
+  let dec=0;while(dec<2&&vals.some(v=>Math.abs(v*Math.pow(10,dec)-Math.round(v*Math.pow(10,dec)))>1e-6))dec++;
+  return vals.map(v=>fmtV(v,dec));
+}
 function plotConfig(){return {displayModeBar:false,responsive:true,locale:LANG==='en'?'en-US':'es',scrollZoom:false};}
 function purge(el){try{if(window.Plotly&&el&&el.classList.contains('js-plotly-plot'))Plotly.purge(el);}catch(e){}}
 function clearMsg(el){Array.prototype.slice.call(el.children).forEach(c=>{if(c.classList.contains('msg'))c.remove();});}
@@ -1180,29 +1234,38 @@ function renderB100(){
     return {id:id,e:e,quote:pairParts(e)[1],pts:pts};}).filter(s=>s.pts.length);
   $('b100Title').textContent=F('Base 100 frente al {base}',{base:set.base||''});
   const fromTxt=fmtD(S.b100From);
-  $('b100Sub').textContent=series.map(s=>s.e.pair).join(' · ');
   const rd=$('b100Reading');
-  if(!series.length){rd.style.display='none';chartMsg('b100Chart',esc(T('Sin datos para esta serie.')));$('b100Foot').textContent='';return;}
-  /* Lectura calculada (sin cifras escritas a mano) */
+  if(!series.length){$('b100Sub').innerHTML='';rd.style.display='none';chartMsg('b100Chart',esc(T('Sin datos para esta serie.')));$('b100Foot').textContent='';return;}
+  /* Llave de zonas (misma cinta y mismo fondo que el gráfico): sobre 100 la moneda se depreció, bajo 100 se apreció */
+  $('b100Sub').innerHTML='<span class="zk up"><i aria-hidden="true"></i><b>▲ '+esc(T('Sobre 100'))+'</b> · '+esc(T('se depreció'))+'</span>'
+    +'<span class="zk dn"><i aria-hidden="true"></i><b>▼ '+esc(T('Bajo 100'))+'</b> · '+esc(T('se apreció'))+'</span>';
+  /* Lectura calculada (sin cifras escritas a mano), agrupada por la dirección frente a 100; el signo se decide con el mismo decimal que se muestra */
   const res=series.map(s=>({q:s.quote,pct:s.pts[s.pts.length-1].value-100,s:s})).sort((a,b)=>b.pct-a.pct);
-  const top=res[0];
-  const concl=top.pct>0?F('La moneda que más se depreció frente al {base}: {q} ({p}).',{base:set.base,q:top.q,p:fmtPct(top.pct,1)})
-    :F('Ninguna moneda se depreció frente al {base} en este periodo; la que menos se apreció: {q} ({p}).',{base:set.base,q:top.q,p:fmtPct(top.pct,1)});
+  const dep=res.filter(r=>sgn(r.pct,1)>0),app=res.filter(r=>sgn(r.pct,1)<0).reverse(),flat=res.filter(r=>sgn(r.pct,1)===0);
+  const lst=a=>a.map(r=>r.q+' '+fmtPct(r.pct,1)).join(' · ');
+  const chip=(cls,txt)=>'<span class="zk '+cls+'"><i aria-hidden="true"></i><b>'+esc(txt)+'</b></span>';
+  const concl=(dep.length?F('La moneda que más se depreció frente al {base}: {q} ({p}).',{base:set.base,q:dep[0].q,p:fmtPct(dep[0].pct,1)})
+      :F('Ninguna moneda se depreció frente al {base} en este periodo.',{base:set.base}))+' '
+    +(app.length?F('La que más se apreció: {q} ({p}).',{q:app[0].q,p:fmtPct(app[0].pct,1)}):T('Ninguna se apreció.'));
   rd.style.display='';
-  rd.innerHTML=esc(F('Variación del índice desde el {date}: {list}.',{date:fromTxt,list:res.map(r=>r.q+' '+fmtPct(r.pct,1)).join(' · ')}))+' <b>'+esc(concl)+'</b><br><span class="small muted">'
-    +esc(F('Una subida del índice indica que hacen falta más unidades de esa moneda para comprar 1 {base}, es decir, que se depreció.',{base:set.base}))+'</span>';
+  rd.innerHTML='<div class="rd small muted">'+esc(F('Variación del índice desde el {date}:',{date:fromTxt}))+'</div>'
+    +(dep.length?'<div class="rd">'+chip('up','▲ '+T('Se depreciaron'))+' '+esc(F('frente al {base} (índice sobre 100): {list}',{base:set.base,list:lst(dep)}))+'</div>':'')
+    +(app.length?'<div class="rd">'+chip('dn','▼ '+T('Se apreciaron'))+' '+esc(F('frente al {base} (índice bajo 100): {list}',{base:set.base,list:lst(app)}))+'</div>':'')
+    +(flat.length?'<div class="rd">'+esc(F('Sin cambio apreciable: {list}',{list:lst(flat)}))+'</div>':'')
+    +'<div class="rd rd-c">'+esc(concl)+'</div>'
+    +'<div class="rd small muted">'+esc(F('Cómo leerlo: sobre 100, hacen falta más unidades de esa moneda para comprar 1 {base}: perdió valor, se depreció. Bajo 100, hacen falta menos: ganó valor, se apreció.',{base:set.base}))+'</div>';
   const insts=[];series.forEach(s=>{const n=shortInst(s.e.source);if(n&&insts.indexOf(n)<0)insts.push(n);});
   $('b100Foot').textContent=F('Fecha base por serie: {list}.',{list:series.map(s=>s.e.pair+' '+fmtD(s.pts[0].date)).join(' · ')})+' '
     +F('Solo días con publicación oficial. Fuente: {s}; índice de cálculo propio.',{s:insts.join(' · ')});
   const allPts=[];series.forEach(s=>s.pts.forEach(p=>allPts.push(p)));
   const log=S.b100Log!=null?S.b100Log:autoLog(allPts);$('b100Log').checked=log;
   const el=$('b100Chart');
-  el.setAttribute('aria-label',F('Gráfico base 100 de {list} desde el {date}.',{list:series.map(s=>s.e.pair).join(', '),date:fromTxt}));
+  el.setAttribute('aria-label',F('Gráfico base 100 de {list} desde el {date}.',{list:series.map(s=>s.e.pair).join(', '),date:fromTxt})+' '+T('Sobre 100: la moneda se depreció; bajo 100: se apreció.'));
   /* Tabla alternativa */
   const tbl=$('b100Table'),det=$('b100Alt');tbl.innerHTML='';
   const build=()=>{const dates=[];const map={};series.forEach(s=>s.pts.forEach(p=>{if(!map[p.date]){map[p.date]={};dates.push(p.date);}map[p.date][s.id]=p.value;}));
     dates.sort().reverse();
-    return '<table><caption>'+esc(F('Base 100 frente al {base}',{base:set.base}))+'</caption><thead><tr><th scope="col">'+esc(T('Fecha'))+'</th>'
+    return '<table><caption>'+esc(F('Base 100 frente al {base}',{base:set.base})+'. '+T('Sobre 100: la moneda se depreció; bajo 100: se apreció.'))+'</caption><thead><tr><th scope="col">'+esc(T('Fecha'))+'</th>'
       +series.map(s=>'<th scope="col" class="n">'+esc(s.e.pair)+'</th>').join('')+'</tr></thead><tbody>'
       +dates.map(dt=>'<tr><td>'+esc(fmtD(dt))+'</td>'+series.map(s=>'<td class="n">'+(map[dt][s.id]!=null?esc(fmtV(map[dt][s.id],1)):'—')+'</td>').join('')+'</tr>').join('')
       +'</tbody></table>';};
@@ -1214,10 +1277,12 @@ function renderB100(){
   const pal=[cssv('--s1'),cssv('--s2'),cssv('--s3'),cssv('--s4'),cssv('--s5'),cssv('--s6'),cssv('--s7')],sx=cssv('--sx'),dashes=['dash','dot','dashdot','longdash'];
   const text=cssv('--text'),muted=cssv('--text-muted'),surface=cssv('--surface');
   const traces=[],ann=[];
+  /* Estado en cada punto, con el mismo criterio de un decimal que la lectura: ▲ sobre 100 = se depreció, ▼ bajo 100 = se apreció */
+  const stateOf=v=>{const g=sgn(v-100,1);return g>0?'▲ '+T('Se depreció'):(g<0?'▼ '+T('Se apreció'):'= '+T('Sin cambio'));};
   series.forEach((s,i)=>{
     const col=i<pal.length?pal[i]:sx,dash=i<3?'solid':dashes[(i-3)%dashes.length];
     traces.push({type:'scatter',mode:'lines',name:s.e.pair,x:s.pts.map(p=>p.date),y:s.pts.map(p=>p.value),line:{color:col,width:2,dash:dash},
-      customdata:s.pts.map(p=>fmtV(p.value,1)),hovertemplate:esc(s.e.pair)+': <b>%{customdata}</b><extra></extra>'});
+      customdata:s.pts.map(p=>[fmtV(p.value,1),stateOf(p.value)]),hovertemplate:esc(s.e.pair)+': <b>%{customdata[0]}</b> · %{customdata[1]}<extra></extra>'});
     const lp=s.pts[s.pts.length-1];
     traces.push({type:'scatter',mode:'markers',x:[lp.date],y:[lp.value],marker:{size:8,color:col,line:{color:surface,width:2}},hoverinfo:'skip',showlegend:false});
     ann.push({x:lp.date,y:log?Math.log10(lp.value):lp.value,xref:'x',yref:'y',xanchor:'left',xshift:8,showarrow:false,
@@ -1232,7 +1297,32 @@ function renderB100(){
   L.hovermode='x unified';
   yLog(L,log);
   if(!nw)L.yaxis.title={text:esc(T('Base 100 frente al {base}').replace('{base}',set.base)),font:{size:11,color:muted}};
-  L.shapes=[{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:100,y1:100,line:{color:muted,width:1,dash:'dot'}}];
+  /* Rango explícito (todas las series parten de 100, así que 100 siempre queda dentro) con un margen para que ambas zonas se vean */
+  let lo=Infinity,hi=-Infinity;allPts.forEach(p=>{if(p.value>0){if(p.value<lo)lo=p.value;if(p.value>hi)hi=p.value;}});
+  lo=Math.min(lo,100);hi=Math.max(hi,100);
+  let r0,r1,yUp,yDn;
+  if(log){const a=Math.log10(lo),b=Math.log10(hi),pad=Math.max((b-a)*.08,.02);r0=a-pad;r1=b+pad;yUp=Math.pow(10,r1+1);yDn=Math.pow(10,r0-1);
+    L.yaxis.range=[r0,r1];
+    const tv=logTicks(Math.pow(10,r0),Math.pow(10,r1));L.yaxis.tickmode='array';L.yaxis.tickvals=tv;L.yaxis.ticktext=tickLabels(tv);delete L.yaxis.dtick;}
+  else{const pad=Math.max((hi-lo)*.08,1);r0=Math.max(lo-pad,0);r1=hi+pad;yUp=r1+(r1-r0);yDn=r0-(r1-r0);L.yaxis.range=[r0,r1];}
+  /* Dos zonas frente a 100 (fondo tenue + cinta lateral de 4 px) y rótulos en el propio gráfico; el color nunca es la única pista */
+  const zUp=cssv('--zone-up'),zDn=cssv('--zone-dn'),iUp=cssv('--zone-up-ink'),iDn=cssv('--zone-dn-ink');
+  L.shapes=[
+    {type:'rect',xref:'paper',x0:0,x1:1,yref:'y',y0:100,y1:yUp,fillcolor:zUp,line:{width:0},layer:'below'},
+    {type:'rect',xref:'paper',x0:0,x1:1,yref:'y',y0:yDn,y1:100,fillcolor:zDn,line:{width:0},layer:'below'},
+    {type:'rect',xref:'paper',xsizemode:'pixel',xanchor:0,x0:0,x1:4,yref:'y',y0:100,y1:yUp,fillcolor:iUp,line:{width:0},layer:'below'},
+    {type:'rect',xref:'paper',xsizemode:'pixel',xanchor:0,x0:0,x1:4,yref:'y',y0:yDn,y1:100,fillcolor:iDn,line:{width:0},layer:'below'},
+    {type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:100,y1:100,line:{color:muted,width:1},layer:'below'}];
+  const wide=(el.clientWidth||900)>=640;
+  const zl=(up)=>{
+    const key=up?'Sobre 100':'Bajo 100';
+    let tx=wide?F(up?'Sobre 100: la moneda perdió valor frente al {base} (se depreció)':'Bajo 100: la moneda ganó valor frente al {base} (se apreció)',{base:set.base})
+               :T(key)+' · '+T(up?'se depreció':'se apreció');
+    tx=esc(tx).replace(esc(T(key)),'<b>'+esc(T(key))+'</b>');
+    return {name:'zone',xref:'paper',yref:'paper',x:0,y:up?1:0,xanchor:'left',yanchor:up?'top':'bottom',xshift:12,yshift:up?-6:6,showarrow:false,
+      text:(up?'▲ ':'▼ ')+tx,font:{size:11,color:text}};
+  };
+  ann.push(zl(true),zl(false));
   L.annotations=ann;
   clearMsg(el);
   Plotly.react(el,traces,L,plotConfig()).then(()=>declutterEndLabels(el)).catch(()=>{});
@@ -1243,7 +1333,9 @@ function declutterEndLabels(el){
   try{
     const fl=el._fullLayout,ya=fl&&fl.yaxis,anns=(el.layout&&el.layout.annotations)||[];
     if(!ya||anns.length<2)return;
-    const GAP=14,items=anns.map((a,i)=>({i,py:ya.l2p(a.y)})).sort((p,q)=>p.py-q.py);
+    /* Los rótulos de zona (name:'zone') no son etiquetas de línea: no entran en el reparto */
+    const GAP=14,items=anns.map((a,i)=>({i,py:a.name==='zone'?null:ya.l2p(a.y)})).filter(it=>it.py!=null).sort((p,q)=>p.py-q.py);
+    if(items.length<2)return;
     let changed=false;
     for(let k=1;k<items.length;k++){
       const want=items[k-1].py+GAP;
