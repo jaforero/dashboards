@@ -24,6 +24,7 @@ The question it answers: **how much is each currency worth against the others to
 4. **Changes.** Against the previous record, over 30 days and year to date, always using official values only.
 5. **Converter.** Between the currencies that appear in the pairs. It shows the date of the rate used and whether that rate is official or calculated.
 6. **Methodology and sources.** Sources, cross-rate methodology, how to read the rates, the source of each series and the legal notice.
+7. **Keep exploring.** At the bottom, two cards with the video and the blog article that explain how the dashboard was built and the infrastructure behind it.
 
 ## Design decisions
 - **No server and no copy of the data.** The page reads `latest.json` and `rates_daily_compact.json` straight from the data repository: `raw.githubusercontent.com` is the primary origin and `cdn.jsdelivr.net` the fallback. Each visit makes two data requests against the visitor's own quota.
@@ -52,6 +53,7 @@ The question it answers: **how much is each currency worth against the others to
 | File | Role |
 |---|---|
 | `index.html` | The page: HTML, CSS and JS in a single file |
+| `i18n-en.js` | ES→EN dictionary (the key is the Spanish text). It loads before the page code so English is applied before the first paint, with no flash; if it does not arrive, the page stays in Spanish. When a text changes, bump the `?v=` parameter of the `<script>` and the `<link rel="preload">` in `index.html` |
 | `fx-data.js` | Dependency-free data layer: network with timeout and fallback, contract validation, cache, and date and format helpers |
 | `assets/og-image.png` | 1200×630 social image |
 
@@ -61,7 +63,7 @@ Bank of Mexico (SIE, FIX exchange rate) · Banco de la República de Colombia (S
 No central bank publishes rates between currencies other than the US dollar (MXN-COP, MXN-ARS, ARS-COP and the BRL, CLP, UYU and PEN pairs): they are calculated by dividing two official US-dollar rates formed on the same market day.
 
 ## Analytics
-GA4 `G-MQ3K8EVKV0` with `content_group: 'tasas-cambio'`. Events: `fx_pair_select`, `fx_range_select`, `fx_cross_filter`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `fx_compact_fallback`, `lang_switch` and `theme_switch`.
+GA4 `G-MQ3K8EVKV0` with `content_group: 'tasas-cambio'`. Events: `fx_pair_select`, `fx_range_select`, `fx_cross_filter`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `fx_compact_fallback`, `fx_resource_click` (click on the video or the article in the footer), `lang_switch` and `theme_switch`.
 
 ## Usage
 Open `https://dashboards.javierforero.co/tasas-cambio/?lang=en`. The language (`jf-lang`) and the light or dark theme (`jf-theme`) are shared with the rest of the portfolio.

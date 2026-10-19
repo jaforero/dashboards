@@ -24,6 +24,7 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 4. **Variaciones.** Frente al registro anterior, a 30 días y en lo que va del año, siempre solo con valores oficiales.
 5. **Conversor.** Entre las monedas que aparecen en los pares. Indica la fecha de la tasa usada y si es oficial o calculada.
 6. **Metodología y fuentes.** Fuentes, metodología de las cruzadas, cómo leer las tasas, la fuente de cada serie y el aviso legal.
+7. **Para seguir explorando.** Al final, dos tarjetas con el video y el artículo del blog que explican cómo se construyó el dashboard y la infraestructura detrás.
 
 ## Decisiones de diseño
 - **Sin servidor y sin copia de los datos.** La página lee `latest.json` y `rates_daily_compact.json` directamente del repositorio de datos: `raw.githubusercontent.com` es el origen principal y `cdn.jsdelivr.net` el respaldo. Cada visita hace dos peticiones de datos con la cuota de cada visitante.
@@ -52,6 +53,7 @@ La pregunta que responde: **¿cuánto vale hoy cada moneda frente a las otras y 
 | Archivo | Rol |
 |---|---|
 | `index.html` | La página: HTML, CSS y JS en un solo archivo |
+| `i18n-en.js` | Diccionario ES→EN (la clave es el texto en español). Se carga antes del código de la página para que el inglés se aplique antes del primer pintado, sin parpadeo; si no llega, la página sigue en español. Al cambiar un texto, se sube el parámetro `?v=` del `<script>` y del `<link rel="preload">` de `index.html` |
 | `fx-data.js` | Capa de datos sin dependencias: red con timeout y respaldo, validación del contrato, caché y utilidades de fechas y formato |
 | `assets/og-image.png` | Imagen social 1200×630 |
 
@@ -61,7 +63,7 @@ Banco de México (SIE, tipo de cambio FIX) · Banco de la República de Colombia
 Las tasas entre monedas distintas del dólar (MXN-COP, MXN-ARS, ARS-COP y las de BRL, CLP, UYU y PEN) no las publica ningún banco central: se calculan dividiendo dos tasas oficiales contra el dólar formadas el mismo día de mercado.
 
 ## Analítica
-GA4 `G-MQ3K8EVKV0` con `content_group: 'tasas-cambio'`. Eventos: `fx_pair_select`, `fx_range_select`, `fx_cross_filter`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `fx_compact_fallback`, `lang_switch` y `theme_switch`.
+GA4 `G-MQ3K8EVKV0` con `content_group: 'tasas-cambio'`. Eventos: `fx_pair_select`, `fx_range_select`, `fx_cross_filter`, `fx_convert`, `fx_load_error`, `fx_contract_error`, `fx_compact_fallback`, `fx_resource_click` (clic en el video o el artículo del pie), `lang_switch` y `theme_switch`.
 
 ## Uso
 Abre `https://dashboards.javierforero.co/tasas-cambio/` (`?lang=en` para inglés). El idioma (`jf-lang`) y el tema claro u oscuro (`jf-theme`) se comparten con el resto del portafolio.
