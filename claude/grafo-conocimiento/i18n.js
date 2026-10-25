@@ -182,6 +182,7 @@ window.KB_T.es.help = {
   'type-related': { h: 'Relacionado', b: 'Declarado en el frontmatter (related_chapters): capítulos afines elegidos por el autor. Se dibuja con línea punteada.' },
   'type-translation': { h: 'Traducción', b: 'Une las versiones de una misma nota en distintos idiomas.', tip: 'Apágalo si solo te interesa la estructura del contenido.' },
   'type-tag': { h: 'Etiquetas compartidas', b: 'No es un enlace escrito: el explorador lo deduce cuando dos entradas comparten 2 o más etiquetas. Sirve para descubrir afinidades temáticas, pero el lector no puede seguirlo.', tip: 'Apágalo para auditar el enlazado interno: lo que quede aislado es lo que tus lectores no pueden alcanzar navegando.' },
+  'type-related-wp': { h: 'Lectura relacionada', b: 'Enlaces dentro de un bloque de lecturas al final del artículo («Lecturas relacionadas:», «Serie ·», «Related posts:»…). Son navegables, pero editoriales: los eligió el autor para guiar la lectura, no forman parte del argumento.', tip: 'Apágalo para ver solo los enlaces dentro del texto y medir cuánto aporta la curaduría.' },
   hubEdges: { h: 'Enlaces de notas eje', b: 'Las notas eje (índices y guías) enlazan casi todo y tapan la estructura. Al apagarlo verás cómo se conectan los capítulos entre sí; las notas eje siguen en el grafo.' },
   fStatus: { h: 'Estado', b: 'Atenúa las notas cuyo estado apagues (borrador, en revisión, publicado…). No las quita ni cambia las líneas: sirve para ver qué parte de la red está terminada.' },
   fTag: { h: 'Etiqueta', b: 'Resalta las notas con esa etiqueta y atenúa el resto sin mover el grafo. Muestra si un tema está concentrado en un grupo o disperso.', tip: 'También puedes hacer clic en una etiqueta dentro de una nota.' },
@@ -195,7 +196,9 @@ window.KB_T.es.help = {
 Object.assign(window.KB_T.es, {
   helpAria: x => `Ayuda: ${x}`, helpTipLabel: 'Consejo', helpKey: 'Atajo', helpFoot: 'Pasa el cursor sobre un control o toca ⓘ para ver qué hace.',
   recTagOn: 'Las líneas por etiquetas son deducidas, no escritas. Para ver la red que tus lectores pueden recorrer, apágalas.', recTagOnBtn: 'Ver solo enlaces escritos',
-  recTagOff: 'Estás viendo solo enlaces escritos. Las notas que quedan aisladas son las que conviene enlazar.', recTagOffBtn: 'Mostrar etiquetas otra vez',
+  recTagOff: 'Estás viendo solo enlaces escritos: las notas aisladas son las que conviene enlazar. Activa las etiquetas para descubrir artículos afines que aún no se enlazan.', recTagOffBtn: 'Mostrar etiquetas compartidas',
+  wpRelatedLong: 'Lectura relacionada (bloque al final del artículo)', legendCurated: 'lecturas relacionadas',
+  wpPagesNote: 'Las páginas suelen enlazarse desde el menú del sitio, que el explorador no lee: que aparezcan aquí no siempre es un problema.',
   recHub: 'Las notas eje enlazan casi todo. Oculta sus líneas para ver la estructura entre capítulos.', recHubBtn: 'Ocultar enlaces de notas eje'
 });
 window.KB_T.en.help = {
@@ -208,6 +211,7 @@ window.KB_T.en.help = {
   'type-related': { h: 'Related', b: 'Declared in the frontmatter (related_chapters): related chapters chosen by the author. Drawn as dashed lines.' },
   'type-translation': { h: 'Translation', b: 'Joins the versions of the same note in different languages.', tip: 'Turn it off if you only care about the content structure.' },
   'type-tag': { h: 'Shared tags', b: 'Not a written link: the explorer infers it when two posts share 2 or more tags. Good for discovering topical affinity, but readers cannot follow it.', tip: 'Turn it off to audit internal linking: whatever is left isolated is what your readers cannot reach by navigating.' },
+  'type-related-wp': { h: 'Related reading', b: 'Links inside a reading-list block at the end of the post (“Related posts:”, “Series ·”, “Lecturas relacionadas:”…). Readers can follow them, but they are editorial: the author chose them to guide reading, they are not part of the argument.', tip: 'Turn it off to see in-text links only and measure how much the curation adds.' },
   hubEdges: { h: 'Hub note links', b: 'Hub notes (indexes and guides) link to almost everything and hide the structure. Turn this off to see how chapters connect to each other; hub notes stay in the graph.' },
   fStatus: { h: 'Status', b: 'Dims the notes whose status you switch off (draft, in review, published…). It neither removes them nor changes the lines: it shows which part of the network is finished.' },
   fTag: { h: 'Tag', b: 'Highlights the notes with that tag and dims the rest without moving the graph. Shows whether a topic is concentrated in one cluster or spread out.', tip: 'You can also click a tag inside a note.' },
@@ -221,7 +225,9 @@ window.KB_T.en.help = {
 Object.assign(window.KB_T.en, {
   helpAria: x => `Help: ${x}`, helpTipLabel: 'Tip', helpKey: 'Shortcut', helpFoot: 'Hover a control or tap ⓘ to see what it does.',
   recTagOn: 'Tag lines are inferred, not written. To see the network your readers can actually walk, turn them off.', recTagOnBtn: 'Show written links only',
-  recTagOff: 'You are seeing written links only. Notes left isolated are the ones worth linking.', recTagOffBtn: 'Show tags again',
+  recTagOff: 'You are seeing written links only: isolated notes are the ones worth linking. Turn tags on to discover related posts that do not link to each other yet.', recTagOffBtn: 'Show shared tags',
+  wpRelatedLong: 'Related reading (block at the end of the post)', legendCurated: 'related reading',
+  wpPagesNote: 'Pages are usually linked from the site menu, which the explorer does not read: seeing them here is not always a problem.',
   recHub: 'Hub notes link to almost everything. Hide their lines to see the structure between chapters.', recHubBtn: 'Hide hub note links'
 });
 

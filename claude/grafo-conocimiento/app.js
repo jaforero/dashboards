@@ -29,8 +29,21 @@ function loadVault(files, assets, meta, opts = {}) {
   S.objectUrls = meta.objectUrls || [];
   const all = files.concat([...assets.keys()].map(p => ({ path: p, text: '' })));
   const v = VaultParser.parseVault(all, s => jsyaml.load(s, { schema: jsyaml.JSON_SCHEMA }));
+  // links that sit in a curated "related reading" block are editorial navigation, not inline references: retype them.
+  // The block closes the article, so the last occurrences of each pair are the curated ones.
+  if (meta.curated) {
+    const left = new Map(meta.curated);
+    for (let i = v.links.length - 1; i >= 0; i--) {
+      const l = v.links[i]; if (l.type !== 'markdown' || !l.target) continue;
+      const k = l.source + '\u0000' + l.target; const c = left.get(k);
+      if (c) { l.type = 'related'; left.set(k, c - 1); }
+    }
+  }
   if (meta.extraLinks) v.links.push(...meta.extraLinks.filter(l => v.notes.some(n => n.id === l.source)));
-  S.defaultTypes = new Set(['markdown', 'wikilink', 'prerequisite', 'related', ...(meta.defaultTypesExtra || [])]);
+  // inferred links (shared tags) start switched on only when the written network leaves many notes isolated
+  const orphanRate = v.notes.length ? v.notes.filter(n => n.orphan).length / v.notes.length : 0;
+  const extraOn = (meta.defaultTypesExtra || []).filter(k => !meta.extraIfOrphanRate || orphanRate > meta.extraIfOrphanRate);
+  S.defaultTypes = new Set(['markdown', 'wikilink', 'prerequisite', 'related', ...extraOn]);
   S.f.types = new Set(S.defaultTypes);
   S.vault = v; S.meta = meta; S.assets = assets; S.source = meta.source;
   S.notes = new Map(v.notes.map(n => [n.id, n]));
@@ -173,11 +186,13 @@ function markText(text, q) {
 }
 
 // ======================= filters / legend =======================
+// in a blog, «related» links come from reading-list blocks at the end of a post, not from frontmatter
+function typeLong(k) { return S.source === 'wordpress' && k === 'related' ? t('wpRelatedLong') : T[UI].typeLong[k]; }
 function buildFilters() {
   const v = S.vault;
   const tc = {}; v.links.filter(l => l.target).forEach(l => tc[l.type] = (tc[l.type] || 0) + 1);
   const types = TYPES.filter(k => tc[k]);
-  let h = types.map(k => `<button type="button" class="tog" data-type="${k}" aria-pressed="${S.f.types.has(k)}" data-help="type-${k}" aria-label="${esc(T[UI].typeLong[k])}">${esc(T[UI].type[k])} <span class="n">${tc[k]}</span></button>`).join('');
+  let h = types.map(k => `<button type="button" class="tog" data-type="${k}" aria-pressed="${S.f.types.has(k)}" data-help="type-${k}${S.source === 'wordpress' && k === 'related' ? '-wp' : ''}" aria-label="${esc(typeLong(k))}">${esc(T[UI].type[k])} <span class="n">${tc[k]}</span></button>`).join('');
   if (S.hubs.size) h += `<button type="button" class="tog" data-hubedges data-help="hubEdges" aria-pressed="${S.f.hubEdges}">${esc(t('hubEdges'))}</button>`;
   $('#f-types').innerHTML = h;
   // recomendación accionable: la decisión de filtro con más efecto en esta bóveda
@@ -199,7 +214,7 @@ function buildFilters() {
 function renderLegend(m) {
   const present = new Set(m.nodes.map(n => n.part));
   let h = S.groups.filter(g => present.has(g)).map(g => `<button type="button" data-group="${esc(g)}" class="${focusGroup === g ? 'on' : ''}"><span class="dot" style="--c:${groupColor(g)}"></span>${esc(groupLabel(g))}</button>`).join('');
-  h += `<span class="key"><span class="line"></span>${esc(t('legendBody'))}</span><span class="key"><span class="line fm"></span>${esc(t('legendFm'))}</span>`;
+  h += `<span class="key"><span class="line"></span>${esc(t('legendBody'))}</span><span class="key"><span class="line fm"></span>${esc(t(S.source === 'wordpress' ? 'legendCurated' : 'legendFm'))}</span>`;
   if (S.f.types.has('translation')) h += `<span class="key"><span class="line tr"></span>${esc(t('legendTr'))}</span>`;
   if (S.f.types.has('tag') && S.vault.links.some(l => l.type === 'tag')) h += `<span class="key"><span class="line tg"></span>${esc(t('legendTag'))}</span>`;
   if (S.hubs.size) h += `<span class="key"><span class="dia" style="--c:var(--panel)"></span>${esc(t('hubs'))}</span>`;
@@ -641,11 +656,11 @@ function renderLinks() {
       const fmT = l.type === 'prerequisite' || l.type === 'related';
       const ctx = l.context ? highlight(l.context, l.display) : `<span style="color:var(--muted)">${esc(t('fmField', l.section))}</span>`;
       const sec = l.context && l.section ? `<small>${esc(t('inSection', l.section))}</small>` : '';
-      return `<div class="bk-ref"><span class="bk-type${fmT ? ' fm' : ''}" title="${esc(T[UI].typeLong[l.type])}">${esc(T[UI].type[l.type])}</span><div class="bk-ctx">${ctx}${sec}</div></div>`;
+      return `<div class="bk-ref"><span class="bk-type${fmT ? ' fm' : ''}" title="${esc(typeLong(l.type))}">${esc(T[UI].type[l.type])}</span><div class="bk-ctx">${ctx}${sec}</div></div>`;
     }).join('');
     return `<div class="bk-note"><button type="button" class="bk-title" data-note="${esc(k)}">${S.hubs.has(k) ? `<span class="dia" style="--c:${groupColor(other.part)}"></span>` : `<span class="dot" style="--c:${groupColor(other.part)}"></span>`}${esc(other.title)}</button>${refs}</div>`;
   }).join('');
-  if (S.linkTab === 'out' && brokenOut.length) h += brokenOut.map(l => `<div class="bk-note"><div class="q-item" style="border:0"><code>${esc(l.raw)}</code><span class="src">${esc(T[UI].typeLong[l.type])}</span></div></div>`).join('');
+  if (S.linkTab === 'out' && brokenOut.length) h += brokenOut.map(l => `<div class="bk-note"><div class="q-item" style="border:0"><code>${esc(l.raw)}</code><span class="src">${esc(typeLong(l.type))}</span></div></div>`).join('');
   if (!list.length && !(S.linkTab === 'out' && brokenOut.length)) h += `<div class="empty">${esc(t(S.linkTab === 'in' ? 'noIn' : 'noOut'))}</div>`;
   box.innerHTML = h;
 }
@@ -663,6 +678,7 @@ function renderQuality() {
   const orphans = v.notes.filter(n => n.orphan);
   const broken = v.links.filter(l => !l.target);
   let h = `<div class="f-row" style="grid-template-columns:1fr;padding-top:4px"><span>${esc(t('orphans'))} · ${orphans.length}</span></div>`;
+  if (S.source === 'wordpress' && orphans.some(n => n.status === 'page')) h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpPagesNote'))}</p>`;
   h += orphans.length ? orphans.map(n => `<button type="button" class="q-item" data-note="${esc(n.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(n.title)}</button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noOrphans'))}</span></div>`;
   h += `<div class="f-row" style="grid-template-columns:1fr;padding-top:12px"><span>${esc(t('brokenH'))} · ${broken.length}</span></div>`;
@@ -1148,6 +1164,7 @@ const WP_LIBS = {
 };
 const WP_LIMIT = 1500;     // articles (posts + pages)
 const WP_MIN_SHARED_TAGS = 2;
+const WP_CURATED_RE = /^(lecturas? relacionad[ao]s?|art[ií]culos? relacionad[ao]s?|te puede interesar|lee tambi[eé]n|serie\b|related (posts?|reading|articles?)|read (also|next)|further reading|see also)\b/i;
 let wpLibsP = null;
 function loadScriptChain(urls) {
   return new Promise((res, rej) => {
@@ -1201,7 +1218,11 @@ async function wpGet(base, path, params, attempt = 0) {
   const data = await r.json();
   return { data, pages: Number(r.headers.get('x-wp-totalpages')) || 1, total: Number(r.headers.get('x-wp-total')) || (Array.isArray(data) ? data.length : 0) };
 }
+// WordPress.com / Atomic edge caches can serve a days-old copy of the REST answer (x-ac: STALE) until it revalidates;
+// a 10-minute bucket in the query keeps the graph current without defeating the cache for every visitor
+const wpFresh = () => Math.floor(Date.now() / 600000).toString(36);
 async function wpAll(base, path, params, onPage) {
+  params = { ...params, _kb: wpFresh() };
   const first = await wpGet(base, path, { ...params, per_page: 100, page: 1 });
   let out = first.data.slice(); onPage && onPage(out.length, first.total);
   for (let p = 2; p <= first.pages; p++) {
@@ -1265,10 +1286,20 @@ async function loadWordpress(input, opts = {}) {
         return `[${text.replace(/\]/g, '\\]')}](<${target}>)`;
       }
     });
-    const metaLinks = {};
+    const metaLinks = {}, curated = new Map();
     const files = items.map(it => {
       const doc = new DOMParser().parseFromString(`<body>${(it.content && it.content.rendered) || ''}</body>`, 'text/html');
       doc.__kbPath = it.path;
+      // reading-list blocks ("Lecturas relacionadas:", "Serie ·", "Related posts:" …): their links are typed «related»
+      doc.body.querySelectorAll('p, div, ul, section, aside').forEach(el => {
+        if (el.querySelector('p, div, ul, section, aside')) return;
+        const lead = (el.textContent || '').trim().slice(0, 60);
+        if (!/related/i.test(el.className) && !WP_CURATED_RE.test(lead)) return;
+        el.querySelectorAll('a[href]').forEach(a => {
+          const k = wpKey(a.getAttribute('href'), host); if (!k || !byKey.has(k)) return;
+          const key = it.path + '\u0000' + byKey.get(k); curated.set(key, (curated.get(key) || 0) + 1);
+        });
+      });
       let md = '';
       try { md = td.turndown(doc.body); } catch (e) { md = htmlText(it.content && it.content.rendered); }
       const title = decodeHtml(it.title && it.title.rendered) || it.slug;
@@ -1299,7 +1330,7 @@ async function loadWordpress(input, opts = {}) {
     S.filesMode = false;
     loadVault(files, new Map(), {
       source: 'wordpress', name: host, host, api: api.base.includes('public-api') ? 'wpcom' : 'site', total: posts.total, truncated: posts.items.length < posts.total,
-      hubs: [], groupLabels, extraLinks, defaultTypesExtra: ['tag'],
+      hubs: [], groupLabels, extraLinks, curated, defaultTypesExtra: ['tag'], extraIfOrphanRate: 0.25,
       links: { site: { root: '', label: { es: 'Ver en el blog', en: 'View on the blog' }, urls: metaLinks } }
     }, { startNote: opts.note });
     syncUrl(); closeSheet(); st.hidden = true;

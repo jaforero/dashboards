@@ -103,6 +103,7 @@
       .replace(/\s*\|\s*/g, ' · ')
       .replace(/<[^>]+>/g, ' ')
       .replace(/(\*\*|__|\*|_|`)(?=\S)([^*_`]+?)\1/g, '$2')
+      .replace(/\\([*_`#\[\]()!>~|+\-.])/g, '$1')            // markdown escapes (HITS\* → HITS*)
       .replace(/\s+/g, ' ').trim();
   }
   function clip(s, max) {
