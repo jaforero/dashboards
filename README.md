@@ -15,7 +15,7 @@ Todo el sitio es **bilingüe ES/EN** con un selector único en la barra superior
 /claude/sla-operaciones/     → Cumplimiento de SLA · Operaciones B2B
 /claude/pulso-financiero/    → Pulso Financiero · Finanzas Corporativas
 /claude/desempeno-comercial/ → Desempeño Comercial · Dirección B2B
-/claude/grafo-conocimiento/  → Grafo de conocimiento · notas Markdown como red navegable (GitHub o carpeta local)
+/claude/grafo-conocimiento/  → Grafo de conocimiento · notas Markdown como red navegable (GitHub, WordPress o carpeta local)
 /claude/costo-vida-colombia/ → Divulgación · Costo de vida por ciudad en Colombia (DANE 2025)
 /ia-compute/                 → Divulgación · La aceleración del cómputo en IA (1958–2026)
 /tasas-cambio/               → Divulgación · Tasas de cambio oficiales de bancos centrales (México, Colombia, Argentina, Brasil, Chile, Uruguay, Perú)
@@ -45,7 +45,7 @@ Datos de demostración, salvo donde se declara lo contrario. Ninguna cifra corre
 | **Cumplimiento de SLA · Operaciones B2B** | 8 capas, alertas, diagnóstico del quiebre, gobernanza, Q&A conversacional y brief exportable. **Sube tu propio SLA (CSV/XLSX)**: detección automática del quiebre, validación de continuidad mensual y recálculo completo en el navegador. | [`/claude/sla-operaciones/`](./claude/sla-operaciones/) |
 | **Pulso Financiero · Finanzas Corporativas** | Crecimiento, margen, caja y liquidez con puente precio-volumen. **Cuatro modelos predictivos comparados a ciegas** (descomposición, Holt-Winters, regresión de Fourier y SARIMA) con validación de origen móvil y benchmark ingenuo. KPIs Inteligentes, gobernanza y brief exportable. **Tres orígenes de datos** (demo simulado · empresa real · tus propios datos), soporte **mensual y trimestral**, y exportación de resultados a Excel/CSV. | [`/claude/pulso-financiero/`](./claude/pulso-financiero/) |
 | **Desempeño Comercial · Dirección B2B** | Ventas vs. meta por vendedor y región, diagnóstico del embudo que aísla el cuello de botella en Propuesta, pipeline ponderado por probabilidad empírica de cierre, predicción con backtest y Q&A conversacional determinista, con gobernanza de la decisión. | [`/claude/desempeno-comercial/`](./claude/desempeno-comercial/) |
-| **Grafo de conocimiento · notas como red navegable** | Pega un repositorio de GitHub o elige una carpeta: cada nota Markdown es un nodo y cada enlace una relación (texto, wikilinks, `prerequisites`, `related_chapters`). Backlinks con la frase que los conecta, grafo local a 2 saltos, filtros por tipo de enlace, estado, etiqueta e idioma, y diagnóstico de enlaces rotos y notas huérfanas. **Demo en vivo con el Health Insurance Reserving Handbook**, actualizada a diario por una GitHub Action; los archivos de una carpeta local no salen del navegador. | [`/claude/grafo-conocimiento/`](./claude/grafo-conocimiento/) |
+| **Grafo de conocimiento · notas como red navegable** | Pega un repositorio de GitHub, escribe la dirección de un blog en WordPress o elige una carpeta: cada nota Markdown es un nodo y cada enlace una relación (texto, wikilinks, `prerequisites`, `related_chapters`). Backlinks con la frase que los conecta, grafo local a 2 saltos, filtros por tipo de enlace, estado, etiqueta e idioma, y diagnóstico de enlaces rotos y notas huérfanas. **Demo en vivo con el Health Insurance Reserving Handbook**, actualizada a diario por una GitHub Action; los archivos de una carpeta local no salen del navegador. | [`/claude/grafo-conocimiento/`](./claude/grafo-conocimiento/) |
 
 ## Divulgación · datos públicos verificables
 

@@ -9,7 +9,7 @@
 
 La pregunta que responde: **¿cómo se conectan los documentos de mi base de conocimiento, qué notas sostienen a las demás y dónde está rota la red?** Está pensada para investigadores, docentes y equipos que escriben en Markdown y quieren ver su producción como una red, al estilo de Obsidian, sin instalar nada.
 
-> **Demo en vivo con datos reales.** Abre con el [Health Insurance Reserving Handbook](https://github.com/jaforero/health-insurance-reserving-handbook) (58 notas). Cualquier visitante puede cargar su propio repositorio público de GitHub o una carpeta de su computador. Los archivos de una carpeta local se leen dentro del navegador y no se envían a ningún servidor.
+> **Demo en vivo con datos reales.** Abre con el [Health Insurance Reserving Handbook](https://github.com/jaforero/health-insurance-reserving-handbook) (58 notas). Cualquier visitante puede cargar su propio repositorio público de GitHub, un blog en WordPress o una carpeta de su computador. Los archivos de una carpeta local se leen dentro del navegador y no se envían a ningún servidor.
 
 ![Grafo de conocimiento: lista de notas, nota con fórmulas y grafo de relaciones](assets/og-image.png)
 
@@ -114,6 +114,11 @@ claude/grafo-conocimiento/
 ## Limitaciones
 - **Solo Markdown.** No lee PDF ni Word. Para un repositorio de artículos en PDF, primero hay que convertirlos.
 - **Ramas con «/» en el nombre.** En una URL `…/tree/rama/carpeta`, la primera parte se toma como la rama. Si el nombre de la rama tiene una barra, se escribe en *Opciones → Rama o etiqueta*.
+- **Blogs en WordPress.**
+  - Solo se leen contenidos publicados y públicos, hasta 1.500 artículos.
+  - Cada artículo queda en el grupo de su primera categoría.
+  - Si el sitio desactiva su API REST o no permite consultas desde otros dominios (CORS), no se puede cargar.
+  - Un enlace a una dirección antigua de un artículo renombrado se cuenta como roto, aunque el blog lo redirija: desde el navegador no se puede distinguir una redirección de un 404. El panel de salud lo advierte.
 - **Necesita conexión.** Las librerías vienen de un CDN.
 
 ## Licencia

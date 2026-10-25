@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Grafo de conocimiento · Javier Forero</title>
-<meta name="description" content="Convierte una carpeta o un repositorio de GitHub con notas en Markdown en una base de conocimiento navegable: grafo de relaciones, notas con fórmulas, backlinks con su contexto y diagnóstico de enlaces rotos. Demo en vivo con el Health Insurance Reserving Handbook.">
+<meta name="description" content="Convierte una carpeta, un repositorio de GitHub o un blog en WordPress en una base de conocimiento navegable: grafo de relaciones, notas con fórmulas, backlinks con su contexto y diagnóstico de enlaces rotos. Demo en vivo con el Health Insurance Reserving Handbook.">
 <meta name="author" content="Javier Forero">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dashboards.javierforero.co/claude/grafo-conocimiento/">
@@ -18,14 +18,14 @@
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://dashboards.javierforero.co/claude/grafo-conocimiento/">
 <meta property="og:title" content="Grafo de conocimiento · tus notas como una red navegable">
-<meta property="og:description" content="Pega un repositorio de GitHub o elige una carpeta: cada nota es un nodo, cada enlace una relación, y los backlinks muestran la frase que los conecta. Tus archivos no salen de tu navegador.">
+<meta property="og:description" content="Pega un repositorio de GitHub, la dirección de tu blog en WordPress o elige una carpeta: cada nota es un nodo, cada enlace una relación, y los backlinks muestran la frase que los conecta. Tus archivos no salen de tu navegador.">
 <meta property="og:image" content="https://dashboards.javierforero.co/claude/grafo-conocimiento/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Grafo de conocimiento: lista de notas, nota con fórmulas y grafo de relaciones coloreado por parte.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Grafo de conocimiento · tus notas como una red navegable">
-<meta name="twitter:description" content="Repositorio de GitHub o carpeta local → grafo, backlinks con contexto y diagnóstico de enlaces. Demo con el Health Insurance Reserving Handbook.">
+<meta name="twitter:description" content="Repositorio de GitHub, blog en WordPress o carpeta local → grafo, backlinks con contexto y diagnóstico de enlaces. Demo con el Health Insurance Reserving Handbook.">
 <meta name="twitter:image" content="https://dashboards.javierforero.co/claude/grafo-conocimiento/assets/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -56,7 +56,7 @@
     window.__lang0=(q==='en'||q==='es')?q:((s==='en'||s==='es')?s:(((navigator.language||'').toLowerCase().indexOf('es')!==0)?'en':'es'));})();
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Grafo de conocimiento","alternateName":"Knowledge graph","url":"https://dashboards.javierforero.co/claude/grafo-conocimiento/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":["es","en"],"isAccessibleForFree":true,"author":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},"description":"Explorador estilo Obsidian para notas Markdown de un repositorio de GitHub o una carpeta local: grafo de relaciones, backlinks con contexto y diagnóstico de enlaces."}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Grafo de conocimiento","alternateName":"Knowledge graph","url":"https://dashboards.javierforero.co/claude/grafo-conocimiento/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":["es","en"],"isAccessibleForFree":true,"author":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},"description":"Explorador estilo Obsidian para notas Markdown de un repositorio de GitHub, artículos de un blog en WordPress o una carpeta local: grafo de relaciones, backlinks con contexto y diagnóstico de enlaces."}
 </script>
 <style>
 
@@ -410,7 +410,7 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
 .top .brand h1 { flex: none; }
 .top .vault-meta > b, .top .vault-meta > a.repo { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 1320px) { .top .vault-meta > b, .top .vault-meta > a.repo, .top .vault-meta > .stat { display: none; } }
-@media (max-width: 1240px) { .top .view-seg button span { display: none; } }
+@media (max-width: 1440px) { .top .view-seg button span { display: none; } .top .view-seg button { padding: 0 10px; } }
 .fbtn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 88%, transparent); backdrop-filter: blur(8px); font-size: 13px; color: var(--ink); box-shadow: 0 2px 8px rgb(20 10 60 / .06); }
 .fbtn svg { width: 15px; height: 15px; color: var(--muted); }
 .fbtn:hover, .fbtn[aria-expanded="true"] { border-color: var(--edge-strong); }

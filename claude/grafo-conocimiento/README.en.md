@@ -9,7 +9,7 @@
 
 The question it answers: **how are the documents in my knowledge base connected, which notes hold the others up, and where is the network broken?** It is built for researchers, teachers and teams who write in Markdown and want to see their work as a network, Obsidian-style, without installing anything.
 
-> **Live demo with real data.** It opens with the [Health Insurance Reserving Handbook](https://github.com/jaforero/health-insurance-reserving-handbook) (58 notes). Any visitor can load their own public GitHub repository or a folder on their computer. Files from a local folder are read inside the browser and are never sent to any server.
+> **Live demo with real data.** It opens with the [Health Insurance Reserving Handbook](https://github.com/jaforero/health-insurance-reserving-handbook) (58 notes). Any visitor can load their own public GitHub repository, a WordPress blog or a folder on their computer. Files from a local folder are read inside the browser and are never sent to any server.
 
 ![Knowledge graph: note list, a note with formulas, and the relationship graph](assets/og-image.png)
 
@@ -114,6 +114,11 @@ claude/grafo-conocimiento/
 ## Limitations
 - **Markdown only.** It does not read PDF or Word. A repository of PDF articles has to be converted first.
 - **Branches with “/” in the name.** In a `…/tree/branch/folder` URL, the first segment is taken as the branch. If the branch name has a slash, type it under *Options → Branch or tag*.
+- **WordPress blogs.**
+  - Only published, public content is read, up to 1,500 posts.
+  - Each post goes into the group of its first category.
+  - A site that disables its REST API or blocks requests from other domains (CORS) cannot be loaded.
+  - A link to the old address of a renamed post counts as broken even if the blog redirects it: from the browser, a redirect cannot be told apart from a 404. The health panel says so.
 - **Needs a connection.** The libraries come from a CDN.
 
 ## License
