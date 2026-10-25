@@ -20,7 +20,7 @@ const S = {
   groups: [], groupIdx: new Map(), hubs: new Set(), search: new Map(),
   cur: null, hist: [], hpos: -1,
   f: { types: new Set(['markdown', 'wikilink', 'prerequisite', 'related']), hubEdges: true, statuses: null, tag: '', lang: 'es' },
-  q: '', matches: null, mode: 'global', wide: false, linkTab: 'in', filesMode: false
+  q: '', matches: null, mode: 'global', view: 'graph', readerTab: 'content', linkTab: 'in', filesMode: false
 };
 
 // ======================= vault loading =======================
@@ -47,7 +47,13 @@ function loadVault(files, assets, meta, opts = {}) {
   S.hubs = new Set((meta.hubs || []).filter(h => S.notes.has(h)));
   if (!meta.hubs) for (const n of v.notes) if (/^(index|readme|home|_index|inicio)\.md$/i.test(n.id)) S.hubs.add(n.id);
   // search text
-  S.search = new Map(v.notes.map(n => [n.id, fold(n.title + ' ' + n.tags.join(' ') + ' ' + n.body)]));
+  for (const n of v.notes) {
+    const fmDesc = n.frontmatter && typeof n.frontmatter.description === 'string' ? n.frontmatter.description : '';
+    n.plainText = VaultParser.plain(VaultParser.maskCode(n.body).replace(/^\s*(?:#{1,6}\s.*|!!!.*|\?\?\?.*|<.*|\$\$.*|[-*_]{3,}\s*)$/gm, ' '));
+    const firstPara = (VaultParser.maskCode(n.body).split(/\n\s*\n/).map(p => p.trim()).find(p => p && !/^(#|!!!|\?\?\?|<|\||\$\$|```|~~~|>|-{3,}|\*\*(Idioma|Language):)/i.test(p)) || '');
+    n.excerpt = (fmDesc || VaultParser.plain(firstPara)).slice(0, 320);
+  }
+  S.search = new Map(v.notes.map(n => [n.id, fold(n.title + ' ' + n.tags.join(' ') + ' ' + n.plainText)]));
   // filters reset
   const langs = [...new Set(v.notes.map(n => n.language).filter(Boolean))];
   S.f.lang = langs.length > 1 ? (langs.includes(meta.defaultLang || 'es') ? (meta.defaultLang || 'es') : 'all') : 'all';
@@ -56,13 +62,14 @@ function loadVault(files, assets, meta, opts = {}) {
   if (!v.links.some(l => l.type === 'wikilink')) S.f.types.add('wikilink');
   S.hist = []; S.hpos = -1; S.q = ''; $('#q').value = ''; S.matches = null;
   posCache.clear();
-  buildFilters(); renderList(); renderQuality(); renderMeta();
+  buildFilters(); renderList(); renderQuality(); renderMeta(); filtersChanged();
   // outside the demo, open on the repository's own entry point (its root README/index) when there is one
   const hubStart = meta.source !== 'demo' ? [...S.hubs].sort()[0] : null;
   const start = (opts.startNote && S.notes.has(opts.startNote)) ? opts.startNote : (meta.start && S.notes.has(meta.start)) ? meta.start : hubStart ? hubStart
     : [...v.notes].filter(visibleNote).sort((a, b) => b.backlinkNotes - a.backlinkNotes)[0]?.id || v.notes[0]?.id;
   rebuildGraph();
   if (start) openNote(start, { push: true, noScroll: true });
+  if (S.pendingView) { setView(S.pendingView, { silent: true }); S.pendingView = null; }
 }
 
 function groupColor(g) { const i = S.groupIdx.get(g); return `var(--g${i == null ? 8 : (i < 10 ? i : 8)})`; }
@@ -252,6 +259,7 @@ function rebuildGraph() {
   nAll.select('.ring').attr('r', d => d.r + 4);
   nAll.select('.body').attr('d', d => d.hub ? diamond(d.r + 1.5) : circle(d.r)).style('fill', d => groupColor(d.note.part));
   nAll.on('click', (e, d) => { e.stopPropagation(); openNote(d.id, { push: true, fromGraph: true }); })
+    .on('dblclick', (e, d) => { e.stopPropagation(); openNote(d.id, { push: true, fromGraph: true }); if (S.view === 'graph') setView('split'); })
     .on('mouseenter', (e, d) => { hoverId = d.id; showTip(e, d); styleGraph(); })
     .on('mousemove', (e, d) => showTip(e, d))
     .on('mouseleave', () => { hoverId = null; $('#tip').hidden = true; styleGraph(); })
@@ -300,6 +308,17 @@ function tick() {
 }
 const nodeIdx = () => G._idx && G._idx.n === G.nodes ? G._idx.m : (G._idx = { n: G.nodes, m: new Map(G.nodes.map(n => [n.id, n])) }).m;
 function node(x) { return typeof x === 'object' ? x : nodeIdx().get(x); }
+// Centre the open note and its direct neighbours (used when a note is opened from search, the index or a link)
+function focusNode(id, animate = true) {
+  const n = nodeIdx().get(id); if (!n || n.x == null) return;
+  const nb = [...(G.adj.get(id) || [])].map(x => nodeIdx().get(x)).filter(Boolean).filter(x => !x.hub);
+  const pts = [n, ...nb];
+  const { w, h } = size();
+  const x0 = Math.min(...pts.map(p => p.x)) - 60, x1 = Math.max(...pts.map(p => p.x)) + 60, y0 = Math.min(...pts.map(p => p.y)) - 50, y1 = Math.max(...pts.map(p => p.y)) + 60;
+  const k = Math.max(0.6, Math.min(2.4, 0.9 * Math.min(w / (x1 - x0), h / (y1 - y0))));
+  const tr = d3.zoomIdentity.translate(w / 2 - k * n.x, h / 2 - k * n.y).scale(k);
+  (animate && !reduced ? svg.transition().duration(550) : svg).call(zoom.transform, tr);
+}
 function fit(animate) {
   if (!G.nodes.length) return;
   const { w, h } = size();
@@ -315,8 +334,10 @@ function styleGraph() {
   if (!G.sel) return;
   const nb = hoverId ? G.adj.get(hoverId) || new Set() : null;
   const local = S.mode === 'local';
+  const curNb = S.cur ? G.adj.get(S.cur) || new Set() : new Set();
   G.sel.nodes
     .classed('sel', d => d.id === S.cur)
+    .classed('nb', d => !hoverId && curNb.has(d.id))
     .classed('match', d => !!S.matches && S.matches.has(d.id))
     .classed('dim', d => !noteActive(d.note) || (S.matches && !S.matches.has(d.id)) || (focusGroup && d.note.part !== focusGroup) || (nb && d.id !== hoverId && !nb.has(d.id)));
   G.sel.links
@@ -352,11 +373,14 @@ function styleLabels() {
 }
 function showTip(e, d) {
   const tip = $('#tip'); const wrap = $('#graph-wrap').getBoundingClientRect();
-  tip.innerHTML = `<b>${esc(d.note.title)}</b><span>${esc(S.hubs.has(d.id) ? t('hub') + ' · ' : '')}${esc(groupLabel(d.note.part))} · ${esc(t('backlinkCount', d.bl))}</span>`;
+  const outN = (G.adj.get(d.id) || new Set()).size;
+  tip.innerHTML = `<span class="t-g"><span class="dot" style="--c:${groupColor(d.note.part)}"></span>${esc(S.hubs.has(d.id) ? t('hub') + ' · ' : '')}${esc(groupLabel(d.note.part))}</span>` +
+    `<b class="t-t">${esc(d.note.title)}</b>` + (d.note.excerpt ? `<span class="t-x">${esc(d.note.excerpt)}</span>` : '') +
+    `<span class="t-s"><span>${esc(t('inShort', d.bl))}</span><span>${esc(t('nbShort', outN))}</span></span>`;
   tip.hidden = false;
-  const x = e.clientX - wrap.left + 14, y = e.clientY - wrap.top + 14;
-  tip.style.left = Math.min(x, wrap.width - tip.offsetWidth - 8) + 'px';
-  tip.style.top = Math.min(y, wrap.height - tip.offsetHeight - 8) + 'px';
+  const x = e.clientX - wrap.left + 16, y = e.clientY - wrap.top + 16;
+  tip.style.left = (x + tip.offsetWidth > wrap.width - 8 ? x - tip.offsetWidth - 32 : x) + 'px';
+  tip.style.top = Math.max(8, Math.min(y, wrap.height - tip.offsetHeight - 8)) + 'px';
 }
 new ResizeObserver(() => { if (G.nodes.length) fit(false); }).observe($('#graph-wrap'));
 
@@ -479,12 +503,14 @@ function openNote(id, o = {}) {
   renderNote(n, o.anchor);
   renderLinks();
   renderList();
+  renderPeek();
   const li = document.querySelector(`#list .item[data-note="${CSS.escape(id)}"]`); if (li && !o.fromList) li.scrollIntoView({ block: 'nearest' });
-  if (S.mode === 'local' && changed) rebuildGraph(); else styleGraph();
+  if (S.mode === 'local' && changed) rebuildGraph(); else { styleGraph(); if (o.focus) requestAnimationFrame(() => focusNode(id)); }
   if (S.mode === 'local') $('#g-hint').textContent = t('hintLocal', short(n.title, 40));
   $('#nav-back').disabled = S.hpos <= 0; $('#nav-fwd').disabled = S.hpos >= S.hist.length - 1;
   syncUrl();
-  if ((o.fromList || o.fromGraph) && matchMedia('(max-width: 900px)').matches && !o.stay) setPane('center');
+  if (o.fromList && narrow()) toggleDrawer(false);
+  if (o.read && S.view === 'graph') setView(narrow() ? 'read' : 'split');
 }
 
 function renderNote(n, anchor, keepScroll) {
@@ -493,13 +519,13 @@ function renderNote(n, anchor, keepScroll) {
   const art = $('#note');
   const isHub = S.hubs.has(n.id);
   const L = S.meta.links || {};
+  setReaderTab(S.readerTab, true);
   const siteUrl = L.site && L.site.urls && L.site.urls[n.id];
   $('#crumb').innerHTML = `<span class="dot" style="--c:${groupColor(n.part)}"></span><span>${esc(groupLabel(n.part))}</span><span class="path">${esc(n.id)}</span>` +
     `<span class="ext-links">${siteUrl != null ? `<a class="site-link" href="${esc(L.site.root + siteUrl)}" target="_blank" rel="noopener">${esc(L.site.label ? L.site.label[UI] || L.site.label.es : t('onSite'))} ↗</a>` : ''}` +
     `${L.github ? `<a class="site-link" href="${esc(L.github.base + encPath(n.id))}" target="_blank" rel="noopener">GitHub ↗</a>` : ''}</span>`;
   const hb = $('#hub-toggle'); hb.setAttribute('aria-pressed', S.hubs.has(n.id)); hb.title = t(S.hubs.has(n.id) ? 'unHub' : 'makeHub'); hb.setAttribute('aria-label', hb.title);
-  let head = '';
-  // properties = frontmatter as written
+  // properties = frontmatter as written (own tab)
   const fm = n.frontmatter || {};
   const keys = Object.keys(fm);
   const val = (k, v) => {
@@ -511,21 +537,35 @@ function renderNote(n, anchor, keepScroll) {
     if (v && typeof v === 'object') return `<code>${esc(JSON.stringify(v))}</code>`;
     return null;
   };
-  if (keys.length || isHub) {
-    const rows = keys.map(k => { const h = val(k, fm[k]); return `<dt>${esc(k)}</dt>` + (h != null ? `<dd>${h}</dd>` : `<dd class="text">${esc(fm[k])}</dd>`); }).join('');
-    head += `<details class="props"${matchMedia('(max-width: 900px)').matches ? '' : ' open'}><summary>${esc(t('props'))} <span class="stat">${keys.length}</span>${isHub ? ` <span class="pill hub">${esc(t('hub'))}</span>` : ''}</summary><dl>${rows}</dl></details>`;
-  }
+  $('#props').innerHTML = keys.length ? keys.map(k => { const h = val(k, fm[k]); return `<dt>${esc(k)}</dt>` + (h != null ? `<dd>${h}</dd>` : `<dd class="text">${esc(fm[k])}</dd>`); }).join('')
+    : `<dd class="text" style="grid-column:1/-1;color:var(--muted)">${esc(t('noProps'))}</dd>`;
+  $('#rt-props-n').textContent = keys.length || '';
+  // hero: where the note sits, its title, its own description, and the facts a reader scans first
+  const ch = chapterTag(n);
+  const desc = typeof fm.description === 'string' ? fm.description : '';
+  const updated = fm.last_updated ? String(fm.last_updated) : '';
+  const meta = [
+    n.status ? `<span class="pill ${esc(n.status)}">${esc(statusLabel(n.status))}</span>` : '',
+    isHub ? `<span class="pill hub">${esc(t('hub'))}</span>` : '',
+    n.language ? `<span>${esc(langLabel(n.language))}</span>` : '',
+    updated ? `<span>${esc(t('updatedOn', updated))}</span>` : '',
+    ...n.tags.slice(0, 6).map(x => `<button type="button" class="chip" data-tag="${esc(x)}">#${esc(x)}</button>`)
+  ].filter(Boolean);
+  let hero = `<div class="h-g"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(groupLabel(n.part))}${ch ? ` <span class="sep">·</span> ${esc(t('chapterN', ch))}` : ''}</div>` +
+    `<h1 id="hero-title">${esc(n.baseTitle || n.title)}</h1>` + (desc ? `<p class="lede">${esc(desc)}</p>` : '') +
+    (meta.length ? `<div class="h-m">${meta.join('')}</div>` : '');
   if (n.translations && n.translations.length) {
-    head += `<div class="lang-switch">${esc(t('readIn'))} ${n.translations.map(tid => { const tn = S.notes.get(tid); return `<button type="button" class="chip" data-note="${esc(tid)}" data-lang-jump="${esc(tn.language)}">${esc(langLabel(tn.language || '?'))}</button>`; }).join(' ')}</div>`;
+    hero += `<div class="lang-switch">${esc(t('readIn'))} ${n.translations.map(tid => { const tn = S.notes.get(tid); return `<button type="button" class="chip" data-note="${esc(tid)}" data-lang-jump="${esc(tn.language)}">${esc(langLabel(tn.language || '?'))}</button>`; }).join(' ')}</div>`;
   }
+  $('#hero').innerHTML = hero;
   let html;
   try { html = mdr.parse(preprocess(n.body)); } catch (e) { html = `<pre>${esc(n.body)}</pre>`; }
-  if (!/^\s*<h1[\s>]/.test(html) && !/<h1[\s>]/.test(html.slice(0, 600))) html = `<h1>${esc(n.title)}</h1>` + html;
-  art.innerHTML = head + html;
+  art.innerHTML = html;
   sanitize(art);
-  // put properties after the first h1, like a document header
-  const h1 = art.querySelector('h1'), props = art.querySelector('.props');
-  if (h1 && props && h1.parentNode === art) { art.prepend(h1); }
+  // the hero already shows the title: drop the document's own first H1 when it is the opening element
+  const firstEl = art.firstElementChild;
+  if (firstEl && firstEl.tagName === 'H1') firstEl.remove();
+  else { const h1 = art.querySelector(':scope > div > h1'); if (h1 && fold(h1.textContent).trim() === fold(n.baseTitle || n.title).trim()) h1.remove(); }
   const sc = $('#note-scroll');
   if (anchor) { const el = art.querySelector('#' + CSS.escape(anchor)); if (el) { el.scrollIntoView({ block: 'start' }); el.classList.add('flash'); } else sc.scrollTop = 0; }
   else sc.scrollTop = keepScroll ? prevScroll : 0;
@@ -572,6 +612,7 @@ function renderLinks() {
   const brokenOut = S.vault.links.filter(l => l.source === id && !l.target);
   const nIn = new Set(inL.map(l => l.source)).size, nOut = new Set(outL.map(l => l.target)).size;
   $('#n-in').textContent = nIn; $('#n-out').textContent = nOut + (brokenOut.length ? ` +${brokenOut.length}` : '');
+  $('#rt-links-n').textContent = nIn + nOut || '';
   $('#tab-in').setAttribute('aria-selected', S.linkTab === 'in'); $('#tab-out').setAttribute('aria-selected', S.linkTab === 'out');
   const list = S.linkTab === 'in' ? inL : outL;
   const keyOf = l => S.linkTab === 'in' ? l.source : l.target;
@@ -614,6 +655,9 @@ function renderQuality() {
   h += broken.length ? broken.map(l => `<button type="button" class="q-item" data-note="${esc(l.source)}" title="${esc(l.reason || '')}"><code>${esc(l.raw)}</code><span class="src">← ${esc(S.notes.get(l.source).title)}</span></button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noBroken'))}</span></div>`;
   $('#quality').innerHTML = h;
+  const issues = orphans.length + broken.length, hb = $('#health-badge');
+  hb.textContent = issues ? String(issues) : '✓'; hb.className = 'badge ' + (issues ? 'warn' : 'ok');
+  hb.title = issues ? t('issues', issues) : t('noIssues');
 }
 
 // ======================= search =======================
@@ -625,21 +669,124 @@ function runSearch() {
     S.matches = new Set(S.vault.notes.filter(n => visibleNote(n) && S.search.get(n.id).includes(q)).map(n => n.id));
     $('#q-count').textContent = t('matches', S.matches.size);
   }
-  renderList(); styleGraph();
+  renderList(); styleGraph(); renderResults();
+}
+let qActive = 0;
+function renderResults() {
+  const box = $('#q-results'), q = fold($('#q').value).trim();
+  if (q.length < 2) { box.hidden = true; $('#q').setAttribute('aria-expanded', 'false'); return; }
+  const hits = [...S.matches].map(id => S.notes.get(id))
+    .sort((a, b) => (fold(b.title).includes(q) - fold(a.title).includes(q)) || b.backlinkNotes - a.backlinkNotes).slice(0, 8);
+  qActive = Math.min(qActive, Math.max(0, hits.length - 1));
+  box.innerHTML = hits.length ? hits.map((n, i) => {
+    const txt = n.plainText || ''; const at = fold(txt).indexOf(q);
+    const snip = fold(n.title).includes(q) ? n.excerpt : at >= 0 ? (at > 50 ? '…' : '') + txt.slice(Math.max(0, at - 50), at + 110) + '…' : n.excerpt;
+    return `<button type="button" class="q-item-r" role="option" id="qr-${i}" aria-selected="${i === qActive}" data-note="${esc(n.id)}" data-search-hit><span class="dot" style="--c:${groupColor(n.part)}"></span><b>${markText(n.title, $('#q').value)}</b><small><span class="g">${esc(groupLabel(n.part))} · </span>${markText(snip || '', $('#q').value)}</small></button>`;
+  }).join('') : `<div class="q-empty">${esc(t('empty'))}</div>`;
+  box.hidden = false; $('#q').setAttribute('aria-expanded', 'true');
+  $('#q').setAttribute('aria-activedescendant', hits.length ? 'qr-' + qActive : '');
+}
+// after choosing a result the palette closes and the graph returns to normal, centred on the chosen note
+function clearSearch() { $('#q').value = ''; S.q = ''; S.matches = null; $('#q-count').textContent = ''; $('#q-results').hidden = true; $('#q').setAttribute('aria-expanded', 'false'); $('#q').blur(); renderList(); styleGraph(); }
+function moveActive(d) {
+  const items = [...document.querySelectorAll('#q-results .q-item-r')]; if (!items.length) return;
+  qActive = (qActive + d + items.length) % items.length;
+  items.forEach((el, i) => el.setAttribute('aria-selected', i === qActive));
+  items[qActive].scrollIntoView({ block: 'nearest' }); $('#q').setAttribute('aria-activedescendant', 'qr-' + qActive);
 }
 
+// ======================= view: graph · split · read =======================
+const narrow = () => matchMedia('(max-width: 900px)').matches;
+function setView(v, opts = {}) {
+  if (v === 'split' && narrow()) v = 'read';
+  if (v !== 'graph' && !S.cur) return;
+  const prev = S.view; S.view = v;
+  $('#stage').dataset.view = v;
+  document.querySelectorAll('.view-seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
+  const ex = $('#r-expand'); ex.setAttribute('aria-pressed', v === 'read'); ex.title = t(v === 'read' ? 'reduceReader' : 'expandReader'); ex.setAttribute('aria-label', ex.title);
+  store.set('kb-view', v);
+  if (!opts.silent) { setParams({ view: v === 'graph' ? null : v }); track('view_switch', { view: v }); }
+  // while reading, the narrow graph shows the open note's neighbourhood; leaving reading restores the global view
+  if (v === 'read' && S.mode === 'global') { S.autoLocal = true; setMode('local', true); }
+  else if (v !== 'read' && S.autoLocal) { S.autoLocal = false; setMode('global', true); }
+  renderPeek();
+  // the graph keeps the open note in sight while its frame grows or shrinks
+  if (prev !== v) setTimeout(() => { if (S.cur && v !== 'graph') focusNode(S.cur); else fit(true); }, reduced ? 0 : 400);
+}
+document.querySelectorAll('.view-seg button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+$('#r-expand').addEventListener('click', () => setView(S.view === 'read' ? 'split' : 'read'));
+$('#r-close').addEventListener('click', () => setView('graph'));
+function setReaderTab(tab, silent) {
+  S.readerTab = tab;
+  ['content', 'links', 'props'].forEach(k => { $('#rt-' + k).setAttribute('aria-selected', k === tab); $('#rp-' + k).hidden = k !== tab; });
+  if (!silent) $('#note-scroll').scrollTop = 0;
+}
+document.querySelectorAll('.reader-tabs [data-rtab]').forEach(b => b.addEventListener('click', () => setReaderTab(b.dataset.rtab)));
+
+// peek card: the selected note while the graph is centre stage
+function renderPeek() {
+  const box = $('#peek'); const n = S.cur && S.notes.get(S.cur);
+  if (!n || S.view !== 'graph') { box.hidden = true; return; }
+  const inN = new Set(S.vault.links.filter(l => l.target === n.id && l.source !== n.id).map(l => l.source)).size;
+  const outN = new Set(S.vault.links.filter(l => l.source === n.id && l.target).map(l => l.target)).size;
+  box.innerHTML = `<button class="icon-btn p-x" type="button" data-peek-close title="${esc(t('close'))}" aria-label="${esc(t('close'))}"><svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>` +
+    `<div class="p-g"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(groupLabel(n.part))}</div><h3>${esc(n.title)}</h3>` +
+    (n.excerpt ? `<p>${esc(n.excerpt)}</p>` : '') +
+    `<div class="p-s"><span><b>${inN}</b> ${esc(t('inLabel'))}</span><span><b>${outN}</b> ${esc(t('outLabel'))}</span></div>` +
+    `<div class="p-a"><button class="btn btn-primary" type="button" data-peek="read">${esc(t('peekRead'))}</button><button class="btn" type="button" data-peek="links">${esc(t('peekLinks'))}</button>` +
+    (S.mode === 'global' ? `<button class="btn" type="button" data-peek="local">${esc(t('peekLocal'))}</button>` : `<button class="btn" type="button" data-peek="global">${esc(t('peekGlobal'))}</button>`) + `</div>`;
+  box.hidden = false;
+}
+$('#peek').addEventListener('click', e => {
+  const b = e.target.closest('[data-peek], [data-peek-close]'); if (!b) return;
+  if (b.hasAttribute('data-peek-close')) { $('#peek').hidden = true; return; }
+  const a = b.dataset.peek;
+  if (a === 'read') { setReaderTab('content'); setView('split'); }
+  else if (a === 'links') { setReaderTab('links'); setView('split'); }
+  else if (a === 'local') setMode('local');
+  else if (a === 'global') setMode('global');
+});
+
+// index drawer and popovers
+function toggleDrawer(open) {
+  const d = $('#index-drawer'); const on = open == null ? !d.classList.contains('open') : open;
+  d.classList.toggle('open', on); $('#index-btn').setAttribute('aria-expanded', on);
+  if (on) { closePops(); const cur = document.querySelector('#list .item.cur'); if (cur) cur.scrollIntoView({ block: 'center' }); }
+}
+$('#index-btn').addEventListener('click', () => toggleDrawer());
+$('#index-close').addEventListener('click', () => toggleDrawer(false));
+function closePops(except) {
+  [['filters-btn', 'filters-pop'], ['health-btn', 'health-pop']].forEach(([b, p]) => { if (p !== except) { $('#' + p).hidden = true; $('#' + b).setAttribute('aria-expanded', 'false'); } });
+}
+[['filters-btn', 'filters-pop'], ['health-btn', 'health-pop']].forEach(([b, p]) => $('#' + b).addEventListener('click', e => {
+  e.stopPropagation(); const open = $('#' + p).hidden; closePops(p); $('#' + p).hidden = !open; $('#' + b).setAttribute('aria-expanded', open);
+  if (open && narrow()) toggleDrawer(false);
+}));
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('.pop, #filters-btn, #health-btn')) closePops();
+  if (!e.target.closest('#search')) { $('#q-results').hidden = true; $('#q').setAttribute('aria-expanded', 'false'); }
+});
+function filtersChanged() {
+  const n = (S.f.types.size !== defaultTypes().size || [...S.f.types].some(x => !defaultTypes().has(x)) ? 1 : 0) + (S.f.hubEdges ? 0 : 1) +
+    (S.f.statuses && S.f.statuses.size !== new Set(S.vault.notes.map(x => x.status)).size ? 1 : 0) + (S.f.tag ? 1 : 0);
+  const b = $('#filters-badge'); b.hidden = !n; b.textContent = n;
+}
+function defaultTypes() { return new Set(['markdown', 'wikilink', 'prerequisite', 'related']); }
+$('#g-zoom-in').addEventListener('click', () => svg.transition().duration(reduced ? 0 : 250).call(zoom.scaleBy, 1.35));
+$('#g-zoom-out').addEventListener('click', () => svg.transition().duration(reduced ? 0 : 250).call(zoom.scaleBy, 1 / 1.35));
+
 // ======================= interactions =======================
-function setPane(p) { $('#app').dataset.pane = p; document.querySelectorAll('.mtabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.pane === p)); if (p === 'right') requestAnimationFrame(() => fit(false)); }
-document.querySelectorAll('.mtabs button').forEach(b => b.addEventListener('click', () => setPane(b.dataset.pane)));
 document.addEventListener('click', e => {
   const tagB = e.target.closest('[data-tag]');
-  if (tagB) { S.f.tag = tagB.dataset.tag; $('#f-tag').value = S.f.tag; renderList(); styleGraph(); toast('#' + S.f.tag); return; }
+  if (tagB) { S.f.tag = tagB.dataset.tag; $('#f-tag').value = S.f.tag; renderList(); styleGraph(); filtersChanged(); toast(t('tagFiltered', S.f.tag)); return; }
   const a = e.target.closest('[data-note], a[data-anchor]');
   if (!a) return;
   if (a.dataset.note) {
     e.preventDefault();
     if (a.dataset.langJump && S.f.lang !== 'all' && S.f.lang !== a.dataset.langJump) { S.f.lang = a.dataset.langJump; buildFilters(); rebuildGraph(); }
-    openNote(a.dataset.note, { push: true, anchor: a.dataset.anchor || '', fromList: !!a.closest('#list') });
+    const fromSearch = a.hasAttribute('data-search-hit');
+    if (fromSearch) clearSearch();
+    openNote(a.dataset.note, { push: true, anchor: a.dataset.anchor || '', fromList: !!a.closest('#list'), focus: true, read: !!a.closest('#reader') });
   } else if (a.dataset.anchor != null) {
     e.preventDefault();
     const el = $('#note').querySelector('#' + CSS.escape(a.dataset.anchor)); if (el) { el.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
@@ -652,44 +799,48 @@ $('#hub-toggle').addEventListener('click', () => {
 });
 $('#nav-back').addEventListener('click', () => { if (S.hpos > 0) { S.hpos--; openNote(S.hist[S.hpos], { push: false }); } });
 $('#nav-fwd').addEventListener('click', () => { if (S.hpos < S.hist.length - 1) { S.hpos++; openNote(S.hist[S.hpos], { push: false }); } });
-$('#q').addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(runSearch, 120); });
+$('#q').addEventListener('input', () => { qActive = 0; clearTimeout(qTimer); qTimer = setTimeout(runSearch, 120); });
+$('#q').addEventListener('focus', () => { if ($('#q').value.trim().length >= 2) renderResults(); });
 $('#q').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && S.matches && S.matches.size) { const first = [...S.matches][0]; openNote(first, { push: true, fromList: true }); }
-  if (e.key === 'Escape') { $('#q').value = ''; runSearch(); }
+  if (e.key === 'ArrowDown') { e.preventDefault(); moveActive(1); }
+  if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
+  if (e.key === 'Enter') { const el = document.querySelector(`#qr-${qActive}`); if (el) { const id = el.dataset.note; clearSearch(); openNote(id, { push: true, focus: true }); } }
+  if (e.key === 'Escape') { $('#q').value = ''; runSearch(); $('#q').blur(); }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && document.activeElement !== $('#q') && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); $('#q').focus(); }
-  if (e.key === 'Escape' && !$('#sheet').hidden) closeSheet();
+  if (e.key === 'Escape' && !$('#sheet').hidden) { closeSheet(); return; }
+  const typing = /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName) || !$('#sheet').hidden;
+  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === 'g') setView('graph'); else if (k === 'd') setView('split'); else if (k === 'l') setView('read');
+  else if (k === 'i') toggleDrawer(); else if (k === 'f') fit(true);
+  else if (e.key === 'Escape') { if (!$('#q-results').hidden) $('#q-results').hidden = true; else if (document.querySelector('.pop:not([hidden])')) closePops(); else if ($('#index-drawer').classList.contains('open')) toggleDrawer(false); else if (S.view !== 'graph') setView('graph'); }
 });
 $('#f-types').addEventListener('click', e => {
   const b = e.target.closest('.tog'); if (!b) return;
   if (b.hasAttribute('data-hubedges')) S.f.hubEdges = !S.f.hubEdges;
   else { const k = b.dataset.type; S.f.types.has(k) ? S.f.types.delete(k) : S.f.types.add(k); }
-  buildFilters(); rebuildGraph(); renderList();
+  buildFilters(); rebuildGraph(); renderList(); filtersChanged();
 });
 $('#f-status').addEventListener('click', e => {
   const b = e.target.closest('.tog'); if (!b) return; const s = b.dataset.status;
   S.f.statuses.has(s) ? S.f.statuses.delete(s) : S.f.statuses.add(s);
-  b.setAttribute('aria-pressed', S.f.statuses.has(s)); renderList(); styleGraph();
+  b.setAttribute('aria-pressed', S.f.statuses.has(s)); renderList(); styleGraph(); filtersChanged();
 });
-$('#f-tag').addEventListener('change', e => { S.f.tag = e.target.value; renderList(); styleGraph(); });
+$('#f-tag').addEventListener('change', e => { S.f.tag = e.target.value; renderList(); styleGraph(); filtersChanged(); });
 $('#f-lang').addEventListener('change', e => { S.f.lang = e.target.value; rebuildGraph(); renderList(); if (S.q) runSearch(); });
 $('#legend').addEventListener('mouseover', e => { const b = e.target.closest('[data-group]'); if (b && focusGroup !== b.dataset.group) { focusGroup = b.dataset.group; styleGraph(); } });
 $('#legend').addEventListener('mouseleave', () => { if (!pinnedGroup) { focusGroup = null; styleGraph(); } else { focusGroup = pinnedGroup; styleGraph(); } });
 let pinnedGroup = null;
 $('#legend').addEventListener('click', e => { const b = e.target.closest('[data-group]'); if (!b) return; pinnedGroup = pinnedGroup === b.dataset.group ? null : b.dataset.group; focusGroup = pinnedGroup; renderLegend(G.m); styleGraph(); });
-function setMode(m) { S.mode = m; $('#tab-global').setAttribute('aria-selected', m === 'global'); $('#tab-local').setAttribute('aria-selected', m === 'local'); rebuildGraph(); }
+function setMode(m, auto) { if (!auto) S.autoLocal = false; S.mode = m; $('#tab-global').setAttribute('aria-selected', m === 'global'); $('#tab-local').setAttribute('aria-selected', m === 'local'); rebuildGraph(); renderPeek(); if (!auto) track('graph_scope', { scope: m }); }
 $('#tab-global').addEventListener('click', () => setMode('global'));
 $('#tab-local').addEventListener('click', () => setMode('local'));
 $('#tab-in').addEventListener('click', () => { S.linkTab = 'in'; renderLinks(); });
 $('#tab-out').addEventListener('click', () => { S.linkTab = 'out'; renderLinks(); });
 $('#g-fit').addEventListener('click', () => fit(true));
-$('#g-wide').addEventListener('click', () => {
-  S.wide = !S.wide; $('#app').classList.toggle('wide', S.wide);
-  $('#g-wide').title = t(S.wide ? 'shrink' : 'expand');
-  if (matchMedia('(max-width: 900px)').matches) setPane('right');
-  requestAnimationFrame(() => fit(true));
-});
+
 svg.on('click', () => { if (pinnedGroup) { pinnedGroup = null; focusGroup = null; renderLegend(G.m); styleGraph(); } });
 
 // ======================= interface language (site contract: ?lang=, jf-lang / iac_lang) =======================
@@ -704,7 +855,8 @@ function applyUI() {
   $('#graph').setAttribute('aria-label', UI === 'es' ? 'Grafo de notas' : 'Note graph');
   document.title = t('pageTitle');
   updateThemeBtn();
-  if (S.vault) { renderMeta(); buildFilters(); renderList(); renderLegend(G.m); renderLinks(); renderQuality(); const n = S.notes.get(S.cur); if (n) { renderNote(n, null, true); } $('#g-count').textContent = t('showing', G.nodes.length, G.edges.length); $('#g-hint').textContent = S.mode === 'local' && n ? t('hintLocal', short(n.title, 40)) : t('hintGlobal'); }
+  const ex = $('#r-expand'); ex.title = t(S.view === 'read' ? 'reduceReader' : 'expandReader'); ex.setAttribute('aria-label', ex.title);
+  if (S.vault) { renderPeek(); renderMeta(); buildFilters(); renderList(); renderLegend(G.m); renderLinks(); renderQuality(); const n = S.notes.get(S.cur); if (n) { renderNote(n, null, true); } $('#g-count').textContent = t('showing', G.nodes.length, G.edges.length); $('#g-hint').textContent = S.mode === 'local' && n ? t('hintLocal', short(n.title, 40)) : t('hintGlobal'); }
 }
 function setLang(l) {
   UI = l === 'en' ? 'en' : 'es';
@@ -738,8 +890,8 @@ function setParams(kv) {
 }
 function syncUrl() {
   if (!S.meta) return;
-  if (S.source === 'github') setParams({ repo: S.meta.repo, ref: S.meta.refParam || null, path: S.meta.pathParam || null, note: S.cur });
-  else if (S.source === 'demo') setParams({ repo: null, ref: null, path: null, note: S.cur });
+  if (S.source === 'github') setParams({ repo: S.meta.repo, ref: S.meta.refParam || null, path: S.meta.pathParam || null, note: S.cur, view: S.view === 'graph' ? null : S.view });
+  else if (S.source === 'demo') setParams({ repo: null, ref: null, path: null, note: S.cur, view: S.view === 'graph' ? null : S.view });
   else setParams({ repo: null, ref: null, path: null, note: null });
 }
 $('#share').addEventListener('click', async () => {
@@ -976,10 +1128,11 @@ async function loadDemo(startNote) {
 
 // ======================= boot =======================
 applyUI();
-setPane('center');
 (() => {
   let p = null; try { p = new URLSearchParams(location.search); } catch (e) {}
   const repo = p && p.get('repo'), note = p && p.get('note');
+  const v0 = (p && p.get('view')) || store.get('kb-view');
+  S.pendingView = ['graph', 'split', 'read'].includes(v0) ? v0 : 'graph';
   if (repo) {
     // shared link: show what is being loaded, in the same panel a visitor would use
     $('#gh-url').value = repo; $('#gh-ref').value = p.get('ref') || ''; $('#gh-path').value = p.get('path') || '';

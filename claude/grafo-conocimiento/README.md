@@ -14,25 +14,27 @@ La pregunta que responde: **¿cómo se conectan los documentos de mi base de con
 ![Grafo de conocimiento: lista de notas, nota con fórmulas y grafo de relaciones](assets/og-image.png)
 
 ## Qué muestra
-1. **Lista de notas.** Agrupadas por parte (campo `part` del frontmatter o, si no existe, la carpeta), con el número de notas que enlazan a cada una. Las notas eje van arriba.
-2. **Nota abierta.**
-   - Markdown con fórmulas LaTeX (MathJax), tablas, admoniciones, diagramas Mermaid e imágenes.
-   - El frontmatter aparece como propiedades, con el valor tal como está escrito.
-   - Los enlaces internos abren la nota destino.
-   - Cada nota trae un enlace a su versión en GitHub y, en la demo, a su página publicada en el manual.
-3. **Grafo global.**
+El grafo es el escenario: ocupa toda el área de trabajo y los controles flotan sobre él.
+
+1. **Tres vistas, un solo control.** En la cabecera, **Grafo · Dividido · Lectura** (teclas `G`, `D`, `L`; `Esc` vuelve al grafo). La transición es animada y el grafo se reencuadra en la nota abierta.
+   - **Grafo:** las relaciones al centro. La nota elegida aparece en una tarjeta compacta con su descripción, sus enlaces entrantes y salientes, y botones para leerla, ver sus conexiones o ver solo sus vecinos.
+   - **Dividido:** grafo y documento lado a lado.
+   - **Lectura:** el documento amplio. El grafo pasa solo a la vista local de esa nota y vuelve a la global al salir.
+2. **Grafo global.**
    - Cada nota es un nodo, coloreado por parte y con tamaño según cuántas notas la enlazan.
    - Las notas eje (en la demo, la portada y la guía de metodologías) se dibujan como rombos fijos encima del grafo, para que no lo colapsen; sus enlaces van tenues.
-   - El botón ◇ de cada nota la fija o la quita como nota eje.
-4. **Grafo local.** La nota abierta y sus vecinas hasta 2 saltos. Las notas eje aparecen, pero no se expanden.
-5. **Filtros y búsqueda.**
-   - Por tipo de enlace (texto, wikilink, prerrequisito, relacionado, traducción), estado, etiqueta e idioma.
-   - La búsqueda cubre títulos y texto, y resalta las coincidencias en la lista y en el grafo.
-6. **Enlaces de esta nota.** Muestra las notas que enlazan aquí, cada una con la frase donde aparece el enlace y la sección donde está, y también las notas a las que esta enlaza, incluidos los enlaces rotos.
-7. **Salud de la bóveda.**
-   - Conteo de notas y conexiones.
-   - En la demo, el commit y la fecha de la instantánea.
-   - Lista de notas huérfanas y enlaces rotos.
+   - Al pasar el cursor por un nodo aparece una vista previa con la descripción de la nota. Un clic la selecciona y un doble clic la abre.
+3. **Grafo local.** La nota abierta y sus vecinas hasta 2 saltos. Las notas eje aparecen, pero no se expanden.
+4. **Documento.**
+   - Una cabecera con la parte, el capítulo, el título, la descripción, el estado, el idioma, la fecha y las etiquetas.
+   - Tres pestañas: **Contenido** (Markdown con fórmulas LaTeX, tablas, admoniciones, diagramas Mermaid e imágenes), **Conexiones** (notas que enlazan aquí, cada una con la frase donde aparece el enlace, y notas a las que esta enlaza, incluidos los enlaces rotos) y **Propiedades** (el frontmatter tal como está escrito).
+   - Enlaces a la versión en GitHub y, en la demo, a la página publicada en el manual. El botón ◇ fija o quita la nota como eje.
+5. **Búsqueda tipo paleta.** Busca en títulos y texto, muestra hasta 8 resultados con el fragmento que coincide, se recorre con las flechas y al elegir uno centra el grafo en esa nota. La tecla `/` lleva a la búsqueda.
+6. **Capas sobre el grafo.**
+   - **Índice** (`I`): las notas agrupadas por parte.
+   - **Filtros:** por tipo de enlace (texto, wikilink, prerrequisito, relacionado, traducción), estado, etiqueta e idioma; el botón muestra cuántos filtros están activos.
+   - **Salud:** conteo de notas y conexiones, el commit y la fecha de la instantánea (en la demo), y la lista de notas huérfanas y enlaces rotos; el botón muestra cuántos hay.
+   - Leyenda de partes y tipos de enlace, y zoom.
 
 ## Tres fuentes
 | Fuente | Cómo se carga | Qué se puede compartir |
@@ -98,7 +100,7 @@ node claude/grafo-conocimiento/tools/build-demo-vault.js /tmp/handbook claude/gr
 ## Archivos
 ```
 claude/grafo-conocimiento/
-├── index.html              página: barra superior, paneles, carga de librerías
+├── index.html              página: barra superior, escenario del grafo, lectura, carga de librerías
 ├── i18n.js                 textos de la interfaz ES/EN
 ├── app.js                  grafo, nota, backlinks, filtros, fuentes (demo, GitHub, carpeta)
 ├── vault-parser.js         analizador de notas y enlaces (el mismo en las tres fuentes)

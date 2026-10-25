@@ -14,25 +14,27 @@ The question it answers: **how are the documents in my knowledge base connected,
 ![Knowledge graph: note list, a note with formulas, and the relationship graph](assets/og-image.png)
 
 ## What it shows
-1. **Note list.** Grouped by part (the `part` frontmatter field or, failing that, the folder), with how many notes link to each one. Hub notes go first.
-2. **Open note.**
-   - Markdown with LaTeX formulas (MathJax), tables, admonitions, Mermaid diagrams and images.
-   - Frontmatter is shown as properties, with each value exactly as written.
-   - Internal links open the target note.
-   - Each note links to its version on GitHub and, in the demo, to its published page in the handbook.
-3. **Global graph.**
+The graph is the stage: it fills the whole work area and the controls float over it.
+
+1. **Three views, one control.** In the header, **Graph · Split · Reading** (keys `G`, `D`, `L`; `Esc` returns to the graph). The transition is animated and the graph re-frames the open note.
+   - **Graph:** relationships at the centre. The selected note appears in a compact card with its description, its incoming and outgoing links, and buttons to read it, see its connections or show only its neighbours.
+   - **Split:** graph and document side by side.
+   - **Reading:** the document wide. The graph switches by itself to that note's local view and returns to the global view when you leave.
+2. **Global graph.**
    - Every note is a node, coloured by part and sized by how many notes link to it.
    - Hub notes (in the demo, the home page and the methodology guide) are drawn as fixed diamonds above the graph so they do not collapse it; their links are faint.
-   - The ◇ button on each note pins it as a hub note or unpins it.
-4. **Local graph.** The open note and its neighbours up to 2 hops. Hub notes appear but are not expanded.
-5. **Filters and search.**
-   - By link type (inline, wikilink, prerequisite, related, translation), status, tag and language.
-   - Search covers titles and text, and highlights matches in the list and the graph.
-6. **Links of this note.** Shows the notes that link here, each with the sentence where the link appears and the section it is in, and also the notes this one links to, including broken links.
-7. **Vault health.**
-   - Note and connection counts.
-   - In the demo, the snapshot's commit and date.
-   - Lists of orphan notes and broken links.
+   - Hovering a node shows a preview with the note's description. A click selects it and a double click opens it.
+3. **Local graph.** The open note and its neighbours up to 2 hops. Hub notes appear but are not expanded.
+4. **Document.**
+   - A header with the part, chapter, title, description, status, language, date and tags.
+   - Three tabs: **Content** (Markdown with LaTeX formulas, tables, admonitions, Mermaid diagrams and images), **Connections** (notes that link here, each with the sentence where the link appears, and notes this one links to, including broken links) and **Properties** (the frontmatter exactly as written).
+   - Links to the GitHub version and, in the demo, to the published handbook page. The ◇ button pins or unpins the note as a hub.
+5. **Palette search.** Searches titles and text, shows up to 8 results with the matching excerpt, is navigated with the arrow keys, and centres the graph on the chosen note. The `/` key jumps to search.
+6. **Layers over the graph.**
+   - **Index** (`I`): notes grouped by part.
+   - **Filters:** by link type (inline, wikilink, prerequisite, related, translation), status, tag and language; the button shows how many filters are active.
+   - **Health:** note and connection counts, the snapshot's commit and date (in the demo), and the list of orphan notes and broken links; the button shows how many there are.
+   - A legend of parts and link types, and zoom.
 
 ## Three sources
 | Source | How it loads | What can be shared |
@@ -98,7 +100,7 @@ node claude/grafo-conocimiento/tools/build-demo-vault.js /tmp/handbook claude/gr
 ## Files
 ```
 claude/grafo-conocimiento/
-├── index.html              page: top bar, panes, library loading
+├── index.html              page: top bar, graph stage, reader, library loading
 ├── i18n.js                 ES/EN interface text
 ├── app.js                  graph, note, backlinks, filters, sources (demo, GitHub, folder)
 ├── vault-parser.js         note and link parser (the same for all three sources)

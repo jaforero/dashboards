@@ -112,16 +112,6 @@ button { cursor: pointer; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-#app {
-  flex: 1 1 auto; min-height: 0; box-sizing: border-box;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 12px;
-  display: grid; gap: 12px;
-  grid-template-columns: minmax(220px, 270px) minmax(0, 1fr) minmax(330px, 420px);
-  grid-template-rows: auto minmax(0, 1fr);
-  grid-template-areas: "top top top" "left center right";
-}
-#app.wide { grid-template-columns: minmax(220px, 270px) minmax(0, 1fr); grid-template-areas: "top top" "left right"; }
-#app.wide .center { display: none; }
 
 /* ---------- top bar ---------- */
 .top { grid-area: top; display: flex; align-items: center; gap: 14px; padding-block: 12px 0; min-width: 0; flex-wrap: wrap; }
@@ -145,12 +135,6 @@ button { cursor: pointer; }
 .btn svg { width: 15px; height: 15px; }
 .lang-ui { font-family: var(--font-data); font-size: 12px; padding: 7px 10px; }
 
-/* ---------- panes ---------- */
-.pane { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); min-height: 0; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
-.left { grid-area: left; }
-.center { grid-area: center; }
-.right { grid-area: right; background: transparent; border: 0; gap: 12px; overflow-y: auto; overscroll-behavior: contain; }
-.right > section { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
 .pane-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 14px 9px; border-bottom: 1px solid var(--line); }
 .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .scroll { overflow-y: auto; overscroll-behavior: contain; min-height: 0; flex: 1; }
@@ -253,13 +237,9 @@ article.kb-article { padding: 22px clamp(18px, 4vw, 48px) 64px; max-width: 74ch;
 @keyframes flash { from { background: var(--accent-soft); } to { background: transparent; } }
 
 /* ---------- graph ---------- */
-.graph-card { display: flex; flex-direction: column; flex: none; }
-#app.wide .graph-card { flex: none; }
 .tabs { display: inline-flex; padding: 2px; border-radius: 999px; background: var(--sunk); gap: 2px; }
 .tabs button { border: 0; background: none; padding: 4px 11px; border-radius: 999px; font-size: 12.5px; color: var(--muted); }
 .tabs button[aria-selected="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
-.graph-wrap { position: relative; height: clamp(280px, 44vh, 470px); border-bottom: 1px solid var(--line); background: radial-gradient(circle at 50% 55%, var(--panel) 0, var(--paper) 120%); }
-#app.wide .graph-wrap { height: max(420px, calc(100dvh - 360px)); }
 #graph { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 #graph:active { cursor: grabbing; }
 .g-link { stroke: var(--edge); stroke-width: 1; fill: none; }
@@ -282,22 +262,12 @@ article.kb-article { padding: 22px clamp(18px, 4vw, 48px) 64px; max-width: 74ch;
 .g-label.on { opacity: 1; }
 .g-label.hubt { fill: var(--ink); }
 .g-label.dim { opacity: .1; }
-.g-tools { position: absolute; right: 8px; bottom: 8px; display: flex; flex-direction: column; gap: 4px; }
-.g-tools .icon-btn { background: var(--panel); border-color: var(--line); }
-.g-hint { padding: 2px 14px 0; font-size: 11.5px; color: var(--faint); }
-.tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 12.5px; box-shadow: 0 6px 18px rgb(20 10 60 / .14); max-width: 240px; z-index: 3; }
-.tip b { font-weight: 400; display: block; color: var(--ink); }
-.tip span { color: var(--muted); font-size: 11.5px; }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
 .legend button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; padding: 1px 0; color: inherit; font-size: 12px; }
 .legend button:hover, .legend button.on { color: var(--ink); }
 .legend .key { display: inline-flex; align-items: center; gap: 6px; }
 .legend .line { width: 18px; height: 0; border-top: 1.5px solid var(--edge-strong); }
 .legend .line.fm { border-top-style: dashed; }
 .legend .line.tr { border-top-style: dotted; border-top-width: 2px; }
-.g-count { padding: 8px 14px 0; font-family: var(--font-data); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.filters { padding: 4px 14px 14px; }
-.filters summary { cursor: pointer; padding: 8px 0 4px; color: var(--muted); font-size: 12.5px; }
 .f-row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 8px; align-items: start; padding-top: 9px; }
 .f-row > label, .f-row > span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 5px; }
 .f-opts { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
@@ -341,19 +311,6 @@ article.kb-article { padding: 22px clamp(18px, 4vw, 48px) 64px; max-width: 74ch;
 .notice { margin: 0 14px 10px; padding: 8px 10px; border-radius: 8px; background: var(--warn-soft); color: var(--warn); font-size: 12.5px; }
 
 /* mobile */
-.mtabs { display: none; }
-@media (max-width: 900px) {
-  body { overflow: hidden; }
-  #app, #app.wide { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); grid-template-areas: "top" "tabs" "pane"; }
-  .left, .center, .right { grid-area: pane; display: none; }
-  #app[data-pane="left"] .left, #app[data-pane="center"] .center, #app[data-pane="right"] .right { display: flex; }
-  .mtabs { grid-area: tabs; display: flex; }
-  .mtabs button { flex: 1; }
-  .search { flex: 1 1 100%; order: 5; }
-  .vault-meta { display: none; }
-  .g-label { font-size: 12px; }
-  #app.wide .center { display: none; }
-}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
 /* ---------- Barra superior del sitio (idéntica a las demás piezas) ---------- */
@@ -414,15 +371,156 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
 .gh-status .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
 .gh-status.err .bar { display: none; }
 .form-actions { display: flex; justify-content: flex-end; }
-@media (max-width: 900px) {
-  .brand { flex: 1 1 100%; }
-  .vault-meta { display: flex; }
-  .vault-meta > :not(.src-pill) { display: none; }
-  .crumb > span:not(.ext-links):not(.dot) { display: none; }
-  .ext-links { gap: 10px; }
-  .ext-links a { font-size: 12px; }
-  #share span, #open-source span { font-size: 13px; }
+
+/* =====================================================================
+   v2 · el grafo es el escenario; la lectura se desliza a su lado
+   ===================================================================== */
+#app { flex: 1 1 auto; min-height: 0; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 12px; }
+.top { grid-area: auto; display: flex; align-items: center; gap: 12px; padding-block: 10px 0; min-width: 0; }
+.search { position: relative; flex: 0 1 420px; min-width: 200px; }
+.search .kbd { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font: 11px var(--font-data); color: var(--faint); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; background: var(--paper); }
+.search input:focus ~ .kbd, .search input:not(:placeholder-shown) ~ .kbd { display: none; }
+.search-count { right: 14px; }
+.q-results { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 12; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 18px 40px rgb(20 10 60 / .18); padding: 6px; max-height: min(60vh, 460px); overflow-y: auto; }
+.q-item-r { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 4px 10px; align-items: baseline; width: 100%; text-align: left; border: 0; background: none; border-radius: 8px; padding: 8px 10px; }
+.q-item-r .dot { align-self: center; }
+.q-item-r b { font-weight: 400; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.q-item-r small { grid-column: 2; color: var(--muted); font-size: 12px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.q-item-r .g { color: var(--faint); }
+.q-item-r[aria-selected="true"], .q-item-r:hover { background: var(--accent-soft); }
+.q-item-r mark { background: none; color: var(--accent-ink); font-weight: 600; padding: 0; }
+.q-empty { padding: 12px; color: var(--muted); font-size: 13px; }
+
+/* stage: the reader track grows and shrinks; the graph keeps the rest */
+.stage { position: relative; min-height: 0; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) 0px; transition: grid-template-columns .38s cubic-bezier(.2, .7, .2, 1); }
+.stage[data-view="split"] { grid-template-columns: minmax(0, 1fr) min(46%, 760px); }
+.stage[data-view="read"] { grid-template-columns: minmax(0, 1fr) 70%; }
+.graph-card, .reader { min-width: 0; min-height: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.graph-card { position: relative; container-type: inline-size; container-name: graph; }
+.graph-wrap { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, var(--panel) 0%, var(--paper) 115%); }
+.reader { display: flex; flex-direction: column; transition: opacity .25s, border-color .25s; }
+.stage[data-view="graph"] .reader { opacity: 0; border-color: transparent; pointer-events: none; visibility: hidden; transition: opacity .2s, visibility 0s .38s; }
+
+/* floating chrome over the graph */
+.g-bar { position: absolute; top: 12px; z-index: 6; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.g-bar-left { left: 12px; right: 12px; }
+.top .view-seg { flex: none; }
+.top .brand { overflow: hidden; }
+.top .brand h1 { flex: none; }
+@media (max-width: 1320px) { .top .vault-meta > b, .top .vault-meta > a.repo, .top .vault-meta > .stat { display: none; } }
+@media (max-width: 1240px) { .top .view-seg button span { display: none; } }
+.fbtn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 88%, transparent); backdrop-filter: blur(8px); font-size: 13px; color: var(--ink); box-shadow: 0 2px 8px rgb(20 10 60 / .06); }
+.fbtn svg { width: 15px; height: 15px; color: var(--muted); }
+.fbtn:hover, .fbtn[aria-expanded="true"] { border-color: var(--edge-strong); }
+.fbtn[aria-expanded="true"] { background: var(--accent-soft); }
+.fbtn .n { font: 11px var(--font-data); color: var(--faint); }
+.badge { min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; display: inline-grid; place-items: center; font: 500 10.5px var(--font-data); background: var(--accent); color: #fff; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.warn { background: var(--bad-soft); color: var(--bad); }
+.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; background: color-mix(in srgb, var(--sunk) 88%, transparent); backdrop-filter: blur(8px); border: 1px solid var(--line); }
+.seg button { display: inline-flex; align-items: center; gap: 6px; height: 28px; border: 0; background: none; padding: 0 12px; border-radius: 999px; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.seg button svg { width: 15px; height: 15px; }
+.seg button[aria-selected="true"], .seg button[aria-pressed="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 3px rgb(20 10 60 / .12); }
+.view-seg button[aria-pressed="true"] { color: var(--accent-ink); }
+.pop { position: absolute; top: 56px; left: 12px; z-index: 8; width: min(420px, calc(100% - 24px)); max-height: calc(100% - 120px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 44px rgb(20 10 60 / .16); padding: 12px 14px 14px; }
+.pop-h { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-bottom: 4px; }
+.pop .vsum { padding: 4px 0 6px; }
+.drawer { position: absolute; top: 0; bottom: 0; left: 0; z-index: 7; width: min(300px, 86%); background: var(--panel); border-right: 1px solid var(--line); display: flex; flex-direction: column; transform: translateX(-102%); transition: transform .3s cubic-bezier(.2, .7, .2, 1); box-shadow: 12px 0 30px rgb(20 10 60 / .08); }
+.drawer.open { transform: none; }
+.drawer-h { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px 6px 16px; }
+.g-foot { position: absolute; left: 12px; right: 140px; bottom: 10px; z-index: 5; display: grid; gap: 4px; pointer-events: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 3px 12px; font-size: 12px; color: var(--muted); pointer-events: auto; padding: 6px 10px; border-radius: 10px; background: color-mix(in srgb, var(--panel) 80%, transparent); backdrop-filter: blur(6px); width: fit-content; max-width: 100%; }
+.g-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0 10px; }
+.g-count { font: 11px var(--font-data); color: var(--muted); font-variant-numeric: tabular-nums; }
+.g-hint { font-size: 11.5px; color: var(--faint); }
+.g-tools { position: absolute; right: 12px; bottom: 12px; z-index: 6; display: flex; flex-direction: column; gap: 4px; }
+.g-tools .icon-btn { background: color-mix(in srgb, var(--panel) 90%, transparent); border-color: var(--line); backdrop-filter: blur(6px); }
+
+/* hover preview */
+.tip { position: absolute; z-index: 9; pointer-events: none; width: 280px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; box-shadow: 0 14px 36px rgb(20 10 60 / .18); }
+.tip .t-g { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.tip .t-t { display: block; font-size: 15px; line-height: 1.25; color: var(--ink); margin: 6px 0; }
+.tip .t-x { font-family: var(--font-read); font-size: 13px; line-height: 1.45; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.tip .t-s { display: flex; gap: 12px; margin-top: 8px; font: 11px var(--font-data); color: var(--faint); }
+
+/* peek card: the selected note while the graph is centre stage */
+.peek { position: absolute; right: 12px; bottom: 132px; z-index: 6; width: min(360px, calc(100% - 24px)); background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; box-shadow: 0 16px 40px rgb(20 10 60 / .16); animation: rise .28s cubic-bezier(.2, .7, .2, 1); }
+.stage:not([data-view="graph"]) .peek { display: none; }
+@keyframes rise { from { transform: translateY(8px); opacity: 0; } }
+.peek .p-g { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.peek h3 { margin: 6px 0; font-weight: 400; font-size: 18px; line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
+.peek p { margin: 0; font-family: var(--font-read); font-size: 13.5px; line-height: 1.45; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.peek .p-s { display: flex; gap: 14px; margin: 10px 0 12px; font: 11.5px var(--font-data); color: var(--muted); }
+.peek .p-s b { font-weight: 500; color: var(--ink); }
+.peek .p-a { display: flex; flex-wrap: wrap; gap: 6px; }
+.peek .p-a .btn { padding: 6px 12px; font-size: 12.5px; }
+.peek .p-x { position: absolute; top: 8px; right: 8px; }
+
+/* reader */
+.reader-bar { display: flex; align-items: center; gap: 4px; padding: 8px 8px 6px 10px; min-width: 0; }
+.reader-bar .crumb { flex: 1; min-width: 0; padding-left: 4px; }
+.reader-tabs { display: flex; gap: 4px; padding: 0 14px; border-bottom: 1px solid var(--line); }
+.reader-tabs button { border: 0; background: none; padding: 9px 10px 10px; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.reader-tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.reader .scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.hero, #rp-content .kb-article { box-sizing: border-box; max-width: 800px; margin: 0 auto; padding-left: clamp(18px, 4vw, 48px); padding-right: clamp(18px, 4vw, 48px); }
+.hero { padding-top: 26px; padding-bottom: 4px; }
+.hero .h-g { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.hero h1 { font-weight: 400; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1; letter-spacing: -.02em; margin: 10px 0 12px; text-wrap: balance; }
+.hero .lede { font-family: var(--font-read); font-size: 18px; line-height: 1.5; color: var(--muted); margin: 0 0 14px; }
+.hero .h-m { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--muted); }
+.hero .h-m .sep { color: var(--faint); }
+.hero .lang-switch { margin: 12px 0 0; }
+#rp-content .kb-article { padding-top: 10px; }
+.links-head { position: sticky; top: 0; z-index: 2; background: var(--panel); padding: 12px 18px 8px; }
+#rp-links .sec-body { padding: 0 18px 24px; max-width: 74ch; }
+.bk-note { padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; margin-top: 10px; }
+.bk-note:first-child { border-top: 1px solid var(--line); }
+.props-dl { display: grid; grid-template-columns: minmax(110px, max-content) minmax(0, 1fr); gap: 8px 16px; margin: 0; padding: 18px 22px 28px; font-size: 13px; }
+.props-dl dt { font-family: var(--font-data); font-size: 11.5px; color: var(--muted); padding-top: 2px; }
+.props-dl dd { margin: 0; display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
+.props-dl dd.text { display: block; }
+
+/* graph emphasis for the selected note's neighbourhood */
+.g-node.nb .ring { opacity: .55; stroke: var(--edge-strong); stroke-width: 1.5; }
+
+@container graph (max-width: 760px) {
+  .fbtn span[data-i18n] { display: none; }
+  .fbtn { padding: 0 10px; }
+  .g-hint { display: none; }
+  .legend { display: none; }
 }
+@container graph (max-width: 560px) {
+  .legend { display: none; }
+  .g-foot { right: 60px; }
+  .seg button { padding: 0 9px; }
+}
+@media (max-width: 1100px) {
+  .stage[data-view="split"] { grid-template-columns: minmax(0, 1fr) 54%; }
+  .stage[data-view="read"] { grid-template-columns: minmax(0, 1fr) 78%; }
+  .view-seg button span { display: none; }
+}
+@media (max-width: 900px) {
+  .top { flex-wrap: wrap; gap: 8px; }
+  .brand { flex: 1 1 100%; }
+  .vault-meta > :not(.src-pill) { display: none; }
+  .top .search { flex: 1 1 120px; order: 0; min-width: 0; }
+  .search .kbd { display: none; }
+  #share span, #open-source span { display: none; }
+  #share, #open-source { padding: 7px 10px; }
+  .stage, .stage[data-view="split"], .stage[data-view="read"] { grid-template-columns: minmax(0, 1fr); }
+  .reader { position: fixed; inset: 0; z-index: 16; border-radius: 0; border: 0; padding-top: env(safe-area-inset-top, 0px); transform: translateY(0); transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
+  .stage[data-view="graph"] .reader { transform: translateY(102%); visibility: hidden; opacity: 1; }
+  .view-seg button[data-view="split"] { display: none; }
+  #r-expand { display: none; }
+  .g-foot { right: 60px; }
+  .legend { display: none; }
+  .peek { left: 12px; right: 60px; width: auto; bottom: 46px; }
+  .tip { display: none; }
+  .crumb > span:not(.ext-links):not(.dot) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .stage, .drawer, .reader { transition: none !important; } .peek { animation: none; } }
 </style>
 </head>
 <body>
@@ -440,91 +538,111 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
     <button type="button" class="theme-btn" id="themeToggle" aria-pressed="false" aria-label="Cambiar a tema oscuro">🌙</button>
   </div>
 </nav>
-<div id="app" data-pane="center">
+<div id="app">
   <header class="top">
     <div class="brand">
       <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 21 L13 5 L22 21 Z" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/><circle cx="13" cy="5" r="2.6" fill="var(--accent)"/><circle cx="4" cy="21" r="2.6" fill="var(--g2)"/><circle cx="22" cy="21" r="2.6" fill="var(--g7)"/><circle cx="13" cy="15.5" r="2" fill="var(--ink)"/><path d="M13 5 L13 15.5 M4 21 L13 15.5 L22 21" stroke="var(--edge-strong)" stroke-width="1"/></svg>
       <h1 data-i18n="appName">Grafo de conocimiento</h1>
       <span class="vault-meta" id="vault-meta"></span>
     </div>
-    <div class="search" role="search">
+    <div class="seg view-seg" role="group" data-i18n-title="viewLabel" title="Vista">
+          <button type="button" data-view="graph" aria-pressed="true" data-i18n-title="viewGraphTip" title="Grafo (G)"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4.5" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="4" r="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8.5" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.6 5.8 7.4 10M10.6 5.3 9.4 9.9M6 4.4h4.4" stroke="currentColor" stroke-width="1.2"/></svg><span data-i18n="viewGraph">Grafo</span></button>
+          <button type="button" data-view="split" aria-pressed="false" data-i18n-title="viewSplitTip" title="Dividido (D)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 2.5v11" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 6h2.5M10.5 8.5h2.5M10.5 11h1.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><span data-i18n="viewSplit">Dividido</span></button>
+          <button type="button" data-view="read" aria-pressed="false" data-i18n-title="viewReadTip" title="Lectura (L)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 2.5v11" stroke="currentColor" stroke-width="1.4"/><path d="M6.8 6h5.7M6.8 8.5h5.7M6.8 11h3.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><span data-i18n="viewRead">Lectura</span></button>
+        </div>
+    <div class="search" id="search">
       <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11 L14.5 14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <label for="q" class="sr" data-i18n="searchLabel">Buscar</label>
-      <input id="q" type="search" autocomplete="off" spellcheck="false" data-i18n-ph="searchPh" placeholder="Buscar en títulos y texto">
-      <span class="search-count" id="q-count"></span>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="q-results" aria-autocomplete="list" data-i18n-ph="searchPh" placeholder="Buscar en títulos y texto">
+      <span class="search-count" id="q-count"></span><kbd class="kbd" aria-hidden="true">/</kbd>
+      <div class="q-results" id="q-results" role="listbox" hidden></div>
     </div>
     <input id="share-url" type="text" readonly hidden aria-label="Enlace">
     <button class="btn" id="share" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M7 4.5l1.2-1.2a2.6 2.6 0 0 1 3.6 3.6L10.6 8M9 11.5l-1.2 1.2a2.6 2.6 0 0 1-3.6-3.6L5.4 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="share">Copiar enlace</span></button>
     <button class="btn btn-primary" id="open-source" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 4.2c0-.7.5-1.2 1.2-1.2h3.4l1.5 1.6h5.7c.7 0 1.2.5 1.2 1.2v6.5c0 .7-.5 1.2-1.2 1.2H2.7c-.7 0-1.2-.5-1.2-1.2z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="openSource">Cargar otra bóveda</span></button>
   </header>
 
-  <nav class="mtabs tabs" aria-label="Paneles">
-    <button type="button" data-pane="left" data-i18n="tabNotes">Notas</button>
-    <button type="button" data-pane="center" data-i18n="tabNote">Nota</button>
-    <button type="button" data-pane="right" data-i18n="tabGraph">Grafo</button>
-  </nav>
-
-  <aside class="pane left" aria-labelledby="list-h">
-    <div class="pane-head"><span class="eyebrow" id="list-h" data-i18n="notesHead">Notas</span><span class="stat" id="list-count"></span></div>
-    <div class="scroll"><div class="list" id="list"></div></div>
-  </aside>
-
-  <main class="pane center">
-    <div class="note-bar">
-      <button class="icon-btn" id="nav-back" type="button" data-i18n-title="back" title="Atrás"><svg viewBox="0 0 16 16"><path d="M10 3 L5 8 L10 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="icon-btn" id="nav-fwd" type="button" data-i18n-title="fwd" title="Adelante"><svg viewBox="0 0 16 16"><path d="M6 3 L11 8 L6 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="icon-btn" id="hub-toggle" type="button" aria-pressed="false" title="Fijar como nota eje"><svg viewBox="0 0 16 16"><path d="M8 2.2 13.8 8 8 13.8 2.2 8Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
-      <div class="crumb" id="crumb"></div>
-    </div>
-    <div class="scroll" id="note-scroll"><article class="kb-article" id="note"></article></div>
-  </main>
-
-  <aside class="pane right">
-    <section class="graph-card" aria-labelledby="graph-h">
-      <div class="pane-head">
-        <span class="eyebrow" id="graph-h" data-i18n="graphHead">Grafo</span>
-        <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tab-global" aria-selected="true" data-i18n="global">Global</button>
-          <button type="button" role="tab" id="tab-local" aria-selected="false" data-i18n="local">Local · 2 saltos</button>
-        </div>
-      </div>
+  <div class="stage" id="stage" data-view="graph">
+    <section class="graph-card" id="graph-card" aria-labelledby="graph-h">
+      <h2 class="sr" id="graph-h" data-i18n="graphHead">Grafo</h2>
       <div class="graph-wrap" id="graph-wrap">
         <svg id="graph" role="img" aria-label="Grafo de notas"></svg>
         <div class="tip" id="tip" hidden></div>
-        <div class="g-tools">
-          <button class="icon-btn" id="g-wide" type="button" data-i18n-title="expand" title="Ampliar grafo"><svg viewBox="0 0 16 16"><path d="M2.5 6V2.5H6 M10 2.5h3.5V6 M13.5 10v3.5H10 M6 13.5H2.5V10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-          <button class="icon-btn" id="g-fit" type="button" data-i18n-title="fit" title="Encuadrar"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2" fill="currentColor"/><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
-        </div>
       </div>
-      <div class="legend" id="legend"></div>
-      <div class="g-count" id="g-count"></div>
-      <div class="g-hint" id="g-hint"></div>
-      <details class="filters" id="filters" open>
-        <summary data-i18n="filters">Filtros</summary>
+
+      <div class="g-bar g-bar-left">
+        <button class="fbtn" id="index-btn" type="button" aria-expanded="false" aria-controls="index-drawer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="index">Índice</span><span class="n" id="list-count"></span></button>
+        <div class="seg" role="tablist" aria-label="Alcance del grafo">
+          <button type="button" role="tab" id="tab-global" aria-selected="true" data-i18n="global">Global</button>
+          <button type="button" role="tab" id="tab-local" aria-selected="false" data-i18n="local">Local · 2 saltos</button>
+        </div>
+        <button class="fbtn" id="filters-btn" type="button" aria-expanded="false" aria-controls="filters-pop"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5h12L9.5 9v4l-3 1.5V9Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span data-i18n="filters">Filtros</span><span class="badge" id="filters-badge" hidden></span></button>
+        <button class="fbtn" id="health-btn" type="button" aria-expanded="false" aria-controls="health-pop"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8.5h3l1.8-4 3 8 1.9-4h3.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="health">Salud</span><span class="badge" id="health-badge"></span></button>
+      </div>
+
+
+      <div class="pop" id="filters-pop" role="dialog" aria-labelledby="filters-h" hidden>
+        <div class="pop-h" id="filters-h" data-i18n="filters">Filtros</div>
         <div class="f-row"><span data-i18n="fLinks">Enlaces</span><div class="f-opts" id="f-types"></div></div>
         <div class="f-row"><span data-i18n="fStatus">Estado</span><div class="f-opts" id="f-status"></div></div>
         <div class="f-row"><label for="f-tag" data-i18n="fTag">Etiqueta</label><div class="f-opts"><select id="f-tag"></select></div></div>
         <div class="f-row" id="f-lang-row"><label for="f-lang" data-i18n="fLang">Idioma</label><div class="f-opts"><select id="f-lang"></select></div></div>
-      </details>
-    </section>
-
-    <section aria-labelledby="bk-h">
-      <div class="pane-head">
-        <span class="eyebrow" id="bk-h" data-i18n="linksHead">Enlaces de esta nota</span>
-        <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tab-in" aria-selected="true"><span data-i18n="incoming">Entrantes</span> <span class="stat" id="n-in"></span></button>
-          <button type="button" role="tab" id="tab-out" aria-selected="false"><span data-i18n="outgoing">Salientes</span> <span class="stat" id="n-out"></span></button>
-        </div>
       </div>
-      <div class="sec-body" id="backlinks"></div>
+      <div class="pop" id="health-pop" role="dialog" aria-labelledby="health-h" hidden>
+        <div class="pop-h" id="health-h" data-i18n="qualityHead">Salud de la bóveda</div>
+        <div class="vsum" id="vault-summary"></div>
+        <div id="quality"></div>
+      </div>
+
+      <aside class="drawer" id="index-drawer" aria-labelledby="index-h">
+        <div class="drawer-h"><span class="eyebrow" id="index-h" data-i18n="notesHead">Notas</span><button class="icon-btn" id="index-close" type="button" data-i18n-title="close" title="Cerrar"><svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
+        <div class="scroll"><div class="list" id="list"></div></div>
+      </aside>
+
+      <div class="g-foot">
+        <div class="legend" id="legend"></div>
+        <div class="g-meta"><span class="g-count" id="g-count"></span><span class="g-hint" id="g-hint"></span></div>
+      </div>
+      <div class="g-tools">
+        <button class="icon-btn" id="g-zoom-in" type="button" data-i18n-title="zoomIn" title="Acercar"><svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button class="icon-btn" id="g-zoom-out" type="button" data-i18n-title="zoomOut" title="Alejar"><svg viewBox="0 0 16 16"><path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button class="icon-btn" id="g-fit" type="button" data-i18n-title="fit" title="Encuadrar"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2" fill="currentColor"/><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+      </div>
+      <article class="peek" id="peek" aria-live="polite" hidden></article>
     </section>
 
-    <section aria-labelledby="q-h">
-      <div class="pane-head"><span class="eyebrow" id="q-h" data-i18n="qualityHead">Salud de la bóveda</span></div>
-      <div class="vsum" id="vault-summary"></div>
-      <div class="sec-body" id="quality"></div>
+    <section class="reader" id="reader" aria-labelledby="hero-title">
+      <div class="reader-bar">
+        <button class="icon-btn" id="nav-back" type="button" data-i18n-title="back" title="Atrás"><svg viewBox="0 0 16 16"><path d="M10 3 L5 8 L10 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="icon-btn" id="nav-fwd" type="button" data-i18n-title="fwd" title="Adelante"><svg viewBox="0 0 16 16"><path d="M6 3 L11 8 L6 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="icon-btn" id="hub-toggle" type="button" aria-pressed="false" title="Fijar como nota eje"><svg viewBox="0 0 16 16"><path d="M8 2.2 13.8 8 8 13.8 2.2 8Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+        <div class="crumb" id="crumb"></div>
+        <button class="icon-btn" id="r-expand" type="button" aria-pressed="false" data-i18n-title="expandReader" title="Expandir lectura"><svg viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="icon-btn" id="r-close" type="button" data-i18n-title="closeReader" title="Volver al grafo"><svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="reader-tabs" role="tablist">
+        <button type="button" role="tab" id="rt-content" data-rtab="content" aria-selected="true" data-i18n="tabContent">Contenido</button>
+        <button type="button" role="tab" id="rt-links" data-rtab="links" aria-selected="false"><span data-i18n="tabLinks">Conexiones</span> <span class="stat" id="rt-links-n"></span></button>
+        <button type="button" role="tab" id="rt-props" data-rtab="props" aria-selected="false"><span data-i18n="tabProps">Propiedades</span> <span class="stat" id="rt-props-n"></span></button>
+      </div>
+      <div class="scroll" id="note-scroll">
+        <div class="rpanel" id="rp-content">
+          <header class="hero" id="hero"></header>
+          <article class="kb-article" id="note"></article>
+        </div>
+        <div class="rpanel" id="rp-links" hidden>
+          <div class="links-head">
+            <div class="seg" role="tablist">
+              <button type="button" role="tab" id="tab-in" aria-selected="true"><span data-i18n="incoming">Entrantes</span> <span class="stat" id="n-in"></span></button>
+              <button type="button" role="tab" id="tab-out" aria-selected="false"><span data-i18n="outgoing">Salientes</span> <span class="stat" id="n-out"></span></button>
+            </div>
+          </div>
+          <div class="sec-body" id="backlinks"></div>
+        </div>
+        <div class="rpanel" id="rp-props" hidden><dl class="props-dl" id="props"></dl></div>
+      </div>
     </section>
-  </aside>
+  </div>
 </div>
 
 <div class="scrim" id="sheet" hidden>
@@ -574,7 +692,7 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
 </div>
 <div class="dropzone-full" id="dropzone" hidden><span data-i18n="dropFull">Suelta la carpeta para explorarla</span></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<script src="i18n.js?v=1"></script>
+<script src="i18n.js?v=2"></script>
 <script src="vault-parser.js?v=1"></script>
 <script>
 /* Librerías: cdnjs primero y jsDelivr de respaldo, con versión fija. La app arranca cuando están las tres. */
@@ -597,7 +715,7 @@ window.MathJax = {
     lib(['https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js', 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js'], 'jsyaml'),
     lib(['https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js', 'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js'], 'marked'),
     lib(['https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js', 'https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js'], 'd3')
-  ]).then(function () { var a = document.createElement('script'); a.src = 'app.js?v=1'; document.body.appendChild(a); })
+  ]).then(function () { var a = document.createElement('script'); a.src = 'app.js?v=2'; document.body.appendChild(a); })
     .catch(function () {
       var en = window.__lang0 === 'en';
       document.getElementById('note').innerHTML = '<h1>' + (en ? 'Knowledge graph' : 'Grafo de conocimiento') + '</h1><p>' + (en ? 'The page libraries could not be loaded. Check your connection or an ad blocker and reload.' : 'No se pudieron cargar las librerías de la página. Revisa tu conexión o un bloqueador de anuncios y recarga.') + '</p>';
