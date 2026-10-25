@@ -231,6 +231,66 @@ Object.assign(window.KB_T.en, {
   recHub: 'Hub notes link to almost everything. Hide their lines to see the structure between chapters.', recHubBtn: 'Hide hub note links'
 });
 
+/* Sugerencias, diagnóstico de red y recorrido guiado. Los textos con <b> se insertan como HTML: todo valor externo pasa por E(). */
+(function () {
+  var E = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  Object.assign(window.KB_T.es, {
+    tour: 'Recorrido', tourStep: function (i, n) { return 'Paso ' + i + ' de ' + n; }, tourPrev: 'Anterior', tourNext: 'Siguiente', tourExit: 'Salir del recorrido', tourMine: 'Probar con tus documentos',
+    tour1: function (n, c, g) { return 'Esta es la red completa: <b>' + n + ' notas</b> unidas por <b>' + c + ' conexiones escritas</b>. Cada color es una de las ' + g + ' secciones y cada punto crece con los enlaces que recibe.'; },
+    tour2: function (x, k) { return 'La nota más enlazada es <b>' + E(x) + '</b>: ' + k + ' notas apuntan a ella. Es el centro de gravedad de este conocimiento.'; },
+    tour3: function (x) { return 'Vista Local: solo <b>' + E(x) + '</b> y su vecindario a dos saltos. Así se ve qué conocimiento se apoya en ella.'; },
+    tour4: function (b, n) { return 'Apagamos las <b>lecturas relacionadas</b> agregadas al final de los artículos: sin ellas, <b>' + b + ' notas quedan aisladas</b>; con ellas, solo ' + n + '. Así se mide lo que aporta enlazar.'; },
+    tour5: function (o, d, b) { return 'Salud convierte el grafo en una lista de tareas: <b>' + o + ' huérfanas</b>, <b>' + d + ' callejones sin salida</b> (reciben enlaces, pero no llevan a ningún lado) y <b>' + b + ' notas puente</b> que sostienen la red.'; },
+    tour5ok: function (g, p) { return 'Salud lo confirma: <b>ninguna huérfana</b>, ningún enlace roto ni callejón sin salida, y ninguna nota sostiene sola la red.' + (g ? ' La sección menos conectada con las demás es <b>' + E(g) + '</b> (' + p + ' % de sus enlaces salen de ella).' : ''); },
+    tour6: function (a, b, w) { return 'El grafo también propone: <b>' + E(a) + '</b> podría enlazar a <b>' + E(b) + '</b>, porque comparten ' + E(w) + '. La línea punteada es la conexión sugerida; el autor decide.'; },
+    tour7: 'Lo mismo funciona con un repositorio de GitHub, un blog de WordPress o una carpeta de notas en tu computador.',
+    sugHead: 'Conexiones sugeridas', sugNone: 'Sin sugerencias claras: ninguna otra nota comparte suficiente contenido con esta.', sugShare: 'Comparten:', sugCopy: 'Copiar enlace', sugCopied: 'Copiado ✓',
+    sugScoreTip: 'Similitud de contenido (coseno TF-IDF)', sugLevel_hi: 'Alta', sugLevel_mid: 'Media', sugLevel_lo: 'Baja', peekSug: function (n) { return n === 1 ? '1 conexión sugerida' : n + ' conexiones sugeridas'; },
+    deadH: 'Callejones sin salida', bridgeH: 'Notas puente', islandH: 'Grupos aislados', secH: 'Conexión entre secciones',
+    noDead: 'Toda nota que recibe enlaces lleva a otra.', noBridge: 'Ninguna nota sostiene sola una parte de la red.', noIsland: 'Todas las notas enlazadas forman una sola red.',
+    deadIn: function (n) { return n + ' entrantes · 0 salientes'; }, bridgeCut: function (n) { return 'separa ' + n + (n === 1 ? ' nota' : ' notas'); },
+    islandSize: function (n, g) { return n + ' notas · ' + g; }, andMore: function (n) { return 'y ' + n + ' más (en el CSV)'; }, exportTasks: 'Descargar lista de tareas (CSV)',
+    csvCat: 'Categoría', csvNote: 'Nota', csvWhere: 'Dirección', csvDetail: 'Detalle', csvSug: 'Sugerencia', csvOrphan: 'Sin enlaces escritos',
+    csvDead: function (n) { return 'Recibe ' + n + ' enlaces y no enlaza a ninguna nota'; }, csvBridge: function (n) { return 'Si se quita, ' + n + ' notas quedan desconectadas'; },
+    csvIsland: function (n, g) { return 'Grupo de ' + n + ' notas (' + g + ') sin camino a la red principal'; }
+  });
+  Object.assign(window.KB_T.es.help, {
+    sug: { h: 'Conexiones sugeridas', b: 'Notas con contenido parecido que todavía no se enlazan con esta. Se calculan comparando las palabras de títulos, etiquetas y texto (TF-IDF): el porcentaje es la similitud y «Comparten» muestra la evidencia.', tip: 'Son propuestas, no enlaces: revisa que la relación tenga sentido para el lector antes de agregarla. «Copiar enlace» lo deja listo para pegar.' },
+    deadEnds: { h: 'Callejones sin salida', b: 'Notas que reciben enlaces pero no enlazan a ninguna otra: el lector llega y no tiene a dónde seguir.', tip: 'Agrega al final un «para seguir leyendo» con 2 o 3 notas; las sugerencias ayudan a elegirlas.' },
+    bridges: { h: 'Notas puente', b: 'Notas que unen partes de la red que, sin ellas, quedarían separadas. El número dice cuántas notas perderían contacto con el resto.', tip: 'Cuídalas: si cambias su dirección o las borras, la red se parte. Un enlace alternativo reduce el riesgo.' },
+    islands: { h: 'Grupos aislados', b: 'Conjuntos de notas enlazadas entre sí, pero sin ningún camino hacia la red principal.', tip: 'Un solo enlace hacia o desde la red principal los integra.' },
+    sections: { h: 'Conexión entre secciones', b: 'Qué parte de los enlaces de cada sección va hacia otras secciones. Una barra corta (en ocre, bajo 15 %) indica un tema que solo habla consigo mismo.' },
+    tour: { h: 'Recorrido guiado', b: 'Presenta esta red paso a paso: su centro, su vecindario, su salud y las conexiones que propone. Pensado para un demo en vivo; avanza con las flechas del teclado.', tip: 'Para abrirlo directamente, agrega ?tour=1 al enlace.' }
+  });
+  Object.assign(window.KB_T.en, {
+    tour: 'Tour', tourStep: function (i, n) { return 'Step ' + i + ' of ' + n; }, tourPrev: 'Back', tourNext: 'Next', tourExit: 'Leave the tour', tourMine: 'Try your own documents',
+    tour1: function (n, c, g) { return 'This is the whole network: <b>' + n + ' notes</b> joined by <b>' + c + ' written connections</b>. Each colour is one of the ' + g + ' sections and each dot grows with the links it receives.'; },
+    tour2: function (x, k) { return 'The most linked note is <b>' + E(x) + '</b>: ' + k + ' notes point to it. It is the centre of gravity of this knowledge.'; },
+    tour3: function (x) { return 'Local view: only <b>' + E(x) + '</b> and its two-hop neighbourhood. This shows which knowledge rests on it.'; },
+    tour4: function (b, n) { return 'We switch off the <b>related reading</b> added at the end of the posts: without it, <b>' + b + ' notes are isolated</b>; with it, only ' + n + '. That is what linking adds.'; },
+    tour5: function (o, d, b) { return 'Health turns the graph into a to-do list: <b>' + o + ' orphans</b>, <b>' + d + ' dead ends</b> (they receive links but lead nowhere) and <b>' + b + ' bridge notes</b> holding the network together.'; },
+    tour5ok: function (g, p) { return 'Health confirms it: <b>no orphans</b>, no broken links or dead ends, and no single note holds the network up.' + (g ? ' The section least connected to the others is <b>' + E(g) + '</b> (' + p + ' % of its links leave it).' : ''); },
+    tour6: function (a, b, w) { return 'The graph also suggests: <b>' + E(a) + '</b> could link to <b>' + E(b) + '</b>, because they share ' + E(w) + '. The dashed line is the suggested connection; the author decides.'; },
+    tour7: 'The same works with a GitHub repository, a WordPress blog or a folder of notes on your computer.',
+    sugHead: 'Suggested connections', sugNone: 'No clear suggestions: no other note shares enough content with this one.', sugShare: 'They share:', sugCopy: 'Copy link', sugCopied: 'Copied ✓',
+    sugScoreTip: 'Content similarity (TF-IDF cosine)', sugLevel_hi: 'High', sugLevel_mid: 'Medium', sugLevel_lo: 'Low', peekSug: function (n) { return n === 1 ? '1 suggested connection' : n + ' suggested connections'; },
+    deadH: 'Dead ends', bridgeH: 'Bridge notes', islandH: 'Isolated groups', secH: 'Links between sections',
+    noDead: 'Every note that receives links leads to another one.', noBridge: 'No single note holds a part of the network on its own.', noIsland: 'All linked notes form a single network.',
+    deadIn: function (n) { return n + ' incoming · 0 outgoing'; }, bridgeCut: function (n) { return 'cuts off ' + n + (n === 1 ? ' note' : ' notes'); },
+    islandSize: function (n, g) { return n + ' notes · ' + g; }, andMore: function (n) { return 'and ' + n + ' more (in the CSV)'; }, exportTasks: 'Download to-do list (CSV)',
+    csvCat: 'Category', csvNote: 'Note', csvWhere: 'Address', csvDetail: 'Detail', csvSug: 'Suggestion', csvOrphan: 'No written links',
+    csvDead: function (n) { return 'Receives ' + n + ' links and links to no note'; }, csvBridge: function (n) { return 'If removed, ' + n + ' notes become disconnected'; },
+    csvIsland: function (n, g) { return 'Group of ' + n + ' notes (' + g + ') with no path to the main network'; }
+  });
+  Object.assign(window.KB_T.en.help, {
+    sug: { h: 'Suggested connections', b: 'Notes with similar content that do not link to this one yet. They come from comparing the words in titles, tags and text (TF-IDF): the percentage is the similarity and “They share” shows the evidence.', tip: 'They are proposals, not links: check the relation makes sense to a reader before adding it. “Copy link” makes it ready to paste.' },
+    deadEnds: { h: 'Dead ends', b: 'Notes that receive links but link to no other note: readers arrive and have nowhere to go next.', tip: 'Add a short “keep reading” with 2 or 3 notes at the end; the suggestions help pick them.' },
+    bridges: { h: 'Bridge notes', b: 'Notes joining parts of the network that would otherwise be split. The number is how many notes would lose contact with the rest.', tip: 'Look after them: renaming or deleting one splits the network. An alternative link lowers the risk.' },
+    islands: { h: 'Isolated groups', b: 'Sets of notes linked to each other but with no path to the main network.', tip: 'A single link to or from the main network brings them in.' },
+    sections: { h: 'Links between sections', b: 'The share of each section’s links that go to other sections. A short bar (ochre, under 15 %) marks a topic that only talks to itself.' },
+    tour: { h: 'Guided tour', b: 'Presents this network step by step: its centre, its neighbourhood, its health and the connections it suggests. Made for a live demo; move with the arrow keys.', tip: 'To open it directly, add ?tour=1 to the link.' }
+  });
+})();
 (function () {
   var L = window.__lang0 === 'en' ? 'en' : 'es', T = window.KB_T[L];
   document.documentElement.lang = L;

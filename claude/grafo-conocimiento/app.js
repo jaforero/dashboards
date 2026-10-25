@@ -25,6 +25,7 @@ const S = {
 
 // ======================= vault loading =======================
 function loadVault(files, assets, meta, opts = {}) {
+  if (TOUR && TOUR.on) tourEnd();
   if (S.objectUrls !== meta.objectUrls) S.objectUrls.forEach(u => URL.revokeObjectURL(u));
   S.objectUrls = meta.objectUrls || [];
   const all = files.concat([...assets.keys()].map(p => ({ path: p, text: '' })));
@@ -86,6 +87,7 @@ function loadVault(files, assets, meta, opts = {}) {
   rebuildGraph();
   if (start) openNote(start, { push: true, noScroll: true });
   if (S.pendingView) { setView(S.pendingView, { silent: true }); S.pendingView = null; }
+  if (!S.tourAsked && new URLSearchParams(location.search).get('tour') === '1') { S.tourAsked = true; setTimeout(tourStart, 700); }
 }
 
 function groupColor(g) { const i = S.groupIdx.get(g); return `var(--g${i == null ? 8 : (i < 10 ? i : 8)})`; }
@@ -312,6 +314,7 @@ function rebuildGraph() {
   sim.on('tick', tick).on('end', styleLabels);
   if (!reduced) sim.alpha(local ? 0.04 : 0.12).restart();
   styleGraph();
+  if (S.ghost) drawGhost();
   $('#g-count').textContent = t('showing', nodes.length, edges.length);
   $('#g-hint').textContent = local ? t('hintLocal', short(S.notes.get(S.cur).title, 40)) : t('hintGlobal');
 }
@@ -333,6 +336,7 @@ function tick() {
   G.sel.nodes.attr('transform', d => { posCache.set(key + d.id, { x: d.x, y: d.y }); return `translate(${d.x},${d.y})`; });
   G.sel.labels.attr('x', d => d.x).attr('y', d => d.y + d.r + 11.5 / Math.sqrt(zoomK) + 2);
   if (++labelTick % 12 === 0) styleLabels();
+  if (S.ghost) drawGhost();
 }
 const nodeIdx = () => G._idx && G._idx.n === G.nodes ? G._idx.m : (G._idx = { n: G.nodes, m: new Map(G.nodes.map(n => [n.id, n])) }).m;
 function node(x) { return typeof x === 'object' ? x : nodeIdx().get(x); }
@@ -663,7 +667,11 @@ function renderLinks() {
   if (S.linkTab === 'out' && brokenOut.length) h += brokenOut.map(l => `<div class="bk-note"><div class="q-item" style="border:0"><code>${esc(l.raw)}</code><span class="src">${esc(typeLong(l.type))}</span></div></div>`).join('');
   if (!list.length && !(S.linkTab === 'out' && brokenOut.length)) h += `<div class="empty">${esc(t(S.linkTab === 'in' ? 'noIn' : 'noOut'))}</div>`;
   box.innerHTML = h;
+  const sg = suggest(id);
+  $('#sug-box').innerHTML = `<div class="q-h sug-head"><span>${esc(t('sugHead'))}${sg.length ? ' · ' + sg.length : ''}</span><button type="button" class="hint" data-help="sug" aria-expanded="false">i</button></div>` + sugHtml(id, sg);
+  helpApply(); syncGhost();
 }
+function syncGhost() { setGhost(S.readerTab === 'links' && S.view !== 'graph' ? S.cur : null); }
 function highlight(ctx, display) {
   if (!display) return esc(ctx);
   const plainD = display.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[*_`]/g, '').replace(/:[a-z0-9-]+:\s*/g, '').trim();
@@ -679,13 +687,14 @@ function renderQuality() {
   const broken = v.links.filter(l => !l.target);
   let h = `<div class="f-row" style="grid-template-columns:1fr;padding-top:4px"><span>${esc(t('orphans'))} · ${orphans.length}</span></div>`;
   if (S.source === 'wordpress' && orphans.some(n => n.status === 'page')) h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpPagesNote'))}</p>`;
-  h += orphans.length ? orphans.map(n => `<button type="button" class="q-item" data-note="${esc(n.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(n.title)}</button>`).join('')
+  h += orphans.length ? orphans.map(n => { const s = topSug(n.id); return `<button type="button" class="q-item" data-note="${esc(n.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span><span class="q-t">${esc(n.title)}</span>${s ? `<span class="src q-sug" title="${esc(t('sugHead'))}">✦ ${esc(short(S.notes.get(s.id).title, 34))}</span>` : ''}</button>`; }).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noOrphans'))}</span></div>`;
   h += `<div class="f-row" style="grid-template-columns:1fr;padding-top:12px"><span>${esc(t('brokenH'))} · ${broken.length}</span></div>`;
   if (broken.length && S.source === 'wordpress') h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpBrokenNote'))}</p>`;
   h += broken.length ? broken.map(l => `<button type="button" class="q-item" data-note="${esc(l.source)}" title="${esc(l.reason || '')}"><code>${esc(l.raw)}</code><span class="src">← ${esc(S.notes.get(l.source).title)}</span></button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noBroken'))}</span></div>`;
-  $('#quality').innerHTML = h;
+  h += diagHtml();
+  $('#quality').innerHTML = h; helpApply();
   const issues = orphans.length + broken.length, hb = $('#health-badge');
   hb.textContent = issues ? String(issues) : '✓'; hb.className = 'badge ' + (issues ? 'warn' : 'ok');
   hb.title = issues ? t('issues', issues) : t('noIssues');
@@ -740,7 +749,7 @@ function setView(v, opts = {}) {
   // while reading, the narrow graph shows the open note's neighbourhood; leaving reading restores the global view
   if (v === 'read' && S.mode === 'global') { S.autoLocal = true; setMode('local', true); }
   else if (v !== 'read' && S.autoLocal) { S.autoLocal = false; setMode('global', true); }
-  renderPeek();
+  renderPeek(); syncGhost();
   // the graph keeps the open note in sight while its frame grows or shrinks
   if (prev !== v) setTimeout(() => { if (S.cur && v !== 'graph') focusNode(S.cur); else fit(true); }, reduced ? 0 : 400);
 }
@@ -751,6 +760,7 @@ function setReaderTab(tab, silent) {
   S.readerTab = tab;
   ['content', 'links', 'props'].forEach(k => { $('#rt-' + k).setAttribute('aria-selected', k === tab); $('#rp-' + k).hidden = k !== tab; });
   if (!silent) $('#note-scroll').scrollTop = 0;
+  syncGhost();
 }
 document.querySelectorAll('.reader-tabs [data-rtab]').forEach(b => b.addEventListener('click', () => setReaderTab(b.dataset.rtab)));
 
@@ -764,6 +774,7 @@ function renderPeek() {
     `<div class="p-g"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(groupLabel(n.part))}</div><h3>${esc(n.title)}</h3>` +
     (n.excerpt ? `<p>${esc(n.excerpt)}</p>` : '') +
     `<div class="p-s"><span><b>${inN}</b> ${esc(t('inLabel'))}</span><span><b>${outN}</b> ${esc(t('outLabel'))}</span></div>` +
+    (() => { const w = linkedSet(n.id).size; const sg = w <= 1 ? suggest(n.id) : []; return sg.length ? `<button type="button" class="p-sug" data-peek="sug">✦ ${esc(t('peekSug', sg.length))}</button>` : ''; })() +
     `<div class="p-a"><button class="btn btn-primary" type="button" data-peek="read">${esc(t('peekRead'))}</button><button class="btn" type="button" data-peek="links">${esc(t('peekLinks'))}</button>` +
     (S.mode === 'global' ? `<button class="btn" type="button" data-peek="local">${esc(t('peekLocal'))}</button>` : `<button class="btn" type="button" data-peek="global">${esc(t('peekGlobal'))}</button>`) + `</div>`;
   box.hidden = false;
@@ -773,7 +784,7 @@ $('#peek').addEventListener('click', e => {
   if (b.hasAttribute('data-peek-close')) { $('#peek').hidden = true; return; }
   const a = b.dataset.peek;
   if (a === 'read') { setReaderTab('content'); setView('split'); }
-  else if (a === 'links') { setReaderTab('links'); setView('split'); }
+  else if (a === 'links' || a === 'sug') { setReaderTab('links'); setView('split'); if (a === 'sug') setTimeout(() => { const b = $('#sug-box'); if (b) b.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' }); }, 450); }
   else if (a === 'local') setMode('local');
   else if (a === 'global') setMode('global');
 });
@@ -866,7 +877,8 @@ $('#f-status').addEventListener('click', e => {
   b.setAttribute('aria-pressed', S.f.statuses.has(s)); renderList(); styleGraph(); filtersChanged();
 });
 $('#f-tag').addEventListener('change', e => { S.f.tag = e.target.value; renderList(); styleGraph(); filtersChanged(); });
-$('#f-lang').addEventListener('change', e => { S.f.lang = e.target.value; rebuildGraph(); renderList(); if (S.q) runSearch(); });
+$('#f-lang').addEventListener('change', e => { S.f.lang = e.target.value; rebuildGraph(); renderList(); renderQuality(); if (S.q) runSearch(); });
+$('#quality').addEventListener('click', e => { if (e.target.closest('#export-tasks')) exportTasks(); });
 $('#legend').addEventListener('mouseover', e => { const b = e.target.closest('[data-group]'); if (b && focusGroup !== b.dataset.group) { focusGroup = b.dataset.group; styleGraph(); } });
 $('#legend').addEventListener('mouseleave', () => { if (!pinnedGroup) { focusGroup = null; styleGraph(); } else { focusGroup = pinnedGroup; styleGraph(); } });
 let pinnedGroup = null;
@@ -1381,6 +1393,274 @@ applyUI();
   }
   else loadDemo(note);
 })();
+// ======================= sugerencias de enlaces (similitud de contenido) =======================
+// TF-IDF sobre título (×3), etiquetas (×2) y texto; coseno entre notas. Se calcula en el navegador, una vez por bóveda.
+// Una sugerencia nunca se aplica sola: se muestra con su evidencia (los términos que comparten) para que el autor decida.
+const STOP = new Set(('de la que el en y a los del se las por un para con no una su al lo como mas pero sus le ya o este si porque esta entre cuando muy sin sobre tambien me hasta hay donde quien desde todo nos durante todos uno les ni contra otros ese eso ante ellos e esto mi antes algunos que unos yo otro otras otra tanto esa estos mucho quienes nada muchos cual poco ella estar estas algunas algo nosotros mis tu te ti tus ellas nosotras vosotros os mio mia tuyo suyo nuestro cada puede pueden ser es son era fue han ha hace hacer tiene tienen tener asi bien solo cada vez forma parte tipo caso ver vez dos tres mismo misma segun donde aqui ahora mientras luego dia ano anos the and for are but not you all any can had her was one our out has have this that with from they will would there their what which when your about into more other than then them these some such only also over most very how its may new use used using via etc http https www com org net html php jpg png gif svg nbsp amp quot youtube nocookie embed iframe width height frameborder allowfullscreen src style div span class href target blank rel noopener noreferrer wp content uploads autoplay player video watch feature share ' +
+  'aunque entonces despues siempre nunca tampoco ademas mediante cuales cuyo cuya tan mucha muchas poca pocos pocas algun alguna ningun ninguna toda nadie alguien primero primera segundo segunda ultimo ultima nuevo nueva nuevos nuevas gran grande grandes mejor mejores peor mayor menor menos alli ahi mal hoy ayer manana ejemplo ejemplos casos formas manera maneras tipos partes veces dias mes meses semana hora tiempo cosa cosas hecho hacen hizo haber habia habian sido siendo estan estaba estado tenia poder podria podemos deber debe deben decir dice dicen dijo vemos visto dar dado dan van vamos venir viene llegar llega pasar pasa seguir sigue quedar queda poner pone saber sabe creer cree querer quiere usar usa usan uso leer lee cuidado tarea supongamos supone importante importantes general posible posibles necesario cierto ciertos sino hacia bajo tras incluso nuestra nuestros nuestras aquel aquella sea sean esten tenemos tengo hacemos hago mismos mismas cualquier demas resto vez ' +
+  'just like make made many much well even back still way take get got see first last however therefore thus each every both either here where while within without because before after between through during against under again further once same own few being been does did doing done should could might must shall').split(' '));
+let SIX = null;
+function simIndex() {
+  if (SIX && SIX.vault === S.vault) return SIX;
+  const notes = S.vault.notes, df = new Map(), raw = new Map(), surface = new Map();
+  // markup, addresses and embed parameters (youtube-nocookie, color1, 0x2b405b…) are not content
+  const words = s => (String(s || '').replace(/\$\$[\s\S]*?\$\$|\$[^$\n]+\$|\\\(|\\\)|\\[a-zA-Z]+/g, ' ').replace(/<[^>]*>/g, ' ').replace(/(?:https?:\/\/|www\.)\S+/gi, ' ').replace(/\b[\w.-]+\.(?:com|org|net|io|co|html?|php|jpe?g|png|gif|svg|webp)\b/gi, ' ')
+    .toLowerCase().match(/[\p{L}\p{N}]{3,}/gu) || []).filter(w => !/\d/.test(w));
+  for (const n of notes) {
+    const tf = new Map();
+    const add = (text, w) => { for (const wd of words(text)) { const k = fold(wd); if (STOP.has(k) || /^\d+$/.test(k) || k.length < 3) continue; tf.set(k, (tf.get(k) || 0) + w); const sf = surface.get(k) || new Map(); sf.set(wd, (sf.get(wd) || 0) + 1); surface.set(k, sf); } };
+    add(n.baseTitle || n.title, 3); add(n.tags.join(' '), 2); add(n.plainText, 1);
+    raw.set(n.id, tf); for (const k of tf.keys()) df.set(k, (df.get(k) || 0) + 1);
+  }
+  const N = notes.length, vec = new Map(), maxDf = Math.max(3, N * 0.5);
+  for (const [id, tf] of raw) {
+    const v = new Map(); let nn = 0;
+    for (const [k, c] of tf) { const d = df.get(k); if (d < 2 || d > maxDf) continue; const w = (1 + Math.log(c)) * Math.log(N / d); v.set(k, w); nn += w * w; }
+    nn = Math.sqrt(nn) || 1; for (const [k, w] of v) v.set(k, w / nn);
+    vec.set(id, v);
+  }
+  const best = new Map(); for (const [k, m] of surface) best.set(k, [...m].sort((a, b) => b[1] - a[1])[0][0]);
+  SIX = { vault: S.vault, vec, surface: best, cache: new Map() };
+  return SIX;
+}
+const STRUCT = l => l.target && l.type !== 'tag';                     // written links (tags are inferred)
+function linkedSet(id) {
+  const s = new Set();
+  for (const l of S.vault.links) if (STRUCT(l)) { if (l.source === id) s.add(l.target); else if (l.target === id) s.add(l.source); }
+  return s;
+}
+const SUG_MIN = 0.1;
+function suggest(id, k = 3, o = {}) {
+  const ix = simIndex(); const key = id + '|' + k + '|' + (o.includeLinked ? 1 : 0) + '|' + S.f.lang;
+  if (ix.cache.has(key)) return ix.cache.get(key);
+  const a = ix.vec.get(id); if (!a || !a.size) return [];
+  const linked = o.includeLinked ? new Set() : linkedSet(id);
+  const out = [];
+  for (const n of S.vault.notes) {
+    if (n.id === id || linked.has(n.id) || !visibleNote(n)) continue;
+    const b = ix.vec.get(n.id); if (!b || !b.size) continue;
+    let sc = 0; const shared = [];
+    const [small, big] = a.size < b.size ? [a, b] : [b, a];
+    for (const [t2, w] of small) { const w2 = big.get(t2); if (w2) { sc += w * w2; shared.push([t2, w * w2]); } }
+    if (sc >= SUG_MIN) out.push({ id: n.id, score: sc, terms: shared.sort((x, y) => y[1] - x[1]).slice(0, 4).map(x => ix.surface.get(x[0]) || x[0]) });
+  }
+  const res = out.sort((x, y) => y.score - x.score).slice(0, k);
+  ix.cache.set(key, res); return res;
+}
+function sugStrength(sc) { return sc >= 0.35 ? 'hi' : sc >= 0.2 ? 'mid' : 'lo'; }
+function noteUrl(id) { const u = S.meta && S.meta.links && S.meta.links.site && S.meta.links.site.urls; return u && u[id] || ''; }
+function linkSnippet(from, to) {
+  const n = S.notes.get(to); const title = n.baseTitle || n.title;
+  if (S.source === 'wordpress') return `<a href="${noteUrl(to)}">${title.replace(/</g, '&lt;')}</a>`;
+  if (S.vault.links.some(l => l.type === 'wikilink')) return `[[${to.split('/').pop().replace(/\.md$/i, '')}${title ? '|' + title : ''}]]`;
+  return `[${title.replace(/\]/g, '\\]')}](${relPath(from, to).replace(/ /g, '%20')})`;
+}
+function sugHtml(id, list) {
+  if (!list.length) return `<div class="empty">${esc(t('sugNone'))}</div>`;
+  return list.map(s => {
+    const n = S.notes.get(s.id);
+    return `<div class="sug" data-sug="${esc(s.id)}"><div class="sug-h"><button type="button" class="bk-title" data-note="${esc(s.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(n.title)}</button>` +
+      `<span class="sug-sc ${sugStrength(s.score)}" title="${esc(t('sugScoreTip'))}">${esc(t('sugLevel_' + sugStrength(s.score)))} · ${Math.round(s.score * 100)}%</span></div>` +
+      `<div class="sug-why">${esc(t('sugShare'))} ${s.terms.map(x => `<b>${esc(x)}</b>`).join(' · ')}</div>` +
+      `<button type="button" class="sug-copy" data-copy-from="${esc(id)}" data-copy-to="${esc(s.id)}">${esc(t('sugCopy'))}</button></div>`;
+  }).join('');
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copy-to]'); if (!b) return;
+  e.preventDefault(); e.stopPropagation();
+  const txt = linkSnippet(b.dataset.copyFrom, b.dataset.copyTo);
+  const done = () => { b.textContent = t('sugCopied'); b.classList.add('ok'); setTimeout(() => { b.textContent = t('sugCopy'); b.classList.remove('ok'); }, 1800); };
+  (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(done, () => { toast(txt, 6000); });
+  track('suggestion_copy', { source: S.source });
+}, true);
+// ghost edges: proposed connections drawn on the graph while their list is on screen
+function setGhost(id) { S.ghost = id && S.notes.has(id) ? id : null; drawGhost(); }
+function drawGhost() {
+  let gGhost = gRoot.select('g.ghosts'); if (gGhost.empty()) gGhost = gRoot.insert('g', ':first-child').attr('class', 'ghosts');
+  const list = S.ghost ? suggest(S.ghost).filter(s => nodeIdx().has(s.id)) : [];
+  const from = S.ghost && nodeIdx().get(S.ghost);
+  const data = from ? list.map(s => ({ a: from, b: nodeIdx().get(s.id), id: s.id })) : [];
+  const ls = gGhost.selectAll('line').data(data, d => d.id); ls.exit().remove();
+  ls.enter().append('line').attr('class', 'g-ghost').merge(ls).attr('x1', d => d.a.x).attr('y1', d => d.a.y).attr('x2', d => d.b.x).attr('y2', d => d.b.y);
+  if (G.sel) G.sel.nodes.classed('sug', d => data.some(x => x.id === d.id));
+}
+
+// ======================= diagnóstico de la red =======================
+// Sobre los enlaces escritos (sin etiquetas ni pares de traducción) entre las notas visibles.
+let DIAG = null;
+function diagnose() {
+  const key = S.vault.links.length + '|' + S.f.lang;
+  if (DIAG && DIAG.vault === S.vault && DIAG.key === key) return DIAG;
+  const notes = S.vault.notes.filter(visibleNote), ids = new Set(notes.map(n => n.id));
+  const adj = new Map(notes.map(n => [n.id, new Set()])), outN = new Map(), inN = new Map();
+  for (const l of S.vault.links) {
+    if (!STRUCT(l) || l.type === 'translation' || !ids.has(l.source) || !ids.has(l.target) || l.source === l.target) continue;
+    adj.get(l.source).add(l.target); adj.get(l.target).add(l.source);
+    (outN.get(l.source) || outN.set(l.source, new Set()).get(l.source)).add(l.target);
+    (inN.get(l.target) || inN.set(l.target, new Set()).get(l.target)).add(l.source);
+  }
+  const deadEnds = notes.filter(n => (inN.get(n.id) || new Set()).size > 0 && !(outN.get(n.id) || new Set()).size && !S.hubs.has(n.id))
+    .sort((a, b) => inN.get(b.id).size - inN.get(a.id).size);
+  // components (notes with at least one link)
+  const comp = new Map(); const comps = [];
+  for (const n of notes) {
+    if (comp.has(n.id) || !adj.get(n.id).size) continue;
+    const c = []; const st = [n.id]; comp.set(n.id, comps.length);
+    while (st.length) { const x = st.pop(); c.push(x); for (const y of adj.get(x)) if (!comp.has(y)) { comp.set(y, comps.length); st.push(y); } }
+    comps.push(c);
+  }
+  comps.sort((a, b) => b.length - a.length);
+  const islands = comps.slice(1).map(c => {
+    const parts = new Map(); c.forEach(id => { const p = S.notes.get(id).part; parts.set(p, (parts.get(p) || 0) + 1); });
+    const top = c.slice().sort((a, b) => (inN.get(b) || new Set()).size - (inN.get(a) || new Set()).size)[0];
+    return { ids: c, part: [...parts].sort((a, b) => b[1] - a[1])[0][0], top };
+  });
+  // articulation points (iterative Tarjan), then how many notes each one cuts off from its component
+  const disc = new Map(), low = new Map(), ap = new Set(); let time = 0;
+  for (const s of adj.keys()) {
+    if (disc.has(s) || !adj.get(s).size) continue;
+    const stack = [[s, null, [...adj.get(s)], 0]]; disc.set(s, time); low.set(s, time++); let rootKids = 0;
+    while (stack.length) {
+      const fr = stack[stack.length - 1]; const [u, p, nb] = fr;
+      if (fr[3] < nb.length) {
+        const v = nb[fr[3]++];
+        if (!disc.has(v)) { disc.set(v, time); low.set(v, time++); if (u === s) rootKids++; stack.push([v, u, [...adj.get(v)], 0]); }
+        else if (v !== p) low.set(u, Math.min(low.get(u), disc.get(v)));
+      } else {
+        stack.pop();
+        if (p != null) { low.set(p, Math.min(low.get(p), low.get(u))); if (p !== s && low.get(u) >= disc.get(p)) ap.add(p); }
+      }
+    }
+    if (rootKids > 1) ap.add(s);
+  }
+  const bridges = [...ap].slice(0, 60).map(x => {
+    const ci = comps.findIndex(c => c.includes(x)); const total = comps[ci].length - 1;
+    const seen = new Set([x]); let biggest = 0;
+    for (const st0 of adj.get(x)) {
+      if (seen.has(st0)) continue; let sz = 0; const st = [st0]; seen.add(st0);
+      while (st.length) { const y = st.pop(); sz++; for (const z of adj.get(y)) if (!seen.has(z)) { seen.add(z); st.push(z); } }
+      biggest = Math.max(biggest, sz);
+    }
+    return { id: x, cut: total - biggest };
+  }).filter(b => b.cut > 0 && !S.hubs.has(b.id)).sort((a, b) => b.cut - a.cut);
+  // how much each section talks to the others
+  const sec = new Map();
+  const pairs = new Set();
+  for (const [a, set] of adj) for (const b of set) { const k = a < b ? a + '\u0000' + b : b + '\u0000' + a; pairs.add(k); }
+  for (const n of notes) { const p = n.part; if (!sec.has(p)) sec.set(p, { part: p, notes: 0, inside: 0, outside: 0 }); sec.get(p).notes++; }
+  for (const k of pairs) { const [a, b] = k.split('\u0000'); const pa = S.notes.get(a).part, pb = S.notes.get(b).part; if (pa === pb) sec.get(pa).inside++; else { sec.get(pa).outside++; sec.get(pb).outside++; } }
+  const sections = [...sec.values()].filter(s => s.notes >= 3 && s.inside + s.outside > 0).map(s => ({ ...s, share: s.outside / (s.inside + s.outside) })).sort((a, b) => a.share - b.share);
+  DIAG = { vault: S.vault, key, pairs: pairs.size, notes, deadEnds, islands, bridges, sections, inN, outN, orphans: notes.filter(n => !adj.get(n.id).size) };
+  return DIAG;
+}
+// best single suggestion for the to-do list
+function topSug(id) { const s = suggest(id, 1); return s[0] || null; }
+function exportTasks() {
+  const d = diagnose(); const rows = [[t('csvCat'), t('csvNote'), t('csvWhere'), t('csvDetail'), t('csvSug') + ' 1', t('csvSug') + ' 2', t('csvSug') + ' 3']];
+  const where = id => noteUrl(id) || id;
+  const sugCols = id => { const s = suggest(id, 3); return [0, 1, 2].map(i => s[i] ? `${S.notes.get(s[i].id).title} (${Math.round(s[i].score * 100)}% · ${s[i].terms.join(', ')})` : ''); };
+  for (const n of d.orphans) rows.push([t('orphans'), n.title, where(n.id), t('csvOrphan'), ...sugCols(n.id)]);
+  for (const l of S.vault.links.filter(x => !x.target)) rows.push([t('brokenH'), S.notes.get(l.source).title, where(l.source), l.raw, '', '', '']);
+  for (const n of d.deadEnds) rows.push([t('deadH'), n.title, where(n.id), t('csvDead', d.inN.get(n.id).size), ...sugCols(n.id)]);
+  for (const b of d.bridges) rows.push([t('bridgeH'), S.notes.get(b.id).title, where(b.id), t('csvBridge', b.cut), '', '', '']);
+  for (const is of d.islands) rows.push([t('islandH'), S.notes.get(is.top).title, where(is.top), t('csvIsland', is.ids.length, groupLabel(is.part)), ...sugCols(is.top)]);
+  const csv = '﻿' + rows.map(r => r.map(c => /[",;\n]/.test(String(c)) ? `"${String(c).replace(/"/g, '""')}"` : String(c)).join(',')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = `grafo-tareas-${S.source}.csv`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  track('export_tasks', { source: S.source, rows_bucket: bucket(rows.length - 1) });
+}
+function diagHtml() {
+  const d = diagnose(); let h = '';
+  const head = (key, n, help) => `<div class="q-h"><span>${esc(t(key))} · ${n}</span><button type="button" class="hint" data-help="${help}" aria-expanded="false">i</button></div>`;
+  const item = (id, extra) => { const n = S.notes.get(id); return `<button type="button" class="q-item" data-note="${esc(id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span><span class="q-t">${esc(n.title)}</span>${extra ? `<span class="src">${extra}</span>` : ''}</button>`; };
+  const more = (arr, n, fn) => arr.slice(0, n).map(fn).join('') + (arr.length > n ? `<div class="q-more">${esc(t('andMore', arr.length - n))}</div>` : '');
+  h += head('deadH', d.deadEnds.length, 'deadEnds');
+  h += d.deadEnds.length ? more(d.deadEnds, 6, n => item(n.id, esc(t('deadIn', d.inN.get(n.id).size)))) : `<div class="ok-line">✓ <span>${esc(t('noDead'))}</span></div>`;
+  h += head('bridgeH', d.bridges.length, 'bridges');
+  h += d.bridges.length ? more(d.bridges, 5, b => item(b.id, esc(t('bridgeCut', b.cut)))) : `<div class="ok-line">✓ <span>${esc(t('noBridge'))}</span></div>`;
+  h += head('islandH', d.islands.length, 'islands');
+  h += d.islands.length ? more(d.islands, 5, is => item(is.top, esc(t('islandSize', is.ids.length, groupLabel(is.part))))) : `<div class="ok-line">✓ <span>${esc(t('noIsland'))}</span></div>`;
+  if (d.sections.length > 1) {
+    h += head('secH', d.sections.length, 'sections');
+    h += d.sections.map(s => `<div class="sec-row${s.share < 0.15 ? ' low' : ''}"><span class="dot" style="--c:${groupColor(s.part)}"></span><span class="q-t">${esc(groupLabel(s.part))}</span><span class="sec-bar"><i style="width:${Math.round(s.share * 100)}%"></i></span><span class="src">${Math.round(s.share * 100)}%</span></div>`).join('');
+  }
+  h += `<button type="button" class="btn sug-export" id="export-tasks">${esc(t('exportTasks'))}</button>`;
+  return h;
+}
+
+// ======================= recorrido guiado =======================
+var TOUR = { on: false, i: 0, steps: [] };
+window.__kbDebug = { suggest: (id, k, o) => suggest(id, k, o), diagnose: () => { const d = diagnose(); return { orphans: d.orphans.length, deadEnds: d.deadEnds.map(n => n.id), bridges: d.bridges, islands: d.islands.map(x => ({ n: x.ids.length, part: x.part, top: x.top })), sections: d.sections.map(x => [x.part, Math.round(x.share * 100)]) }; } };
+function tourSteps() {
+  const v = S.vault, d = diagnose(); const steps = [];
+  const writtenIn = id => (d.inN.get(id) || new Set()).size;
+  const pool = d.notes.filter(n => !S.hubs.has(n.id));
+  const central = (pool.length ? pool : d.notes).slice().sort((a, b) => writtenIn(b.id) - writtenIn(a.id))[0];
+  const conns = d.pairs;
+  steps.push({ k: 'overview', run() { resetTypes(); setView('graph'); setMode('global'); setTimeout(() => fit(true), 50); }, text: () => t('tour1', d.notes.length, conns, S.groups.length) });
+  if (central) {
+    steps.push({ k: 'central', run() { resetTypes(); setView('graph'); setMode('global'); openNote(central.id, { focus: true }); }, text: () => t('tour2', central.title, writtenIn(central.id)) });
+    steps.push({ k: 'local', run() { resetTypes(); setView('graph'); if (S.cur !== central.id) openNote(central.id); setMode('local'); }, text: () => t('tour3', central.title) });
+  }
+  const hasCurated = v.links.some(l => l.type === 'related' && l.target);
+  if (hasCurated && S.source === 'wordpress') {
+    const before = isolatedWithout('related'), now = d.orphans.length;
+    steps.push({ k: 'curated', run() { setView('graph'); setMode('global'); S.f.types.delete('related'); buildFilters(); rebuildGraph(); renderList(); filtersChanged(); }, text: () => t('tour4', before, now), after() { resetTypes(); } });
+  }
+  steps.push({ k: 'health', run() { resetTypes(); setView('graph'); setMode('global'); closePops(); $('#health-pop').hidden = false; $('#health-btn').setAttribute('aria-expanded', 'true'); }, text: () => (d.orphans.length + d.deadEnds.length + d.bridges.length + d.islands.length + S.vault.links.filter(l => !l.target).length)
+    ? t('tour5', d.orphans.length, d.deadEnds.length, d.bridges.length)
+    : t('tour5ok', d.sections[0] ? groupLabel(d.sections[0].part) : '', d.sections[0] ? Math.round(d.sections[0].share * 100) : 0), after() { closePops(); } });
+  // the note that most needs links and has a convincing suggestion
+  const needy = d.notes.filter(n => !S.hubs.has(n.id)).map(n => ({ n, deg: writtenIn(n.id) + (d.outN.get(n.id) || new Set()).size, s: topSug(n.id) }))
+    .filter(x => x.s).sort((a, b) => (a.s.score >= 0.2 ? 0 : 1) - (b.s.score >= 0.2 ? 0 : 1) || a.deg - b.deg || b.s.score - a.s.score)[0];
+  if (needy) steps.push({ k: 'suggest', run() { resetTypes(); setMode('global'); openNote(needy.n.id, { focus: true }); setReaderTab('links'); setView('split'); setGhost(needy.n.id); }, text: () => t('tour6', needy.n.title, S.notes.get(needy.s.id).title, needy.s.terms.slice(0, 3).join(', ')), after() { setGhost(null); } });
+  steps.push({ k: 'yours', run() { resetTypes(); setView('graph'); setMode('global'); setTimeout(() => fit(true), 50); }, text: () => t('tour7'), cta: true });
+  return steps;
+}
+function isolatedWithout(type) {
+  const ids = new Set(S.vault.notes.filter(visibleNote).map(n => n.id)); const touched = new Set();
+  for (const l of S.vault.links) if (STRUCT(l) && l.type !== type && l.type !== 'translation' && ids.has(l.source) && ids.has(l.target) && l.source !== l.target) { touched.add(l.source); touched.add(l.target); }
+  return [...ids].filter(id => !touched.has(id)).length;
+}
+function resetTypes() {
+  const def = defaultTypes(); if (S.f.types.size === def.size && [...def].every(x => S.f.types.has(x)) && S.f.hubEdges) return;
+  S.f.types = new Set(def); S.f.hubEdges = true; buildFilters(); rebuildGraph(); renderList(); filtersChanged();
+}
+function tourStart() {
+  if (!S.vault) return;
+  TOUR.startNote = S.cur; TOUR.startView = S.view; TOUR.steps = tourSteps(); TOUR.on = true; TOUR.i = 0; $('#tour').hidden = false; $('#tour-btn').setAttribute('aria-pressed', 'true'); document.body.classList.add('tour-on'); tourGo(0);
+  track('tour_start', { source: S.source });
+}
+function tourGo(i) {
+  const prev = TOUR.steps[TOUR.i]; if (prev && prev.after && i !== TOUR.i) prev.after();
+  TOUR.i = Math.max(0, Math.min(TOUR.steps.length - 1, i)); const st = TOUR.steps[TOUR.i];
+  st.run();
+  const n = TOUR.steps.length;
+  $('#tour').innerHTML = `<div class="tour-h"><span class="tour-n">${esc(t('tourStep', TOUR.i + 1, n))}</span><span class="tour-dots">${TOUR.steps.map((_, j) => `<i class="${j === TOUR.i ? 'on' : ''}"></i>`).join('')}</span><button type="button" class="icon-btn" data-tour="close" aria-label="${esc(t('tourExit'))}" title="${esc(t('tourExit'))}"><svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>` +
+    `<p class="tour-t">${st.text()}</p><div class="tour-a">` +
+    (TOUR.i ? `<button type="button" class="btn" data-tour="prev">← ${esc(t('tourPrev'))}</button>` : '<span></span>') +
+    (st.cta ? `<button type="button" class="btn btn-primary" data-tour="mine">${esc(t('tourMine'))}</button>` : `<button type="button" class="btn btn-primary" data-tour="next">${esc(t('tourNext'))} →</button>`) + `</div>`;
+  const nb = $('#tour [data-tour="next"], #tour [data-tour="mine"]'); if (nb) nb.focus({ preventScroll: true });
+}
+function tourEnd() {
+  if (!TOUR.on) return; const st = TOUR.steps[TOUR.i]; if (st && st.after) st.after();
+  TOUR.on = false; $('#tour').hidden = true; $('#tour-btn').setAttribute('aria-pressed', 'false'); document.body.classList.remove('tour-on'); setGhost(null); closePops(); resetTypes(); setMode('global');
+  if (TOUR.startNote && S.notes.has(TOUR.startNote) && S.cur !== TOUR.startNote) openNote(TOUR.startNote, { focus: true });
+  setView(TOUR.startView === 'graph' ? 'graph' : TOUR.startView || 'graph'); setParams({ tour: null });
+}
+$('#tour').addEventListener('click', e => {
+  const b = e.target.closest('[data-tour]'); if (!b) return;
+  const a = b.dataset.tour;
+  if (a === 'next') tourGo(TOUR.i + 1); else if (a === 'prev') tourGo(TOUR.i - 1);
+  else if (a === 'close') tourEnd(); else if (a === 'mine') { tourEnd(); openSheet(S.source === 'wordpress' ? 'wp' : 'github'); }
+});
+$('#tour-btn').addEventListener('click', () => TOUR.on ? tourEnd() : tourStart());
+document.addEventListener('keydown', e => {
+  if (!TOUR.on || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); tourGo(TOUR.i + 1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); tourGo(TOUR.i - 1); }
+  else if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); tourEnd(); }
+}, true);
 
 // ======================= ayuda contextual (tooltips enriquecidos) =======================
 // Un solo tooltip accesible para todos los controles con data-help: aparece con retardo al pasar el ratón, de inmediato con el
@@ -1432,6 +1712,7 @@ document.addEventListener('pointerout', e => {
 document.addEventListener('focusin', e => { const trg = e.target.closest('[data-help]'); if (trg && trg.matches(':focus-visible')) helpShow(trg); });
 document.addEventListener('focusout', e => { if (HT.cur && e.target.closest('[data-help]') === HT.cur && !HT.pinned) helpHide(true); });
 document.addEventListener('click', e => {
+  clearTimeout(HT.timer);
   const hb = e.target.closest('.hint');
   if (hb) { e.preventDefault(); e.stopPropagation(); if (HT.cur === hb && HT.pinned) helpHide(true); else helpShow(hb, true); return; }
   if (HT.cur && (!HT.pinned || e.target.closest('[data-help]') !== HT.cur)) helpHide(true); // al usar un control, el tooltip se retira para no tapar el resultado
