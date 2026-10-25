@@ -171,6 +171,60 @@ window.KB_T = {
     ghTruncated: 'GitHub returned an incomplete structure because the repository is very large. Choose a subfolder to see all of it.'
   }
 };
+/* Ayuda contextual de los controles del grafo (tooltips enriquecidos). h = título, b = qué hace, tip = recomendación. */
+window.KB_T.es.help = {
+  global: { h: 'Global · toda la red', b: 'Muestra todas las notas a la vez. Cada punto es una nota y crece con los enlaces que recibe. Sirve para ver grupos temáticos, notas centrales y notas aisladas.', tip: 'Pasa el cursor por un punto para resaltar sus vecinas; haz clic para abrirla.' },
+  local: { h: 'Local · el vecindario de una nota', b: 'Deja la nota abierta en el centro, sus vecinas directas en el primer anillo (1 salto) y las vecinas de estas en el segundo (2 saltos). Las notas eje aparecen, pero no se expanden, para que no arrastren toda la red.', tip: 'Con «Etiquetas» activo el vecindario crece mucho, porque compartir etiquetas también cuenta como vecindad. Apágalo para ver solo lo que el texto enlaza.' },
+  fLinks: { h: 'Enlaces · qué líneas se dibujan', b: 'Cada botón enciende o apaga un tipo de conexión. Al apagarlo se quitan sus líneas, se recalcula el tamaño de los puntos y se reduce el vecindario local. Las notas siguen visibles. El número indica cuántos enlaces hay de ese tipo.' },
+  'type-markdown': { h: 'Texto', b: 'Enlace escrito dentro del cuerpo de la nota. Es el que el lector puede seguir con un clic: la red de lectura real.' },
+  'type-wikilink': { h: 'Wikilink', b: 'Enlace al estilo Obsidian: [[nota]], [[nota|alias]] o [[nota#sección]]. Se navega igual que un enlace en el texto.' },
+  'type-prerequisite': { h: 'Prerrequisito', b: 'Declarado en el frontmatter (prerequisites): qué conviene leer antes. Dibuja rutas de aprendizaje con línea punteada.' },
+  'type-related': { h: 'Relacionado', b: 'Declarado en el frontmatter (related_chapters): capítulos afines elegidos por el autor. Se dibuja con línea punteada.' },
+  'type-translation': { h: 'Traducción', b: 'Une las versiones de una misma nota en distintos idiomas.', tip: 'Apágalo si solo te interesa la estructura del contenido.' },
+  'type-tag': { h: 'Etiquetas compartidas', b: 'No es un enlace escrito: el explorador lo deduce cuando dos entradas comparten 2 o más etiquetas. Sirve para descubrir afinidades temáticas, pero el lector no puede seguirlo.', tip: 'Apágalo para auditar el enlazado interno: lo que quede aislado es lo que tus lectores no pueden alcanzar navegando.' },
+  hubEdges: { h: 'Enlaces de notas eje', b: 'Las notas eje (índices y guías) enlazan casi todo y tapan la estructura. Al apagarlo verás cómo se conectan los capítulos entre sí; las notas eje siguen en el grafo.' },
+  fStatus: { h: 'Estado', b: 'Atenúa las notas cuyo estado apagues (borrador, en revisión, publicado…). No las quita ni cambia las líneas: sirve para ver qué parte de la red está terminada.' },
+  fTag: { h: 'Etiqueta', b: 'Resalta las notas con esa etiqueta y atenúa el resto sin mover el grafo. Muestra si un tema está concentrado en un grupo o disperso.', tip: 'También puedes hacer clic en una etiqueta dentro de una nota.' },
+  fLang: { h: 'Idioma', b: 'Muestra solo las notas de un idioma. «Todos los idiomas» las junta y deja ver los pares de traducción.' },
+  health: { h: 'Salud · lista de tareas editorial', b: 'Huérfanas: notas sin ningún enlace escrito, ni entrante ni saliente (las etiquetas no cuentan). Rotos: enlaces cuyo destino no existe. Haz clic en una para abrirla.', tip: 'Enlazar las huérfanas más valiosas es la forma más rápida de mejorar la navegación interna.' },
+  index: { h: 'Índice', b: 'Todas las notas agrupadas por sección, con sus enlaces entrantes.', k: 'I' },
+  'view-graph': { h: 'Vista Grafo', b: 'El grafo ocupa todo el espacio. Al hacer clic en un punto ves una vista previa de la nota.', k: 'G' },
+  'view-split': { h: 'Vista Dividida', b: 'Grafo y lectura lado a lado: lees una nota y ves cómo cambia su vecindario.', k: 'D' },
+  'view-read': { h: 'Vista Lectura', b: 'La nota a pantalla completa. Sus conexiones están en la pestaña Conexiones.', k: 'L' }
+};
+Object.assign(window.KB_T.es, {
+  helpAria: x => `Ayuda: ${x}`, helpTipLabel: 'Consejo', helpKey: 'Atajo', helpFoot: 'Pasa el cursor sobre un control o toca ⓘ para ver qué hace.',
+  recTagOn: 'Las líneas por etiquetas son deducidas, no escritas. Para ver la red que tus lectores pueden recorrer, apágalas.', recTagOnBtn: 'Ver solo enlaces escritos',
+  recTagOff: 'Estás viendo solo enlaces escritos. Las notas que quedan aisladas son las que conviene enlazar.', recTagOffBtn: 'Mostrar etiquetas otra vez',
+  recHub: 'Las notas eje enlazan casi todo. Oculta sus líneas para ver la estructura entre capítulos.', recHubBtn: 'Ocultar enlaces de notas eje'
+});
+window.KB_T.en.help = {
+  global: { h: 'Global · the whole network', b: 'Shows every note at once. Each dot is a note and grows with the links it receives. Use it to spot topic clusters, central notes and isolated notes.', tip: 'Hover a dot to highlight its neighbours; click to open it.' },
+  local: { h: 'Local · one note’s neighbourhood', b: 'Keeps the open note in the centre, its direct neighbours on the first ring (1 hop) and their neighbours on the second (2 hops). Hub notes appear but are not expanded, so they do not pull in the whole network.', tip: 'With “Tags” on, the neighbourhood grows a lot because sharing tags also counts as being neighbours. Turn it off to see only what the text links to.' },
+  fLinks: { h: 'Links · which lines are drawn', b: 'Each button turns one kind of connection on or off. Turning one off removes its lines, recomputes dot sizes and shrinks the local neighbourhood. Notes stay visible. The number is how many links of that kind exist.' },
+  'type-markdown': { h: 'Text', b: 'A link written in the body of the note. Readers can follow it with a click: the real reading network.' },
+  'type-wikilink': { h: 'Wikilink', b: 'An Obsidian-style link: [[note]], [[note|alias]] or [[note#section]]. Navigable like a text link.' },
+  'type-prerequisite': { h: 'Prerequisite', b: 'Declared in the frontmatter (prerequisites): what to read first. Draws learning paths as dashed lines.' },
+  'type-related': { h: 'Related', b: 'Declared in the frontmatter (related_chapters): related chapters chosen by the author. Drawn as dashed lines.' },
+  'type-translation': { h: 'Translation', b: 'Joins the versions of the same note in different languages.', tip: 'Turn it off if you only care about the content structure.' },
+  'type-tag': { h: 'Shared tags', b: 'Not a written link: the explorer infers it when two posts share 2 or more tags. Good for discovering topical affinity, but readers cannot follow it.', tip: 'Turn it off to audit internal linking: whatever is left isolated is what your readers cannot reach by navigating.' },
+  hubEdges: { h: 'Hub note links', b: 'Hub notes (indexes and guides) link to almost everything and hide the structure. Turn this off to see how chapters connect to each other; hub notes stay in the graph.' },
+  fStatus: { h: 'Status', b: 'Dims the notes whose status you switch off (draft, in review, published…). It neither removes them nor changes the lines: it shows which part of the network is finished.' },
+  fTag: { h: 'Tag', b: 'Highlights the notes with that tag and dims the rest without moving the graph. Shows whether a topic is concentrated in one cluster or spread out.', tip: 'You can also click a tag inside a note.' },
+  fLang: { h: 'Language', b: 'Shows only the notes in one language. “All languages” puts them together and reveals translation pairs.' },
+  health: { h: 'Health · an editorial to-do list', b: 'Orphans: notes with no written link at all, in or out (tags do not count). Broken: links whose target does not exist. Click one to open it.', tip: 'Linking the most valuable orphans is the quickest way to improve internal navigation.' },
+  index: { h: 'Index', b: 'Every note grouped by section, with its incoming links.', k: 'I' },
+  'view-graph': { h: 'Graph view', b: 'The graph takes the whole space. Clicking a dot shows a preview of the note.', k: 'G' },
+  'view-split': { h: 'Split view', b: 'Graph and reader side by side: read a note and watch its neighbourhood change.', k: 'D' },
+  'view-read': { h: 'Reading view', b: 'The note full screen. Its connections are in the Connections tab.', k: 'L' }
+};
+Object.assign(window.KB_T.en, {
+  helpAria: x => `Help: ${x}`, helpTipLabel: 'Tip', helpKey: 'Shortcut', helpFoot: 'Hover a control or tap ⓘ to see what it does.',
+  recTagOn: 'Tag lines are inferred, not written. To see the network your readers can actually walk, turn them off.', recTagOnBtn: 'Show written links only',
+  recTagOff: 'You are seeing written links only. Notes left isolated are the ones worth linking.', recTagOffBtn: 'Show tags again',
+  recHub: 'Hub notes link to almost everything. Hide their lines to see the structure between chapters.', recHubBtn: 'Hide hub note links'
+});
+
 (function () {
   var L = window.__lang0 === 'en' ? 'en' : 'es', T = window.KB_T[L];
   document.documentElement.lang = L;

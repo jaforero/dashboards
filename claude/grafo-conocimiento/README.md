@@ -32,7 +32,7 @@ El grafo es el escenario: ocupa toda el área de trabajo y los controles flotan 
 5. **Búsqueda tipo paleta.** Busca en títulos y texto, muestra hasta 8 resultados con el fragmento que coincide, se recorre con las flechas y al elegir uno centra el grafo en esa nota. La tecla `/` lleva a la búsqueda.
 6. **Capas sobre el grafo.**
    - **Índice** (`I`): las notas agrupadas por parte.
-   - **Filtros:** por tipo de enlace (texto, wikilink, prerrequisito, relacionado, traducción), estado, etiqueta e idioma; el botón muestra cuántos filtros están activos.
+   - **Filtros:** por tipo de enlace (texto, wikilink, prerrequisito, relacionado, traducción), estado, etiqueta e idioma; el botón muestra cuántos filtros están activos. Cada control tiene ayuda contextual (ⓘ al tocar, o al pasar el cursor o enfocarlo con el teclado) que explica qué hace y cuándo conviene usarlo, y el panel propone la acción de filtro con más efecto para esa bóveda (por ejemplo, ver solo enlaces escritos).
    - **Salud:** conteo de notas y conexiones, el commit y la fecha de la instantánea (en la demo), y la lista de notas huérfanas y enlaces rotos; el botón muestra cuántos hay.
    - Leyenda de partes y tipos de enlace, y zoom.
 

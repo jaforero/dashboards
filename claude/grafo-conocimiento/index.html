@@ -526,6 +526,28 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
   .crumb > span:not(.ext-links):not(.dot) { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .stage, .drawer, .reader { transition: none !important; } .peek { animation: none; } }
+
+/* ayuda contextual: ⓘ + tooltip enriquecido (hover con retardo, foco, toque) */
+.f-lab { display: flex; align-items: center; gap: 5px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 5px; }
+.f-row > .f-lab { padding-top: 5px; }
+.f-lab label { cursor: pointer; }
+.f-opts select { width: 100%; max-width: 100%; min-width: 0; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); font: 13px var(--font-ui, inherit); }
+.hint { flex: none; display: inline-grid; place-items: center; width: 16px; height: 16px; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--muted); font: italic 600 10px/1 Georgia, serif; text-transform: none; letter-spacing: 0; cursor: help; position: relative; }
+.hint::after { content: ""; position: absolute; inset: -8px; }
+.hint:hover, .hint[aria-expanded="true"], .hint:focus-visible { color: #fff; background: var(--accent, #4e00ff); border-color: var(--accent, #4e00ff); }
+.pop-h-x { display: flex; align-items: center; gap: 6px; }
+.f-foot { margin: 12px 0 0; font-size: 12px; color: var(--faint); }
+.f-rec { margin: 6px 0 4px; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--accent, #4e00ff) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent, #4e00ff) 22%, transparent); font-size: 13px; line-height: 1.45; color: var(--ink); }
+.f-rec button { display: inline-block; margin-top: 8px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--accent, #4e00ff); background: var(--panel); color: var(--accent, #4e00ff); font: 600 12px var(--font-ui, inherit); cursor: pointer; }
+.f-rec button:hover { background: var(--accent, #4e00ff); color: #fff; }
+.htip { position: fixed; z-index: 60; max-width: min(320px, calc(100vw - 24px)); background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px 12px; box-shadow: 0 14px 36px rgb(20 10 60 / .2); font-size: 13px; line-height: 1.45; pointer-events: none; opacity: 0; transform: translateY(2px); transition: opacity .12s, transform .12s; }
+.htip.on { opacity: 1; transform: none; }
+.htip b { display: block; font-size: 13.5px; margin-bottom: 4px; color: var(--ink); }
+.htip p { margin: 0; color: var(--muted); }
+.htip .h-rec { margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); color: var(--ink); }
+.htip .h-rec em { font-style: normal; font-weight: 600; color: var(--accent, #4e00ff); }
+.htip kbd { font: 600 11px var(--font-data, monospace); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; margin-left: 4px; }
+@media (prefers-reduced-motion: reduce) { .htip { transition: none; } }
 </style>
 </head>
 <body>
@@ -551,9 +573,9 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
       <span class="vault-meta" id="vault-meta"></span>
     </div>
     <div class="seg view-seg" role="group" data-i18n-title="viewLabel" title="Vista">
-          <button type="button" data-view="graph" aria-pressed="true" data-i18n-title="viewGraphTip" title="Grafo (G)"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4.5" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="4" r="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8.5" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.6 5.8 7.4 10M10.6 5.3 9.4 9.9M6 4.4h4.4" stroke="currentColor" stroke-width="1.2"/></svg><span data-i18n="viewGraph">Grafo</span></button>
-          <button type="button" data-view="split" aria-pressed="false" data-i18n-title="viewSplitTip" title="Dividido (D)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 2.5v11" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 6h2.5M10.5 8.5h2.5M10.5 11h1.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><span data-i18n="viewSplit">Dividido</span></button>
-          <button type="button" data-view="read" aria-pressed="false" data-i18n-title="viewReadTip" title="Lectura (L)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 2.5v11" stroke="currentColor" stroke-width="1.4"/><path d="M6.8 6h5.7M6.8 8.5h5.7M6.8 11h3.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><span data-i18n="viewRead">Lectura</span></button>
+          <button type="button" data-view="graph" data-help="view-graph" aria-pressed="true" data-i18n-title="viewGraphTip" title="Grafo (G)"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4.5" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="4" r="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="8.5" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.6 5.8 7.4 10M10.6 5.3 9.4 9.9M6 4.4h4.4" stroke="currentColor" stroke-width="1.2"/></svg><span data-i18n="viewGraph">Grafo</span></button>
+          <button type="button" data-view="split" data-help="view-split" aria-pressed="false" data-i18n-title="viewSplitTip" title="Dividido (D)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 2.5v11" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 6h2.5M10.5 8.5h2.5M10.5 11h1.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><span data-i18n="viewSplit">Dividido</span></button>
+          <button type="button" data-view="read" data-help="view-read" aria-pressed="false" data-i18n-title="viewReadTip" title="Lectura (L)"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 2.5v11" stroke="currentColor" stroke-width="1.4"/><path d="M6.8 6h5.7M6.8 8.5h5.7M6.8 11h3.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><span data-i18n="viewRead">Lectura</span></button>
         </div>
     <div class="search" id="search">
       <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11 L14.5 14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -576,25 +598,27 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
       </div>
 
       <div class="g-bar g-bar-left">
-        <button class="fbtn" id="index-btn" type="button" aria-expanded="false" aria-controls="index-drawer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="index">Índice</span><span class="n" id="list-count"></span></button>
+        <button class="fbtn" id="index-btn" type="button" data-help="index" aria-expanded="false" aria-controls="index-drawer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="index">Índice</span><span class="n" id="list-count"></span></button>
         <div class="seg" role="tablist" aria-label="Alcance del grafo">
-          <button type="button" role="tab" id="tab-global" aria-selected="true" data-i18n="global">Global</button>
-          <button type="button" role="tab" id="tab-local" aria-selected="false" data-i18n="local">Local · 2 saltos</button>
+          <button type="button" role="tab" id="tab-global" aria-selected="true" data-help="global" data-i18n="global">Global</button>
+          <button type="button" role="tab" id="tab-local" aria-selected="false" data-help="local" data-i18n="local">Local · 2 saltos</button>
         </div>
         <button class="fbtn" id="filters-btn" type="button" aria-expanded="false" aria-controls="filters-pop"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5h12L9.5 9v4l-3 1.5V9Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span data-i18n="filters">Filtros</span><span class="badge" id="filters-badge" hidden></span></button>
-        <button class="fbtn" id="health-btn" type="button" aria-expanded="false" aria-controls="health-pop"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8.5h3l1.8-4 3 8 1.9-4h3.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="health">Salud</span><span class="badge" id="health-badge"></span></button>
+        <button class="fbtn" id="health-btn" type="button" data-help="health" aria-expanded="false" aria-controls="health-pop"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8.5h3l1.8-4 3 8 1.9-4h3.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="health">Salud</span><span class="badge" id="health-badge"></span></button>
       </div>
 
 
       <div class="pop" id="filters-pop" role="dialog" aria-labelledby="filters-h" hidden>
         <div class="pop-h" id="filters-h" data-i18n="filters">Filtros</div>
-        <div class="f-row"><span data-i18n="fLinks">Enlaces</span><div class="f-opts" id="f-types"></div></div>
-        <div class="f-row"><span data-i18n="fStatus">Estado</span><div class="f-opts" id="f-status"></div></div>
-        <div class="f-row"><label for="f-tag" data-i18n="fTag">Etiqueta</label><div class="f-opts"><select id="f-tag"></select></div></div>
-        <div class="f-row" id="f-lang-row"><label for="f-lang" data-i18n="fLang">Idioma</label><div class="f-opts"><select id="f-lang"></select></div></div>
+        <div class="f-rec" id="f-rec" hidden></div>
+        <div class="f-row"><span class="f-lab"><span data-i18n="fLinks">Enlaces</span><button type="button" class="hint" data-help="fLinks" aria-expanded="false">i</button></span><div class="f-opts" id="f-types"></div></div>
+        <div class="f-row"><span class="f-lab"><span data-i18n="fStatus">Estado</span><button type="button" class="hint" data-help="fStatus" aria-expanded="false">i</button></span><div class="f-opts" id="f-status"></div></div>
+        <div class="f-row"><span class="f-lab"><label for="f-tag" data-i18n="fTag">Etiqueta</label><button type="button" class="hint" data-help="fTag" aria-expanded="false">i</button></span><div class="f-opts"><select id="f-tag"></select></div></div>
+        <div class="f-row" id="f-lang-row"><span class="f-lab"><label for="f-lang" data-i18n="fLang">Idioma</label><button type="button" class="hint" data-help="fLang" aria-expanded="false">i</button></span><div class="f-opts"><select id="f-lang"></select></div></div>
+        <p class="f-foot" data-i18n="helpFoot">Pasa el cursor sobre un control o toca ⓘ para ver qué hace.</p>
       </div>
       <div class="pop" id="health-pop" role="dialog" aria-labelledby="health-h" hidden>
-        <div class="pop-h" id="health-h" data-i18n="qualityHead">Salud de la bóveda</div>
+        <div class="pop-h pop-h-x"><span id="health-h" data-i18n="qualityHead">Salud de la bóveda</span><button type="button" class="hint" data-help="health" aria-expanded="false">i</button></div>
         <div class="vsum" id="vault-summary"></div>
         <div id="quality"></div>
       </div>
@@ -706,8 +730,9 @@ a.snap:hover { color: var(--accent-ink); text-decoration: underline; }
 </div>
 <div class="dropzone-full" id="dropzone" hidden><span data-i18n="dropFull">Suelta la carpeta para explorarla</span></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<script src="i18n.js?v=3"></script>
-<script src="vault-parser.js?v=3"></script>
+<div class="htip" id="htip" role="tooltip" hidden></div>
+<script src="i18n.js?v=4"></script>
+<script src="vault-parser.js?v=4"></script>
 <script>
 /* Librerías: cdnjs primero y jsDelivr de respaldo, con versión fija. La app arranca cuando están las tres. */
 window.KB_LIBS = { mermaid: ['https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js', 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js'] };
@@ -729,7 +754,7 @@ window.MathJax = {
     lib(['https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js', 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js'], 'jsyaml'),
     lib(['https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js', 'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js'], 'marked'),
     lib(['https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js', 'https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js'], 'd3')
-  ]).then(function () { var a = document.createElement('script'); a.src = 'app.js?v=3'; document.body.appendChild(a); })
+  ]).then(function () { var a = document.createElement('script'); a.src = 'app.js?v=4'; document.body.appendChild(a); })
     .catch(function () {
       var en = window.__lang0 === 'en';
       document.getElementById('note').innerHTML = '<h1>' + (en ? 'Knowledge graph' : 'Grafo de conocimiento') + '</h1><p>' + (en ? 'The page libraries could not be loaded. Check your connection or an ad blocker and reload.' : 'No se pudieron cargar las librerías de la página. Revisa tu conexión o un bloqueador de anuncios y recarga.') + '</p>';

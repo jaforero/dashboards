@@ -177,9 +177,14 @@ function buildFilters() {
   const v = S.vault;
   const tc = {}; v.links.filter(l => l.target).forEach(l => tc[l.type] = (tc[l.type] || 0) + 1);
   const types = TYPES.filter(k => tc[k]);
-  let h = types.map(k => `<button type="button" class="tog" data-type="${k}" aria-pressed="${S.f.types.has(k)}" title="${esc(T[UI].typeLong[k])}">${esc(T[UI].type[k])} <span class="n">${tc[k]}</span></button>`).join('');
-  if (S.hubs.size) h += `<button type="button" class="tog" data-hubedges aria-pressed="${S.f.hubEdges}">${esc(t('hubEdges'))}</button>`;
+  let h = types.map(k => `<button type="button" class="tog" data-type="${k}" aria-pressed="${S.f.types.has(k)}" data-help="type-${k}" aria-label="${esc(T[UI].typeLong[k])}">${esc(T[UI].type[k])} <span class="n">${tc[k]}</span></button>`).join('');
+  if (S.hubs.size) h += `<button type="button" class="tog" data-hubedges data-help="hubEdges" aria-pressed="${S.f.hubEdges}">${esc(t('hubEdges'))}</button>`;
   $('#f-types').innerHTML = h;
+  // recomendación accionable: la decisión de filtro con más efecto en esta bóveda
+  const rec = $('#f-rec');
+  if (tc.tag) { const on = S.f.types.has('tag'); rec.innerHTML = `${esc(t(on ? 'recTagOn' : 'recTagOff'))}<br><button type="button" data-rec="tag">${esc(t(on ? 'recTagOnBtn' : 'recTagOffBtn'))}</button>`; rec.hidden = false; }
+  else if (S.hubs.size && S.f.hubEdges) { rec.innerHTML = `${esc(t('recHub'))}<br><button type="button" data-rec="hub">${esc(t('recHubBtn'))}</button>`; rec.hidden = false; }
+  else rec.hidden = true;
   const sc = {}; v.notes.forEach(n => sc[n.status] = (sc[n.status] || 0) + 1);
   $('#f-status').innerHTML = Object.keys(sc).sort().map(s => `<button type="button" class="tog" data-status="${esc(s)}" aria-pressed="${S.f.statuses.has(s)}">${esc(statusLabel(s))} <span class="n">${sc[s]}</span></button>`).join('');
   const tg = {}; v.notes.forEach(n => n.tags.forEach(x => tg[x] = (tg[x] || 0) + 1));
@@ -833,6 +838,12 @@ $('#f-types').addEventListener('click', e => {
   else { const k = b.dataset.type; S.f.types.has(k) ? S.f.types.delete(k) : S.f.types.add(k); }
   buildFilters(); rebuildGraph(); renderList(); filtersChanged();
 });
+$('#f-rec').addEventListener('click', e => {
+  const b = e.target.closest('[data-rec]'); if (!b) return;
+  if (b.dataset.rec === 'tag') S.f.types.has('tag') ? S.f.types.delete('tag') : S.f.types.add('tag'); else S.f.hubEdges = false;
+  buildFilters(); rebuildGraph(); renderList(); filtersChanged(); track('filter_recommendation', { rec: b.dataset.rec });
+  const nb = $('#f-rec [data-rec]') || $('#f-types .tog'); if (nb) nb.focus();
+});
 $('#f-status').addEventListener('click', e => {
   const b = e.target.closest('.tog'); if (!b) return; const s = b.dataset.status;
   S.f.statuses.has(s) ? S.f.statuses.delete(s) : S.f.statuses.add(s);
@@ -864,7 +875,7 @@ function applyUI() {
   $('#rules').innerHTML = T[UI].rules.map(r => `<li>${r}</li>`).join('');
   $('#graph').setAttribute('aria-label', UI === 'es' ? 'Grafo de notas' : 'Note graph');
   document.title = t('pageTitle');
-  updateThemeBtn();
+  updateThemeBtn(); helpApply();
   const ex = $('#r-expand'); ex.title = t(S.view === 'read' ? 'reduceReader' : 'expandReader'); ex.setAttribute('aria-label', ex.title);
   if (S.vault) { renderPeek(); renderMeta(); buildFilters(); renderList(); renderLegend(G.m); renderLinks(); renderQuality(); const n = S.notes.get(S.cur); if (n) { renderNote(n, null, true); } $('#g-count').textContent = t('showing', G.nodes.length, G.edges.length); $('#g-hint').textContent = S.mode === 'local' && n ? t('hintLocal', short(n.title, 40)) : t('hintGlobal'); }
 }
@@ -1339,4 +1350,63 @@ applyUI();
   }
   else loadDemo(note);
 })();
+
+// ======================= ayuda contextual (tooltips enriquecidos) =======================
+// Un solo tooltip accesible para todos los controles con data-help: aparece con retardo al pasar el ratón, de inmediato con el
+// teclado (foco visible) y se fija al tocar un ⓘ. No usa title nativo para no duplicar mensajes. Esc lo cierra.
+var HT = { el: document.getElementById('htip'), cur: null, timer: null, pinned: false };
+function helpData(k) { return (T[UI].help || {})[k]; }
+function helpShow(trg, pin) {
+  const d = helpData(trg.dataset.help); if (!d) return;
+  clearTimeout(HT.timer);
+  if (HT.cur && HT.cur !== trg) helpHide(true);
+  const el = HT.el;
+  el.innerHTML = `<b>${esc(d.h)}${d.k ? `<kbd>${esc(d.k)}</kbd>` : ''}</b><p>${esc(d.b)}</p>${d.tip ? `<p class="h-rec"><em>${esc(t('helpTipLabel'))}:</em> ${esc(d.tip)}</p>` : ''}`;
+  el.hidden = false; el.classList.remove('on');
+  const r = trg.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight, vw = innerWidth, vh = innerHeight;
+  let top = r.bottom + 8; if (top + h > vh - 8 && r.top - h - 8 > 8) top = r.top - h - 8;
+  let left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), vw - w - 8);
+  const pop = trg.closest('.pop'); // dentro de un panel: el tooltip va al costado para no tapar las demás opciones
+  if (pop) { const pr = pop.getBoundingClientRect(); if (pr.right + w + 18 < vw) { left = pr.right + 10; top = Math.min(Math.max(8, r.top - 6), vh - h - 8); } }
+  el.style.top = Math.round(Math.max(8, top)) + 'px'; el.style.left = Math.round(left) + 'px';
+  requestAnimationFrame(() => el.classList.add('on'));
+  HT.cur = trg; HT.pinned = !!pin; trg.setAttribute('aria-describedby', 'htip');
+  if (trg.classList.contains('hint')) trg.setAttribute('aria-expanded', 'true');
+}
+function helpHide(now) {
+  clearTimeout(HT.timer);
+  const go = () => { if (HT.cur) { HT.cur.removeAttribute('aria-describedby'); if (HT.cur.classList.contains('hint')) HT.cur.setAttribute('aria-expanded', 'false'); } HT.cur = null; HT.pinned = false; HT.el.classList.remove('on'); HT.el.hidden = true; };
+  now ? go() : (HT.timer = setTimeout(go, 80));
+}
+function helpApply() {
+  document.querySelectorAll('[data-help]').forEach(el => {
+    const d = helpData(el.dataset.help); if (!d) return;
+    if (el.title) { if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', el.title); el.removeAttribute('title'); }
+    if (el.classList.contains('hint')) el.setAttribute('aria-label', t('helpAria', d.h));
+  });
+  if (!HT) return; // primera llamada desde applyUI, antes de crear el tooltip
+  if (HT.cur && document.body.contains(HT.cur)) helpShow(HT.cur, HT.pinned); else if (HT.cur) helpHide(true);
+}
+document.addEventListener('pointerover', e => {
+  if (e.pointerType !== 'mouse') return;
+  const trg = e.target.closest('[data-help]'); if (!trg || trg === HT.cur) return;
+  if (HT.pinned) return;
+  clearTimeout(HT.timer); HT.timer = setTimeout(() => helpShow(trg), HT.cur ? 0 : 380);
+});
+document.addEventListener('pointerout', e => {
+  if (e.pointerType !== 'mouse' || HT.pinned) return;
+  const trg = e.target.closest('[data-help]'); if (!trg || (e.relatedTarget && trg.contains(e.relatedTarget))) return;
+  clearTimeout(HT.timer); if (HT.cur) helpHide();
+});
+document.addEventListener('focusin', e => { const trg = e.target.closest('[data-help]'); if (trg && trg.matches(':focus-visible')) helpShow(trg); });
+document.addEventListener('focusout', e => { if (HT.cur && e.target.closest('[data-help]') === HT.cur && !HT.pinned) helpHide(true); });
+document.addEventListener('click', e => {
+  const hb = e.target.closest('.hint');
+  if (hb) { e.preventDefault(); e.stopPropagation(); if (HT.cur === hb && HT.pinned) helpHide(true); else helpShow(hb, true); return; }
+  if (HT.cur && (!HT.pinned || e.target.closest('[data-help]') !== HT.cur)) helpHide(true); // al usar un control, el tooltip se retira para no tapar el resultado
+}, true);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && HT.cur) { helpHide(true); e.stopImmediatePropagation(); } }, true);
+addEventListener('scroll', () => { if (HT.cur) helpHide(true); }, true);
+addEventListener('resize', () => { if (HT.cur) helpHide(true); });
+helpApply();
 })();

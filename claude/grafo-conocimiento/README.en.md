@@ -32,7 +32,7 @@ The graph is the stage: it fills the whole work area and the controls float over
 5. **Palette search.** Searches titles and text, shows up to 8 results with the matching excerpt, is navigated with the arrow keys, and centres the graph on the chosen note. The `/` key jumps to search.
 6. **Layers over the graph.**
    - **Index** (`I`): notes grouped by part.
-   - **Filters:** by link type (inline, wikilink, prerequisite, related, translation), status, tag and language; the button shows how many filters are active.
+   - **Filters:** by link type (inline, wikilink, prerequisite, related, translation), status, tag and language; the button shows how many filters are active. Every control has contextual help (tap ⓘ, or hover or focus it with the keyboard) explaining what it does and when to use it, and the panel suggests the filter action with the most effect for that vault (for example, written links only).
    - **Health:** note and connection counts, the snapshot's commit and date (in the demo), and the list of orphan notes and broken links; the button shows how many there are.
    - A legend of parts and link types, and zoom.
 
