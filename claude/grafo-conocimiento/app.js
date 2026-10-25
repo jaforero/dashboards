@@ -14,7 +14,7 @@ const track = (n, p) => { try { if (typeof window.track === 'function') window.t
 const t = (k, ...a) => { const v = T[UI][k]; return typeof v === 'function' ? v(...a) : v; };
 
 // ======================= state =======================
-const TYPES = ['markdown', 'wikilink', 'prerequisite', 'related', 'translation'];
+const TYPES = ['markdown', 'wikilink', 'prerequisite', 'related', 'translation', 'tag'];
 const S = {
   source: 'demo', meta: null, vault: null, notes: new Map(), assets: new Map(), objectUrls: [],
   groups: [], groupIdx: new Map(), hubs: new Set(), search: new Map(),
@@ -29,6 +29,9 @@ function loadVault(files, assets, meta, opts = {}) {
   S.objectUrls = meta.objectUrls || [];
   const all = files.concat([...assets.keys()].map(p => ({ path: p, text: '' })));
   const v = VaultParser.parseVault(all, s => jsyaml.load(s, { schema: jsyaml.JSON_SCHEMA }));
+  if (meta.extraLinks) v.links.push(...meta.extraLinks.filter(l => v.notes.some(n => n.id === l.source)));
+  S.defaultTypes = new Set(['markdown', 'wikilink', 'prerequisite', 'related', ...(meta.defaultTypesExtra || [])]);
+  S.f.types = new Set(S.defaultTypes);
   S.vault = v; S.meta = meta; S.assets = assets; S.source = meta.source;
   S.notes = new Map(v.notes.map(n => [n.id, n]));
   // repeated titles (three "Homework", several "README") get their folder appended so they can be told apart
@@ -116,7 +119,7 @@ function model() {
 function renderMeta() {
   const v = S.vault, m = S.meta;
   const brokenN = v.stats.linksBroken;
-  const pairs = new Set(v.links.filter(l => l.target).map(l => l.source < l.target ? l.source + '\u0000' + l.target : l.target + '\u0000' + l.source)).size;
+  const pairs = new Set(v.links.filter(l => l.target && l.type !== 'tag').map(l => l.source < l.target ? l.source + '\u0000' + l.target : l.target + '\u0000' + l.source)).size;
   const stats = `${esc(t('notes', v.stats.notes))} · ${esc(t('conns', pairs))}${brokenN ? ' · ' + esc(t('broken', brokenN)) : ''}`;
   let h = '', sum = `<span class="stat">${stats}</span>`;
   if (S.source === 'demo') {
@@ -126,6 +129,10 @@ function renderMeta() {
   } else if (S.source === 'github') {
     h = `<span class="src-pill">GitHub</span><a class="repo" href="https://github.com/${esc(m.repo)}" target="_blank" rel="noopener"><b>${esc(m.repo)}</b></a><span class="stat">@${esc(m.ref)}${m.root ? ' · ' + esc(m.root) + '/' : ''}</span>`;
     if (m.rootWhy === 'mkdocs') sum += `<span class="snap">${esc(t('mkdocsRoot'))}</span>`;
+  } else if (S.source === 'wordpress') {
+    h = `<span class="src-pill">WordPress</span><a class="repo" href="https://${esc(m.host)}/" target="_blank" rel="noopener"><b>${esc(m.host)}</b></a>`;
+    const tagPairs = v.links.filter(l => l.type === 'tag').length / 2;
+    if (tagPairs) sum += `<span class="snap">${esc(t('wpTagPairs', tagPairs))}</span>`;
   } else {
     h = `<span class="src-pill">${esc(t('folderPill'))}</span><b>${esc(m.name)}</b>`;
   }
@@ -189,6 +196,7 @@ function renderLegend(m) {
   let h = S.groups.filter(g => present.has(g)).map(g => `<button type="button" data-group="${esc(g)}" class="${focusGroup === g ? 'on' : ''}"><span class="dot" style="--c:${groupColor(g)}"></span>${esc(groupLabel(g))}</button>`).join('');
   h += `<span class="key"><span class="line"></span>${esc(t('legendBody'))}</span><span class="key"><span class="line fm"></span>${esc(t('legendFm'))}</span>`;
   if (S.f.types.has('translation')) h += `<span class="key"><span class="line tr"></span>${esc(t('legendTr'))}</span>`;
+  if (S.f.types.has('tag') && S.vault.links.some(l => l.type === 'tag')) h += `<span class="key"><span class="line tg"></span>${esc(t('legendTag'))}</span>`;
   if (S.hubs.size) h += `<span class="key"><span class="dia" style="--c:var(--panel)"></span>${esc(t('hubs'))}</span>`;
   $('#legend').innerHTML = h;
 }
@@ -235,9 +243,9 @@ function rebuildGraph() {
     nodes.forEach(n => { const p = posCache.get(n.id); if (p && !n.hub) { n.x = p.x; n.y = p.y; } });
   }
   const byId = new Map(nodes.map(n => [n.id, n]));
-  const simEdges = edges.filter(e => local || !e.hubl).map(e => ({ source: byId.get(e.source), target: byId.get(e.target), fm: !e.types.has('markdown') && !e.types.has('wikilink') }));
+  const simEdges = edges.filter(e => local || !e.hubl).map(e => ({ source: byId.get(e.source), target: byId.get(e.target), fm: !e.types.has('markdown') && !e.types.has('wikilink'), tg: e.types.size === 1 && e.types.has('tag') }));
   sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(simEdges).distance(e => local ? 70 : (e.fm ? 62 : 48)).strength(local ? 0.15 : 0.25))
+    .force('link', d3.forceLink(simEdges).distance(e => local ? 70 : (e.tg ? 80 : e.fm ? 62 : 48)).strength(e => (local ? 0.15 : 0.25) * (e.tg ? 0.35 : 1)))
     .force('charge', d3.forceManyBody().strength(local ? -220 : -190).distanceMax(local ? 600 : 520))
     .force('collide', d3.forceCollide(d => d.r + (local ? 14 : 4)))
     .stop();
@@ -248,7 +256,7 @@ function rebuildGraph() {
   const ls = gLinks.selectAll('line').data(edges, e => e.source + '|' + e.target);
   ls.exit().remove();
   const lsAll = ls.enter().append('line').merge(ls)
-    .attr('class', e => 'g-link' + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.has('translation') && e.types.size === 1 ? ' tr' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
+    .attr('class', e => 'g-link' + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.size === 1 && e.types.has('translation') ? ' tr' : e.types.size === 1 && e.types.has('tag') ? ' tg' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
   const ns = gNodes.selectAll('g.g-node').data(nodes, d => d.id);
   ns.exit().remove();
   const nEnter = ns.enter().append('g').attr('class', 'g-node').attr('tabindex', -1);
@@ -545,9 +553,10 @@ function renderNote(n, anchor, keepScroll) {
   const desc = typeof fm.description === 'string' ? fm.description : '';
   const updated = fm.last_updated ? String(fm.last_updated) : '';
   const meta = [
-    n.status ? `<span class="pill ${esc(n.status)}">${esc(statusLabel(n.status))}</span>` : '',
+    n.status && n.status !== 'publish' ? `<span class="pill ${esc(n.status)}">${esc(statusLabel(n.status))}</span>` : '',
     isHub ? `<span class="pill hub">${esc(t('hub'))}</span>` : '',
     n.language ? `<span>${esc(langLabel(n.language))}</span>` : '',
+    fm.date && S.source === 'wordpress' ? `<span>${esc(t('publishedOn', String(fm.date)))}</span>` : '',
     updated ? `<span>${esc(t('updatedOn', updated))}</span>` : '',
     ...n.tags.slice(0, 6).map(x => `<button type="button" class="chip" data-tag="${esc(x)}">#${esc(x)}</button>`)
   ].filter(Boolean);
@@ -652,6 +661,7 @@ function renderQuality() {
   h += orphans.length ? orphans.map(n => `<button type="button" class="q-item" data-note="${esc(n.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(n.title)}</button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noOrphans'))}</span></div>`;
   h += `<div class="f-row" style="grid-template-columns:1fr;padding-top:12px"><span>${esc(t('brokenH'))} · ${broken.length}</span></div>`;
+  if (broken.length && S.source === 'wordpress') h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpBrokenNote'))}</p>`;
   h += broken.length ? broken.map(l => `<button type="button" class="q-item" data-note="${esc(l.source)}" title="${esc(l.reason || '')}"><code>${esc(l.raw)}</code><span class="src">← ${esc(S.notes.get(l.source).title)}</span></button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noBroken'))}</span></div>`;
   $('#quality').innerHTML = h;
@@ -771,7 +781,7 @@ function filtersChanged() {
     (S.f.statuses && S.f.statuses.size !== new Set(S.vault.notes.map(x => x.status)).size ? 1 : 0) + (S.f.tag ? 1 : 0);
   const b = $('#filters-badge'); b.hidden = !n; b.textContent = n;
 }
-function defaultTypes() { return new Set(['markdown', 'wikilink', 'prerequisite', 'related']); }
+function defaultTypes() { return S.defaultTypes || new Set(['markdown', 'wikilink', 'prerequisite', 'related']); }
 $('#g-zoom-in').addEventListener('click', () => svg.transition().duration(reduced ? 0 : 250).call(zoom.scaleBy, 1.35));
 $('#g-zoom-out').addEventListener('click', () => svg.transition().duration(reduced ? 0 : 250).call(zoom.scaleBy, 1 / 1.35));
 
@@ -890,9 +900,10 @@ function setParams(kv) {
 }
 function syncUrl() {
   if (!S.meta) return;
-  if (S.source === 'github') setParams({ repo: S.meta.repo, ref: S.meta.refParam || null, path: S.meta.pathParam || null, note: S.cur, view: S.view === 'graph' ? null : S.view });
-  else if (S.source === 'demo') setParams({ repo: null, ref: null, path: null, note: S.cur, view: S.view === 'graph' ? null : S.view });
-  else setParams({ repo: null, ref: null, path: null, note: null });
+  if (S.source === 'wordpress') setParams({ wp: S.meta.host, repo: null, ref: null, path: null, note: S.cur, view: S.view === 'graph' ? null : S.view });
+  else if (S.source === 'github') setParams({ wp: null, repo: S.meta.repo, ref: S.meta.refParam || null, path: S.meta.pathParam || null, note: S.cur, view: S.view === 'graph' ? null : S.view });
+  else if (S.source === 'demo') setParams({ wp: null, repo: null, ref: null, path: null, note: S.cur, view: S.view === 'graph' ? null : S.view });
+  else setParams({ wp: null, repo: null, ref: null, path: null, note: null });
 }
 $('#share').addEventListener('click', async () => {
   syncUrl();
@@ -906,13 +917,15 @@ $('#share').addEventListener('click', async () => {
 const toastEl = $('#toast'); let toastT = null;
 function toast(msg, ms = 3200) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => toastEl.hidden = true, ms); }
 function setSheetTab(tab) {
-  ['github', 'folder'].forEach(k => { $('#stab-' + k).setAttribute('aria-selected', k === tab); $('#spanel-' + k).hidden = k !== tab; });
+  ['github', 'wp', 'folder'].forEach(k => { $('#stab-' + k).setAttribute('aria-selected', k === tab); $('#spanel-' + k).hidden = k !== tab; });
 }
-function openSheet(tab) { $('#sheet').hidden = false; setSheetTab(tab || 'github'); (tab === 'folder' ? $('#pick-dir-btn') : $('#gh-url')).focus(); }
+function openSheet(tab) { $('#sheet').hidden = false; setSheetTab(tab || 'github'); (tab === 'folder' ? $('#pick-dir-btn') : tab === 'wp' ? $('#wp-url') : $('#gh-url')).focus(); }
 function closeSheet() { $('#sheet').hidden = true; $('#open-source').focus(); }
 $('#open-source').addEventListener('click', () => openSheet());
 $('#stab-github').addEventListener('click', () => setSheetTab('github'));
 $('#stab-folder').addEventListener('click', () => setSheetTab('folder'));
+$('#stab-wp').addEventListener('click', () => setSheetTab('wp'));
+document.querySelectorAll('[data-wp-example]').forEach(b => b.addEventListener('click', () => { $('#wp-url').value = b.dataset.wpExample; }));
 $('#sheet-close').addEventListener('click', closeSheet);
 $('#sheet').addEventListener('click', e => { if (e.target === $('#sheet')) closeSheet(); });
 $('#back-demo').addEventListener('click', () => { closeSheet(); loadDemo(); });
@@ -1113,6 +1126,184 @@ $('#spanel-github').addEventListener('submit', e => {
   loadGithub($('#gh-url').value, { ref: $('#gh-ref').value.trim(), path: $('#gh-path').value.trim(), token: $('#gh-token').value });
 });
 
+// ======================= WordPress sites =======================
+// A blog is read through its public REST API: posts and pages become notes, categories become groups, and links
+// between articles become edges. Each article is converted from HTML to Markdown in this browser (Turndown) so the
+// same parser applies. Articles that share 2 or more tags get an extra, optional link type ("Etiquetas").
+// Sites on WordPress.com without their own /wp-json are read through public-api.wordpress.com.
+const WP_LIBS = {
+  turndown: ['https://cdn.jsdelivr.net/npm/turndown@7.2.0/lib/turndown.browser.umd.js', 'https://unpkg.com/turndown@7.2.0/lib/turndown.browser.umd.js'],
+  gfm: ['https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js', 'https://unpkg.com/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js']
+};
+const WP_LIMIT = 1500;     // articles (posts + pages)
+const WP_MIN_SHARED_TAGS = 2;
+let wpLibsP = null;
+function loadScriptChain(urls) {
+  return new Promise((res, rej) => {
+    const next = i => { if (i >= urls.length) return rej(new Error('lib')); const sc = document.createElement('script'); sc.src = urls[i]; sc.onload = res; sc.onerror = () => { sc.remove(); next(i + 1); }; document.head.appendChild(sc); };
+    next(0);
+  });
+}
+function wpLibs() {
+  if (!wpLibsP) wpLibsP = loadScriptChain(WP_LIBS.turndown).then(() => loadScriptChain(WP_LIBS.gfm)).then(() => {
+    const td = new window.TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced', bulletListMarker: '-', emDelimiter: '*' });
+    if (window.turndownPluginGfm) td.use(window.turndownPluginGfm.gfm);
+    td.remove(['script', 'style', 'noscript', 'iframe', 'form', 'button']);
+    return td;
+  });
+  return wpLibsP;
+}
+function parseWpInput(s) {
+  s = String(s || '').trim();
+  if (!s) return null;
+  try { const u = new URL(/^https?:\/\//i.test(s) ? s : 'https://' + s); if (!/\./.test(u.hostname)) return null; return u.hostname.replace(/^www\./, ''); }
+  catch (e) { return null; }
+}
+const decodeHtml = s => { const d = document.createElement('textarea'); d.innerHTML = String(s || ''); return d.value; };
+const htmlText = s => { const d = new DOMParser().parseFromString(String(s || ''), 'text/html'); return (d.body.textContent || '').replace(/\s+/g, ' ').trim(); };
+// canonical form of a URL on the blog: host without www, path without trailing slash, no query or hash
+function wpKey(href, host) {
+  try {
+    const u = new URL(href, 'https://' + host + '/');
+    if (u.hostname.replace(/^www\./, '') !== host) return null;
+    return u.pathname.replace(/\/+$/, '') || '/';
+  } catch (e) { return null; }
+}
+function relPath(fromPath, toPath) {
+  const a = fromPath.split('/').slice(0, -1), b = toPath.split('/');
+  let i = 0; while (i < a.length && i < b.length - 1 && a[i] === b[i]) i++;
+  return '../'.repeat(a.length - i) + b.slice(i).join('/');
+}
+async function wpGet(base, path, params, attempt = 0) {
+  const url = base + path + '?' + new URLSearchParams(params).toString();
+  let r;
+  try { r = await fetch(url, { credentials: 'omit' }); } catch (e) { throw GHError('wpNetwork'); }
+  if (r.status === 429) {   // the host is throttling: wait as it asks (or a little) and try twice more
+    if (attempt >= 2) throw GHError('wpRate');
+    const wait = Math.min(8, Number(r.headers.get('retry-after')) || 2 * (attempt + 1));
+    await new Promise(res => setTimeout(res, wait * 1000));
+    return wpGet(base, path, params, attempt + 1);
+  }
+  if (r.status === 404) throw GHError('wpNoApi');
+  if (r.status === 401 || r.status === 403) throw GHError('wpForbidden');
+  if (!r.ok) throw GHError('wpHttp', r.status);
+  const data = await r.json();
+  return { data, pages: Number(r.headers.get('x-wp-totalpages')) || 1, total: Number(r.headers.get('x-wp-total')) || (Array.isArray(data) ? data.length : 0) };
+}
+async function wpAll(base, path, params, onPage) {
+  const first = await wpGet(base, path, { ...params, per_page: 100, page: 1 });
+  let out = first.data.slice(); onPage && onPage(out.length, first.total);
+  for (let p = 2; p <= first.pages; p++) {
+    const r = await wpGet(base, path, { ...params, per_page: 100, page: p });
+    out = out.concat(r.data); onPage && onPage(out.length, first.total);
+    if (out.length >= WP_LIMIT) break;
+  }
+  return { items: out, total: first.total };
+}
+async function wpFindApi(host) {
+  const candidates = [`https://${host}/wp-json/wp/v2/`, `https://public-api.wordpress.com/wp/v2/sites/${host}/`];
+  for (const base of candidates) {
+    try { const r = await wpGet(base, 'posts', { per_page: 1, _fields: 'id' }); if (Array.isArray(r.data)) return { base, total: r.total }; }
+    catch (e) { if (e.code === 'wpForbidden' || e.code === 'wpRate') throw e; }
+  }
+  throw GHError('wpNoApi');
+}
+let wpBusy = false;
+async function loadWordpress(input, opts = {}) {
+  if (wpBusy) return; wpBusy = true;
+  const st = $('#wp-status'), stt = $('#wp-status-text'), bar = $('#wp-bar');
+  const progress = (txt, frac) => { st.hidden = false; st.classList.remove('err'); stt.textContent = txt; bar.style.width = frac == null ? '0%' : Math.round(frac * 100) + '%'; };
+  const fail = msg => { st.hidden = false; st.classList.add('err'); stt.textContent = msg; bar.style.width = '0%'; wpBusy = false; if (opts.fromUrl && !S.vault) loadDemo(); };
+  const host = parseWpInput(input);
+  if (!host) return fail(t('wpBadUrl'));
+  try {
+    progress(t('wpFinding', host), null);
+    const api = await wpFindApi(host);
+    const fieldsP = 'id,date,modified,slug,link,title,excerpt,content,categories,tags';
+    const posts = await wpAll(api.base, 'posts', { _fields: fieldsP, status: 'publish' }, (n, tot) => progress(t('wpDownloading', n, tot), tot ? 0.7 * n / tot : null));
+    let pages = { items: [] };
+    try { pages = await wpAll(api.base, 'pages', { _fields: 'id,date,modified,slug,link,title,excerpt,content' }); } catch (e) {}
+    const cats = await wpAll(api.base, 'categories', { _fields: 'id,name,slug', hide_empty: 'true' }).catch(() => ({ items: [] }));
+    // only the tags these posts use, 100 ids per request
+    const tagIds = [...new Set(posts.items.flatMap(p => p.tags || []))];
+    let tagItems = [];
+    for (let i = 0; i < tagIds.length; i += 100) {
+      const r = await wpGet(api.base, 'tags', { include: tagIds.slice(i, i + 100).join(','), per_page: 100, _fields: 'id,name' }).catch(() => ({ data: [] }));
+      tagItems = tagItems.concat(r.data);
+    }
+    progress(t('wpConverting'), 0.85);
+    const td = await wpLibs().catch(() => { throw GHError('wpLib'); });
+    const catName = new Map(cats.items.map(c => [c.id, decodeHtml(c.name)]));
+    const tagName = new Map(tagItems.map(x => [x.id, decodeHtml(x.name)]));
+    // stable paths: posts under their year, pages under paginas/
+    const items = posts.items.map(p => ({ ...p, kind: 'post', path: `${String(p.date).slice(0, 4)}/${p.slug}.md` }))
+      .concat(pages.items.map(p => ({ ...p, kind: 'page', path: `paginas/${p.slug}.md` })));
+    const byKey = new Map(items.map(it => [wpKey(it.link, host), it.path]));
+    const isPostUrl = k => /^\/\d{4}\/\d{2}\/\d{2}\/[^/]+$/.test(k) || /^\/\d{4}\/\d{2}\/[^/]+$/.test(k);
+    // links to other articles become relative note paths; a post-like URL with no matching article stays as a
+    // note path too, so it is reported as broken (it may redirect to a renamed article, or return 404)
+    td.addRule('wpLinks', {
+      filter: n => n.nodeName === 'A' && n.getAttribute('href'),
+      replacement: (content, node) => {
+        const text = content.trim() || node.getAttribute('title') || '';
+        if (!text) return '';
+        const href = node.getAttribute('href'); const k = wpKey(href, host); const from = node.ownerDocument.__kbPath;
+        let target = href;
+        if (k && byKey.has(k)) target = relPath(from, byKey.get(k));
+        else if (k && isPostUrl(k)) target = relPath(from, `${k.split('/')[1]}/${k.split('/').pop()}.md`);
+        return `[${text.replace(/\]/g, '\\]')}](<${target}>)`;
+      }
+    });
+    const metaLinks = {};
+    const files = items.map(it => {
+      const doc = new DOMParser().parseFromString(`<body>${(it.content && it.content.rendered) || ''}</body>`, 'text/html');
+      doc.__kbPath = it.path;
+      let md = '';
+      try { md = td.turndown(doc.body); } catch (e) { md = htmlText(it.content && it.content.rendered); }
+      const title = decodeHtml(it.title && it.title.rendered) || it.slug;
+      const desc = htmlText(it.excerpt && it.excerpt.rendered).replace(/\s*(\[…\]|\[&hellip;\]|…|Continue reading.*|Seguir leyendo.*)$/i, '');
+      const descShort = desc.length > 300 ? desc.slice(0, 300).replace(/\s+\S*$/, '') + '…' : desc;
+      const cat = it.kind === 'page' ? t('wpPagesGroup') : (catName.get((it.categories || [])[0]) || t('wpNoCategory'));
+      const fm = { title, part: cat, date: String(it.date).slice(0, 10), last_updated: String(it.modified || it.date).slice(0, 10), status: it.kind === 'page' ? 'page' : 'publish' };
+      if (descShort) fm.description = descShort;
+      const tags = (it.tags || []).map(id => tagName.get(id)).filter(Boolean);
+      if (tags.length) fm.tags = tags;
+      if (it.kind === 'post' && (it.categories || []).length > 1) fm.categories = it.categories.map(id => catName.get(id)).filter(Boolean);
+      metaLinks[it.path] = it.link;
+      const yaml = Object.entries(fm).map(([k2, v]) => `${k2}: ${JSON.stringify(v)}`).join('\n');
+      return { path: it.path, text: `---\n${yaml}\n---\n\n${md}\n` };
+    });
+    // group labels exactly as the categories are named on the blog
+    const groupLabels = {};
+    for (const it of files) { const n = (it.text.match(/^part: (.*)$/m) || [])[1]; if (n) { const name = JSON.parse(n); groupLabels[VaultParser.normPart(name, it.path)] = { es: name, en: name }; } }
+    // optional link type: articles that share at least WP_MIN_SHARED_TAGS tags (both directions, so it reads as a backlink too)
+    const extraLinks = [];
+    const tagged = items.filter(it => (it.tags || []).length);
+    for (let i = 0; i < tagged.length; i++) for (let j = i + 1; j < tagged.length; j++) {
+      const a = tagged[i], b = tagged[j]; const shared = a.tags.filter(x => b.tags.includes(x));
+      if (shared.length < WP_MIN_SHARED_TAGS) continue;
+      const ctx = shared.map(x => '#' + (tagName.get(x) || x)).join(' · ');
+      for (const [s1, s2] of [[a.path, b.path], [b.path, a.path]]) extraLinks.push({ source: s1, target: s2, raw: s2, type: 'tag', resolution: 'relative', reason: null, heading: null, display: null, section: null, context: t('wpSharedTags', shared.length) + ': ' + ctx });
+    }
+    S.filesMode = false;
+    loadVault(files, new Map(), {
+      source: 'wordpress', name: host, host, api: api.base.includes('public-api') ? 'wpcom' : 'site', total: posts.total, truncated: posts.items.length < posts.total,
+      hubs: [], groupLabels, extraLinks, defaultTypesExtra: ['tag'],
+      links: { site: { root: '', label: { es: 'Ver en el blog', en: 'View on the blog' }, urls: metaLinks } }
+    }, { startNote: opts.note });
+    syncUrl(); closeSheet(); st.hidden = true;
+    toast(t('loaded', S.vault.stats.notes, S.vault.stats.linksResolved), 4200);
+    if (S.meta.truncated) setTimeout(() => toast(t('wpTruncated', WP_LIMIT), 7000), 4300);
+    track('vault_load', { source: 'wordpress', via: S.meta.api, notes_bucket: bucket(S.vault.stats.notes) });
+  } catch (e) {
+    const msg = { wpNoApi: t('wpNoApi'), wpForbidden: t('wpForbidden'), wpNetwork: t('wpNetwork'), wpLib: t('wpLib'), wpRate: t('wpRate') }[e.code] || t('wpGeneric');
+    track('vault_load_error', { source: 'wordpress', code: e.code || 'error' });
+    return fail(msg);
+  }
+  wpBusy = false;
+}
+$('#spanel-wp').addEventListener('submit', e => { e.preventDefault(); loadWordpress($('#wp-url').value); });
+
 // ======================= demo =======================
 let demoData = null;
 async function loadDemo(startNote) {
@@ -1133,7 +1324,12 @@ applyUI();
   const repo = p && p.get('repo'), note = p && p.get('note');
   const v0 = (p && p.get('view')) || store.get('kb-view');
   S.pendingView = ['graph', 'split', 'read'].includes(v0) ? v0 : 'graph';
-  if (repo) {
+  const wp = p && p.get('wp');
+  if (wp) {
+    $('#wp-url').value = wp; openSheet('wp');
+    $('#note').innerHTML = `<p class="empty">${esc(t('wpFinding', wp))}</p>`;
+    loadWordpress(wp, { note, fromUrl: true });
+  } else if (repo) {
     // shared link: show what is being loaded, in the same panel a visitor would use
     $('#gh-url').value = repo; $('#gh-ref').value = p.get('ref') || ''; $('#gh-path').value = p.get('path') || '';
     if ($('#gh-ref').value || $('#gh-path').value) $('#gh-opts').open = true;

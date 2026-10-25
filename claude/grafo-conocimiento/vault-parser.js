@@ -163,8 +163,8 @@
 
     const notes = [], links = [], assets = [], fmErrors = [];
     // destination is either <anything but > or newline> or a run without spaces/parens
-    const mdLinkRe = /(!?)\[((?:[^\[\]\n]|\[[^\[\]\n]*\])*)\]\(\s*(?:<([^>\n]*)>|([^)\s]*))(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g;
-    const wikiRe = /(!?)\[\[([^\[\]|#\n]*)(#[^\[\]|\n]*)?(?:\|([^\[\]\n]*))?\]\]/g;
+    const mdLinkRe = /(?<!\\)(!?)\[((?:[^\[\]\n]|\[[^\[\]\n]*\])*)\]\(\s*(?:<([^>\n]*)>|([^)\s]*))(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g;
+    const wikiRe = /(?<!\\)(!?)\[\[([^\[\]|#\n]*)(#[^\[\]|\n]*)?(?:\|([^\[\]\n]*))?\]\]/g;
 
     for (const f of mdFiles) {
       const { fm, body, fmError } = splitFrontmatter(f.text, yamlLoad);
@@ -213,6 +213,7 @@
         const path = raw.split(/[?#]/)[0];
         const heading = raw.includes('#') ? raw.slice(raw.indexOf('#') + 1) : null;
         if (isExternal(raw) || !path) continue;
+        if (/\]\(|^\[/.test(raw)) continue; // malformed: Markdown typed inside a link destination, e.g. [OpenAI]([https://…](https://…))
         if (isImg) { assets.push({ source: f.path, raw: path, alt: m[2] }); continue; }
         push('markdown', path, m, body.slice(m.index + 1, m.index + 1 + m[2].length), heading);
       }

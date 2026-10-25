@@ -36,11 +36,12 @@ The graph is the stage: it fills the whole work area and the controls float over
    - **Health:** note and connection counts, the snapshot's commit and date (in the demo), and the list of orphan notes and broken links; the button shows how many there are.
    - A legend of parts and link types, and zoom.
 
-## Three sources
+## Four sources
 | Source | How it loads | What can be shared |
 |---|---|---|
 | **Demo** | `data/demo-vault.json`, a snapshot of the Handbook. It never calls the GitHub API, so it holds up in a full room on shared wifi. | `…/grafo-conocimiento/?note=<path>` |
 | **GitHub repository** | The visitor pastes `user/repo` or its URL (a subfolder works too: `…/tree/main/docs`). If the repository has `mkdocs.yml`, its `docs_dir` is used. | `…/grafo-conocimiento/?repo=user/repo&path=docs&note=<path>` |
+| **WordPress blog** | The visitor types the blog address (`myblog.com`). Published posts and pages are read through the public WordPress API (`/wp-json/wp/v2/`, or `public-api.wordpress.com` for WordPress.com sites); each post is converted from HTML to Markdown in the browser. Categories become the groups, and posts that share 2 or more tags are joined by a separate link type, “Tags”, that can be switched off under Filters. | `…/grafo-conocimiento/?wp=myblog.com&note=<year>/<slug>.md` |
 | **Local folder** | “Choose folder”, “Choose .md files”, or drag the folder onto the page. | Not possible: the files only exist in that browser. |
 
 The language travels in the link, as everywhere else on the site (`?lang=en`).

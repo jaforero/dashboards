@@ -36,11 +36,12 @@ El grafo es el escenario: ocupa toda el área de trabajo y los controles flotan 
    - **Salud:** conteo de notas y conexiones, el commit y la fecha de la instantánea (en la demo), y la lista de notas huérfanas y enlaces rotos; el botón muestra cuántos hay.
    - Leyenda de partes y tipos de enlace, y zoom.
 
-## Tres fuentes
+## Cuatro fuentes
 | Fuente | Cómo se carga | Qué se puede compartir |
 |---|---|---|
 | **Demo** | `data/demo-vault.json`, una instantánea del Handbook. No consulta la API de GitHub, así que aguanta una sala llena con el mismo wifi. | `…/grafo-conocimiento/?note=<ruta>` |
 | **Repositorio de GitHub** | El visitante pega `usuario/repo` o la URL (también de una subcarpeta: `…/tree/main/docs`). Si el repositorio tiene `mkdocs.yml`, se usa su `docs_dir`. | `…/grafo-conocimiento/?repo=usuario/repo&path=docs&note=<ruta>` |
+| **Blog en WordPress** | El visitante escribe la dirección del blog (`miblog.com`). Se leen los artículos y páginas publicados con la API pública de WordPress (`/wp-json/wp/v2/`, o `public-api.wordpress.com` para sitios de WordPress.com); cada artículo se convierte de HTML a Markdown en el navegador. Las categorías son los grupos y los artículos que comparten 2 o más etiquetas se unen con un tipo de enlace aparte, «Etiquetas», que se apaga en Filtros. | `…/grafo-conocimiento/?wp=miblog.com&note=<año>/<slug>.md` |
 | **Carpeta local** | «Elegir carpeta», «Elegir archivos .md» o arrastrar la carpeta sobre la página. | No se puede: los archivos solo existen en ese navegador. |
 
 El idioma viaja en el enlace como en el resto del sitio (`?lang=en`).
