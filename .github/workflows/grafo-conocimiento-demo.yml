@@ -1,0 +1,61 @@
+# Grafo de conocimiento · actualiza la instantánea de la demo
+#
+# Lee el Health Insurance Reserving Handbook y regenera
+# claude/grafo-conocimiento/data/demo-vault.json. Solo hace commit si el Handbook cambió
+# (el archivo lleva la fecha del commit del Handbook, no la de esta ejecución).
+
+name: Grafo de conocimiento · demo
+
+on:
+  schedule:
+    - cron: "23 10 * * *"   # todos los días, 05:23 en Bogotá
+  workflow_dispatch:         # botón «Run workflow» en la pestaña Actions
+  repository_dispatch:       # opcional: el Handbook puede avisar al publicar (ver README de la pieza)
+    types: [handbook-updated]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: grafo-conocimiento-demo
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dashboards
+        uses: actions/checkout@v4
+
+      - name: Checkout Handbook
+        uses: actions/checkout@v4
+        with:
+          repository: jaforero/health-insurance-reserving-handbook
+          path: _handbook
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install js-yaml
+        run: npm install --no-save --prefix /tmp/grafo js-yaml@4.1.0
+
+      - name: Build demo snapshot
+        env:
+          NODE_PATH: /tmp/grafo/node_modules
+        run: node claude/grafo-conocimiento/tools/build-demo-vault.js _handbook claude/grafo-conocimiento/data/demo-vault.json
+
+      - name: Commit if the Handbook changed
+        run: |
+          FILE=claude/grafo-conocimiento/data/demo-vault.json
+          if git diff --quiet -- "$FILE"; then
+            echo "Sin cambios en el Handbook: no hay nada que publicar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add "$FILE"
+          git commit -m "chore(grafo-conocimiento): demo al commit $(git -C _handbook rev-parse --short HEAD) del Handbook"
+          git push

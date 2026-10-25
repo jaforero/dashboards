@@ -1,0 +1,23 @@
+{
+  "name": "Health Insurance Reserving Handbook",
+  "repo": "jaforero/health-insurance-reserving-handbook",
+  "docsDir": "docs",
+  "defaultLang": "es",
+  "hubs": ["index.md", "methodology-selection-guide.md"],
+  "site": {
+    "root": "https://actuaria.javierforero.co/",
+    "label": { "es": "Ver en el manual", "en": "View in the handbook" }
+  },
+  "groupLabels": {
+    "repository": { "es": "Inicio", "en": "Home" },
+    "repository-governance": { "es": "Gobierno del repositorio", "en": "Repository governance" },
+    "part-01-foundations": { "es": "Parte 1 · Fundamentos", "en": "Part 1 · Foundations" },
+    "part-02-classical-reserving": { "es": "Parte 2 · Reserving clásico", "en": "Part 2 · Classical reserving" },
+    "part-03-stochastic-reserving": { "es": "Parte 3 · Reserving estocástico", "en": "Part 3 · Stochastic reserving" },
+    "part-04-statistical-models": { "es": "Parte 4 · Modelos estadísticos", "en": "Part 4 · Statistical models" },
+    "part-05-machine-learning": { "es": "Parte 5 · Machine Learning", "en": "Part 5 · Machine learning" },
+    "part-06-health-specific": { "es": "Parte 6 · Especificidades de salud", "en": "Part 6 · Health specifics" },
+    "part-07-colombia": { "es": "Parte 7 · Colombia", "en": "Part 7 · Colombia" },
+    "examples": { "es": "Demos prácticos", "en": "Practical demos" }
+  }
+}

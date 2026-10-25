@@ -15,6 +15,7 @@ The whole site is **bilingual ES/EN** with a single switcher in the top bar. The
 /claude/sla-operaciones/     → SLA Compliance · B2B Operations
 /claude/pulso-financiero/    → Financial Pulse · Corporate Finance
 /claude/desempeno-comercial/ → Sales Performance · B2B Leadership
+/claude/grafo-conocimiento/  → Knowledge graph · Markdown notes as a navigable network (GitHub or local folder)
 /claude/costo-vida-colombia/ → Explainer · Cost of living by city in Colombia (DANE 2025)
 /ia-compute/                 → Explainer · The acceleration of AI compute (1958–2026)
 /tasas-cambio/               → Explainer · Official central-bank exchange rates (Mexico, Colombia, Argentina, Brazil, Chile, Uruguay, Peru)
@@ -44,6 +45,7 @@ Demonstration data, except where stated otherwise. No figure corresponds to a re
 | **SLA Compliance · B2B Operations** | 8 layers, alerts, breakpoint diagnosis, governance, conversational Q&A and an exportable brief. **Upload your own SLA data (CSV/XLSX)**: automatic breakpoint detection, monthly continuity validation and a full recalculation in the browser. | [`/claude/sla-operaciones/`](./claude/sla-operaciones/) |
 | **Financial Pulse · Corporate Finance** | Growth, margin, cash and liquidity with a price-volume bridge. **Four forecasting models compared blind** (decomposition, Holt-Winters, Fourier regression and SARIMA) with rolling-origin validation and a naïve benchmark. Smart KPIs, governance and an exportable brief. **Three data sources** (simulated demo · real company · your own data), **monthly and quarterly** support, and results export to Excel/CSV. | [`/claude/pulso-financiero/`](./claude/pulso-financiero/) |
 | **Sales Performance · B2B Leadership** | Revenue vs. target by rep and region, a funnel diagnosis that isolates the bottleneck at Proposal, a pipeline weighted by empirical close probability, backtested forecasting and deterministic conversational Q&A, with decision governance. | [`/claude/desempeno-comercial/`](./claude/desempeno-comercial/) |
+| **Knowledge graph · notes as a navigable network** | Paste a GitHub repository or pick a folder: every Markdown note is a node and every link a relationship (inline links, wikilinks, `prerequisites`, `related_chapters`). Backlinks with the sentence that connects them, a 2-hop local graph, filters by link type, status, tag and language, and a diagnosis of broken links and orphan notes. **Live demo with the Health Insurance Reserving Handbook**, refreshed daily by a GitHub Action; files from a local folder never leave the browser. | [`/claude/grafo-conocimiento/`](./claude/grafo-conocimiento/) |
 
 ## Explainers · verifiable public data
 
