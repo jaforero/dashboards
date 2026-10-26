@@ -291,6 +291,55 @@ Object.assign(window.KB_T.en, {
     tour: { h: 'Guided tour', b: 'Presents this network step by step: its centre, its neighbourhood, its health and the connections it suggests. Made for a live demo; move with the arrow keys.', tip: 'To open it directly, add ?tour=1 to the link.' }
   });
 })();
+/* Relaciones del autor: la capa que solo el autor puede declarar. */
+(function () {
+  var E = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var es = window.KB_T.es, en = window.KB_T.en;
+  es.type.author = 'Del autor'; en.type.author = 'Author';
+  es.typeLong.author = 'Relación declarada por el autor (con dirección y verbo)'; en.typeLong.author = 'Relation declared by the author (with direction and verb)';
+  es.verbs = { evolves: ['evoluciona en', 'evoluciona de'], founds: ['fundamenta', 'se fundamenta en'], applies: ['aplica', 'se aplica en'], updates: ['actualiza a', 'es actualizado por'] };
+  en.verbs = { evolves: ['evolves into', 'evolved from'], founds: ['underpins', 'builds on'], applies: ['applies', 'is applied in'], updates: ['updates', 'is updated by'] };
+  Object.assign(es, {
+    authHead: 'Relaciones del autor', legendAuthor: 'relación del autor', pillar: 'Pilar del autor', pillarIs: 'Pilar del pensamiento del autor', authNoneYet: 'Es un pilar, pero aún no tiene relaciones declaradas. Decláralas en Salud → Decisiones del autor.',
+    authSrc_blog: 'en el blog', authSrc_site: 'publicada', authSrc_local: 'borrador (este navegador)',
+    authTasks: 'Decisiones del autor', authDeclaredN: function (n) { return n === 1 ? '1 relación declarada' : n + ' relaciones declaradas'; },
+    pillarsN: function (n) { return n === 1 ? '1 pilar' : n + ' pilares'; },
+    authPendingN: function (n) { return n ? 'Por declarar · ' + n + (n === 1 ? ' par que solo tú puedes calificar' : ' pares que solo tú puedes calificar') : 'Por declarar'; },
+    authWhyLink: '1 enlace', authWhyLinks: function (n) { return n + ' enlaces entre ellas'; }, authWhyBoth: 'se citan mutuamente', authWhyPillar: 'incluye un pilar', authWhySim: function (p) { return p + ' % de similitud'; },
+    authChoose: 'Elige la relación…', authDeclare: 'Declarar', authDel: 'Quitar este borrador', authNoPending: 'No hay pares fuertes sin calificar.',
+    authCopyBlocks: 'Copiar bloques para el blog', authExport: 'Exportar relaciones (JSON)', authCopied: 'Bloques copiados: pégalos al final de cada artículo.',
+    authSaved: 'Relación declarada como borrador en este navegador. Para publicarla, pega el bloque en el artículo o exporta el JSON.',
+    authLocalNote: 'Los borradores solo se ven en este navegador. Se publican al agregar el bloque «Evoluciona en: …» al artículo, o al subir el JSON a data/author-relations.json.',
+    makePillar: 'Marcar como pilar del autor', unPillar: 'Quitar de los pilares del autor',
+    tourAuthor: function (a, v, b) { return 'Hay relaciones que el grafo no puede inferir y solo el autor puede declarar: <b>' + E(a) + '</b> <b>' + E(v) + '</b> <b>' + E(b) + '</b>. La flecha gruesa es esa decisión: dirección y significado, no solo una línea.'; }
+  });
+  Object.assign(en, {
+    authHead: 'Author relations', legendAuthor: 'author relation', pillar: 'Author pillar', pillarIs: 'Pillar of the author’s thinking', authNoneYet: 'It is a pillar but has no declared relations yet. Declare them in Health → Author decisions.',
+    authSrc_blog: 'on the blog', authSrc_site: 'published', authSrc_local: 'draft (this browser)',
+    authTasks: 'Author decisions', authDeclaredN: function (n) { return n === 1 ? '1 declared relation' : n + ' declared relations'; },
+    pillarsN: function (n) { return n === 1 ? '1 pillar' : n + ' pillars'; },
+    authPendingN: function (n) { return n ? 'To declare · ' + n + (n === 1 ? ' pair only you can qualify' : ' pairs only you can qualify') : 'To declare'; },
+    authWhyLink: '1 link', authWhyLinks: function (n) { return n + ' links between them'; }, authWhyBoth: 'they cite each other', authWhyPillar: 'includes a pillar', authWhySim: function (p) { return p + ' % similarity'; },
+    authChoose: 'Choose the relation…', authDeclare: 'Declare', authDel: 'Remove this draft', authNoPending: 'No strong pairs left to qualify.',
+    authCopyBlocks: 'Copy blocks for the blog', authExport: 'Export relations (JSON)', authCopied: 'Blocks copied: paste them at the end of each post.',
+    authSaved: 'Relation declared as a draft in this browser. To publish it, paste the block into the post or export the JSON.',
+    authLocalNote: 'Drafts are only visible in this browser. They are published by adding the “Evolves into: …” block to the post, or by uploading the JSON to data/author-relations.json.',
+    makePillar: 'Mark as an author pillar', unPillar: 'Remove from author pillars',
+    tourAuthor: function (a, v, b) { return 'Some relations cannot be inferred by the graph and only the author can declare them: <b>' + E(a) + '</b> <b>' + E(v) + '</b> <b>' + E(b) + '</b>. The thick arrow is that decision: direction and meaning, not just a line.'; }
+  });
+  Object.assign(es.help, {
+    'type-author': { h: 'Relaciones del autor', b: 'Relaciones que el grafo no puede deducir: el autor las declara con dirección y verbo (evoluciona en, fundamenta, aplica, actualiza a). Se dibujan como flechas gruesas y tienen prioridad sobre cualquier enlace.', tip: 'Se declaran con un bloque al final del artículo («Evoluciona en: …») o en Salud → Decisiones del autor.' },
+    author: { h: 'Relaciones del autor', b: 'Lo que el autor afirma sobre esta nota: de qué evoluciona, qué fundamenta, qué aplica. No es similitud ni una cita: es su interpretación de cómo se conecta su pensamiento.' },
+    authorTasks: { h: 'Decisiones del autor', b: 'Pares de notas con una conexión fuerte (varios enlaces, citas mutuas, un pilar o mucha similitud) que el grafo no puede calificar. Solo el autor sabe si una evoluciona de la otra, la fundamenta o la aplica.', tip: 'Cada declaración queda como borrador en este navegador; «Copiar bloques» y «Exportar» la convierten en algo publicado.' },
+    pillar: { h: 'Pilar del autor', b: 'Marca las piezas que son eje del pensamiento del autor. Se destacan con anillo y nombre siempre visible, aunque todavía tengan pocos enlaces: su lugar no lo da el número de conexiones, lo decide el autor.' }
+  });
+  Object.assign(en.help, {
+    'type-author': { h: 'Author relations', b: 'Relations the graph cannot infer: the author declares them with direction and verb (evolves into, underpins, applies, updates). They are drawn as thick arrows and take priority over any link.', tip: 'Declare them with a block at the end of the post (“Evolves into: …”) or in Health → Author decisions.' },
+    author: { h: 'Author relations', b: 'What the author states about this note: what it evolved from, what it underpins, what it applies. Not similarity, not a citation: the author’s reading of how their thinking connects.' },
+    authorTasks: { h: 'Author decisions', b: 'Pairs of notes with a strong connection (several links, mutual citations, a pillar or high similarity) that the graph cannot qualify. Only the author knows whether one evolved from the other, underpins it or applies it.', tip: 'Each declaration stays as a draft in this browser; “Copy blocks” and “Export” turn it into something published.' },
+    pillar: { h: 'Author pillar', b: 'Marks the pieces at the core of the author’s thinking. They are highlighted with a ring and an always-visible name even if they still have few links: their place is decided by the author, not by the number of connections.' }
+  });
+})();
 (function () {
   var L = window.__lang0 === 'en' ? 'en' : 'es', T = window.KB_T[L];
   document.documentElement.lang = L;

@@ -1,0 +1,12 @@
+{
+  "javierforero.co": {
+    "note": "Relaciones declaradas por Javier Forero: PULSE es la evolución natural de las 5 etapas de la analítica; ambas piezas son eje de su pensamiento en analítica avanzada.",
+    "pillars": [
+      "2026/analitica-datos-5-niveles.md",
+      "2026/pulse-decidir-mejor-con-datos.md"
+    ],
+    "relations": [
+      { "from": "2026/analitica-datos-5-niveles.md", "verb": "evolves", "to": "2026/pulse-decidir-mejor-con-datos.md" }
+    ]
+  }
+}

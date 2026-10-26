@@ -14,7 +14,7 @@ const track = (n, p) => { try { if (typeof window.track === 'function') window.t
 const t = (k, ...a) => { const v = T[UI][k]; return typeof v === 'function' ? v(...a) : v; };
 
 // ======================= state =======================
-const TYPES = ['markdown', 'wikilink', 'prerequisite', 'related', 'translation', 'tag'];
+const TYPES = ['author', 'markdown', 'wikilink', 'prerequisite', 'related', 'translation', 'tag'];
 const S = {
   source: 'demo', meta: null, vault: null, notes: new Map(), assets: new Map(), objectUrls: [],
   groups: [], groupIdx: new Map(), hubs: new Set(), search: new Map(),
@@ -48,6 +48,7 @@ function loadVault(files, assets, meta, opts = {}) {
   S.f.types = new Set(S.defaultTypes);
   S.vault = v; S.meta = meta; S.assets = assets; S.source = meta.source;
   S.notes = new Map(v.notes.map(n => [n.id, n]));
+  applyAuthor(false);
   // repeated titles (three "Homework", several "README") get their folder appended so they can be told apart
   const byTitle = new Map(); v.notes.forEach(n => byTitle.set(n.title, (byTitle.get(n.title) || []).concat(n)));
   for (const group of byTitle.values()) {
@@ -219,6 +220,7 @@ function renderLegend(m) {
   h += `<span class="key"><span class="line"></span>${esc(t('legendBody'))}</span><span class="key"><span class="line fm"></span>${esc(t(S.source === 'wordpress' ? 'legendCurated' : 'legendFm'))}</span>`;
   if (S.f.types.has('translation')) h += `<span class="key"><span class="line tr"></span>${esc(t('legendTr'))}</span>`;
   if (S.f.types.has('tag') && S.vault.links.some(l => l.type === 'tag')) h += `<span class="key"><span class="line tg"></span>${esc(t('legendTag'))}</span>`;
+ if (S.f.types.has('author') && (S.authorRels || []).length) h += `<span class="key"><span class="line au"></span>${esc(t('legendAuthor'))}</span>`;
   if (S.hubs.size) h += `<span class="key"><span class="dia" style="--c:var(--panel)"></span>${esc(t('hubs'))}</span>`;
   $('#legend').innerHTML = h;
 }
@@ -265,9 +267,9 @@ function rebuildGraph() {
     nodes.forEach(n => { const p = posCache.get(n.id); if (p && !n.hub) { n.x = p.x; n.y = p.y; } });
   }
   const byId = new Map(nodes.map(n => [n.id, n]));
-  const simEdges = edges.filter(e => local || !e.hubl).map(e => ({ source: byId.get(e.source), target: byId.get(e.target), fm: !e.types.has('markdown') && !e.types.has('wikilink'), tg: e.types.size === 1 && e.types.has('tag') }));
+  const simEdges = edges.filter(e => local || !e.hubl).map(e => ({ source: byId.get(e.source), target: byId.get(e.target), fm: !e.types.has('markdown') && !e.types.has('wikilink'), tg: e.types.size === 1 && e.types.has('tag'), au: e.types.has('author') }));
   sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(simEdges).distance(e => local ? 70 : (e.tg ? 80 : e.fm ? 62 : 48)).strength(e => (local ? 0.15 : 0.25) * (e.tg ? 0.35 : 1)))
+    .force('link', d3.forceLink(simEdges).distance(e => e.au ? (local ? 150 : 130) : local ? 70 : (e.tg ? 80 : e.fm ? 62 : 48)).strength(e => e.au ? 0.6 : (local ? 0.15 : 0.25) * (e.tg ? 0.35 : 1)))
     .force('charge', d3.forceManyBody().strength(local ? -220 : -190).distanceMax(local ? 600 : 520))
     .force('collide', d3.forceCollide(d => d.r + (local ? 14 : 4)))
     .stop();
@@ -278,7 +280,7 @@ function rebuildGraph() {
   const ls = gLinks.selectAll('line').data(edges, e => e.source + '|' + e.target);
   ls.exit().remove();
   const lsAll = ls.enter().append('line').merge(ls)
-    .attr('class', e => 'g-link' + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.size === 1 && e.types.has('translation') ? ' tr' : e.types.size === 1 && e.types.has('tag') ? ' tg' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
+    .attr('class', e => 'g-link' + (e.types.size === 1 && e.types.has('author') ? ' au' : '') + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.size === 1 && e.types.has('translation') ? ' tr' : e.types.size === 1 && e.types.has('tag') ? ' tg' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
   const ns = gNodes.selectAll('g.g-node').data(nodes, d => d.id);
   ns.exit().remove();
   const nEnter = ns.enter().append('g').attr('class', 'g-node').attr('tabindex', -1);
@@ -315,6 +317,7 @@ function rebuildGraph() {
   if (!reduced) sim.alpha(local ? 0.04 : 0.12).restart();
   styleGraph();
   if (S.ghost) drawGhost();
+  drawAuthor();
   $('#g-count').textContent = t('showing', nodes.length, edges.length);
   $('#g-hint').textContent = local ? t('hintLocal', short(S.notes.get(S.cur).title, 40)) : t('hintGlobal');
 }
@@ -337,6 +340,7 @@ function tick() {
   G.sel.labels.attr('x', d => d.x).attr('y', d => d.y + d.r + 11.5 / Math.sqrt(zoomK) + 2);
   if (++labelTick % 12 === 0) styleLabels();
   if (S.ghost) drawGhost();
+  if (S.authorRels && S.authorRels.length) drawAuthor();
 }
 const nodeIdx = () => G._idx && G._idx.n === G.nodes ? G._idx.m : (G._idx = { n: G.nodes, m: new Map(G.nodes.map(n => [n.id, n])) }).m;
 function node(x) { return typeof x === 'object' ? x : nodeIdx().get(x); }
@@ -381,7 +385,7 @@ function styleGraph() {
 function placeLabels() {
   const nb = hoverId ? G.adj.get(hoverId) || new Set() : null;
   const fs = 11.5 / Math.sqrt(zoomK);
-  const prio = d => d.id === S.cur ? 0 : d.id === hoverId ? 1 : d.hub ? 2 : (nb && nb.has(d.id)) ? 3 : (S.matches && S.matches.has(d.id)) ? 4 : (S.mode === 'local' && d.depth === 1) ? 5 : G.topIds.has(d.id) && !S.matches && !hoverId ? 6 : (S.mode === 'local' || zoomK > 1.6) && !S.matches ? 7 : 99;
+  const prio = d => d.id === S.cur ? 0 : d.id === hoverId ? 1 : (d.hub || S.pillars.has(d.id)) ? 2 : (nb && nb.has(d.id)) ? 3 : (S.matches && S.matches.has(d.id)) ? 4 : (S.mode === 'local' && d.depth === 1) ? 5 : G.topIds.has(d.id) && !S.matches && !hoverId ? 6 : (S.mode === 'local' || zoomK > 1.6) && !S.matches ? 7 : 99;
   const cands = G.nodes.filter(d => prio(d) < 99 && noteActive(d.note) && !(focusGroup && d.note.part !== focusGroup)).sort((a, b) => prio(a) - prio(b) || b.bl - a.bl).slice(0, 80);
   const boxes = [], shown = new Set();
   for (const d of cands) {
@@ -556,6 +560,7 @@ function renderNote(n, anchor, keepScroll) {
   $('#crumb').innerHTML = `<span class="dot" style="--c:${groupColor(n.part)}"></span><span>${esc(groupLabel(n.part))}</span><span class="path">${esc(n.id)}</span>` +
     `<span class="ext-links">${siteUrl != null ? `<a class="site-link" href="${esc(L.site.root + siteUrl)}" target="_blank" rel="noopener">${esc(L.site.label ? L.site.label[UI] || L.site.label.es : t('onSite'))} ↗</a>` : ''}` +
     `${L.github ? `<a class="site-link" href="${esc(L.github.base + encPath(n.id))}" target="_blank" rel="noopener">GitHub ↗</a>` : ''}</span>`;
+  syncPillarBtn(n.id);
   const hb = $('#hub-toggle'); hb.setAttribute('aria-pressed', S.hubs.has(n.id)); hb.title = t(S.hubs.has(n.id) ? 'unHub' : 'makeHub'); hb.setAttribute('aria-label', hb.title);
   // properties = frontmatter as written (own tab)
   const fm = n.frontmatter || {};
@@ -667,6 +672,7 @@ function renderLinks() {
   if (S.linkTab === 'out' && brokenOut.length) h += brokenOut.map(l => `<div class="bk-note"><div class="q-item" style="border:0"><code>${esc(l.raw)}</code><span class="src">${esc(typeLong(l.type))}</span></div></div>`).join('');
   if (!list.length && !(S.linkTab === 'out' && brokenOut.length)) h += `<div class="empty">${esc(t(S.linkTab === 'in' ? 'noIn' : 'noOut'))}</div>`;
   box.innerHTML = h;
+  $('#au-box').innerHTML = authorBoxHtml(id);
   const sg = suggest(id);
   $('#sug-box').innerHTML = `<div class="q-h sug-head"><span>${esc(t('sugHead'))}${sg.length ? ' · ' + sg.length : ''}</span><button type="button" class="hint" data-help="sug" aria-expanded="false">i</button></div>` + sugHtml(id, sg);
   helpApply(); syncGhost();
@@ -693,6 +699,7 @@ function renderQuality() {
   if (broken.length && S.source === 'wordpress') h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpBrokenNote'))}</p>`;
   h += broken.length ? broken.map(l => `<button type="button" class="q-item" data-note="${esc(l.source)}" title="${esc(l.reason || '')}"><code>${esc(l.raw)}</code><span class="src">← ${esc(S.notes.get(l.source).title)}</span></button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noBroken'))}</span></div>`;
+  h += authorHealthHtml();
   h += diagHtml();
   $('#quality').innerHTML = h; helpApply();
   const issues = orphans.length + broken.length, hb = $('#health-badge');
@@ -774,6 +781,7 @@ function renderPeek() {
     `<div class="p-g"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(groupLabel(n.part))}</div><h3>${esc(n.title)}</h3>` +
     (n.excerpt ? `<p>${esc(n.excerpt)}</p>` : '') +
     `<div class="p-s"><span><b>${inN}</b> ${esc(t('inLabel'))}</span><span><b>${outN}</b> ${esc(t('outLabel'))}</span></div>` +
+    (S.pillars.has(n.id) || relsOf(n.id).length ? `<div class="p-au">${S.pillars.has(n.id) ? `<span class="au-pill">★ ${esc(t('pillar'))}</span>` : ''}${relsOf(n.id).slice(0, 2).map(r => { const p = relPhrase(r, n.id); return `<span class="p-au-r">${esc(p.verb)} <b>${esc(short(S.notes.get(p.other).title, 36))}</b></span>`; }).join('')}</div>` : '') +
     (() => { const w = linkedSet(n.id).size; const sg = w <= 1 ? suggest(n.id) : []; return sg.length ? `<button type="button" class="p-sug" data-peek="sug">✦ ${esc(t('peekSug', sg.length))}</button>` : ''; })() +
     `<div class="p-a"><button class="btn btn-primary" type="button" data-peek="read">${esc(t('peekRead'))}</button><button class="btn" type="button" data-peek="links">${esc(t('peekLinks'))}</button>` +
     (S.mode === 'global' ? `<button class="btn" type="button" data-peek="local">${esc(t('peekLocal'))}</button>` : `<button class="btn" type="button" data-peek="global">${esc(t('peekGlobal'))}</button>`) + `</div>`;
@@ -1298,7 +1306,7 @@ async function loadWordpress(input, opts = {}) {
         return `[${text.replace(/\]/g, '\\]')}](<${target}>)`;
       }
     });
-    const metaLinks = {}, curated = new Map();
+    const metaLinks = {}, curated = new Map(), declared = [];
     const files = items.map(it => {
       const doc = new DOMParser().parseFromString(`<body>${(it.content && it.content.rendered) || ''}</body>`, 'text/html');
       doc.__kbPath = it.path;
@@ -1306,6 +1314,12 @@ async function loadWordpress(input, opts = {}) {
       doc.body.querySelectorAll('p, div, ul, section, aside').forEach(el => {
         if (el.querySelector('p, div, ul, section, aside')) return;
         const lead = (el.textContent || '').trim().slice(0, 60);
+        const av = lead.match(AV_RE);
+        if (av) {   // author-declared relation: «Evoluciona en: <a>…</a>»
+          const [verb, inv] = AV_LEAD[av[1].toLowerCase()];
+          el.querySelectorAll('a[href]').forEach(a => { const k = wpKey(a.getAttribute('href'), host); if (k && byKey.has(k)) declared.push(inv ? { from: byKey.get(k), verb, to: it.path } : { from: it.path, verb, to: byKey.get(k) }); });
+          return;
+        }
         if (!/related/i.test(el.className) && !WP_CURATED_RE.test(lead)) return;
         el.querySelectorAll('a[href]').forEach(a => {
           const k = wpKey(a.getAttribute('href'), host); if (!k || !byKey.has(k)) return;
@@ -1342,7 +1356,7 @@ async function loadWordpress(input, opts = {}) {
     S.filesMode = false;
     loadVault(files, new Map(), {
       source: 'wordpress', name: host, host, api: api.base.includes('public-api') ? 'wpcom' : 'site', total: posts.total, truncated: posts.items.length < posts.total,
-      hubs: [], groupLabels, extraLinks, curated, defaultTypesExtra: ['tag'], extraIfOrphanRate: 0.25,
+      hubs: [], groupLabels, extraLinks, curated, declared, defaultTypesExtra: ['tag'], extraIfOrphanRate: 0.25,
       links: { site: { root: '', label: { es: 'Ver en el blog', en: 'View on the blog' }, urls: metaLinks } }
     }, { startNote: opts.note });
     syncUrl(); closeSheet(); st.hidden = true;
@@ -1587,6 +1601,144 @@ function diagHtml() {
   h += `<button type="button" class="btn sug-export" id="export-tasks">${esc(t('exportTasks'))}</button>`;
   return h;
 }
+// ======================= relaciones del autor =======================
+// Tercera capa del grafo: relaciones que no se infieren (etiquetas, similitud) ni equivalen a un enlace cualquiera.
+// Solo el autor puede declararlas: tienen dirección y verbo («5 Niveles evoluciona en PULSE»).
+// Fuentes, en orden de autoridad: bloques en el propio contenido («Evoluciona en: …»), el archivo publicado
+// data/author-relations.json y, como borrador, lo que el autor declara en este navegador.
+const AVERBS = ['evolves', 'founds', 'applies', 'updates'];
+const AV_LEAD = {
+  'evoluciona en': ['evolves', 0], 'evoluciona de': ['evolves', 1], 'evolves into': ['evolves', 0], 'evolved from': ['evolves', 1],
+  'fundamenta': ['founds', 0], 'se fundamenta en': ['founds', 1], 'underpins': ['founds', 0], 'builds on': ['founds', 1],
+  'aplica': ['applies', 0], 'se aplica en': ['applies', 1], 'applies': ['applies', 0], 'applied in': ['applies', 1],
+  'actualiza a': ['updates', 0], 'actualizado por': ['updates', 1], 'updates': ['updates', 0], 'updated by': ['updates', 1],
+  'es actualizado por': ['updates', 1], 'is updated by': ['updates', 1], 'is applied in': ['applies', 1]
+};
+const AV_RE = new RegExp('^(' + Object.keys(AV_LEAD).sort((a, b) => b.length - a.length).join('|') + ')\\s*:', 'i');
+let AUTH_CFG = null;
+fetch('data/author-relations.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+  .then(j => { AUTH_CFG = j || {}; if (S.vault) applyAuthor(true); });
+function authKey() { const m = S.meta || {}; return String(S.source === 'wordpress' ? m.host : (m.repo || m.name || '')).toLowerCase(); }
+function authLocal() { try { return JSON.parse(store.get('kb-author:' + authKey()) || '{}') || {}; } catch (e) { return {}; } }
+function authSave(o) { store.set('kb-author:' + authKey(), JSON.stringify(o)); }
+function verbLabel(v, inverse) { const L = T[UI].verbs[v] || [v, v]; return L[inverse ? 1 : 0]; }
+function authDeclared() {
+  const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal(), seen = new Set(), out = [];
+  const add = (r, src) => { if (!r || !AVERBS.includes(r.verb) || !S.notes.has(r.from) || !S.notes.has(r.to) || r.from === r.to) return; const k = r.from + '|' + r.verb + '|' + r.to; if (seen.has(k)) return; seen.add(k); out.push({ from: r.from, to: r.to, verb: r.verb, src }); };
+  (S.meta && S.meta.declared || []).forEach(r => add(r, 'blog'));
+  (cfg.relations || []).forEach(r => add(r, 'site'));
+  (loc.relations || []).forEach(r => add(r, 'local'));
+  return out;
+}
+function applyAuthor(rerender) {
+  if (!S.vault) return;
+  S.vault.links = S.vault.links.filter(l => l.type !== 'author');
+  const rels = authDeclared();
+  for (const r of rels) S.vault.links.push({ source: r.from, target: r.to, raw: r.to, type: 'author', verb: r.verb, origin: r.src, resolution: 'relative', reason: null, heading: null, display: null, section: null,
+    context: `${verbLabel(r.verb, false)} → ${S.notes.get(r.to).title}` });
+  const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal();
+  S.pillars = new Set([...(cfg.pillars || []), ...(loc.pillars || [])].filter(id => S.notes.has(id) && !(loc.unpillars || []).includes(id)));
+  S.authorRels = rels;
+  if (!S.defaultTypes.has('author')) { S.defaultTypes.add('author'); S.f.types.add('author'); }
+  if (SIX) SIX.cache.clear();
+  if (rerender) { buildFilters(); rebuildGraph(); renderList(); renderQuality(); if (S.cur) { renderLinks(); renderPeek(); renderNote(S.notes.get(S.cur), null, true); } }
+}
+S.pillars = new Set(); S.authorRels = [];
+function relsOf(id) { return (S.authorRels || []).filter(r => r.from === id || r.to === id); }
+function relPhrase(r, id) { const out = r.from === id; return { verb: verbLabel(r.verb, !out), other: out ? r.to : r.from, out }; }
+function authorBoxHtml(id) {
+  const rs = relsOf(id); const pillar = S.pillars.has(id);
+  if (!rs.length && !pillar) return '';
+  let h = `<div class="q-h au-head"><span>${esc(t('authHead'))}${rs.length ? ' · ' + rs.length : ''}</span><button type="button" class="hint" data-help="author" aria-expanded="false">i</button></div>`;
+  if (pillar) h += `<div class="au-pill">★ ${esc(t('pillarIs'))}</div>`;
+  h += rs.map(r => { const p = relPhrase(r, id), o = S.notes.get(p.other); return `<div class="au-rel"><span class="au-verb">${p.out ? '' : '← '}${esc(p.verb)}${p.out ? ' →' : ''}</span><button type="button" class="bk-title" data-note="${esc(p.other)}"><span class="dot" style="--c:${groupColor(o.part)}"></span>${esc(o.title)}</button><span class="au-src">${esc(t('authSrc_' + r.src))}</span></div>`; }).join('');
+  if (!rs.length) h += `<div class="empty">${esc(t('authNoneYet'))}</div>`;
+  return h;
+}
+// what only the author can settle: strong pairs (several links, a pillar, high similarity) with no declared relation
+function authCandidates(limit = 6) {
+  const declared = new Set((S.authorRels || []).flatMap(r => [r.from + '|' + r.to, r.to + '|' + r.from]));
+  const pairs = new Map();
+  for (const l of S.vault.links) {
+    if (!l.target || l.source === l.target || l.type === 'tag' || l.type === 'author' || l.type === 'translation') continue;
+    const a = S.notes.get(l.source), b = S.notes.get(l.target); if (!visibleNote(a) || !visibleNote(b) || S.hubs.has(a.id) || S.hubs.has(b.id)) continue;
+    const k = l.source < l.target ? l.source + '|' + l.target : l.target + '|' + l.source;
+    if (declared.has(k)) continue;
+    const p = pairs.get(k) || { a: k.split('|')[0], b: k.split('|')[1], n: 0, dirs: new Set() }; p.n++; p.dirs.add(l.source); pairs.set(k, p);
+  }
+  const ix = simIndex(); const cos = (x, y) => { const A = ix.vec.get(x), B = ix.vec.get(y); if (!A || !B) return 0; let s = 0; for (const [k, w] of A) { const w2 = B.get(k); if (w2) s += w * w2; } return s; };
+  return [...pairs.values()].map(p => {
+    const pil = (S.pillars.has(p.a) ? 1 : 0) + (S.pillars.has(p.b) ? 1 : 0), sim = cos(p.a, p.b);
+    return { ...p, pil, sim, both: p.dirs.size > 1, score: pil * 2 + Math.min(p.n, 4) * 0.5 + (p.dirs.size > 1 ? 1 : 0) + sim * 3 };
+  }).filter(p => p.pil || p.n >= 2 || p.both || p.sim >= 0.3).sort((x, y) => y.score - x.score).slice(0, limit);
+}
+function authorHealthHtml() {
+  const rels = S.authorRels || [], cands = authCandidates();
+  const nm = id => esc(short(S.notes.get(id).title, 34));
+  let h = `<div class="q-h"><span>${esc(t('authTasks'))}</span><button type="button" class="hint" data-help="authorTasks" aria-expanded="false">i</button></div>`;
+  h += `<div class="au-sub">${esc(t('authDeclaredN', rels.length))}</div>`;
+  h += rels.map(r => `<div class="au-row"><button type="button" class="q-item" data-note="${esc(r.from)}"><span class="q-t"><b>${nm(r.from)}</b> <span class="au-verb">${esc(verbLabel(r.verb))} →</span> <b>${nm(r.to)}</b></span><span class="src">${esc(t('authSrc_' + r.src))}</span></button>${r.src === 'local' ? `<button type="button" class="au-x" data-au-del="${esc(r.from + '|' + r.verb + '|' + r.to)}" aria-label="${esc(t('authDel'))}" title="${esc(t('authDel'))}">×</button>` : ''}</div>`).join('');
+  if (S.pillars.size) h += `<div class="au-sub">★ ${esc(t('pillarsN', S.pillars.size))}: ${[...S.pillars].map(id => `<button type="button" class="au-link" data-note="${esc(id)}">${nm(id)}</button>`).join(' · ')}</div>`;
+  h += `<div class="au-sub">${esc(t('authPendingN', cands.length))}</div>`;
+  h += cands.length ? cands.map((c, i) => {
+    const A = S.notes.get(c.a), B = S.notes.get(c.b);
+    const why = [c.n > 1 ? t('authWhyLinks', c.n) : t('authWhyLink'), c.both ? t('authWhyBoth') : '', c.pil ? t('authWhyPillar') : '', c.sim >= 0.1 ? t('authWhySim', Math.round(c.sim * 100)) : ''].filter(Boolean).join(' · ');
+    const opts = AVERBS.flatMap(v => [[c.a, v, c.b], [c.b, v, c.a]]).map(([f, v, to]) => `<option value="${esc(f + '|' + v + '|' + to)}">${esc(short(S.notes.get(f).title, 22))} ${esc(verbLabel(v))} ${esc(short(S.notes.get(to).title, 22))}</option>`).join('');
+    return `<div class="au-cand"><div class="au-pair"><button type="button" class="au-link" data-note="${esc(c.a)}">${esc(A.title)}</button> ↔ <button type="button" class="au-link" data-note="${esc(c.b)}">${esc(B.title)}</button></div><div class="au-why">${esc(why)}</div>` +
+      `<div class="au-act"><label class="sr" for="au-sel-${i}">${esc(t('authChoose'))}</label><select id="au-sel-${i}" class="au-sel"><option value="">${esc(t('authChoose'))}</option>${opts}</select><button type="button" class="btn au-go" data-au-sel="au-sel-${i}">${esc(t('authDeclare'))}</button></div></div>`;
+  }).join('') : `<div class="ok-line">✓ <span>${esc(t('authNoPending'))}</span></div>`;
+  const loc = authLocal();
+  if ((loc.relations || []).length || (loc.pillars || []).length) h += `<div class="au-tools"><button type="button" class="btn" id="au-copy">${esc(t('authCopyBlocks'))}</button><button type="button" class="btn" id="au-export">${esc(t('authExport'))}</button></div><p class="help" style="margin-top:6px">${esc(t('authLocalNote'))}</p>`;
+  return h;
+}
+function authBlockHtml(from) {
+  const lines = (S.authorRels || []).filter(r => r.src === 'local' && (r.from === from || r.to === from)).map(r => { const p = relPhrase(r, from); const vb = p.verb.charAt(0).toUpperCase() + p.verb.slice(1); return `<p class="jf-relation"><strong>${vb}:</strong> <a href="${noteUrl(p.other) || p.other}">${S.notes.get(p.other).title.replace(/</g, '&lt;')}</a></p>`; });
+  return lines.join('\n');
+}
+$('#quality').addEventListener('click', e => {
+  const go = e.target.closest('[data-au-sel]'), del = e.target.closest('[data-au-del]');
+  if (go) {
+    const v = $('#' + go.dataset.auSel).value; if (!v) { $('#' + go.dataset.auSel).focus(); return; }
+    const [from, verb, to] = v.split('|'); const loc = authLocal(); loc.relations = (loc.relations || []).concat({ from, verb, to }); authSave(loc);
+    applyAuthor(true); toast(t('authSaved'), 5200); track('author_relation_declare', { verb, source: S.source });
+  } else if (del) {
+    const [from, verb, to] = del.dataset.auDel.split('|'); const loc = authLocal();
+    loc.relations = (loc.relations || []).filter(r => !(r.from === from && r.verb === verb && r.to === to)); authSave(loc); applyAuthor(true);
+  } else if (e.target.closest('#au-copy')) {
+    const froms = [...new Set((S.authorRels || []).filter(r => r.src === 'local').flatMap(r => [r.from, r.to]))];
+    const txt = froms.map(id => `<!-- ${S.notes.get(id).title} -->\n${authBlockHtml(id)}`).filter(x => /jf-relation/.test(x)).join('\n\n');
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast(t('authCopied')), () => toast(txt, 8000));
+  } else if (e.target.closest('#au-export')) {
+    const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal();
+    const out = { [authKey()]: { pillars: [...S.pillars], relations: (S.authorRels || []).filter(r => r.src !== 'blog').map(({ from, verb, to }) => ({ from, verb, to })) } };
+    if (cfg.note) out[authKey()].note = cfg.note;
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' }));
+    a.download = 'author-relations.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    track('author_relations_export', { source: S.source });
+  }
+});
+$('#pillar-toggle').addEventListener('click', () => {
+  const id = S.cur; if (!id) return; const loc = authLocal();
+  loc.pillars = (loc.pillars || []).filter(x => x !== id); loc.unpillars = (loc.unpillars || []).filter(x => x !== id);
+  if (S.pillars.has(id)) loc.unpillars.push(id); else loc.pillars.push(id);
+  authSave(loc); applyAuthor(true);
+});
+function syncPillarBtn(id) { const b = $('#pillar-toggle'); const on = S.pillars.has(id); b.setAttribute('aria-pressed', on); b.title = t(on ? 'unPillar' : 'makePillar'); b.setAttribute('aria-label', b.title); }
+// declared relations drawn as arrows over the graph (direction matters: from → to)
+function drawAuthor() {
+  let g = gRoot.select('g.au-arrows'); if (g.empty()) { g = gRoot.insert('g', () => gNodes.node()).attr('class', 'au-arrows'); }
+  if (svg.select('#au-arrow').empty()) svg.append('defs').append('marker').attr('id', 'au-arrow').attr('viewBox', '0 0 10 10').attr('refX', 9).attr('refY', 5).attr('markerWidth', 7).attr('markerHeight', 7).attr('orient', 'auto-start-reverse').append('path').attr('d', 'M0,0L10,5L0,10Z').attr('class', 'au-head');
+  const on = S.f.types.has('author');
+  const data = on ? (S.authorRels || []).map(r => ({ r, a: nodeIdx().get(r.from), b: nodeIdx().get(r.to) })).filter(d => d.a && d.b && d.a.x != null && d.b.x != null) : [];
+  const ls = g.selectAll('line').data(data, d => d.r.from + '|' + d.r.verb + '|' + d.r.to); ls.exit().remove();
+  ls.enter().append('line').attr('class', 'g-author').attr('marker-end', 'url(#au-arrow)').append('title').merge(ls.select('title')).text(d => `${d.a.note.title} · ${verbLabel(d.r.verb)} → ${d.b.note.title}`);
+  g.selectAll('line').each(function (d) {
+    const dx = d.b.x - d.a.x, dy = d.b.y - d.a.y, L = Math.hypot(dx, dy) || 1, ra = d.a.r + 3, rb = d.b.r + 6;
+    d3.select(this).attr('x1', d.a.x + dx / L * ra).attr('y1', d.a.y + dy / L * ra).attr('x2', d.b.x - dx / L * rb).attr('y2', d.b.y - dy / L * rb);
+  });
+  if (G.sel) G.sel.nodes.classed('pillar', d => S.pillars.has(d.id));
+  if (G.sel) G.sel.labels.classed('pillt', d => S.pillars.has(d.id));
+}
 
 // ======================= recorrido guiado =======================
 var TOUR = { on: false, i: 0, steps: [] };
@@ -1602,6 +1754,9 @@ function tourSteps() {
     steps.push({ k: 'central', run() { resetTypes(); setView('graph'); setMode('global'); openNote(central.id, { focus: true }); }, text: () => t('tour2', central.title, writtenIn(central.id)) });
     steps.push({ k: 'local', run() { resetTypes(); setView('graph'); if (S.cur !== central.id) openNote(central.id); setMode('local'); }, text: () => t('tour3', central.title) });
   }
+  const ar = (S.authorRels || []).slice().sort((a, b) => (b.verb === 'evolves') - (a.verb === 'evolves'))[0];
+  if (ar) steps.push({ k: 'author', run() { resetTypes(); setView('graph'); openNote(ar.from); setMode('local'); setTimeout(() => focusNode(ar.from), 80); },
+    text: () => t('tourAuthor', S.notes.get(ar.from).title, verbLabel(ar.verb), S.notes.get(ar.to).title) });
   const hasCurated = v.links.some(l => l.type === 'related' && l.target);
   if (hasCurated && S.source === 'wordpress') {
     const before = isolatedWithout('related'), now = d.orphans.length;
