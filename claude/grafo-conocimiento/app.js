@@ -194,8 +194,8 @@ function typeLong(k) { return S.source === 'wordpress' && k === 'related' ? t('w
 function buildFilters() {
   const v = S.vault;
   const tc = {}; v.links.filter(l => l.target).forEach(l => tc[l.type] = (tc[l.type] || 0) + 1);
-  const types = TYPES.filter(k => tc[k]);
-  let h = types.map(k => `<button type="button" class="tog" data-type="${k}" aria-pressed="${S.f.types.has(k)}" data-help="type-${k}${S.source === 'wordpress' && k === 'related' ? '-wp' : ''}" aria-label="${esc(typeLong(k))}">${esc(T[UI].type[k])} <span class="n">${tc[k]}</span></button>`).join('');
+  const types = TYPES.filter(k => tc[k] || k === 'author');
+  let h = types.map(k => `<button type="button" class="tog" data-type="${k}" aria-pressed="${S.f.types.has(k)}" data-help="type-${k}${S.source === 'wordpress' && k === 'related' ? '-wp' : ''}" aria-label="${esc(typeLong(k))}">${esc(T[UI].type[k])} <span class="n">${tc[k] || 0}</span></button>`).join('');
   if (S.hubs.size) h += `<button type="button" class="tog" data-hubedges data-help="hubEdges" aria-pressed="${S.f.hubEdges}">${esc(t('hubEdges'))}</button>`;
   $('#f-types').innerHTML = h;
   // recomendación accionable: la decisión de filtro con más efecto en esta bóveda
@@ -783,6 +783,7 @@ function renderPeek() {
     `<div class="p-s"><span><b>${inN}</b> ${esc(t('inLabel'))}</span><span><b>${outN}</b> ${esc(t('outLabel'))}</span></div>` +
     (S.pillars.has(n.id) || relsOf(n.id).length ? `<div class="p-au">${S.pillars.has(n.id) ? `<span class="au-pill">★ ${esc(t('pillar'))}</span>` : ''}${relsOf(n.id).slice(0, 2).map(r => { const p = relPhrase(r, n.id); return `<span class="p-au-r">${esc(p.verb)} <b>${esc(short(S.notes.get(p.other).title, 36))}</b></span>`; }).join('')}</div>` : '') +
     (() => { const w = linkedSet(n.id).size; const sg = w <= 1 ? suggest(n.id) : []; return sg.length ? `<button type="button" class="p-sug" data-peek="sug">✦ ${esc(t('peekSug', sg.length))}</button>` : ''; })() +
+    `<button type="button" class="p-rel" data-peek="rel">＋ ${esc(t('relAddShort'))}</button>` +
     `<div class="p-a"><button class="btn btn-primary" type="button" data-peek="read">${esc(t('peekRead'))}</button><button class="btn" type="button" data-peek="links">${esc(t('peekLinks'))}</button>` +
     (S.mode === 'global' ? `<button class="btn" type="button" data-peek="local">${esc(t('peekLocal'))}</button>` : `<button class="btn" type="button" data-peek="global">${esc(t('peekGlobal'))}</button>`) + `</div>`;
   box.hidden = false;
@@ -793,6 +794,7 @@ $('#peek').addEventListener('click', e => {
   const a = b.dataset.peek;
   if (a === 'read') { setReaderTab('content'); setView('split'); }
   else if (a === 'links' || a === 'sug') { setReaderTab('links'); setView('split'); if (a === 'sug') setTimeout(() => { const b = $('#sug-box'); if (b) b.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' }); }, 450); }
+  else if (a === 'rel') relOpen(S.cur);
   else if (a === 'local') setMode('local');
   else if (a === 'global') setMode('global');
 });
@@ -987,6 +989,7 @@ $('#pick-files').addEventListener('change', e => { ingest([...e.target.files].ma
 
 const IMG = /\.(svg|png|jpe?g|gif|webp|avif)$/i;
 const SKIP = /(^|\/)(\.[^/]*|node_modules|__pycache__|site|_site|vendor)(\/|$)/;
+const REL_FILE = /^(relaciones-autor|author-relations|relations)\.json$/i;   // author relations kept in the vault itself
 async function ingest(entries, fromDir) {
   // drop the picked folder's own name so paths are relative to the vault root
   let root = '';
@@ -1002,9 +1005,11 @@ async function ingest(entries, fromDir) {
   const files = await Promise.all(md.map(async x => ({ path: rel(x).replace(/\.markdown$/i, '.md'), text: await x.file.text() })));
   const assets = new Map(); const urls = [];
   for (const x of keep.filter(x => IMG.test(x.path))) { let u = null; assets.set(rel(x), () => { if (!u) { u = URL.createObjectURL(x.file); urls.push(u); } return u; }); }
+  let relationsFile = null; const rfx = keep.find(x => REL_FILE.test(rel(x)));
+  if (rfx) { try { relationsFile = JSON.parse(await rfx.file.text()); } catch (e) { relationsFile = null; } }
   closeSheet();
   S.filesMode = !fromDir;
-  loadVault(files, assets, { source: 'folder', name: root || t('yours'), hubs: null, objectUrls: urls });
+  loadVault(files, assets, { source: 'folder', name: root || t('yours'), hubs: null, objectUrls: urls, relationsFile });
   syncUrl();
   toast(t('loaded', S.vault.stats.notes, S.vault.stats.linksResolved), 4200);
   track('vault_load', { source: 'folder', notes_bucket: bucket(S.vault.stats.notes) });
@@ -1146,11 +1151,13 @@ async function loadGithub(input, opts = {}) {
     await Promise.all(Array.from({ length: Math.min(8, md.length) }, worker));
     const assets = new Map();
     inRoot.filter(f => IMG.test(f.rel)).forEach(f => assets.set(f.rel, ghAssetGetter(o, list.ref, f.path, token, list.isPrivate)));
+    let relationsFile = null; const rfx = inRoot.find(f => REL_FILE.test(f.rel));
+    if (rfx) { try { relationsFile = JSON.parse(await fetchText(o, list.ref, rfx.path, token, list.isPrivate)); } catch (e) { relationsFile = null; } }
     const repoLabel = `${o.owner}/${o.repo}`;
     S.filesMode = false;
     loadVault(files, assets, {
       source: 'github', name: repoLabel, repo: repoLabel, ref: list.ref, root, rootWhy, via: list.via, truncated: list.truncated,
-      refParam: o.ref || null, pathParam: pathOverride != null ? pathOverride : (o.path || null), hubs: null,
+      refParam: o.ref || null, pathParam: pathOverride != null ? pathOverride : (o.path || null), hubs: null, relationsFile,
       links: { github: { base: `https://github.com/${o.owner}/${o.repo}/blob/${encodeURIComponent(list.ref)}/${pre}` } }
     }, { startNote: opts.note });
     syncUrl(); closeSheet(); $('#gh-status').hidden = true;
@@ -1625,7 +1632,9 @@ function verbLabel(v, inverse) { const L = T[UI].verbs[v] || [v, v]; return L[in
 function authDeclared() {
   const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal(), seen = new Set(), out = [];
   const add = (r, src) => { if (!r || !AVERBS.includes(r.verb) || !S.notes.has(r.from) || !S.notes.has(r.to) || r.from === r.to) return; const k = r.from + '|' + r.verb + '|' + r.to; if (seen.has(k)) return; seen.add(k); out.push({ from: r.from, to: r.to, verb: r.verb, src }); };
+  (S.vault.authorRels || []).forEach(r => add(r, S.source === 'wordpress' ? 'blog' : 'note'));
   (S.meta && S.meta.declared || []).forEach(r => add(r, 'blog'));
+  ((S.meta && S.meta.relationsFile || {}).relations || []).forEach(r => add(r, 'file'));
   (cfg.relations || []).forEach(r => add(r, 'site'));
   (loc.relations || []).forEach(r => add(r, 'local'));
   return out;
@@ -1637,7 +1646,8 @@ function applyAuthor(rerender) {
   for (const r of rels) S.vault.links.push({ source: r.from, target: r.to, raw: r.to, type: 'author', verb: r.verb, origin: r.src, resolution: 'relative', reason: null, heading: null, display: null, section: null,
     context: `${verbLabel(r.verb, false)} → ${S.notes.get(r.to).title}` });
   const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal();
-  S.pillars = new Set([...(cfg.pillars || []), ...(loc.pillars || [])].filter(id => S.notes.has(id) && !(loc.unpillars || []).includes(id)));
+  const rf = (S.meta && S.meta.relationsFile) || {};
+  S.pillars = new Set([...(S.vault.pillars || []), ...(rf.pillars || []), ...(cfg.pillars || []), ...(loc.pillars || [])].filter(id => S.notes.has(id) && !(loc.unpillars || []).includes(id)));
   S.authorRels = rels;
   if (!S.defaultTypes.has('author')) { S.defaultTypes.add('author'); S.f.types.add('author'); }
   if (SIX) SIX.cache.clear();
@@ -1648,11 +1658,12 @@ function relsOf(id) { return (S.authorRels || []).filter(r => r.from === id || r
 function relPhrase(r, id) { const out = r.from === id; return { verb: verbLabel(r.verb, !out), other: out ? r.to : r.from, out }; }
 function authorBoxHtml(id) {
   const rs = relsOf(id); const pillar = S.pillars.has(id);
-  if (!rs.length && !pillar) return '';
+  if (!rs.length && !pillar) return `<button type="button" class="au-cta" data-au-new="${esc(id)}">＋ ${esc(t('relAddLong'))}</button>`;
   let h = `<div class="q-h au-head"><span>${esc(t('authHead'))}${rs.length ? ' · ' + rs.length : ''}</span><button type="button" class="hint" data-help="author" aria-expanded="false">i</button></div>`;
   if (pillar) h += `<div class="au-pill">★ ${esc(t('pillarIs'))}</div>`;
   h += rs.map(r => { const p = relPhrase(r, id), o = S.notes.get(p.other); return `<div class="au-rel"><span class="au-verb">${p.out ? '' : '← '}${esc(p.verb)}${p.out ? ' →' : ''}</span><button type="button" class="bk-title" data-note="${esc(p.other)}"><span class="dot" style="--c:${groupColor(o.part)}"></span>${esc(o.title)}</button><span class="au-src">${esc(t('authSrc_' + r.src))}</span></div>`; }).join('');
   if (!rs.length) h += `<div class="empty">${esc(t('authNoneYet'))}</div>`;
+  h += `<button type="button" class="au-cta in" data-au-new="${esc(id)}">＋ ${esc(t('relAddShort'))}</button>`;
   return h;
 }
 // what only the author can settle: strong pairs (several links, a pillar, high similarity) with no declared relation
@@ -1676,7 +1687,8 @@ function authorHealthHtml() {
   const rels = S.authorRels || [], cands = authCandidates();
   const nm = id => esc(short(S.notes.get(id).title, 34));
   let h = `<div class="q-h"><span>${esc(t('authTasks'))}</span><button type="button" class="hint" data-help="authorTasks" aria-expanded="false">i</button></div>`;
-  h += `<div class="au-sub">${esc(t('authDeclaredN', rels.length))}</div>`;
+  if (!rels.length) h += `<div class="au-empty"><p>${esc(t('authEmpty'))}</p><button type="button" class="btn btn-primary" data-au-new="">＋ ${esc(t('authFirst'))}</button></div>`;
+  else h += `<div class="au-sub">${esc(t('authDeclaredN', rels.length))}</div>`;
   h += rels.map(r => `<div class="au-row"><button type="button" class="q-item" data-note="${esc(r.from)}"><span class="q-t"><b>${nm(r.from)}</b> <span class="au-verb">${esc(verbLabel(r.verb))} →</span> <b>${nm(r.to)}</b></span><span class="src">${esc(t('authSrc_' + r.src))}</span></button>${r.src === 'local' ? `<button type="button" class="au-x" data-au-del="${esc(r.from + '|' + r.verb + '|' + r.to)}" aria-label="${esc(t('authDel'))}" title="${esc(t('authDel'))}">×</button>` : ''}</div>`).join('');
   if (S.pillars.size) h += `<div class="au-sub">★ ${esc(t('pillarsN', S.pillars.size))}: ${[...S.pillars].map(id => `<button type="button" class="au-link" data-note="${esc(id)}">${nm(id)}</button>`).join(' · ')}</div>`;
   h += `<div class="au-sub">${esc(t('authPendingN', cands.length))}</div>`;
@@ -1696,7 +1708,8 @@ function authBlockHtml(from) {
   return lines.join('\n');
 }
 $('#quality').addEventListener('click', e => {
-  const go = e.target.closest('[data-au-sel]'), del = e.target.closest('[data-au-del]');
+  const go = e.target.closest('[data-au-sel]'), del = e.target.closest('[data-au-del]'), nw = e.target.closest('[data-au-new]');
+  if (nw) return;
   if (go) {
     const v = $('#' + go.dataset.auSel).value; if (!v) { $('#' + go.dataset.auSel).focus(); return; }
     const [from, verb, to] = v.split('|'); const loc = authLocal(); loc.relations = (loc.relations || []).concat({ from, verb, to }); authSave(loc);
@@ -1710,10 +1723,12 @@ $('#quality').addEventListener('click', e => {
     (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast(t('authCopied')), () => toast(txt, 8000));
   } else if (e.target.closest('#au-export')) {
     const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal();
-    const out = { [authKey()]: { pillars: [...S.pillars], relations: (S.authorRels || []).filter(r => r.src !== 'blog').map(({ from, verb, to }) => ({ from, verb, to })) } };
-    if (cfg.note) out[authKey()].note = cfg.note;
+    const body = { pillars: [...S.pillars], relations: (S.authorRels || []).filter(r => r.src !== 'blog' && r.src !== 'note').map(({ from, verb, to }) => ({ from, verb, to })) };
+    if (cfg.note) body.note = cfg.note;
+    const own = S.source === 'github' || S.source === 'folder';   // goes at the root of the user's own repository / folder
+    const out = own ? body : { [authKey()]: body };
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' }));
-    a.download = 'author-relations.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    a.download = own ? 'relaciones-autor.json' : 'author-relations.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
     track('author_relations_export', { source: S.source });
   }
 });
@@ -1739,6 +1754,96 @@ function drawAuthor() {
   if (G.sel) G.sel.nodes.classed('pillar', d => S.pillars.has(d.id));
   if (G.sel) G.sel.labels.classed('pillt', d => S.pillars.has(d.id));
 }
+// ======================= declarar una relación (desde cualquier nota) =======================
+// El autor elige verbo y nota destino; queda como borrador en este navegador y el panel le entrega
+// el fragmento exacto para hacerla permanente en su propia fuente (blog, nota Markdown o archivo del repositorio).
+const REL_OPTS = [['evolves', 0], ['evolves', 1], ['founds', 0], ['founds', 1], ['applies', 0], ['applies', 1], ['updates', 0], ['updates', 1]];
+const REL = { from: null, to: null, opt: 0, saved: false };
+function relCandidates(q) {
+  const from = REL.from; const fq = fold(q || '').trim();
+  if (!fq) {
+    const seen = new Set([from]); const out = [];
+    for (const s of suggest(from, 4, { includeLinked: true })) if (!seen.has(s.id)) { seen.add(s.id); out.push(s.id); }
+    for (const id of linkedSet(from)) if (!seen.has(id) && out.length < 8) { seen.add(id); out.push(id); }
+    return out.slice(0, 8);
+  }
+  return S.vault.notes.filter(n => n.id !== from && fold(n.title).includes(fq)).slice(0, 8).map(n => n.id);
+}
+function relOpen(from, to) {
+  if (!S.notes.has(from)) return;
+  REL.from = from; REL.to = to && S.notes.has(to) ? to : null; REL.opt = 0; REL.saved = false;
+  closePops(); $('#rel-pop').hidden = false; relRender(true);
+  track('author_relation_open', { source: S.source });
+}
+function relClose() { $('#rel-pop').hidden = true; const b = $('#rel-add'); if (b && !b.closest('[hidden]')) b.focus({ preventScroll: true }); }
+function relRender(first) {
+  const A = S.notes.get(REL.from), B = REL.to && S.notes.get(REL.to);
+  const [verb, inv] = REL_OPTS[REL.opt];
+  const opts = REL_OPTS.map(([v, i], k) => `<option value="${k}"${k === REL.opt ? ' selected' : ''}>${esc(verbLabel(v, !!i))}</option>`).join('');
+  const prev = B ? `<b>${esc(A.title)}</b> <span class="au-verb">${esc(verbLabel(verb, !!inv))}</span> <b>${esc(B.title)}</b>` : esc(t('relPickTo'));
+  let h = `<div class="rel-h"><h3 id="rel-h">${esc(t('relTitle'))}</h3><button type="button" class="icon-btn" data-rel="close" aria-label="${esc(t('close'))}" title="${esc(t('close'))}"><svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>` +
+    `<p class="help">${esc(t('relLead'))}</p>` +
+    `<div class="rel-row"><span class="rel-from"><span class="dot" style="--c:${groupColor(A.part)}"></span>${esc(A.title)}</span><label class="sr" for="rel-verb">${esc(t('relVerb'))}</label><select id="rel-verb">${opts}</select></div>` +
+    `<label class="sr" for="rel-q">${esc(t('relSearch'))}</label><input id="rel-q" type="search" autocomplete="off" placeholder="${esc(t('relSearch'))}" value="${B ? esc(B.title) : ''}" aria-controls="rel-list">` +
+    `<div class="rel-list" id="rel-list" role="listbox"></div>` +
+    `<div class="rel-prev">${prev}</div>` +
+    `<div class="rel-a"><button type="button" class="btn btn-primary" data-rel="save"${B ? '' : ' disabled'}>${esc(t('relSave'))}</button><button type="button" class="btn" data-rel="close">${esc(t('relCancel'))}</button></div>` +
+    `<div class="rel-perm" id="rel-perm" hidden></div>`;
+  $('#rel-pop').innerHTML = h; relList(B ? '' : '');
+  if (first) setTimeout(() => $('#rel-q').focus(), 30);
+}
+function relList(q) {
+  const ids = relCandidates(q);
+  $('#rel-list').innerHTML = ids.length ? ids.map(id => { const n = S.notes.get(id); return `<button type="button" role="option" class="rel-opt${id === REL.to ? ' on' : ''}" aria-selected="${id === REL.to}" data-rel-to="${esc(id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span>${esc(n.title)}</button>`; }).join('')
+    : `<div class="empty">${esc(t('relNoMatch'))}</div>`;
+}
+function relSnippets(from, verb, to, inv) {
+  // the block goes in the note the author is looking at (from), with the verb read from there
+  const vb = verbLabel(verb, !!inv), Vb = vb.charAt(0).toUpperCase() + vb.slice(1), B = S.notes.get(to);
+  const title = B.baseTitle || B.title;
+  if (S.source === 'wordpress') return [{ where: t('relWhereWp', S.notes.get(from).title), code: `<p class="jf-relation"><strong>${Vb}:</strong> <a href="${noteUrl(to) || to}">${title.replace(/</g, '&lt;')}</a></p>` }];
+  const wiki = S.vault.links.some(l => l.type === 'wikilink');
+  const target = wiki ? `[[${to.split('/').pop().replace(/\.md$/i, '')}]]` : `[${title.replace(/\]/g, '\\]')}](${relPath(from, to).replace(/ /g, '%20')})`;
+  const key = (T[UI].verbs[verb][inv ? 1 : 0]).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '_');
+  return [
+    { where: t('relWhereLine', S.notes.get(from).title), code: `**${Vb}:** ${target}` },
+    { where: t('relWhereFm'), code: `${key}:\n  - ${wiki ? `"[[${to.split('/').pop().replace(/\.md$/i, '')}]]"` : relPath(from, to)}` },
+    { where: t('relWhereFile'), code: JSON.stringify({ relations: [{ from, verb, to }] }, null, 2) }
+  ];
+}
+$('#rel-pop').addEventListener('click', e => {
+  const b = e.target.closest('[data-rel], [data-rel-to], [data-rel-copy]'); if (!b) return;
+  if (b.dataset.relTo) { REL.to = b.dataset.relTo; relRender(false); const sv = $('#rel-pop [data-rel="save"]'); if (sv) sv.focus(); return; }
+  if (b.dataset.relCopy != null) {
+    const code = b.parentElement.querySelector('pre').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(code) : Promise.reject()).then(() => { b.textContent = t('sugCopied'); setTimeout(() => { b.textContent = t('relCopy'); }, 1600); }, () => toast(code, 8000));
+    return;
+  }
+  const a = b.dataset.rel;
+  if (a === 'close') relClose();
+  else if (a === 'save' && REL.to) {
+    const [verb, inv] = REL_OPTS[REL.opt];
+    const rel = inv ? { from: REL.to, verb, to: REL.from } : { from: REL.from, verb, to: REL.to };
+    const loc = authLocal(); loc.relations = (loc.relations || []).filter(r => !(r.from === rel.from && r.verb === rel.verb && r.to === rel.to)).concat(rel); authSave(loc);
+    applyAuthor(true); REL.saved = true;
+    const box = $('#rel-perm');
+    box.innerHTML = `<div class="rel-ok">✓ ${esc(t('relSaved'))}</div><div class="q-h" style="padding-top:8px"><span>${esc(t('relPerm'))}</span></div>` +
+      relSnippets(REL.from, verb, REL.to, inv).map(sn => `<div class="rel-sn"><div class="rel-where">${esc(sn.where)}</div><pre>${esc(sn.code)}</pre><button type="button" class="sug-copy" data-rel-copy>${esc(t('relCopy'))}</button></div>`).join('');
+    box.hidden = false; $('#rel-pop [data-rel="save"]').disabled = true;
+    track('author_relation_declare', { verb, source: S.source, via: 'note' });
+  }
+});
+$('#rel-pop').addEventListener('input', e => { if (e.target.id === 'rel-q') relList(e.target.value); });
+$('#rel-pop').addEventListener('change', e => {
+  if (e.target.id === 'rel-verb') { REL.opt = Number(e.target.value); relRender(false); $('#rel-verb').focus(); }
+});
+$('#rel-pop').addEventListener('keydown', e => {
+  if (e.key === 'Escape') { e.stopPropagation(); relClose(); }
+  if (e.key === 'Enter' && e.target.id === 'rel-q') { const f = $('#rel-list .rel-opt'); if (f) { e.preventDefault(); f.click(); } }
+});
+$('#rel-add').addEventListener('click', () => S.cur && relOpen(S.cur));
+document.addEventListener('click', e => { const b = e.target.closest('[data-au-new]'); if (b) { e.preventDefault(); relOpen(b.dataset.auNew || S.cur || (S.vault.notes[0] || {}).id); } });
+document.addEventListener('pointerdown', e => { if (!$('#rel-pop').hidden && !e.target.closest('#rel-pop, #rel-add, [data-peek="rel"], [data-au-new]')) $('#rel-pop').hidden = true; });
 
 // ======================= recorrido guiado =======================
 var TOUR = { on: false, i: 0, steps: [] };
@@ -1757,6 +1862,8 @@ function tourSteps() {
   const ar = (S.authorRels || []).slice().sort((a, b) => (b.verb === 'evolves') - (a.verb === 'evolves'))[0];
   if (ar) steps.push({ k: 'author', run() { resetTypes(); setView('graph'); openNote(ar.from); setMode('local'); setTimeout(() => focusNode(ar.from), 80); },
     text: () => t('tourAuthor', S.notes.get(ar.from).title, verbLabel(ar.verb), S.notes.get(ar.to).title) });
+  if (!ar && central) steps.push({ k: 'authorEmpty', run() { resetTypes(); openNote(central.id); setMode('global'); setView('split'); setReaderTab('links'); $('#rel-add').classList.add('pulse'); },
+    text: () => t('tourAuthorEmpty'), after() { $('#rel-add').classList.remove('pulse'); } });
   const hasCurated = v.links.some(l => l.type === 'related' && l.target);
   if (hasCurated && S.source === 'wordpress') {
     const before = isolatedWithout('related'), now = d.orphans.length;

@@ -127,6 +127,15 @@
   const LANG_LINE = /^\s*(?:\*\*|__)?\s*(?:idioma|language|lang|lengua|langue|sprache)\s*:/i;
 
   // ---------- main ----------
+  // verbs of author-declared relations, by normalised key: [canonical verb, 1 when written from the other end]
+  const AUTHOR_VERBS = {
+    evoluciona_en: ['evolves', 0], evolves_into: ['evolves', 0], evoluciona_de: ['evolves', 1], evolved_from: ['evolves', 1],
+    fundamenta: ['founds', 0], underpins: ['founds', 0], se_fundamenta_en: ['founds', 1], builds_on: ['founds', 1],
+    aplica: ['applies', 0], applies: ['applies', 0], se_aplica_en: ['applies', 1], applied_in: ['applies', 1], is_applied_in: ['applies', 1],
+    actualiza_a: ['updates', 0], updates: ['updates', 0], actualizado_por: ['updates', 1], es_actualizado_por: ['updates', 1], updated_by: ['updates', 1], is_updated_by: ['updates', 1]
+  };
+  const verbKeyOf = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/[\s-]+/g, '_');
+  const AUTHOR_LINE = /^\s*(?:[-*+]\s+)?(?:\*\*|__)?\s*([A-Za-z\u00C0-\u00FF][A-Za-z\u00C0-\u00FF _-]{2,24}?)\s*(?:::|:)\s*(?:\*\*|__)?\s*(.+)$/;
   function parseVault(files, yamlLoad, opts) {
     opts = opts || {};
     const mdFiles = files.filter(f => /\.md$/i.test(f.path)).sort((a, b) => a.path.localeCompare(b.path));
@@ -162,7 +171,7 @@
       return { status: 'broken', reason: 'no such note' };
     }
 
-    const notes = [], links = [], assets = [], fmErrors = [];
+    const notes = [], links = [], assets = [], fmErrors = [], authorRels = [], pillars = [];
     // destination is either <anything but > or newline> or a run without spaces/parens
     const mdLinkRe = /(?<!\\)(!?)\[((?:[^\[\]\n]|\[[^\[\]\n]*\])*)\]\(\s*(?:<([^>\n]*)>|([^)\s]*))(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g;
     const wikiRe = /(?<!\\)(!?)\[\[([^\[\]|#\n]*)(#[^\[\]|\n]*)?(?:\|([^\[\]\n]*))?\]\]/g;
@@ -227,6 +236,26 @@
       for (const [field, type] of [['prerequisites', 'prerequisite'], ['related_chapters', 'related']]) {
         for (const raw of asList(fm[field])) push(type, raw.split('#')[0], null, null, null);
       }
+      // ---------- author relations: what only the author can declare (direction + verb) ----------
+      // frontmatter `evoluciona_en: [pulse.md]`, a body line `Evoluciona en: [PULSE](pulse.md)` / `**Fundamenta:** [[nota]]`,
+      // or a Dataview-style field `aplica:: [[nota]]`. `pilar: true` (or the tag «pilar») marks a pillar of the author's thinking.
+      const addRel = (verbKey, raw, kind) => {
+        const v = AUTHOR_VERBS[verbKey]; if (!v || !raw) return;
+        const r = resolve(f.path, raw.split('#')[0].trim(), kind); if (!r.to || r.to === f.path) return;
+        authorRels.push(v[1] ? { from: r.to, to: f.path, verb: v[0] } : { from: f.path, to: r.to, verb: v[0] });
+      };
+      for (const k of Object.keys(fm)) {
+        const vk = verbKeyOf(k); if (!AUTHOR_VERBS[vk]) continue;
+        for (const raw of asList(fm[k])) { const w = /^\[\[([^\]|#]+)/.exec(raw); addRel(vk, w ? w[1] : raw, w ? 'wikilink' : 'markdown'); }
+      }
+      for (const line of masked.split('\n')) {
+        const lm = AUTHOR_LINE.exec(line); if (!lm) continue;
+        const vk = verbKeyOf(lm[1]); if (!AUTHOR_VERBS[vk]) continue;
+        let x; const md2 = /\]\(\s*<?([^)>\s]+)>?(?:\s+"[^"]*")?\s*\)/g, wk2 = /\[\[([^\]|#]+)/g;
+        while ((x = md2.exec(lm[2]))) { let raw = x[1]; try { raw = decodeURI(raw); } catch (e) {} if (!isExternal(raw)) addRel(vk, raw, 'markdown'); }
+        while ((x = wk2.exec(lm[2]))) addRel(vk, x[1], 'wikilink');
+      }
+      if (fm.pilar === true || fm.pillar === true || note.tags.some(t => /^(pilar|pillar)$/i.test(String(t)))) pillars.push(f.path);
     }
 
     // ---------- resolve image assets (relative, then root-relative) ----------
@@ -287,7 +316,7 @@
       }
       return null;
     }
-    return { notes, links, assets, stats, resolve, resolveAsset };
+    return { notes, links, assets, stats, resolve, resolveAsset, authorRels, pillars };
   }
 
   return { parseVault, normalize, maskCode, sentenceAt, plain, normPart };

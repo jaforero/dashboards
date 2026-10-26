@@ -340,6 +340,36 @@ Object.assign(window.KB_T.en, {
     pillar: { h: 'Author pillar', b: 'Marks the pieces at the core of the author’s thinking. They are highlighted with a ring and an always-visible name even if they still have few links: their place is decided by the author, not by the number of connections.' }
   });
 })();
+/* Declarar relaciones del autor desde cualquier nota, en cualquier fuente. */
+(function () {
+  var es = window.KB_T.es, en = window.KB_T.en;
+  es.rules.splice(2, 0, 'Relaciones del autor (con dirección y verbo): una línea <code>**Evoluciona en:** [[nota]]</code>, el campo <code>evoluciona_en: [nota.md]</code> o <code>fundamenta</code>, <code>aplica</code>, <code>actualiza_a</code>; <code>pilar: true</code> marca un pilar. También un archivo <code>relaciones-autor.json</code> en la raíz.');
+  en.rules.splice(2, 0, 'Author relations (with direction and verb): a line <code>**Evolves into:** [[note]]</code>, the field <code>evolves_into: [note.md]</code> or <code>underpins</code>, <code>applies</code>, <code>updates</code>; <code>pillar: true</code> marks a pillar. Also a <code>relaciones-autor.json</code> file at the root.');
+  Object.assign(es, {
+    relTitle: 'Declarar una relación del autor', relLead: 'El grafo deduce parecidos y lee enlaces, pero no sabe cómo evoluciona tu pensamiento. Eso solo lo decides tú.',
+    relVerb: 'Relación', relCopy: 'Copiar', relSearch: 'Busca la otra nota…', relPickTo: 'Elige la otra nota para ver la relación.', relSave: 'Agregar al grafo', relCancel: 'Cancelar', relNoMatch: 'Ninguna nota coincide.',
+    relSaved: 'Agregada al grafo como borrador en este navegador.', relPerm: 'Hazla permanente en tu fuente',
+    relWhereWp: function (x) { return 'Pega este bloque al final de «' + x + '» en WordPress:'; },
+    relWhereLine: function (x) { return 'Agrega esta línea en «' + x + '»:'; }, relWhereFm: 'O este campo en su frontmatter:', relWhereFile: 'O súmala a relaciones-autor.json en la raíz del repositorio:',
+    relAddShort: 'Declarar relación del autor', relAddLong: 'Declarar una relación del autor: ¿de qué evoluciona esta nota, qué fundamenta o qué aplica?',
+    authEmpty: 'El grafo no puede saber qué idea evoluciona de cuál ni cuáles son tus pilares. Esa capa es del autor: declárala para que el grafo muestre tu pensamiento, no solo tus enlaces.',
+    authFirst: 'Declarar la primera relación', authSrc_note: 'en la nota', authSrc_file: 'en el repositorio',
+    tourAuthorEmpty: 'Falta una capa que el grafo no puede inferir: <b>cómo evoluciona el pensamiento del autor</b>. Desde cualquier nota, el botón <b>＋ Relación del autor</b> declara que una idea evoluciona de otra, la fundamenta o la aplica, y entrega el fragmento para guardarla en la propia fuente.'
+  });
+  Object.assign(en, {
+    relTitle: 'Declare an author relation', relLead: 'The graph infers similarity and reads links, but it cannot know how your thinking evolves. Only you decide that.',
+    relVerb: 'Relation', relCopy: 'Copy', relSearch: 'Search the other note…', relPickTo: 'Pick the other note to see the relation.', relSave: 'Add to the graph', relCancel: 'Cancel', relNoMatch: 'No note matches.',
+    relSaved: 'Added to the graph as a draft in this browser.', relPerm: 'Make it permanent in your source',
+    relWhereWp: function (x) { return 'Paste this block at the end of “' + x + '” in WordPress:'; },
+    relWhereLine: function (x) { return 'Add this line to “' + x + '”:'; }, relWhereFm: 'Or this field in its frontmatter:', relWhereFile: 'Or add it to relaciones-autor.json at the repository root:',
+    relAddShort: 'Declare an author relation', relAddLong: 'Declare an author relation: what does this note evolve from, underpin or apply?',
+    authEmpty: 'The graph cannot know which idea evolved from which, or which pieces are your pillars. That layer belongs to the author: declare it so the graph shows your thinking, not just your links.',
+    authFirst: 'Declare the first relation', authSrc_note: 'in the note', authSrc_file: 'in the repository',
+    tourAuthorEmpty: 'One layer cannot be inferred by the graph: <b>how the author’s thinking evolves</b>. From any note, the <b>＋ Author relation</b> button declares that one idea evolved from another, underpins it or applies it, and hands over the snippet to keep it in the source itself.'
+  });
+  es.help.relAdd = { h: 'Relación del autor', b: 'Declara cómo se conecta esta nota con otra en tu pensamiento: evoluciona en, fundamenta, aplica o actualiza. Aparece como flecha gruesa y el panel te da el fragmento para guardarla en el blog, en la nota o en el repositorio.', tip: 'Lo que el grafo deduce puede cambiar con cada lectura; lo que declaras tú es una decisión.' };
+  en.help.relAdd = { h: 'Author relation', b: 'Declare how this note connects to another in your thinking: evolves into, underpins, applies or updates. It shows as a thick arrow, and the panel gives you the snippet to keep it on the blog, in the note or in the repository.', tip: 'What the graph infers may change with every reading; what you declare is a decision.' };
+})();
 (function () {
   var L = window.__lang0 === 'en' ? 'en' : 'es', T = window.KB_T[L];
   document.documentElement.lang = L;

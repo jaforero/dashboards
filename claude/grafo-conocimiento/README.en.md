@@ -40,6 +40,20 @@ The graph is the stage: it fills the whole work area and the controls float over
 10. **Author relations and pillars.** A third layer, besides inferred relations (tags, similarity) and written ones (links): relations only the author can declare, with direction and verb (*evolves into*, *underpins*, *applies*, *updates*). They are drawn as thick arrows, and the author's core pieces are marked as **pillars**: ring and name always visible even with few links. Declare them with a block at the end of the post (`Evolves into: <link>`), in `data/author-relations.json`, or as a draft from Health → **Author decisions**, which suggests the pairs the graph cannot qualify (several links, mutual citations, a pillar or high similarity) and exports decisions as JSON or as blocks for the blog. Published example: *Analítica de Datos en 5 Niveles* evolves into *PULSE*.
 9. **Guided tour** (▷ button or `?tour=1` in the link): 6 or 7 steps computed from the vault (whole network, central note, Local view, the effect of related reading on blogs, health, one suggested connection and how to try your own documents). Move with the arrow keys; leaving restores the view.
 
+## Author relations: the layer only you can create
+The graph has three layers. **Inferred** ones (shared tags, content similarity) are computed by the explorer; **written** ones (links) come from your documents; **declared** ones cannot be inferred by anyone but the author: which idea *evolves into* another, which one *underpins* it, *applies* it or *updates* it. They are drawn as thick arrows, and core pieces are marked as **pillars** even while they still have few links.
+
+How to declare them, in any source:
+
+| Where | How |
+|---|---|
+| From the explorer | The **＋ Author relation** button on every note (also in the preview and in Health → Author decisions). It stays as a draft in your browser and the panel hands you the exact snippet for your source. |
+| Markdown note (repo or folder) | A line `**Evolves into:** [[note]]` or `**Underpins:** [Title](path.md)`, a Dataview field `applies:: [[note]]`, or the frontmatter `evolves_into: [path.md]`. `pillar: true` or the tag `pillar` marks a pillar. |
+| Repository or folder | A `relaciones-autor.json` file at the root: `{"pillars": ["a.md"], "relations": [{"from": "a.md", "verb": "evolves", "to": "b.md"}]}`. **Export relations (JSON)** creates it. |
+| WordPress blog | A paragraph at the end of the post: `Evolves into: <link>` (also `Underpins:`, `Applies:`, `Updates:` and their inverse forms). The tag `pillar` marks a pillar. |
+
+Verbs: `evolves` (evolves into / evolved from), `founds` (underpins / builds on), `applies` (applies / is applied in), `updates` (updates / is updated by), in Spanish or English. Health → **Author decisions** suggests the pairs the graph cannot qualify.
+
 ## Four sources
 | Source | How it loads | What can be shared |
 |---|---|---|

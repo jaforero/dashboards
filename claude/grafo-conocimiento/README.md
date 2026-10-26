@@ -40,6 +40,20 @@ El grafo es el escenario: ocupa toda el área de trabajo y los controles flotan 
 10. **Relaciones del autor y pilares.** Una tercera capa, además de las relaciones deducidas (etiquetas, similitud) y las escritas (enlaces): relaciones que solo el autor puede declarar, con dirección y verbo (*evoluciona en*, *fundamenta*, *aplica*, *actualiza a*). Se dibujan como flechas gruesas y las piezas eje del autor se marcan como **pilares**: anillo y nombre siempre visibles, aunque todavía tengan pocos enlaces. Se declaran con un bloque al final del artículo (`Evoluciona en: <enlace>`), en `data/author-relations.json` o, como borrador, desde Salud → **Decisiones del autor**. Esa sección propone los pares que el grafo no puede calificar (varios enlaces, citas mutuas, un pilar o mucha similitud) y permite exportar las decisiones a JSON o copiarlas como bloques para el blog. Ejemplo publicado: *Analítica de Datos en 5 Niveles* evoluciona en *PULSE*.
 9. **Recorrido guiado** (botón ▷ o `?tour=1` en el enlace): 6 o 7 pasos calculados con los datos de la bóveda (red completa, nota central, vista Local, efecto de las lecturas relacionadas en blogs, salud, una conexión sugerida y cómo probar con documentos propios). Se avanza con las flechas; al salir, la vista vuelve a como estaba.
 
+## Relaciones del autor: la capa que solo tú puedes crear
+El grafo tiene tres capas. Las **deducidas** (etiquetas compartidas, similitud de contenido) las calcula el explorador; las **escritas** (enlaces) salen de tus documentos; las **declaradas** no las puede inferir nadie más que el autor: qué idea *evoluciona en* otra, cuál la *fundamenta*, cuál la *aplica* o la *actualiza*. Se dibujan como flechas gruesas, y las piezas eje se marcan como **pilares** aunque todavía tengan pocos enlaces.
+
+Cómo declararlas, en cualquier fuente:
+
+| Dónde | Cómo |
+|---|---|
+| Desde el explorador | Botón **＋ Relación del autor** en cada nota (también en la vista previa y en Salud → Decisiones del autor). Queda como borrador en tu navegador y el panel te entrega el fragmento exacto para tu fuente. |
+| Nota Markdown (repo o carpeta) | Una línea `**Evoluciona en:** [[nota]]` o `**Fundamenta:** [Título](ruta.md)`, un campo Dataview `aplica:: [[nota]]`, o en el frontmatter `evoluciona_en: [ruta.md]`. `pilar: true` o la etiqueta `pilar` marcan un pilar. |
+| Repositorio o carpeta | Un archivo `relaciones-autor.json` en la raíz: `{"pillars": ["a.md"], "relations": [{"from": "a.md", "verb": "evolves", "to": "b.md"}]}`. **Exportar relaciones (JSON)** lo genera. |
+| Blog de WordPress | Un párrafo al final del artículo: `Evoluciona en: <enlace>` (también `Fundamenta:`, `Aplica:`, `Actualiza a:` y sus formas inversas). La etiqueta `pilar` marca un pilar. |
+
+Verbos: `evolves` (evoluciona en / evoluciona de), `founds` (fundamenta / se fundamenta en), `applies` (aplica / se aplica en), `updates` (actualiza a / es actualizado por), en español o inglés. Salud → **Decisiones del autor** propone los pares que el grafo no puede calificar.
+
 ## Cuatro fuentes
 | Fuente | Cómo se carga | Qué se puede compartir |
 |---|---|---|
