@@ -4,7 +4,7 @@
 
 An explainer built on real public data: [dashboards.javierforero.co/poblacion-latam/](https://dashboards.javierforero.co/poblacion-latam/?lang=en).
 
-The question it answers: **how many people live in the region, according to those mandated to count them?** It shows official annual series and projections with a map, a country series, a base-100 comparator, annual growth, peak-population year and a transparency panel.
+The question it answers: **how many people live in the region, according to those mandated to count them?** It shows official annual series and projections with a map, a country series, population pyramids, a base-100 comparator, annual growth, peak-population year and a transparency panel.
 
 ## Data
 There is no server or build step. It reads the JSON files of [`jaforero/latam-population-official`](https://github.com/jaforero/latam-population-official) live from raw.githubusercontent.com, with a jsDelivr backup. Updating the data requires no commits here.

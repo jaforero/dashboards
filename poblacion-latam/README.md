@@ -4,7 +4,7 @@
 
 Pieza de divulgación con datos públicos reales: [dashboards.javierforero.co/poblacion-latam/](https://dashboards.javierforero.co/poblacion-latam/).
 
-La pregunta que responde: **¿cuánta gente vive en la región, según quién tiene el mandato de contarla?** Muestra series anuales y proyecciones oficiales con mapa, serie por país, comparador base 100, crecimiento anual, año de máxima población y un panel de transparencia.
+La pregunta que responde: **¿cuánta gente vive en la región, según quién tiene el mandato de contarla?** Muestra series anuales y proyecciones oficiales con mapa, serie por país, pirámides de población, comparador base 100, crecimiento anual, año de máxima población y un panel de transparencia.
 
 ## Datos
 No tiene servidor ni paso de build. Lee en vivo los JSON de [`jaforero/latam-population-official`](https://github.com/jaforero/latam-population-official) desde raw.githubusercontent.com, con respaldo en jsDelivr. Actualizar los datos no requiere commits aquí.

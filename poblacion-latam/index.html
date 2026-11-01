@@ -193,6 +193,15 @@
     .tablewrap.tall{max-height:none}
     #countryTable,#compareTable{min-width:520px}
   }
+  .pyr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+  .pyr-panel{border:1px solid var(--border-soft);border-radius:12px;padding:10px;min-width:0}
+  .pyr-panel h3{font-size:.92rem;color:var(--heading);font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:2px}
+  .pyr-panel svg{width:100%;height:auto;display:block;touch-action:pan-y}
+  .pyr-stats{font-size:.75rem;color:var(--text-soft);margin:2px 0 4px;font-variant-numeric:tabular-nums}
+  .pyr-empty{font-size:.82rem;color:var(--text-muted);padding:18px 4px}
+  .pyr-empty .btn{margin-top:8px;min-height:40px}
+  .pyr-hit{fill:transparent}
+  .pyr-hit:hover{fill:color-mix(in srgb,var(--text) 7%,transparent)}
   .method p,.method li{font-size:.9rem;color:var(--text-soft);margin:6px 0;max-width:80ch}
   .method ul{padding-left:18px}
   .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -269,6 +278,29 @@
     <details><summary data-i18n>Ver la serie en una tabla</summary><div class="tablewrap tall" tabindex="0" role="region"><table id="countryTable"></table></div></details>
   </section>
 
+  <section class="card" id="s-pyr" aria-labelledby="h-pyr">
+    <h2 id="h-pyr" data-i18n>Pirámides de población: edad y sexo, país por país</h2>
+    <p class="sub" data-i18n>Hombres a la izquierda y mujeres a la derecha, en los mismos 17 grupos de edad para todos. En porcentaje, todas las pirámides comparten escala y se comparan directamente. La trama diagonal marca los años proyectados.</p>
+    <div class="controls">
+      <div class="yearline">
+        <label class="sr-only" for="pyrYear" data-i18n>Año de las pirámides</label>
+        <input type="range" id="pyrYear" min="1950" max="2100" step="1">
+        <output class="year-big" id="pyrYearOut" for="pyrYear"></output>
+      </div>
+      <button type="button" class="btn" id="pyrPlay" data-i18n>▶ Recorrer</button>
+      <label class="field"><span data-i18n>Escala</span><select id="pyrScale"><option value="share" data-i18n>% de la población</option><option value="abs" data-i18n>Personas</option></select></label>
+      <label class="field"><span data-i18n>Vista</span><select id="pyrLayout"><option value="side" data-i18n>Lado a lado</option><option value="overlay" data-i18n>Superpuestas</option></select></label>
+      <button type="button" class="btn" id="csvPyr" data-i18n>Descargar CSV de las pirámides</button>
+    </div>
+    <p class="src" data-i18n>Elige hasta 4 países. Para cambiar uno cuando ya hay 4, primero quita otro.</p>
+    <div class="chips" id="pyrChips" role="group"></div>
+    <div class="legend" id="pyrLegend"></div>
+    <div class="pyr-grid" id="pyrGrid" aria-live="polite"></div>
+    <p class="src" id="pyrNote"></p>
+    <details><summary data-i18n>Ver las pirámides en una tabla</summary><div class="tablewrap tall" tabindex="0" role="region"><table id="pyrTable"></table></div></details>
+    <details><summary data-i18n>Países sin pirámide y por qué</summary><ul class="src" id="pyrPending" style="padding-left:18px"></ul></details>
+  </section>
+
   <section class="card" id="s-compare" aria-labelledby="h-compare">
     <h2 id="h-compare" data-i18n>Comparar países con índice base 100</h2>
     <p class="sub" data-i18n>Cada país vale 100 en el año elegido. Solo se dibuja la serie que contiene ese año: el índice no cruza rupturas, así que algunas líneas son más cortas. La zona sombreada empieza en la primera proyección de los países elegidos.</p>
@@ -316,6 +348,7 @@
       <li data-i18n>No se interpola, no se encadena y no se ajusta. Los años sin dato quedan vacíos.</li>
       <li data-i18n>La mayoría de las cifras históricas son estimaciones oficiales ancladas en censos, no conteos directos.</li>
       <li data-i18n>No hay total regional: faltan países y las fechas de referencia difieren.</li>
+      <li data-i18n>Una pirámide se publica solo si hombres y mujeres suman el total oficial de ese año. Se agrupa en 80 años y más porque es el último grupo común a todas las fuentes; nada se desagrega ni se interpola.</li>
       <li data-i18n>Los términos de uso de cada fuente aún están por verificar. Consulta a cada institución antes de reutilizar sus datos.</li>
     </ul>
   </section>
@@ -323,9 +356,9 @@
   <footer class="jf-footer"><span>Javier Forero</span> <i>·</i> <a href="https://javierforero.co">javierforero.co</a><br><span id="footOrigin"></span></footer>
 </main>
 <div class="tip" id="tip" role="status"></div>
-<script src="i18n-en.js?v=2"></script>
+<script src="i18n-en.js?v=3"></script>
 <script src="latam-map.js?v=2"></script>
-<script src="pop-data.js?v=2"></script>
-<script src="app.js?v=3"></script>
+<script src="pop-data.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

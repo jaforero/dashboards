@@ -87,5 +87,11 @@
     });
   }
 
-  root.PopData = { ISO3: ISO3, loadAll: loadAll, REPO_BLOB: REPO_BLOB, PUBLISHED_DATA_DATE: PUBLISHED_DATA_DATE, SOURCES: SOURCES };
+  /* Las pirámides se piden solo al elegir el país: son el archivo más pesado por país. */
+  function loadPyramid(iso) {
+    return fetchWithFallback("processed/pyramids/" + iso + ".json", SOURCES)
+      .then(function (r) { return assertContract(r.json, "pirámide " + iso); });
+  }
+
+  root.PopData = { ISO3: ISO3, loadAll: loadAll, loadPyramid: loadPyramid, REPO_BLOB: REPO_BLOB, PUBLISHED_DATA_DATE: PUBLISHED_DATA_DATE, SOURCES: SOURCES };
 })(typeof self !== "undefined" ? self : this);

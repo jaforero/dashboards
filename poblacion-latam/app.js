@@ -232,6 +232,160 @@ function sourceBoxes(iso){
   }).join('')+breaks;
 }
 
+/* ---------- Pirámides ---------- */
+const PYR={docs:{},loading:{},countries:['COL','GTM','URY','BRA'],year:NOW,scale:'share',layout:'side',playing:null};
+const PYR_MAX=4;
+const pyrInfo=iso=>((S.status.countries||{})[iso]||{}).pyramid||{};
+const pyrAvailable=iso=>(pyrInfo(iso).years||0)>0;
+const pick=o=>o&&(o[LANG]||o.es);
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const pyrTotal=v=>sum(v.m)+sum(v.f);
+function pyrLoad(iso){
+  if(PYR.docs[iso]||PYR.loading[iso])return;
+  PYR.loading[iso]=true;
+  PopData.loadPyramid(iso).then(d=>{PYR.docs[iso]=d;}).catch(()=>{PYR.docs[iso]={error:true};}).finally(()=>{delete PYR.loading[iso];renderPyr();});
+}
+const pyrAt=(iso,y)=>{const d=PYR.docs[iso];return d&&d.years?d.years[y]:null;};
+const pyrYears=iso=>{const d=PYR.docs[iso];return d&&d.years?Object.keys(d.years).map(Number).sort((a,b)=>a-b):[];};
+/* Tope estable en %: el mayor grupo de los países elegidos en todos sus años, para que la escala no salte al mover el año. */
+function pyrShareMax(){
+  let mx=0;
+  PYR.countries.forEach(i=>{const d=PYR.docs[i];if(!d||!d.years)return;Object.values(d.years).forEach(v=>{const t=pyrTotal(v);v.m.concat(v.f).forEach(x=>{if(x/t>mx)mx=x/t;});});});
+  return mx||.1;
+}
+function niceMax(v){const e=Math.pow(10,Math.floor(Math.log10(v)));const f=v/e;return [1,1.5,2,2.5,3,4,5,6,8,10].find(s=>f<=s)*e;}
+const pyrFmt=v=>PYR.scale==='share'?fmtN(v*100,1)+' %':(v>=1e6?fmtN(v/1e6,1)+' M':v>=1e3?fmtN(v/1e3,0)+' k':fmtN(v));
+function pyrFrame(max,rows,bars){
+  const W=320,top=4,rowH=14,cg=34,half=(W-cg)/2,H=top+rowH*17+20;
+  const xL=v=>half-(v/max)*half,xR=v=>half+cg+(v/max)*half;
+  const ages=window.__ageGroups||[];
+  let g='';
+  [0,.5,1].forEach(f=>{const v=max*f;
+    [xL(v),xR(v)].forEach(x=>{g+=`<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${top}" y2="${top+rowH*17}" stroke="var(--grid)" stroke-width="1"></line>`;});
+    /* En el borde el rótulo se ancla hacia adentro para que no se corte. */
+    if(f>0)[[xL(v),f===1?'start':'middle'],[xR(v),f===1?'end':'middle']].forEach(([x,an])=>{g+=`<text x="${x.toFixed(1)}" y="${H-7}" text-anchor="${an}" font-size="9" fill="var(--text-muted)">${esc(pyrFmt(v))}</text>`;});
+  });
+  const labels=ages.map((a,i)=>`<text x="${W/2}" y="${top+rowH*(16-i)+rowH*.72}" text-anchor="middle" font-size="9" fill="var(--text-soft)">${esc(a)}</text>`).join('');
+  const hits=ages.map((a,i)=>`<rect class="pyr-hit" data-i="${i}" x="0" y="${top+rowH*(16-i)}" width="${W}" height="${rowH}"></rect>`).join('');
+  return {W,H,top,rowH,xL,xR,half,cg,inner:g+bars({xL,xR,top,rowH,half,cg,W})+labels+hits};
+}
+function pyrSvg(iso,v,max){
+  const t=pyrTotal(v),val=x=>PYR.scale==='share'?x/t:x,proj=v.series_type==='projection';
+  const f=pyrFrame(max,17,({xL,xR,top,rowH,half,cg})=>{
+    let b='';
+    for(let i=0;i<17;i++){
+      const y=(top+rowH*(16-i)+1).toFixed(1),h=rowH-2,lm=xL(val(v.m[i])),rf=xR(val(v.f[i]));
+      b+=`<rect x="${lm.toFixed(1)}" y="${y}" width="${(half-lm).toFixed(1)}" height="${h}" rx="1.5" fill="var(--s1)"></rect>`;
+      b+=`<rect x="${(half+cg).toFixed(1)}" y="${y}" width="${(rf-half-cg).toFixed(1)}" height="${h}" rx="1.5" fill="var(--s2)"></rect>`;
+      if(proj){b+=`<rect x="${lm.toFixed(1)}" y="${y}" width="${(half-lm).toFixed(1)}" height="${h}" fill="url(#hatch)"></rect><rect x="${(half+cg).toFixed(1)}" y="${y}" width="${(rf-half-cg).toFixed(1)}" height="${h}" fill="url(#hatch)"></rect>`;}
+    }
+    return b;
+  });
+  const [y0,y1,y2]=pyrBroad(v);
+  const lbl=F('Pirámide de {c} en {y}: {a} menores de 15 años, {b} de 65 años y más. Los valores están en la tabla de abajo.',{c:name(iso),y:PYR.year,a:fmtPct2(y0),b:fmtPct2(y2)});
+  return `<svg viewBox="0 0 ${f.W} ${f.H}" data-iso="${iso}" role="img" tabindex="0" aria-label="${esc(lbl)}">${f.inner}</svg>`;
+}
+const fmtPct2=p=>fmtN(p*100,1)+' %';
+function pyrBroad(v){const t=pyrTotal(v),s=(a,b)=>sum(v.m.slice(a,b))+sum(v.f.slice(a,b));return [s(0,3)/t,s(3,13)/t,s(13,17)/t];}
+function pyrOverlaySvg(items,max){
+  const f=pyrFrame(max,17,({xL,xR,top,rowH})=>items.map(it=>{
+    const t=pyrTotal(it.v),col=`var(${SLOTS[it.slot]})`,dash=it.v.series_type==='projection'?' stroke-dasharray="3 2"':'';
+    const path=(arr,x)=>{let d='';for(let i=0;i<17;i++){const X=x(arr[i]/t).toFixed(1),y1=top+rowH*(16-i),y2=y1+rowH;d+=(i?'L':'M')+X+','+y2+'L'+X+','+y1;}return d;};
+    return `<path d="${path(it.v.m,xL)}" fill="none" stroke="${col}" stroke-width="2"${dash}></path><path d="${path(it.v.f,xR)}" fill="none" stroke="${col}" stroke-width="2"${dash}></path>`;
+  }).join(''));
+  return `<svg viewBox="0 0 ${f.W} ${f.H}" data-overlay="1" role="img" tabindex="0" aria-label="${esc(F('Pirámides superpuestas en {y}. Los valores están en la tabla de abajo.',{y:PYR.year}))}">${f.inner}</svg>`;
+}
+function pyrSource(iso,v){
+  const d=PYR.docs[iso];const files=(d.raw_files||[]).map((f,i)=>`<a href="${esc(blob(f.path))}" rel="noopener">${esc((d.raw_files.length>1)?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
+  return `<p class="src"><a href="${esc(d.source_url)}" rel="noopener">${esc(d.institution)}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
+}
+function pyrEmpty(iso){
+  const d=PYR.docs[iso];
+  if(!d||PYR.loading[iso])return `<p class="pyr-empty">${esc(T('Cargando pirámide…'))}</p>`;
+  if(d.error)return `<p class="pyr-empty">${esc(T('No se pudo cargar esta pirámide. Los demás datos siguen disponibles.'))}</p>`;
+  const ys=pyrYears(iso);if(!ys.length)return `<p class="pyr-empty">${esc(pick(d.reason)||T('Sin datos disponibles.'))}</p>`;
+  const near=ys.reduce((a,c)=>Math.abs(c-PYR.year)<Math.abs(a-PYR.year)?c:a);
+  return `<p class="pyr-empty">${esc(F('Sin pirámide para {y}. Años disponibles: {a}–{b}.',{y:PYR.year,a:ys[0],b:ys[ys.length-1]}))}<br><button type="button" class="btn" data-go="${near}">${esc(F('Ver {y}',{y:near}))}</button></p>`;
+}
+function renderPyr(){
+  if(!S.status)return;
+  PYR.countries.forEach(pyrLoad);
+  const loaded=PYR.countries.find(i=>PYR.docs[i]&&PYR.docs[i].age_groups);
+  if(loaded)window.__ageGroups=PYR.docs[loaded].age_groups;
+  $('pyrYearOut').textContent=PYR.year;$('pyrYear').value=PYR.year;
+  $('pyrScale').value=PYR.scale;$('pyrLayout').value=PYR.layout;
+  $('pyrScale').disabled=PYR.layout==='overlay';
+  $('pyrChips').innerHTML=ISOS().map(i=>{const on=PYR.countries.includes(i),ok=pyrAvailable(i);
+    return `<button type="button" class="chip" data-iso="${i}" aria-pressed="${on}"${!ok||(!on&&PYR.countries.length>=PYR_MAX)?' disabled':''}${ok?'':` title="${esc(pick(pyrInfo(i).reason)||'')}"`}>${on&&PYR.layout==='overlay'?`<span class="dot" style="background:var(${SLOTS[PYR.countries.indexOf(i)]})"></span>`:''}${esc(name(i))}</button>`;}).join('');
+  const shareScale=PYR.scale==='share'||PYR.layout==='overlay';
+  const grid=$('pyrGrid');
+  if(PYR.layout==='overlay'){
+    const saved=PYR.scale;PYR.scale='share';
+    const items=PYR.countries.map((iso,slot)=>({iso,slot,v:pyrAt(iso,PYR.year)})).filter(x=>x.v);
+    const miss=PYR.countries.filter(i=>!pyrAt(i,PYR.year));
+    $('pyrLegend').innerHTML=`<span class="lg">${esc(T('Izquierda: hombres · Derecha: mujeres'))}</span>`+items.map(x=>`<span class="lg"><span class="dot" style="background:var(${SLOTS[x.slot]})"></span>${esc(name(x.iso))}${x.v.series_type==='projection'?' ('+esc(T('proyección'))+')':''}</span>`).join('');
+    grid.style.gridTemplateColumns='minmax(0,1fr)';
+    grid.innerHTML=`<div class="pyr-panel" style="max-width:640px;margin:0 auto;width:100%">${items.length?pyrOverlaySvg(items,niceMax(pyrShareMax())):pyrEmpty(PYR.countries[0])}${items.map(x=>pyrSource(x.iso,x.v).replace('<p class="src">',`<p class="src"><b>${esc(name(x.iso))}:</b> `)).join('')}${miss.map(i=>`<p class="src"><b>${esc(name(i))}:</b> ${esc(F('sin dato para {y}',{y:PYR.year}))}</p>`).join('')}</div>`;
+    PYR.scale=saved;
+  }else{
+    grid.style.gridTemplateColumns='';
+    $('pyrLegend').innerHTML=`<span class="lg"><span class="sw" style="background:var(--s1)"></span>${esc(T('Hombres'))}</span><span class="lg"><span class="sw" style="background:var(--s2)"></span>${esc(T('Mujeres'))}</span><span class="lg"><svg width="18" height="12" aria-hidden="true"><rect width="18" height="12" rx="3" fill="var(--sx)"></rect><rect width="18" height="12" rx="3" fill="url(#hatch)"></rect></svg>${esc(T('Proyección'))}</span>`;
+    const shared=niceMax(pyrShareMax());
+    grid.innerHTML=PYR.countries.map(iso=>{
+      const v=pyrAt(iso,PYR.year);
+      if(!v)return `<div class="pyr-panel"><h3>${esc(name(iso))}</h3>${pyrEmpty(iso)}</div>`;
+      const b=pyrBroad(v);
+      const mx=shareScale?shared:niceMax(Math.max(...v.m,...v.f));
+      return `<div class="pyr-panel"><h3>${esc(name(iso))}<span class="badge${v.series_type==='projection'?' proj':''}">${esc(typeText(v.series_type))}</span></h3>`
+        +`<p class="pyr-stats">${esc(F('Población: {p}',{p:fmtN(pyrTotal(v))}))}<br>${esc(F('{a} menores de 15 · {b} de 15 a 64 · {c} de 65 y más',{a:fmtPct2(b[0]),b:fmtPct2(b[1]),c:fmtPct2(b[2])}))}</p>`
+        +pyrSvg(iso,v,mx)+pyrSource(iso,v)+`</div>`;
+    }).join('');
+  }
+  $('pyrNote').textContent=PYR.scale==='abs'&&PYR.layout==='side'?T('En personas, cada pirámide usa su propia escala: compara su forma, no su tamaño. Para comparar países entre sí usa porcentajes.'):T('Último grupo: 80 años y más, el común a todas las fuentes. Las fechas de referencia difieren entre países; cada panel declara la suya.');
+  const ages=window.__ageGroups||[];
+  const withV=PYR.countries.map(i=>({i,v:pyrAt(i,PYR.year)})).filter(x=>x.v);
+  $('pyrTable').innerHTML=`<caption class="sr-only">${esc(F('Población por edad y sexo en {y}',{y:PYR.year}))}</caption><thead><tr><th>${esc(T('Edad'))}</th>${withV.map(x=>`<th class="n">${esc(name(x.i))} · ${esc(T('H'))}</th><th class="n">${esc(name(x.i))} · ${esc(T('M'))}</th>`).join('')}</tr></thead><tbody>`
+    +ages.map((a,k)=>({a,k})).reverse().map(({a,k})=>`<tr><td>${esc(a)}</td>${withV.map(x=>{const t=pyrTotal(x.v),f=n=>PYR.scale==='share'||PYR.layout==='overlay'?fmtPct2(n/t):fmtN(n);return `<td class="n">${f(x.v.m[k])}</td><td class="n">${f(x.v.f[k])}</td>`;}).join('')}</tr>`).join('')+'</tbody>';
+  $('pyrPending').innerHTML=ISOS().filter(i=>!pyrAvailable(i)).map(i=>`<li><b>${esc(name(i))}:</b> ${esc(pick(pyrInfo(i).reason)||T('Sin datos disponibles.'))}</li>`).join('');
+  $('csvPyr').disabled=!withV.length;
+}
+function pyrTip(ev,svg){
+  const r=ev.target.closest&&ev.target.closest('[data-i]');if(!r)return hideTip();
+  const k=+r.dataset.i,a=(window.__ageGroups||[])[k];
+  const list=svg.dataset.overlay?PYR.countries.map(i=>({i,v:pyrAt(i,PYR.year)})).filter(x=>x.v):[{i:svg.dataset.iso,v:pyrAt(svg.dataset.iso,PYR.year)}];
+  tip(ev,`<b>${esc(a)}</b> · ${PYR.year}<br>`+list.map(x=>{const t=pyrTotal(x.v);return `${list.length>1||svg.dataset.overlay?esc(name(x.i))+'<br>':''}${esc(T('Hombres'))}: ${fmtN(x.v.m[k])} (${fmtPct2(x.v.m[k]/t)})<br>${esc(T('Mujeres'))}: ${fmtN(x.v.f[k])} (${fmtPct2(x.v.f[k]/t)})`;}).join('<br>'));
+}
+function pyrStop(){if(PYR.playing){clearInterval(PYR.playing);PYR.playing=null;const b=$('pyrPlay');b.dataset.es='▶ Recorrer';b.textContent=T('▶ Recorrer');}}
+function wirePyr(){
+  const infos=PopData.ISO3.map(pyrInfo).filter(x=>x.years);
+  const minY=Math.min(...infos.map(x=>x.year_from)),maxY=Math.max(...infos.map(x=>x.year_to));
+  const yr=$('pyrYear');yr.min=minY;yr.max=maxY;PYR.year=Math.min(maxY,Math.max(minY,NOW));
+  PYR.countries=PYR.countries.filter(pyrAvailable);
+  yr.addEventListener('input',()=>{pyrStop();PYR.year=+yr.value;renderPyr();});
+  $('pyrScale').addEventListener('change',e=>{PYR.scale=e.target.value;renderPyr();});
+  $('pyrLayout').addEventListener('change',e=>{PYR.layout=e.target.value;renderPyr();track('pyramid_layout',{layout:PYR.layout});});
+  $('pyrPlay').addEventListener('click',()=>{
+    if(PYR.playing)return pyrStop();
+    if(PYR.year>=maxY)PYR.year=minY;
+    const b=$('pyrPlay');b.dataset.es='❚❚ Pausa';b.textContent=T('❚❚ Pausa');
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    PYR.playing=setInterval(()=>{PYR.year=Math.min(maxY,PYR.year+(reduce?10:1));renderPyr();if(PYR.year>=maxY)pyrStop();},reduce?900:220);
+    track('pyramid_play');
+  });
+  $('pyrChips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c||c.disabled)return;const i=c.dataset.iso;
+    PYR.countries=PYR.countries.includes(i)?PYR.countries.filter(x=>x!==i):PYR.countries.concat(i);track('pyramid_country',{iso3:i});renderPyr();});
+  const grid=$('pyrGrid');
+  grid.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){PYR.year=+b.dataset.go;renderPyr();}});
+  grid.addEventListener('pointermove',e=>{const s=e.target.closest&&e.target.closest('svg');if(s)pyrTip(e,s);});
+  grid.addEventListener('pointerleave',hideTip);
+  $('csvPyr').addEventListener('click',()=>{
+    const ages=window.__ageGroups||[];
+    const rows=[];PYR.countries.forEach(i=>{const v=pyrAt(i,PYR.year),d=PYR.docs[i];if(!v)return;const t=pyrTotal(v);
+      ages.forEach((a,k)=>[['m',v.m[k]],['f',v.f[k]]].forEach(([s,n])=>rows.push({iso3:i,country:name(i),year:PYR.year,age_group:a,sex:s==='m'?'male':'female',population:n,share_of_total:n/t,series_type:v.series_type,source_id:v.source_id,source_tier:v.source_tier,institution:d.institution,vintage:v.vintage,reference_date:v.reference_date,source_url:d.source_url,raw_files:(d.raw_files||[]).map(f=>f.path).join(' | ')})));});
+    downloadCSV(`piramides-${PYR.year}.csv`,rows);
+  });
+}
+
 /* ---------- Comparador base 100 ---------- */
 function slotOf(iso){if(S.slots[iso]==null){const used=new Set(S.compare.map(i=>S.slots[i]));for(let i=0;i<SLOTS.length;i++)if(!used.has(i)){S.slots[iso]=i;break;}}return S.slots[iso];}
 function indexed(iso){
@@ -357,7 +511,7 @@ function hideTip(){tipEl().style.display='none';}
 function renderAll(){
   renderHead();
   const sel=$('countrySel');sel.innerHTML=ISOS().map(i=>`<option value="${i}">${esc(name(i))}${recs(i).length?'':' · '+esc(T('pendiente'))}</option>`).join('');sel.value=S.country;
-  renderMap();renderCountry();renderCompare();renderMultiples();renderPeak();renderMatrix();
+  renderMap();renderCountry();renderPyr();renderCompare();renderMultiples();renderPeak();renderMatrix();
 }
 function stopPlay(){if(S.playing){clearInterval(S.playing);S.playing=null;const b=$('playBtn');b.dataset.es='▶ Recorrer';b.textContent=T('▶ Recorrer');}}
 
@@ -401,13 +555,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyTheme(document.documentElement.getAttribute('data-theme')||'light',true);
   LANG=window.__lang0==='en'?'en':'es';i18nStatic();
   $('langToggle').addEventListener('click',e=>{const o=e.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang,false);});
-  $('themeToggle').addEventListener('click',()=>{applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');if(S.status){renderMap();renderCountry();renderCompare();}});
+  $('themeToggle').addEventListener('click',()=>{applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');if(S.status){renderMap();renderCountry();renderPyr();renderCompare();}});
   const q=(()=>{try{return new URLSearchParams(location.search).get('datos');}catch(e){return null;}})();
   /* ?datos=prueba-error simula una caída para revisar el mensaje; no afecta a nadie más. */
   PopData.loadAll(q==='prueba-error'?{sources:['https://raw.githubusercontent.com/jaforero/latam-population-official/main/no-existe']}:{}).then(r=>{
     S.status=r.status;S.countries=r.countries;S.failed=r.failed;S.fromCache=r.fromCache;
     S.compare=S.compare.filter(i=>recs(i).length);S.compare.forEach(slotOf);
     if(!recs(S.country).length)S.country=PopData.ISO3.find(i=>recs(i).length);
-    buildMap();wire();$('content').hidden=false;renderAll();
+    buildMap();wire();wirePyr();$('content').hidden=false;renderAll();
   }).catch(showFatal);
 });
