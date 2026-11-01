@@ -704,7 +704,7 @@ function renderRegion(){
   const more=$('regionMore');more.textContent=REGION.all?T('Ver menos'):T('Ver los 20 países');more.setAttribute('aria-expanded',String(REGION.all));
   const odd=p.components.filter(c=>!['07-01','06-30','mid-year'].includes(c.reference_date));
   const notes=[T('Funciona como una media ponderada por población: los países grandes mueven más el total. No es el promedio simple de 20 países.')];
-  if(p.regional_fallback.length)notes.push(F('En {y} incluye CEPAL/CELADE como respaldo declarado para {c}. Sin esas cifras no habría total de los 20 países.',{y,c:nameList(p.regional_fallback)}));
+  if(p.regional_fallback.length)notes.push(F('En {y} incluye series de CEPAL/CELADE para {c}, cuyo permiso de reutilización falta confirmar. Sin esas cifras no habría total de los 20 países.',{y,c:nameList(p.regional_fallback)}));
   if(odd.length)notes.push(F('No todas las cifras van a mitad de año: {c}.',{c:odd.map(c=>`${name(c.iso3)} (${refText(c.reference_date)})`).join(', ')}));
   if(g&&g.excluded.length)notes.push(F('Entre {a} y {b}, {c} cambia de serie: queda fuera del crecimiento, pero su cifra oficial sí suma en cada total.',{a:g.from_year,b:g.to_year,c:nameList(g.excluded.map(e=>e.iso3))}));
   notes.push(T('Es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL: cada cifra conserva las de su fuente. Ver la pestaña Fuentes.'));
