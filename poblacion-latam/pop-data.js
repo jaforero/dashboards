@@ -59,7 +59,7 @@
   function writeCache(p) { try { localStorage.setItem(CACHE_KEY, JSON.stringify(p)); } catch (e) { /* cuota o modo privado */ } }
 
   /**
-   * Devuelve { status, countries, failed, fromCache, origin }.
+   * Devuelve { status, region, countries, failed, fromCache, origin }. region es null si su archivo no carga.
    * Rechaza solo si no hay status.json ni datos en caché.
    */
   function loadAll(opts) {
@@ -69,21 +69,24 @@
       return fetchWithFallback("processed/" + iso + ".json", sources)
         .then(function (r) { return assertContract(r.json, iso); });
     });
-    return Promise.all([statusP.catch(function (e) { return { error: e }; })].concat(countryPs.map(function (p) {
+    var regionP = fetchWithFallback("processed/region.json", sources)
+      .then(function (r) { return assertContract(r.json, "región"); })
+      .catch(function () { return null; });
+    return Promise.all([statusP.catch(function (e) { return { error: e }; }), regionP].concat(countryPs.map(function (p) {
       return p.catch(function (e) { return { error: e }; });
     }))).then(function (res) {
-      var st = res[0], countries = {}, failed = [];
+      var st = res[0], region = res[1], countries = {}, failed = [];
       ISO3.forEach(function (iso, i) {
-        var d = res[i + 1];
+        var d = res[i + 2];
         if (d && !d.error) countries[iso] = d; else failed.push(iso);
       });
       if (st.error || failed.length === ISO3.length) {
         var cache = readCache();
-        if (cache && cache.status) return { status: cache.status, countries: cache.countries, failed: [], fromCache: true, origin: null, error: st.error };
+        if (cache && cache.status) return { status: cache.status, region: cache.region || null, countries: cache.countries, failed: [], fromCache: true, origin: null, error: st.error };
         throw st.error || new Error("No cargó ningún país");
       }
-      if (!failed.length) writeCache({ status: st.json, countries: Object.keys(countries).reduce(function (a, k) { a[k] = slim(countries[k]); return a; }, {}) });
-      return { status: st.json, countries: countries, failed: failed, fromCache: false, origin: st.base };
+      if (!failed.length) writeCache({ status: st.json, region: region, countries: Object.keys(countries).reduce(function (a, k) { a[k] = slim(countries[k]); return a; }, {}) });
+      return { status: st.json, region: region, countries: countries, failed: failed, fromCache: false, origin: st.base };
     });
   }
 
