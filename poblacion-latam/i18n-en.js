@@ -65,6 +65,7 @@ window.TR_EN={
 "Leído en navegador": "Read in a browser",
 "Aviso dentro del archivo": "Notice inside the file",
 "Solo extracto de buscador": "Search excerpt only",
+"Texto aportado por Javier Forero": "Text supplied by Javier Forero",
 "ver texto": "see text",
 "ver licencia": "see licence",
 "Creative Commons (el pie del sitio enlaza CC BY-SA 4.0)": "Creative Commons (the site footer links to CC BY-SA 4.0)",

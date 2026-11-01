@@ -494,7 +494,7 @@ const lic=k=>S.lic&&S.lic.licenses&&S.lic.licenses[k];
 const LIC_ORDER=['restricted','no_license','own_terms','open_license'];
 const licLabel=s=>({open_license:T('Licencia abierta'),own_terms:T('Condiciones propias'),no_license:T('Sin licencia localizada'),restricted:T('Restringe')}[s]||s);
 const licClass=s=>({open_license:'ok',no_license:'warn',restricted:'err'}[s]||'');
-const licHow=h=>({direct:T('Leído en la fuente'),browser:T('Leído en navegador'),in_file:T('Aviso dentro del archivo'),search_excerpt:T('Solo extracto de buscador')}[h]||'');
+const licHow=h=>({direct:T('Leído en la fuente'),browser:T('Leído en navegador'),in_file:T('Aviso dentro del archivo'),search_excerpt:T('Solo extracto de buscador'),provided_by_owner:T('Texto aportado por Javier Forero')}[h]||'');
 const licLine=k=>{const l=lic(k);return `${esc(T('Condiciones:'))} <a href="${esc(l.license_url||l.terms_url)}" rel="noopener">${esc(T(l.name))}</a> · ${esc(l.attribution)}`;};
 function renderLicenses(){
   const box=$('licBox');
