@@ -12,6 +12,7 @@ There is no server or build step. It reads the JSON files of [`jaforero/latam-po
 - **Source rule:** national institution first; ECLAC/CELADE only as a declared fallback; no aggregators. What cannot be verified stays pending, never filled in.
 - **Breaks:** joins between sources or vintages are not spliced. Growth, CAGR and the base-100 index do not cross them.
 - **Traceability:** every figure links to its institution and to its file in `data/raw/`.
+- **Licences:** the page shows each source's terms and citation from `data/processed/licenses.json`. Each figure keeps its source's conditions.
 
 ## Files
 | File | Role |

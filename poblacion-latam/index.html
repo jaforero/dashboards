@@ -204,6 +204,7 @@
   .pyr-hit:hover{fill:color-mix(in srgb,var(--text) 7%,transparent)}
   .method p,.method li{font-size:.9rem;color:var(--text-soft);margin:6px 0;max-width:80ch}
   .method ul{padding-left:18px}
+  .method h3{font-size:.95rem;color:var(--heading);font-weight:700;margin:14px 0 6px}
   .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .jf-footer{margin-top:32px;border-top:1px solid var(--border);padding:16px 0 0;font-size:.78rem;color:var(--text-muted);text-align:center}
   .jf-footer a{color:var(--blue);font-weight:700}
@@ -349,16 +350,19 @@
       <li data-i18n>La mayoría de las cifras históricas son estimaciones oficiales ancladas en censos, no conteos directos.</li>
       <li data-i18n>No hay total regional: faltan países y las fechas de referencia difieren.</li>
       <li data-i18n>Una pirámide se publica solo si hombres y mujeres suman el total oficial de ese año. Se agrupa en 80 años y más porque es el último grupo común a todas las fuentes; nada se desagrega ni se interpola.</li>
-      <li data-i18n>Los términos de uso de cada fuente aún están por verificar. Consulta a cada institución antes de reutilizar sus datos.</li>
+      <li data-i18n>Frente a los archivos originales, esta pieza solo extrae totales, pasa los miles de CEPAL a personas, suma edades en 17 grupos y calcula crecimiento, índice base 100 y año máximo. Ninguna cifra se corrige.</li>
+      <li data-i18n>Cada cifra conserva las condiciones de su fuente: esta pieza no otorga una licencia nueva. Lo derivado de fuentes CC BY-SA 4.0 u ODbL se comparte bajo esa misma licencia.</li>
     </ul>
+    <h3 data-i18n>Licencias y atribución</h3>
+    <div id="licBox"></div>
   </section>
   </div>
   <footer class="jf-footer"><span>Javier Forero</span> <i>·</i> <a href="https://javierforero.co">javierforero.co</a><br><span id="footOrigin"></span></footer>
 </main>
 <div class="tip" id="tip" role="status"></div>
-<script src="i18n-en.js?v=3"></script>
+<script src="i18n-en.js?v=4"></script>
 <script src="latam-map.js?v=2"></script>
-<script src="pop-data.js?v=3"></script>
-<script src="app.js?v=7"></script>
+<script src="pop-data.js?v=4"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

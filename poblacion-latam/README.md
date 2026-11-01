@@ -12,6 +12,7 @@ No tiene servidor ni paso de build. Lee en vivo los JSON de [`jaforero/latam-pop
 - **Regla de fuentes:** institución nacional primero; CEPAL/CELADE solo como respaldo declarado; ningún agregador. Lo que no se puede verificar queda pendiente, nunca rellenado.
 - **Rupturas:** las uniones entre fuentes o vintages no se empalman. El crecimiento, el CAGR y el índice base 100 no las cruzan.
 - **Trazabilidad:** cada cifra enlaza a su institución y a su archivo en `data/raw/`.
+- **Licencias:** la página muestra las condiciones y la cita de cada fuente desde `data/processed/licenses.json`. Cada cifra conserva las condiciones de su fuente.
 
 ## Archivos
 | Archivo | Papel |

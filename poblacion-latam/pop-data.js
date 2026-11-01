@@ -93,5 +93,11 @@
       .then(function (r) { return assertContract(r.json, "pirámide " + iso); });
   }
 
-  root.PopData = { ISO3: ISO3, loadAll: loadAll, loadPyramid: loadPyramid, REPO_BLOB: REPO_BLOB, PUBLISHED_DATA_DATE: PUBLISHED_DATA_DATE, SOURCES: SOURCES };
+  /* Revisión de términos por institución. La página funciona aunque este archivo no llegue. */
+  function loadLicenses() {
+    return fetchWithFallback("processed/licenses.json", SOURCES)
+      .then(function (r) { return assertContract(r.json, "licencias"); });
+  }
+
+  root.PopData = { ISO3: ISO3, loadAll: loadAll, loadPyramid: loadPyramid, loadLicenses: loadLicenses, REPO_BLOB: REPO_BLOB, PUBLISHED_DATA_DATE: PUBLISHED_DATA_DATE, SOURCES: SOURCES };
 })(typeof self !== "undefined" ? self : this);

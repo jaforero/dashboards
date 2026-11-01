@@ -80,7 +80,7 @@ function csvRow(iso,r,extra){
   const s=segInfo(iso,r)||{};
   return Object.assign({iso3:iso,country:name(iso),year:r.year,population:r.population,series_type:r.series_type},extra||{},
     {growth:r.growth,source_id:r.source_id,source_tier:r.source_tier,institution:s.institution||'',vintage:r.vintage,reference_date:r.reference_date,scenario:r.scenario,
-     retrieved_at:r.retrieved_at,interpolated:r.interpolated,raw_file:r.raw_file,source_url:s.source_url||''});
+     retrieved_at:r.retrieved_at,interpolated:r.interpolated,raw_file:r.raw_file,source_url:s.source_url||'',attribution:(lic(s.license)||{}).attribution||''});
 }
 
 /* ---------- Mapa ---------- */
@@ -230,7 +230,7 @@ function sourceBoxes(iso){
     s.notes=(s.notes||[]).filter(n=>{if(seenNotes.has(n.es))return false;seenNotes.add(n.es);return true;});
     const files=s.files.map((f,i)=>`<a href="${esc(blob(f))}" rel="noopener">${esc(s.files.length>1?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
     const notes=(s.notes||[]).map(n=>`<br>${esc(n[LANG]||n.es)}`).join('');
-    return `<div class="srcbox${cep?' cepal':''}">${cep?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<b>${esc(s.institution)}</b> · ${esc(s.vintage)} · ${s.year_from}–${s.year_to} · ${esc(T('referencia:'))} ${esc(refText(s.reference_date))}<br><a href="${esc(s.source_url)}" rel="noopener">${esc(T('fuente'))}</a> · ${files} · ${esc(T('descargado:'))} ${esc(fmtDate(s.retrieved_at))}${s.retrieved_by==='manual'?' · '+esc(T('carga manual')):''}${notes}</div>`;
+    return `<div class="srcbox${cep?' cepal':''}">${cep?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<b>${esc(s.institution)}</b> · ${esc(s.vintage)} · ${s.year_from}–${s.year_to} · ${esc(T('referencia:'))} ${esc(refText(s.reference_date))}<br><a href="${esc(s.source_url)}" rel="noopener">${esc(T('fuente'))}</a> · ${files} · ${esc(T('descargado:'))} ${esc(fmtDate(s.retrieved_at))}${s.retrieved_by==='manual'?' · '+esc(T('carga manual')):''}${s.license&&lic(s.license)?'<br>'+licLine(s.license):''}${notes}</div>`;
   }).join('')+breaks;
 }
 
@@ -297,11 +297,11 @@ function pyrOverlaySvg(items,max){
   }).join(''));
   return `<svg viewBox="0 0 ${f.W} ${f.H}" data-overlay="1" role="img" tabindex="0" aria-label="${esc(F('Pirámides superpuestas en {y}. Los valores están en la tabla de abajo.',{y:PYR.year}))}">${f.inner}</svg>`;
 }
-function pyrPart(iso,v){const d=PYR.docs[iso];return (d.parts&&d.parts[v.part])||{institution:d.institution,source_url:d.source_url,raw_files:d.raw_files||[]};}
+function pyrPart(iso,v){const d=PYR.docs[iso];return (d.parts&&d.parts[v.part])||{institution:d.institution,license:d.license,source_url:d.source_url,raw_files:d.raw_files||[]};}
 function pyrSource(iso,v){
   const d=PYR.docs[iso],p=pyrPart(iso,v),fs=p.raw_files||[];
   const files=fs.map((f,i)=>`<a href="${esc(blob(f.path))}" rel="noopener">${esc(fs.length>1?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
-  return `<p class="src">${isCepal(v.source_tier)?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<a href="${esc(p.source_url)}" rel="noopener">${esc(p.institution)}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
+  return `<p class="src">${isCepal(v.source_tier)?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<a href="${esc(p.source_url)}" rel="noopener">${esc(p.institution)}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${lic(p.license)?'<br>'+licLine(p.license):''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
 }
 function pyrEmpty(iso){
   const d=PYR.docs[iso];
@@ -489,6 +489,26 @@ function renderMatrix(){
     +ISOS().map(iso=>{const c=(S.status.countries||{})[iso]||{series:{}};return `<tr><td class="iso">${esc(name(iso))}</td>${cell(c.series.historical,h)}${cell(c.series.projection,p)}</tr>`;}).join('')+'</tbody>';
 }
 
+/* ---------- Licencias ---------- */
+const lic=k=>S.lic&&S.lic.licenses&&S.lic.licenses[k];
+const LIC_ORDER=['restricted','no_license','own_terms','open_license'];
+const licLabel=s=>({open_license:T('Licencia abierta'),own_terms:T('Condiciones propias'),no_license:T('Sin licencia localizada'),restricted:T('Restringe')}[s]||s);
+const licClass=s=>({open_license:'ok',no_license:'warn',restricted:'err'}[s]||'');
+const licHow=h=>({direct:T('Leído en la fuente'),browser:T('Leído en navegador'),in_file:T('Aviso dentro del archivo'),search_excerpt:T('Solo extracto de buscador')}[h]||'');
+const licLine=k=>{const l=lic(k);return `${esc(T('Condiciones:'))} <a href="${esc(l.license_url||l.terms_url)}" rel="noopener">${esc(T(l.name))}</a> · ${esc(l.attribution)}`;};
+function renderLicenses(){
+  const box=$('licBox');
+  if(!S.lic){box.innerHTML=S.licFailed?`<p>${esc(T('No se pudo cargar la revisión de términos.'))} <a href="${esc(blob('data/processed/licenses.json'))}" rel="noopener">licenses.json</a></p>`:`<p>${esc(T('Cargando datos…'))}</p>`;return;}
+  const all=Object.values(S.lic.licenses),n=s=>all.filter(l=>l.status===s).length,pick=o=>o&&(o[LANG]||o.es);
+  const rows=all.slice().sort((a,b)=>LIC_ORDER.indexOf(a.status)-LIC_ORDER.indexOf(b.status)||a.institution.localeCompare(b.institution,LOC()));
+  const hI=T('Institución'),hS=T('Estado'),hW=T('Qué dice'),hC=T('Cita');
+  box.innerHTML=`<p>${esc(F('Revisado el {d}: {a} instituciones con licencia abierta, {b} con condiciones propias, {c} sin licencia localizada y {e} que restringe la reutilización.',{d:fmtDate(S.lic.review.reviewed),a:n('open_license'),b:n('own_terms'),c:n('no_license'),e:n('restricted')}))} ${esc(pick(S.lic.review.caveat))}</p>`
+    +rows.filter(l=>l.status==='restricted').map(l=>`<div class="srcbox cepal"><b>${esc(l.institution)}:</b> ${esc(pick(l.summary))}</div>`).join('')
+    +`<details><summary>${esc(T('Ver las condiciones de cada institución'))}</summary><div class="tablewrap" tabindex="0" role="region"><table id="licTable" class="matrix"><caption class="sr-only">${esc(T('Licencias y atribución'))}</caption><thead><tr><th>${esc(hI)}</th><th>${esc(hS)}</th><th>${esc(hW)}</th><th>${esc(hC)}</th></tr></thead><tbody>`
+    +rows.map(l=>`<tr><td class="iso">${esc(l.institution)}<div class="src">${esc(l.countries.map(name).join(', '))}</div></td><td data-th="${esc(hS)}"><span class="badge ${licClass(l.status)}">${esc(licLabel(l.status))}</span><div class="src">${esc(licHow(l.read_how))}</div></td><td data-th="${esc(hW)}">${esc(pick(l.summary))} <a href="${esc(l.terms_url)}" rel="noopener">${esc(T('ver texto'))}</a>${l.license_url&&l.license_url!==l.terms_url?` · <a href="${esc(l.license_url)}" rel="noopener">${esc(T('ver licencia'))}</a>`:''}</td><td data-th="${esc(hC)}">${esc(l.attribution)}</td></tr>`).join('')
+    +'</tbody></table></div></details>';
+}
+
 /* ---------- Encabezado ---------- */
 function renderHead(){
   const withData=PopData.ISO3.filter(i=>recs(i).length);
@@ -516,7 +536,7 @@ function hideTip(){tipEl().style.display='none';}
 function renderAll(){
   renderHead();
   const sel=$('countrySel');sel.innerHTML=ISOS().map(i=>`<option value="${i}">${esc(name(i))}${recs(i).length?'':' · '+esc(T('pendiente'))}</option>`).join('');sel.value=S.country;
-  renderMap();renderCountry();renderPyr();renderCompare();renderMultiples();renderPeak();renderMatrix();
+  renderMap();renderCountry();renderPyr();renderCompare();renderMultiples();renderPeak();renderMatrix();renderLicenses();
 }
 function stopPlay(){if(S.playing){clearInterval(S.playing);S.playing=null;const b=$('playBtn');b.dataset.es='▶ Recorrer';b.textContent=T('▶ Recorrer');}}
 
@@ -568,5 +588,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     S.compare=S.compare.filter(i=>recs(i).length);S.compare.forEach(slotOf);
     if(!recs(S.country).length)S.country=PopData.ISO3.find(i=>recs(i).length);
     buildMap();wire();wirePyr();$('content').hidden=false;renderAll();
+    PopData.loadLicenses().then(d=>{S.lic=d;}).catch(()=>{S.licFailed=true;}).finally(()=>{renderLicenses();renderCountry();renderPyr();});
   }).catch(showFatal);
 });
