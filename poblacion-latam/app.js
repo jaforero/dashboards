@@ -386,9 +386,9 @@ function pyrCompare(iso,v,R){
   const a=pyrBroad(v),b=pyrBroad(R),fem=x=>sum(x.f)/pyrTotal(x);
   const near=d=>Math.abs(d)<.0005;
   const pp=d=>(near(d)?'':d>0?'+':'−')+Math.abs(d*100).toLocaleString(LOC(),{minimumFractionDigits:1,maximumFractionDigits:1})+' pp';
-  const more=(d,same)=>near(d)?T(same):(d>0?T('más'):T('menos'));
+  const cmp=d=>near(d)?T('similar'):(d>0?T('mayor'):T('menor'));
   const rows=[[T('Menores de 15'),a[0],b[0]],[T('15 a 64 años'),a[1],b[1]],[T('65 años y más'),a[2],b[2]],[T('Mujeres'),fem(v),fem(R)]];
-  return `<p class="pyr-read">${esc(F('{c} tiene {d1} menores de 15 que la región ({a}) y {d2} personas de 65 años y más ({b}).',{c:name(iso),d1:more(a[0]-b[0],'casi los mismos'),a:pp(a[0]-b[0]),d2:more(a[2]-b[2],'casi las mismas'),b:pp(a[2]-b[2])}))}</p>`
+  return `<p class="pyr-read">${esc(F('Frente a la región, {c} tiene una proporción {d1} de menores de 15 ({a}) y {d2} de personas de 65 años y más ({b}).',{c:name(iso),d1:cmp(a[0]-b[0]),a:pp(a[0]-b[0]),d2:cmp(a[2]-b[2]),b:pp(a[2]-b[2])}))}</p>`
     +`<table class="pyr-cmp"><caption class="sr-only">${esc(F('{c} frente a la región en {y}',{c:name(iso),y:PYR.year}))}</caption><thead><tr><th>${esc(T('% de la población'))}</th><th class="n">${esc(name(iso))}</th><th class="n">${esc(T('Región'))}</th><th class="n">${esc(T('Dif.'))}</th></tr></thead><tbody>`
     +rows.map(r=>`<tr><td>${esc(r[0])}</td><td class="n">${fmtPct2(r[1])}</td><td class="n">${fmtPct2(r[2])}</td><td class="n">${pp(r[1]-r[2])}</td></tr>`).join('')+'</tbody></table>';
 }

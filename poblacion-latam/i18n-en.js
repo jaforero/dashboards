@@ -241,12 +241,9 @@ window.TR_EN={
 "Dif.": "Diff.",
 "Con la región": "With the region",
 "Rep. Dominicana": "Dominican Rep.",
-"más": "more",
-"menos": "fewer",
 "Menores de 15": "Under 15",
 "15 a 64 años": "Aged 15–64",
 "65 años y más": "Aged 65+",
-"{c} tiene {d1} menores de 15 que la región ({a}) y {d2} personas de 65 años y más ({b}).": "{c} has {d1} under-15s than the region ({a}) and {d2} people aged 65+ ({b}).",
 "{c} frente a la región en {y}": "{c} against the region in {y}",
 "{c} frente a la región": "{c} against the region",
 "Pirámides de población: cada país contra la región": "Population pyramids: each country against the region",
@@ -280,5 +277,9 @@ window.TR_EN={
 "Frente a los archivos originales, esta pieza solo extrae totales, pasa los miles de la ONU a personas, suma edades en 17 grupos y calcula crecimiento, índice base 100, año máximo y total regional. Ninguna cifra se corrige.": "Compared with the original files, this piece only extracts totals, converts UN thousands to people, adds ages into 17 groups and calculates growth, index base 100, peak year and the regional total. No figure is corrected.",
 "Mueve el año. La trama diagonal marca las cifras proyectadas y la tabla declara la fuente y la fecha de referencia de cada país. El total regional aparece solo en los años con los 20 países.": "Move the year. The diagonal hatch marks projected figures and the table states each country's source and reference date. The regional total appears only in years with all 20 countries.",
 "En {y} incluye a la ONU como respaldo declarado para {c}. Sin esas cifras no habría total de los 20 países.": "In {y} it includes the UN as a declared fallback for {c}. Without those figures there would be no total of the 20 countries.",
-"El total regional es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL. Depende de la ONU para Cuba, Haití, la historia de Honduras y la proyección de Nicaragua: sin esas cifras no habría total de los 20 países.": "The regional total is a derived database combining sources with different terms of use, including CC BY-SA and ODbL. It relies on the UN for Cuba, Haiti, the history of Honduras and the projection of Nicaragua: without those figures there would be no total of the 20 countries."
+"El total regional es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL. Depende de la ONU para Cuba, Haití, la historia de Honduras y la proyección de Nicaragua: sin esas cifras no habría total de los 20 países.": "The regional total is a derived database combining sources with different terms of use, including CC BY-SA and ODbL. It relies on the UN for Cuba, Haiti, the history of Honduras and the projection of Nicaragua: without those figures there would be no total of the 20 countries.",
+"mayor": "higher",
+"menor": "lower",
+"similar": "similar",
+"Frente a la región, {c} tiene una proporción {d1} de menores de 15 ({a}) y {d2} de personas de 65 años y más ({b}).": "Compared with the region, {c} has a {d1} share of under-15s ({a}) and a {d2} share of people aged 65+ ({b})."
 };
