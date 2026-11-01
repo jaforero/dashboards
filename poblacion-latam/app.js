@@ -35,7 +35,7 @@ function reason(iso){
   if(!d)return T('El archivo de este país no cargó.');
   return pick(d.reasons&&(d.reasons.projection||d.reasons.historical))||T('Sin datos disponibles.');
 }
-const refText=c=>({'07-01':T('1 de julio'),'06-30':T('30 de junio'),'01-01':T('1 de enero'),'mid-year':T('mitad de año')}[c]||T('no declarada'));
+const refText=c=>({'07-01':T('1 de julio'),'06-30':T('30 de junio'),'01-01':T('1 de enero'),'mid-year':T('mitad de año'),'census':T('fecha de cada censo')}[c]||T('no declarada'));
 const typeText=t=>t==='projection'?T('Proyección'):(t==='observed'?T('Observado'):T('Estimado'));
 const statusLabel=s=>({ok:T('Verificado'),manual:T('Carga manual'),manual_pendiente:T('Falta carga manual'),stale:T('Fuente caída: último dato válido'),error:T('Error'),pendiente:T('Pendiente')}[s]||s);
 const statusClass=s=>({ok:'ok',manual:'ok',stale:'warn',manual_pendiente:'warn',pendiente:'warn',error:'err'}[s]||'');
@@ -141,9 +141,13 @@ function splitTraces(rows){
   rows.forEach(r=>{if(!cur||cur.key!==segKey(r)){cur={key:segKey(r),rows:[],src:r};groups.push(cur);}cur.rows.push(r);});
   const out=[];
   groups.forEach(g=>{
-    const est=g.rows.filter(r=>r.series_type!=='projection'),pro=g.rows.filter(r=>r.series_type==='projection');
-    if(est.length)out.push({group:g,type:'estimate',rows:est});
-    if(pro.length)out.push({group:g,type:'projection',rows:(est.length?[est[est.length-1]]:[]).concat(pro)});
+    let prev=null;
+    ['observed','estimate','projection'].forEach(t=>{
+      const part=g.rows.filter(r=>r.series_type===t);
+      if(!part.length)return;
+      out.push({group:g,type:t,rows:(prev?[prev]:[]).concat(part)});
+      prev=part[part.length-1];
+    });
   });
   return out;
 }
@@ -191,8 +195,10 @@ function renderCountry(){
     const data=splitTraces(rows).map(t=>{
       const k=t.group.key,cep=isCepal(t.group.src.source_tier);
       if(!colors[k])colors[k]=cep?css('--s4'):palette[n++%palette.length];
-      const sparse=t.rows.length>1&&(t.rows[t.rows.length-1].year-t.rows[0].year)/(t.rows.length-1)>1.5;
-      return {type:'scatter',mode:(sparse||t.rows.length<3)?'lines+markers':'lines',x:t.rows.map(r=>r.year),y:t.rows.map(r=>r.population),
+      const step=t.rows.length>1?(t.rows[t.rows.length-1].year-t.rows[0].year)/(t.rows.length-1):0;
+      /* Censos separados por años: solo puntos, porque una línea sugeriría una serie que la fuente no publica. */
+      const pointsOnly=step>=8;
+      return {type:'scatter',mode:pointsOnly?'markers':((step>1.5||t.rows.length<3)?'lines+markers':'lines'),x:t.rows.map(r=>r.year),y:t.rows.map(r=>r.population),
         name:`${t.group.src.vintage} · ${typeText(t.type)}${cep?' · CEPAL':''}`,
         line:{color:colors[k],width:2,dash:t.type==='projection'?'dot':'solid'},marker:{size:8,color:colors[k]},
         customdata:t.rows.map(r=>[typeText(r.series_type),r.vintage,fmtPct(r.growth)]),
