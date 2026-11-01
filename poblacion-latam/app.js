@@ -297,9 +297,11 @@ function pyrOverlaySvg(items,max){
   }).join(''));
   return `<svg viewBox="0 0 ${f.W} ${f.H}" data-overlay="1" role="img" tabindex="0" aria-label="${esc(F('Pirámides superpuestas en {y}. Los valores están en la tabla de abajo.',{y:PYR.year}))}">${f.inner}</svg>`;
 }
+function pyrPart(iso,v){const d=PYR.docs[iso];return (d.parts&&d.parts[v.part])||{institution:d.institution,source_url:d.source_url,raw_files:d.raw_files||[]};}
 function pyrSource(iso,v){
-  const d=PYR.docs[iso];const files=(d.raw_files||[]).map((f,i)=>`<a href="${esc(blob(f.path))}" rel="noopener">${esc((d.raw_files.length>1)?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
-  return `<p class="src"><a href="${esc(d.source_url)}" rel="noopener">${esc(d.institution)}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
+  const d=PYR.docs[iso],p=pyrPart(iso,v),fs=p.raw_files||[];
+  const files=fs.map((f,i)=>`<a href="${esc(blob(f.path))}" rel="noopener">${esc(fs.length>1?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
+  return `<p class="src">${isCepal(v.source_tier)?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<a href="${esc(p.source_url)}" rel="noopener">${esc(p.institution)}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
 }
 function pyrEmpty(iso){
   const d=PYR.docs[iso];
@@ -349,6 +351,7 @@ function renderPyr(){
   $('pyrTable').innerHTML=`<caption class="sr-only">${esc(F('Población por edad y sexo en {y}',{y:PYR.year}))}</caption><thead><tr><th>${esc(T('Edad'))}</th>${withV.map(x=>`<th class="n">${esc(name(x.i))} · ${esc(T('H'))}</th><th class="n">${esc(name(x.i))} · ${esc(T('M'))}</th>`).join('')}</tr></thead><tbody>`
     +ages.map((a,k)=>({a,k})).reverse().map(({a,k})=>`<tr><td>${esc(a)}</td>${withV.map(x=>{const t=pyrTotal(x.v),f=n=>PYR.scale==='share'||PYR.layout==='overlay'?fmtPct2(n/t):fmtN(n);return `<td class="n">${f(x.v.m[k])}</td><td class="n">${f(x.v.f[k])}</td>`;}).join('')}</tr>`).join('')+'</tbody>';
   $('pyrPending').innerHTML=ISOS().filter(i=>!pyrAvailable(i)).map(i=>`<li><b>${esc(name(i))}:</b> ${esc(pick(pyrInfo(i).reason)||T('Sin datos disponibles.'))}</li>`).join('');
+  $('pyrPending').closest('details').hidden=!ISOS().some(i=>!pyrAvailable(i));
   $('csvPyr').disabled=!withV.length;
 }
 function pyrTip(ev,svg){
@@ -383,7 +386,7 @@ function wirePyr(){
   $('csvPyr').addEventListener('click',()=>{
     const ages=window.__ageGroups||[];
     const rows=[];PYR.countries.forEach(i=>{const v=pyrAt(i,PYR.year),d=PYR.docs[i];if(!v)return;const t=pyrTotal(v);
-      ages.forEach((a,k)=>[['m',v.m[k]],['f',v.f[k]]].forEach(([s,n])=>rows.push({iso3:i,country:name(i),year:PYR.year,age_group:a,sex:s==='m'?'male':'female',population:n,share_of_total:n/t,series_type:v.series_type,source_id:v.source_id,source_tier:v.source_tier,institution:d.institution,vintage:v.vintage,reference_date:v.reference_date,source_url:d.source_url,raw_files:(d.raw_files||[]).map(f=>f.path).join(' | ')})));});
+      ages.forEach((a,k)=>[['m',v.m[k]],['f',v.f[k]]].forEach(([s,n])=>rows.push({iso3:i,country:name(i),year:PYR.year,age_group:a,sex:s==='m'?'male':'female',population:n,share_of_total:n/t,series_type:v.series_type,source_id:v.source_id,source_tier:v.source_tier,institution:pyrPart(i,v).institution,vintage:v.vintage,reference_date:v.reference_date,source_url:pyrPart(i,v).source_url,raw_files:(pyrPart(i,v).raw_files||[]).map(f=>f.path).join(' | ')})));});
     downloadCSV(`piramides-${PYR.year}.csv`,rows);
   });
 }
