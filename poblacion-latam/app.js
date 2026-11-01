@@ -9,6 +9,8 @@ const F=(s,o)=>T(s).replace(/\{(\w+)\}/g,(m,k)=>(o&&o[k]!==undefined)?o[k]:m);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LOC=()=>LANG==='en'?'en-US':'es-CO';
 const NOW=new Date().getFullYear();
+/* Año inicial: el último múltiplo de 5, el único que tienen todas las series, incluidas las quinquenales. */
+const DEFAULT_YEAR=Math.floor(NOW/5)*5;
 const safeStore={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const fmtN=(v,d)=>v==null?'—':Number(v).toLocaleString(LOC(),{maximumFractionDigits:d||0});
@@ -359,7 +361,7 @@ function pyrStop(){if(PYR.playing){clearInterval(PYR.playing);PYR.playing=null;c
 function wirePyr(){
   const infos=PopData.ISO3.map(pyrInfo).filter(x=>x.years);
   const minY=Math.min(...infos.map(x=>x.year_from)),maxY=Math.max(...infos.map(x=>x.year_to));
-  const yr=$('pyrYear');yr.min=minY;yr.max=maxY;PYR.year=Math.min(maxY,Math.max(minY,NOW));
+  const yr=$('pyrYear');yr.min=minY;yr.max=maxY;PYR.year=Math.min(maxY,Math.max(minY,DEFAULT_YEAR));
   PYR.countries=PYR.countries.filter(pyrAvailable);
   yr.addEventListener('input',()=>{pyrStop();PYR.year=+yr.value;renderPyr();});
   $('pyrScale').addEventListener('change',e=>{PYR.scale=e.target.value;renderPyr();});
@@ -518,7 +520,7 @@ function stopPlay(){if(S.playing){clearInterval(S.playing);S.playing=null;const 
 function wire(){
   const yr=$('yearRange');
   const allY=PopData.ISO3.flatMap(i=>recs(i).map(r=>r.year));
-  const minY=Math.min(...allY),maxY=Math.max(...allY);yr.min=minY;yr.max=maxY;S.year=Math.min(maxY,Math.max(minY,NOW));yr.value=S.year;
+  const minY=Math.min(...allY),maxY=Math.max(...allY);yr.min=minY;yr.max=maxY;S.year=Math.min(maxY,Math.max(minY,DEFAULT_YEAR));yr.value=S.year;
   yr.addEventListener('input',()=>{stopPlay();S.year=+yr.value;renderMap();});
   $('playBtn').addEventListener('click',()=>{
     if(S.playing)return stopPlay();
