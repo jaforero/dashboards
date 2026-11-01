@@ -255,7 +255,7 @@ function pyrShareMax(){
   PYR.countries.forEach(i=>{const d=PYR.docs[i];if(!d||!d.years)return;Object.values(d.years).forEach(v=>{const t=pyrTotal(v);v.m.concat(v.f).forEach(x=>{if(x/t>mx)mx=x/t;});});});
   return mx||.1;
 }
-function niceMax(v){const e=Math.pow(10,Math.floor(Math.log10(v)));const f=v/e;return [1,1.5,2,2.5,3,4,5,6,8,10].find(s=>f<=s)*e;}
+function niceMax(v){const e=Math.pow(10,Math.floor(Math.log10(v)));const f=v/e;return [1,1.2,1.5,2,2.5,3,4,5,6,8,10].find(s=>f<=s)*e;}
 const pyrFmt=v=>PYR.scale==='share'?fmtN(v*100,1)+' %':(v>=1e6?fmtN(v/1e6,1)+' M':v>=1e3?fmtN(v/1e3,0)+' k':fmtN(v));
 function pyrFrame(max,rows,bars){
   const W=320,top=4,rowH=14,cg=34,half=(W-cg)/2,H=top+rowH*17+20;
