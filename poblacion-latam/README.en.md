@@ -9,7 +9,7 @@ The question it answers: **how many people live in the region, according to thos
 ## Data
 There is no server or build step. It reads the JSON files of [`jaforero/latam-population-official`](https://github.com/jaforero/latam-population-official) live from raw.githubusercontent.com, with a jsDelivr backup. Updating the data requires no commits here.
 
-- **Source rule:** national institution first; ECLAC/CELADE only as a declared fallback; no aggregators. What cannot be verified stays pending, never filled in.
+- **Source rule:** national institution first; UN World Population Prospects 2024 only as a declared fallback; no aggregators. What cannot be verified stays pending, never filled in.
 - **Breaks:** joins between sources or vintages are not spliced. Growth, CAGR and the base-100 index do not cross them.
 - **Traceability:** every figure links to its institution and to its file in `data/raw/`.
 - **Region:** `region.json` arrives calculated from the data repository; here it is only drawn. There is a total only in years with all 20 countries and a regional pyramid only if all 20 publish. If the file is missing or empty, the page keeps working without the region.

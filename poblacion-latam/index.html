@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Población oficial de América Latina · series y proyecciones · Javier Forero</title>
-<meta name="description" content="Población total de América Latina según sus institutos nacionales: series anuales, proyecciones, pirámides y el total de los 20 países como referencia. Cada cifra lleva su institución, vintage y archivo fuente. CEPAL solo como respaldo declarado.">
+<meta name="description" content="Población total de América Latina según sus institutos nacionales: series anuales, proyecciones, pirámides y el total de los 20 países como referencia. Cada cifra lleva su institución, vintage y archivo fuente. La ONU solo como respaldo declarado.">
 <meta name="author" content="Javier Forero">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://dashboards.javierforero.co/poblacion-latam/">
@@ -49,7 +49,7 @@
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset","name":"Población oficial de América Latina: series anuales y proyecciones",
- "description":"Población total de 20 países de América Latina según sus instituciones nacionales, con CEPAL/CELADE solo como respaldo declarado.",
+ "description":"Población total de 20 países de América Latina según sus instituciones nacionales, con la ONU solo como respaldo declarado.",
  "url":"https://dashboards.javierforero.co/poblacion-latam/","creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
  "isBasedOn":"https://github.com/jaforero/latam-population-official","inLanguage":["es","en"],
  "distribution":{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://raw.githubusercontent.com/jaforero/latam-population-official/main/data/processed/latam.csv"}}
@@ -165,7 +165,7 @@
   tr.sel td{background:color-mix(in srgb,var(--primary) 9%,transparent)}
   .badge{display:inline-block;font-size:.68rem;font-weight:700;border-radius:100px;padding:2px 8px;border:1px solid var(--border);color:var(--text-soft);white-space:nowrap}
   .badge.proj{border-style:dashed;color:var(--primary);border-color:var(--primary)}
-  .badge.cepal{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd)}
+  .badge.fallback{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd)}
   .badge.ok{color:var(--ok);background:var(--ok-bg);border-color:var(--ok-bd)}
   .badge.warn{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd)}
   .badge.err{color:var(--err);background:var(--err-bg);border-color:var(--err-bd)}
@@ -174,7 +174,7 @@
   @media(min-width:760px){.chart{min-height:420px}}
   .srcbox{font-size:.84rem;color:var(--text-soft);border-left:4px solid var(--primary);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:10px 12px;border-radius:0 10px 10px 0;margin-top:8px}
   .srcbox+.srcbox{margin-top:6px}
-  .srcbox.cepal{border-left-color:var(--stale);background:var(--stale-bg);color:var(--text)}
+  .srcbox.fallback{border-left-color:var(--stale);background:var(--stale-bg);color:var(--text)}
   .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
   @media(min-width:760px){.kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}}
   .kpi{border:1px solid var(--border);border-radius:12px;padding:10px 12px;min-width:0}
@@ -445,15 +445,15 @@
   <section class="card method" aria-labelledby="h-method">
     <h2 id="h-method" data-i18n>Cómo se construyó y qué no dice</h2>
     <ul>
-      <li data-i18n>Primero la institución nacional con mandato. CEPAL/CELADE solo por país y tipo de serie, cuando la nacional no publica esa serie de forma verificable y descargable. Ningún agregador.</li>
-      <li data-i18n>La Revisión 2024 de CEPAL/CELADE declara coproducción con la División de Población de la ONU. Se usa como respaldo declarado y se marca en cada gráfico.</li>
+      <li data-i18n>Primero la institución nacional con mandato. La ONU solo por país y tipo de serie, cuando la nacional no publica esa serie de forma verificable y descargable. Ninguna otra base internacional.</li>
+      <li data-i18n>World Population Prospects 2024 de la ONU son estimaciones y proyecciones internacionales, no cifras de una institución nacional. Se usan como respaldo declarado y se marcan en cada gráfico.</li>
       <li data-i18n>No se interpola, no se encadena y no se ajusta. Los años sin dato quedan vacíos.</li>
       <li data-i18n>La mayoría de las cifras históricas son estimaciones oficiales ancladas en censos, no conteos directos.</li>
       <li data-i18n>El total regional es una suma propia de las cifras oficiales, no una cifra oficial. Solo existe en los años con dato de los 20 países. Sus tasas e índices excluyen al país que cambia de serie entre los dos años, y ese país queda listado.</li>
       <li data-i18n>La pirámide regional suma las 20 pirámides publicadas de ese año. Si falta una, ese año no tiene pirámide regional.</li>
-      <li data-i18n>El total regional es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL. Incluye series de CEPAL/CELADE para Cuba, Haití, la historia de Honduras y la proyección de Nicaragua, cuyo permiso de reutilización falta confirmar: sin esas cifras no habría total de los 20 países.</li>
+      <li data-i18n>El total regional es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL. Depende de la ONU para Cuba, Haití, la historia de Honduras y la proyección de Nicaragua: sin esas cifras no habría total de los 20 países.</li>
       <li data-i18n>Una pirámide se publica solo si hombres y mujeres suman el total oficial de ese año. Se agrupa en 80 años y más porque es el último grupo común a todas las fuentes; nada se desagrega ni se interpola.</li>
-      <li data-i18n>Frente a los archivos originales, esta pieza solo extrae totales, pasa los miles de CEPAL a personas, suma edades en 17 grupos y calcula crecimiento, índice base 100, año máximo y total regional. Ninguna cifra se corrige.</li>
+      <li data-i18n>Frente a los archivos originales, esta pieza solo extrae totales, pasa los miles de la ONU a personas, suma edades en 17 grupos y calcula crecimiento, índice base 100, año máximo y total regional. Ninguna cifra se corrige.</li>
       <li data-i18n>Cada cifra conserva las condiciones de su fuente: esta pieza no otorga una licencia nueva. Lo derivado de fuentes CC BY-SA 4.0 u ODbL se comparte bajo esa misma licencia.</li>
     </ul>
   </section>
@@ -477,9 +477,9 @@
   <footer class="jf-footer"><span>Javier Forero</span> <i>·</i> <a href="https://javierforero.co">javierforero.co</a><br><span id="footOrigin"></span></footer>
 </main>
 <div class="tip" id="tip" role="status"></div>
-<script src="i18n-en.js?v=7"></script>
+<script src="i18n-en.js?v=8"></script>
 <script src="latam-map.js?v=2"></script>
-<script src="pop-data.js?v=5"></script>
-<script src="app.js?v=11"></script>
+<script src="pop-data.js?v=6"></script>
+<script src="app.js?v=12"></script>
 </body>
 </html>

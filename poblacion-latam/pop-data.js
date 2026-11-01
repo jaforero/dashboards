@@ -11,8 +11,8 @@
     "https://cdn.jsdelivr.net/gh/jaforero/latam-population-official@main/data"
   ];
   var ISO3 = ["ARG","BOL","BRA","CHL","COL","CRI","CUB","DOM","ECU","GTM","HND","HTI","MEX","NIC","PAN","PER","PRY","SLV","URY","VEN"];
-  var SUPPORTED_MAJOR = "1.";
-  var CACHE_KEY = "jf-pop-cache-v1";
+  var SUPPORTED_MAJORS = ["1.", "2."];
+  var CACHE_KEY = "jf-pop-cache-v2";
   var REPO_BLOB = "https://github.com/jaforero/latam-population-official/blob/main/";
   /* Fecha del último dato conocido al publicar la pieza: se muestra si no llega nada y no hay caché. */
   var PUBLISHED_DATA_DATE = "2026-11-01";
@@ -39,7 +39,7 @@
 
   function assertContract(doc, name) {
     if (!doc || typeof doc.schema_version !== "string") throw new Error(name + ": falta schema_version");
-    if (doc.schema_version.indexOf(SUPPORTED_MAJOR) !== 0)
+    if (!SUPPORTED_MAJORS.some(function (m) { return doc.schema_version.indexOf(m) === 0; }))
       throw new Error(name + ": contrato " + doc.schema_version + " no soportado");
     return doc;
   }

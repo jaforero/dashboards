@@ -30,7 +30,8 @@ const name=iso=>{if(iso===REG)return T('Región (20 países)');const c=(S.status
 const ISOS=()=>PopData.ISO3.slice().sort((a,b)=>name(a).localeCompare(name(b),LOC()));
 const segKey=r=>r.source_id+'|'+r.vintage;
 const segInfo=(iso,r)=>{const d=doc(iso);return d?(d.segments.find(s=>s.source_id===r.source_id&&s.year_from<=r.year&&r.year<=s.year_to)||d.segments.find(s=>s.source_id===r.source_id)):null;};
-const isCepal=t=>t==='regional_fallback';
+const isFallback=t=>!!t&&t!=='national';
+const fallbackOf=p=>p.international_fallback||fallbackOf(p)||[];
 const blob=p=>p?PopData.REPO_BLOB+p.split('/').map(encodeURIComponent).join('/'):null;
 function reason(iso){
   const d=doc(iso);
@@ -163,7 +164,7 @@ function renderMap(){
   const regRow=rp?`<tr><td><b>${esc(name(REG))}</b></td><td class="n"><b>${fmtN(rp.population)}</b></td><td><span class="badge">${esc(T('Suma propia'))}</span></td><td class="src">${esc(F('Suma de las 20 cifras oficiales; {n} en proyección.',{n:rp.n_projection}))}</td></tr>`
     :(S.region&&miss.length?`<tr><td colspan="4" class="src full">${esc(F('Sin total regional en {y}: faltan {n} países ({c}).',{y:S.year,n:miss.length,c:nameList(miss.map(x=>x.iso))}))}</td></tr>`:'');
   $('yearTable').innerHTML=`<caption class="sr-only">${esc(F('Población por país en {y}',{y:S.year}))}</caption><thead><tr><th>${esc(T('País'))}</th><th class="n">${esc(T('Población'))}</th><th>${esc(T('Tipo'))}</th><th>${esc(T('Fuente'))}</th></tr></thead><tbody>`+regRow
-   +have.map(({iso,r})=>{const s=segInfo(iso,r)||{};return `<tr class="click${iso===S.country?' sel':''}" data-iso="${iso}"><td>${esc(name(iso))}</td><td class="n">${fmtN(r.population)}${rp?`<br><span class="src">${fmtPct2(rp.shares[iso])}</span>`:''}</td><td><span class="badge${r.series_type==='projection'?' proj':''}">${esc(typeText(r.series_type))}</span></td><td class="src"><a href="${esc(s.source_url)}" rel="noopener">${esc(s.institution)}</a> · ${esc(r.vintage)} · ${esc(refText(r.reference_date))}${isCepal(r.source_tier)?` <span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span>`:''}</td></tr>`;}).join('')
+   +have.map(({iso,r})=>{const s=segInfo(iso,r)||{};return `<tr class="click${iso===S.country?' sel':''}" data-iso="${iso}"><td>${esc(name(iso))}</td><td class="n">${fmtN(r.population)}${rp?`<br><span class="src">${fmtPct2(rp.shares[iso])}</span>`:''}</td><td><span class="badge${r.series_type==='projection'?' proj':''}">${esc(typeText(r.series_type))}</span></td><td class="src"><a href="${esc(s.source_url)}" rel="noopener">${esc(T(s.institution))}</a> · ${esc(r.vintage)} · ${esc(refText(r.reference_date))}${isFallback(r.source_tier)?` <span class="badge fallback">${esc(T('Respaldo internacional: ONU'))}</span>`:''}</td></tr>`;}).join('')
    +miss.map(({iso})=>{const d=recs(iso);const span=d.length?F('Serie disponible: {a}–{b}',{a:d[0].year,b:d[d.length-1].year}):reason(iso);return `<tr class="click${iso===S.country?' sel':''}" data-iso="${iso}"><td>${esc(name(iso))}</td><td class="n">—</td><td><span class="badge warn">${esc(d.length?T('Sin dato'):T('Pendiente'))}</span></td><td class="src">${esc(span)}</td></tr>`;}).join('')+'</tbody>';
   const pr=byYear(S.country)[S.year],sh=regShare(S.country,S.year);
   $('mapPick').innerHTML=`<span><b>${esc(name(S.country))}</b> · ${S.year} · ${pr?fmtN(pr.population):esc(T('sin dato'))}${sh!=null?' · '+esc(F('{p} de la región',{p:fmtPct2(sh)})):''}</span><button type="button" class="btn" data-go-tab="pais">${esc(T('Ver el país'))} →</button>`;
@@ -245,19 +246,19 @@ function renderCountry(){
     .map(k=>`<div class="kpi"><b>${esc(k[0])}</b><span>${esc(k[1])}</span></div>`).join('');
   $('countrySrc').innerHTML=sourceBoxes(iso);
   tbl.innerHTML=`<caption class="sr-only">${esc(name(iso))}</caption><thead><tr><th>${esc(T('Año'))}</th><th class="n">${esc(T('Población'))}</th><th class="n">${esc(T('Crecimiento'))}</th><th>${esc(T('Tipo'))}</th><th>${esc(T('Fuente'))}</th><th>${esc(T('Archivo'))}</th></tr></thead><tbody>`
-    +rows.map(r=>{const s=segInfo(iso,r)||{};return `<tr><td>${r.year}</td><td class="n">${fmtN(r.population)}</td><td class="n">${fmtPct(r.growth)}</td><td>${esc(typeText(r.series_type))}</td><td class="src">${esc(s.institution)} · ${esc(r.vintage)}</td><td class="src"><a href="${esc(blob(r.raw_file))}" rel="noopener">${esc(T('crudo'))}</a></td></tr>`;}).join('')+'</tbody>';
+    +rows.map(r=>{const s=segInfo(iso,r)||{};return `<tr><td>${r.year}</td><td class="n">${fmtN(r.population)}</td><td class="n">${fmtPct(r.growth)}</td><td>${esc(typeText(r.series_type))}</td><td class="src">${esc(T(s.institution))} · ${esc(r.vintage)}</td><td class="src"><a href="${esc(blob(r.raw_file))}" rel="noopener">${esc(T('crudo'))}</a></td></tr>`;}).join('')+'</tbody>';
   box.setAttribute('aria-label',F('Serie de población de {c}. Los valores están en la tabla de abajo.',{c:name(iso)}));
   loadPlotly().then(()=>{
     if($('p-pais').hidden){UI.dirty.add('pais');return;}
     const palette=[css('--s1'),css('--s7'),css('--s3')];let n=0;const colors={};
     const data=splitTraces(rows).map(t=>{
-      const k=t.group.key,cep=isCepal(t.group.src.source_tier);
-      if(!colors[k])colors[k]=cep?css('--s4'):palette[n++%palette.length];
+      const k=t.group.key,fb=isFallback(t.group.src.source_tier);
+      if(!colors[k])colors[k]=fb?css('--s4'):palette[n++%palette.length];
       const step=t.rows.length>1?(t.rows[t.rows.length-1].year-t.rows[0].year)/(t.rows.length-1):0;
       /* Censos separados por años: solo puntos, porque una línea sugeriría una serie que la fuente no publica. */
       const pointsOnly=step>=8;
       return {type:'scatter',mode:pointsOnly?'markers':((step>1.5||t.rows.length<3)?'lines+markers':'lines'),x:t.rows.map(r=>r.year),y:t.rows.map(r=>r.population),
-        name:`${t.group.src.vintage} · ${typeText(t.type)}${cep?' · CEPAL':''}`,
+        name:`${t.group.src.vintage} · ${typeText(t.type)}${fb?' · ONU':''}`,
         line:{color:colors[k],width:2,dash:t.type==='projection'?'dot':'solid'},marker:{size:8,color:colors[k]},
         customdata:t.rows.map(r=>[typeText(r.series_type),r.vintage,fmtPct(r.growth)]),
         hovertemplate:'%{y:,.0f} · %{customdata[0]} · %{customdata[1]} · %{customdata[2]}<extra></extra>'};
@@ -282,11 +283,11 @@ function sourceBoxes(iso){
     if(!merged[k].url2&&s.source_url!==merged[k].source_url)merged[k].url2=s.source_url;});
   const breaks=(doc(iso).breaks||[]).map(b=>`<div class="srcbox"><b>${esc(F('Ruptura de serie en {y}:',{y:b.year}))}</b> ${esc(b.from_vintage)} → ${esc(b.to_vintage)} (${fmtN(b.last_value)} → ${fmtN(b.first_value)}). ${esc(T('Son fuentes o ediciones distintas: no se empalman ni se ajustan, y el crecimiento no se calcula a través de la ruptura.'))}</div>`).join('');
   const seenNotes=new Set();
-  return Object.values(merged).map(s=>{const cep=isCepal(s.source_tier);
+  return Object.values(merged).map(s=>{const fb=isFallback(s.source_tier);
     s.notes=(s.notes||[]).filter(n=>{if(seenNotes.has(n.es))return false;seenNotes.add(n.es);return true;});
     const files=s.files.map((f,i)=>`<a href="${esc(blob(f))}" rel="noopener">${esc(s.files.length>1?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
     const notes=(s.notes||[]).map(n=>`<br>${esc(n[LANG]||n.es)}`).join('');
-    return `<div class="srcbox${cep?' cepal':''}">${cep?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<b>${esc(s.institution)}</b> · ${esc(s.vintage)} · ${s.year_from}–${s.year_to} · ${esc(T('referencia:'))} ${esc(refText(s.reference_date))}<br><a href="${esc(s.source_url)}" rel="noopener">${esc(T('fuente'))}</a> · ${files} · ${esc(T('descargado:'))} ${esc(fmtDate(s.retrieved_at))}${s.retrieved_by==='manual'?' · '+esc(T('carga manual')):''}${s.license&&lic(s.license)?'<br>'+licLine(s.license):''}${notes}</div>`;
+    return `<div class="srcbox${fb?' fallback':''}">${fb?`<span class="badge fallback">${esc(T('Respaldo internacional: ONU'))}</span> `:''}<b>${esc(T(s.institution))}</b> · ${esc(s.vintage)} · ${s.year_from}–${s.year_to} · ${esc(T('referencia:'))} ${esc(refText(s.reference_date))}<br><a href="${esc(s.source_url)}" rel="noopener">${esc(T('fuente'))}</a> · ${files} · ${esc(T('descargado:'))} ${esc(fmtDate(s.retrieved_at))}${s.retrieved_by==='manual'?' · '+esc(T('carga manual')):''}${s.license&&lic(s.license)?'<br>'+licLine(s.license):''}${notes}</div>`;
   }).join('')+breaks;
 }
 
@@ -358,10 +359,10 @@ function pyrOverlaySvg(items,max){
 }
 function pyrPart(iso,v){if(isReg(iso))return {institution:T('Suma propia de los 20 países'),source_url:'',raw_files:[]};const d=PYR.docs[iso];return (d.parts&&d.parts[v.part])||{institution:d.institution,license:d.license,source_url:d.source_url,raw_files:d.raw_files||[]};}
 function pyrSource(iso,v){
-  if(isReg(iso))return `<p class="src"><b>${esc(name(REG))}:</b> ${esc(F('suma propia de las 20 pirámides publicadas en {y}, con {n} países en proyección.',{y:PYR.year,n:v.n_projection}))}${v.regional_fallback.length?' '+esc(F('Incluye CEPAL/CELADE para {c}.',{c:nameList(v.regional_fallback)})):''}</p>`;
+  if(isReg(iso))return `<p class="src"><b>${esc(name(REG))}:</b> ${esc(F('suma propia de las 20 pirámides publicadas en {y}, con {n} países en proyección.',{y:PYR.year,n:v.n_projection}))}${fallbackOf(v).length?' '+esc(F('Incluye a la ONU para {c}.',{c:nameList(fallbackOf(v))})):''}</p>`;
   const d=PYR.docs[iso],p=pyrPart(iso,v),fs=p.raw_files||[];
   const files=fs.map((f,i)=>`<a href="${esc(blob(f.path))}" rel="noopener">${esc(fs.length>1?F('archivo crudo {n}',{n:i+1}):T('archivo crudo'))}</a>`).join(' · ');
-  return `<p class="src">${isCepal(v.source_tier)?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span> `:''}<a href="${esc(p.source_url)}" rel="noopener">${esc(p.institution)}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${lic(p.license)?'<br>'+licLine(p.license):''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
+  return `<p class="src">${isFallback(v.source_tier)?`<span class="badge fallback">${esc(T('Respaldo internacional: ONU'))}</span> `:''}<a href="${esc(p.source_url)}" rel="noopener">${esc(T(p.institution))}</a> · ${esc(v.vintage)} · ${esc(refText(v.reference_date))}${files?' · '+files:''}${lic(p.license)?'<br>'+licLine(p.license):''}${d.note?'<br>'+esc(pick(d.note)):''}</p>`;
 }
 function pyrEmpty(iso){
   const d=PYR.docs[iso];
@@ -503,7 +504,7 @@ function renderCompare(){
   if(regOn&&!regIdx)msgs.push(F('La región solo tiene total en {list}: elige uno de esos años como base para verla.',{list:regPoints().map(p=>p.year).join(', ')}));
   if(regIdx){const ns=regIdx.map(r=>r.n_countries);msgs.push(F('Región: cada punto compara solo los países con la misma serie en el año base y en ese año ({a} a {b} de 20).',{a:Math.min(...ns),b:Math.max(...ns)}));}
   $('compareExcluded').textContent=msgs.join(' ');
-  $('compareSrc').innerHTML=ok.map(s=>{const seg=segInfo(s.iso,s.rows[0])||{};return `<b>${esc(name(s.iso))}:</b> <a href="${esc(seg.source_url)}" rel="noopener">${esc(seg.institution)}</a> · ${esc(s.rows[0].vintage)}${isCepal(s.rows[0].source_tier)?' · '+esc(T('Fuente regional: CEPAL/CELADE')):''}`;}).join(' &nbsp;|&nbsp; ');
+  $('compareSrc').innerHTML=ok.map(s=>{const seg=segInfo(s.iso,s.rows[0])||{};return `<b>${esc(name(s.iso))}:</b> <a href="${esc(seg.source_url)}" rel="noopener">${esc(T(seg.institution))}</a> · ${esc(s.rows[0].vintage)}${isFallback(s.rows[0].source_tier)?' · '+esc(T('Respaldo internacional: ONU')):''}`;}).join(' &nbsp;|&nbsp; ');
   const years=[...new Set(ok.flatMap(s=>s.rows.map(r=>r.year)).concat(regIdx?regIdx.map(r=>r.year):[]))].sort((a,b)=>a-b);
   $('compareTable').innerHTML=`<thead><tr><th>${esc(T('Año'))}</th>${regIdx?`<th class="n">${esc(T('Región'))}</th>`:''}${ok.map(s=>`<th class="n">${esc(name(s.iso))}</th>`).join('')}</tr></thead><tbody>`
     +years.map(y=>{const rr=regIdx&&regIdx.find(x=>x.year===y);return `<tr><td>${y}</td>${regIdx?`<td class="n">${rr?fmtN(rr.index,1):'—'}</td>`:''}${ok.map(s=>{const r=s.rows.find(x=>x.year===y);return `<td class="n">${r?fmtN(r.index,1)+(r.series_type==='projection'?' *':''):'—'}</td>`;}).join('')}</tr>`;}).join('')+`</tbody><caption class="src" style="caption-side:bottom;text-align:left">${esc(T('* Proyección'))}</caption>`;
@@ -594,11 +595,11 @@ function renderMultiples(){
     const brk=(doc(iso).breaks||[]).filter(b=>inRange(b.year)).map(b=>`<line x1="${X(b.year-.5).toFixed(1)}" x2="${X(b.year-.5).toFixed(1)}" y1="2" y2="${H-2}" stroke="var(--text-muted)" stroke-dasharray="2 2" stroke-width="1"></line>`).join('');
     const lastY=Math.min(x1,rows[rows.length-1].year),fx=fp==null?null:Math.max(x0,fp);
     const shade=fx!=null&&fx<lastY?`<rect x="${X(fx).toFixed(1)}" y="0" width="${(X(lastY)-X(fx)).toFixed(1)}" height="${H}" fill="var(--proj-bg)"></rect>`:'';
-    const cepal=rows.some(r=>isCepal(r.source_tier));
+    const fb=rows.some(r=>isFallback(r.source_tier));
     const cur0=withG.filter(r=>r.year<=NOW).pop();
     const lbl=F('{c}: crecimiento anual de {a} a {b}. Valor reciente {v}.',{c:name(iso),a:rows[0].year,b:rows[rows.length-1].year,v:cur0?fmtPct(cur0.growth):'—'});
     const empty=!withG.length&&!noAnnual.includes(iso);
-    return `<div class="mini"><h3>${esc(name(iso))}${cepal?'<span class="badge cepal" title="'+esc(T('Fuente regional: CEPAL/CELADE'))+'">CEPAL</span>':''}</h3>`
+    return `<div class="mini"><h3>${esc(name(iso))}${fb?'<span class="badge fallback" title="'+esc(T('Respaldo internacional: ONU'))+'">ONU</span>':''}</h3>`
       +`<svg viewBox="0 0 ${W} ${H}" data-iso="${iso}" tabindex="0" role="img" aria-label="${esc(lbl)}">${shade}<line x1="0" x2="${W}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="var(--border)" stroke-width="1"></line>${brk}${regLine}${parts}${empty?`<text x="${W/2}" y="${H/2}" text-anchor="middle" font-size="9" fill="var(--text-muted)">${esc(T('Sin tramo anual'))}</text>`:''}</svg></div>`;
   }).join('');
   $('multiples').querySelectorAll('svg[data-iso]').forEach(svg=>{
@@ -606,7 +607,7 @@ function renderMultiples(){
       const g=periods.find(p=>y>p.from_year&&y<=p.to_year),regTxt=g?`<br>${esc(F('Región {a}–{b}: {r}',{a:g.from_year,b:g.to_year,r:fmtPct(g.rate)}))}`:'';
       const rows=annual(iso);
       if(!rows.length){const q=quin(iso).find(x=>y>x.a&&y<=x.b);if(!q)return hideTip();return tip(e,`<b>${esc(name(iso))}</b> · ${q.a}–${q.b}<br>${fmtPct(q.r)} · ${esc(T('media quinquenal'))}${regTxt}`);}
-      const r=rows.reduce((a,c)=>Math.abs(c.year-y)<Math.abs(a.year-y)?c:a);const s=segInfo(iso,r)||{};tip(e,`<b>${esc(name(iso))}</b> · ${r.year}<br>${fmtPct(r.growth)} · ${esc(typeText(r.series_type))}<br>${esc(s.institution)} · ${esc(r.vintage)}${regTxt}`);};
+      const r=rows.reduce((a,c)=>Math.abs(c.year-y)<Math.abs(a.year-y)?c:a);const s=segInfo(iso,r)||{};tip(e,`<b>${esc(name(iso))}</b> · ${r.year}<br>${fmtPct(r.growth)} · ${esc(typeText(r.series_type))}<br>${esc(T(s.institution))} · ${esc(r.vintage)}${regTxt}`);};
     svg.addEventListener('pointermove',show);svg.addEventListener('click',show);
     svg.addEventListener('pointerleave',hideTip);
   });
@@ -622,7 +623,7 @@ function renderPeak(){
    +items.map(({iso,p})=>{
      if(!p||p.status==='no_projection')return `<tr><td>${esc(name(iso))}</td><td colspan="4" class="src">${esc(reason(iso))}</td></tr>`;
      const r=recs(iso).find(x=>x.source_id===p.source_id&&x.series_type==='projection')||recs(iso)[0];const s=segInfo(iso,r)||{};
-     return `<tr><td>${esc(name(iso))}</td><td>${p.status==='peak'?`<b>${p.year}</b>${p.year<=NOW?` <span class="badge">${esc(T('ya alcanzado'))}</span>`:''}`:esc(T('No alcanza máximo en el horizonte'))}</td><td class="n">${fmtN(p.population)}</td><td class="n">${p.horizon_end}</td><td class="src"><a href="${esc(s.source_url)}" rel="noopener">${esc(s.institution)}</a> · ${esc(r.vintage)}${isCepal(r.source_tier)?` <span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span>`:''}</td></tr>`;
+     return `<tr><td>${esc(name(iso))}</td><td>${p.status==='peak'?`<b>${p.year}</b>${p.year<=NOW?` <span class="badge">${esc(T('ya alcanzado'))}</span>`:''}`:esc(T('No alcanza máximo en el horizonte'))}</td><td class="n">${fmtN(p.population)}</td><td class="n">${p.horizon_end}</td><td class="src"><a href="${esc(s.source_url)}" rel="noopener">${esc(T(s.institution))}</a> · ${esc(r.vintage)}${isFallback(r.source_tier)?` <span class="badge fallback">${esc(T('Respaldo internacional: ONU'))}</span>`:''}</td></tr>`;
    }).join('')+'</tbody>';
   const lastReg=regPoints().length?regPoints()[regPoints().length-1].year:null;
   $('peakRegion').textContent=lastReg?F('La región no tiene año máximo calculable: su última cifra con los 20 países es {y} y no todas las proyecciones llegan más lejos.',{y:lastReg}):'';
@@ -633,9 +634,9 @@ function renderMatrix(){
   const cell=(e,label)=>{
     if(!e)return `<td data-th="${esc(label)}">—</td>`;
     const pick=o=>o&&(o[LANG]||o.es);
-    const tier=e.source_tier==='regional_fallback'?`<span class="badge cepal">${esc(T('Fuente regional: CEPAL/CELADE'))}</span>`:(e.status==='pendiente'?`<span class="badge">${esc(T('Sin fuente verificada'))}</span>`:`<span class="badge">${esc(T('Nacional'))}</span>`);
+    const tier=isFallback(e.source_tier)?`<span class="badge fallback">${esc(T('Respaldo internacional: ONU'))}</span>`:(e.status==='pendiente'?`<span class="badge">${esc(T('Sin fuente verificada'))}</span>`:`<span class="badge">${esc(T('Nacional'))}</span>`);
     const msg=pick(e.reason);
-    return `<td data-th="${esc(label)}"><span class="badge ${statusClass(e.status)}">${esc(statusLabel(e.status))}</span> ${tier}<div class="src"><a href="${esc(e.url)}" rel="noopener">${esc(e.institution)}</a>${e.vintage?' · '+esc(e.vintage):''}<br>${esc(T('Última fecha:'))} ${esc(fmtDate(e.retrieved_at))}${e.status==='stale'&&e.error?'<br>'+esc(e.error):''}${msg?'<br>'+esc(msg):''}</div></td>`;
+    return `<td data-th="${esc(label)}"><span class="badge ${statusClass(e.status)}">${esc(statusLabel(e.status))}</span> ${tier}<div class="src"><a href="${esc(e.url)}" rel="noopener">${esc(T(e.institution))}</a>${e.vintage?' · '+esc(e.vintage):''}<br>${esc(T('Última fecha:'))} ${esc(fmtDate(e.retrieved_at))}${e.status==='stale'&&e.error?'<br>'+esc(e.error):''}${msg?'<br>'+esc(msg):''}</div></td>`;
   };
   const h=T('Serie histórica'),p=T('Proyección');
   $('matrix').innerHTML=`<caption class="sr-only">${esc(T('Panel de transparencia'))}</caption><thead><tr><th>${esc(T('País'))}</th><th>${esc(h)}</th><th>${esc(p)}</th></tr></thead><tbody>`
@@ -655,10 +656,10 @@ function renderLicenses(){
   const all=Object.values(S.lic.licenses),n=s=>all.filter(l=>l.status===s).length,pick=o=>o&&(o[LANG]||o.es);
   const rows=all.slice().sort((a,b)=>LIC_ORDER.indexOf(a.status)-LIC_ORDER.indexOf(b.status)||a.institution.localeCompare(b.institution,LOC()));
   const hI=T('Institución'),hS=T('Estado'),hW=T('Qué dice'),hC=T('Cita');
-  box.innerHTML=`<p>${esc(F('Revisado el {d}: {a} instituciones con licencia abierta, {b} con condiciones propias, {c} sin licencia localizada y {e} que restringe la reutilización.',{d:fmtDate(S.lic.review.reviewed),a:n('open_license'),b:n('own_terms'),c:n('no_license'),e:n('restricted')}))} ${esc(pick(S.lic.review.caveat))}</p>`
-    +rows.filter(l=>l.status==='restricted').map(l=>`<div class="srcbox cepal"><b>${esc(l.institution)}:</b> ${esc(pick(l.summary))}</div>`).join('')
+  box.innerHTML=`<p>${esc(F('Revisado el {d}: {a} instituciones con licencia abierta, {b} con condiciones propias y {c} sin licencia localizada.',{d:fmtDate(S.lic.review.reviewed),a:n('open_license'),b:n('own_terms'),c:n('no_license')}))} ${esc(pick(S.lic.review.caveat))}</p>`
+    +rows.filter(l=>l.status==='restricted').map(l=>`<div class="srcbox fallback"><b>${esc(T(l.institution))}:</b> ${esc(pick(l.summary))}</div>`).join('')
     +`<details><summary>${esc(T('Ver las condiciones de cada institución'))}</summary><div class="tablewrap" tabindex="0" role="region"><table id="licTable" class="matrix"><caption class="sr-only">${esc(T('Licencias y atribución'))}</caption><thead><tr><th>${esc(hI)}</th><th>${esc(hS)}</th><th>${esc(hW)}</th><th>${esc(hC)}</th></tr></thead><tbody>`
-    +rows.map(l=>`<tr><td class="iso">${esc(l.institution)}<div class="src">${esc(l.countries.map(name).join(', '))}</div></td><td data-th="${esc(hS)}"><span class="badge ${licClass(l.status)}">${esc(licLabel(l.status))}</span><div class="src">${esc(licHow(l.read_how))}</div></td><td data-th="${esc(hW)}">${esc(pick(l.summary))} <a href="${esc(l.terms_url)}" rel="noopener">${esc(T('ver texto'))}</a>${l.license_url&&l.license_url!==l.terms_url?` · <a href="${esc(l.license_url)}" rel="noopener">${esc(T('ver licencia'))}</a>`:''}</td><td data-th="${esc(hC)}">${esc(l.attribution)}</td></tr>`).join('')
+    +rows.map(l=>`<tr><td class="iso">${esc(T(l.institution))}<div class="src">${esc(l.countries.map(name).join(', '))}</div></td><td data-th="${esc(hS)}"><span class="badge ${licClass(l.status)}">${esc(licLabel(l.status))}</span><div class="src">${esc(licHow(l.read_how))}</div></td><td data-th="${esc(hW)}">${esc(pick(l.summary))} <a href="${esc(l.terms_url)}" rel="noopener">${esc(T('ver texto'))}</a>${l.license_url&&l.license_url!==l.terms_url?` · <a href="${esc(l.license_url)}" rel="noopener">${esc(T('ver licencia'))}</a>`:''}</td><td data-th="${esc(hC)}">${esc(l.attribution)}</td></tr>`).join('')
     +'</tbody></table></div></details>';
 }
 
@@ -670,8 +671,8 @@ function renderHead(){
   const dates=live.map(s=>s.retrieved_at).sort();const last=S.status.last_data_update||dates[dates.length-1];
   const pd=$('pillDate');delete pd.dataset.es;pd.removeAttribute('data-i18n');pd.textContent=F('Última actualización: {d}',{d:fmtDate(last)});
   $('pillCoverage').textContent=F('{n} de 20 países con datos',{n:withData.length});
-  const nat=live.filter(s=>s.source_tier==='national').length,reg=live.filter(s=>s.source_tier==='regional_fallback').length;
-  $('pillTier').textContent=F('{n} series nacionales · {r} con CEPAL de respaldo',{n:nat,r:reg});
+  const nat=live.filter(s=>s.source_tier==='national').length,reg=live.filter(s=>isFallback(s.source_tier)).length;
+  $('pillTier').textContent=F('{n} series nacionales · {r} con la ONU de respaldo',{n:nat,r:reg});
   const stale=series.filter(s=>s.status==='stale').length;
   const b=$('banner');
   if(S.fromCache){b.hidden=false;b.className='banner warn';b.textContent=F('No se pudo leer el repositorio de datos. Se muestran los últimos datos guardados en este navegador, con fecha {d}.',{d:fmtDate(last)});}
@@ -704,15 +705,15 @@ function renderRegion(){
   const more=$('regionMore');more.textContent=REGION.all?T('Ver menos'):T('Ver los 20 países');more.setAttribute('aria-expanded',String(REGION.all));
   const odd=p.components.filter(c=>!['07-01','06-30','mid-year'].includes(c.reference_date));
   const notes=[T('Funciona como una media ponderada por población: los países grandes mueven más el total. No es el promedio simple de 20 países.')];
-  if(p.regional_fallback.length)notes.push(F('En {y} incluye series de CEPAL/CELADE para {c}, cuyo permiso de reutilización falta confirmar. Sin esas cifras no habría total de los 20 países.',{y,c:nameList(p.regional_fallback)}));
+  if(fallbackOf(p).length)notes.push(F('En {y} incluye a la ONU como respaldo declarado para {c}. Sin esas cifras no habría total de los 20 países.',{y,c:nameList(fallbackOf(p))}));
   if(odd.length)notes.push(F('No todas las cifras van a mitad de año: {c}.',{c:odd.map(c=>`${name(c.iso3)} (${refText(c.reference_date)})`).join(', ')}));
   if(g&&g.excluded.length)notes.push(F('Entre {a} y {b}, {c} cambia de serie: queda fuera del crecimiento, pero su cifra oficial sí suma en cada total.',{a:g.from_year,b:g.to_year,c:nameList(g.excluded.map(e=>e.iso3))}));
   notes.push(T('Es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL: cada cifra conserva las de su fuente. Ver la pestaña Fuentes.'));
   const li=a=>a.map(n=>`<li>${esc(n)}</li>`).join('');
   $('regionNotes').innerHTML=li(notes.slice(0,2));$('regionNotesMore').innerHTML=li(notes.slice(2));
   const nxt=q=>ps.find(x=>x.from_year===q.year);
-  $('regionTable').innerHTML=`<caption class="sr-only">${esc(T('Total regional por año'))}</caption><thead><tr><th>${esc(T('Año'))}</th><th class="n">${esc(T('Población'))}</th><th class="n">${esc(T('Países'))}</th><th class="n">${esc(T('En proyección'))}</th><th>${esc(T('Con CEPAL/CELADE'))}</th><th class="n">${esc(T('Crecimiento anual medio hasta el siguiente'))}</th><th class="n">${esc(T('Países en esa tasa'))}</th></tr></thead><tbody>`
-    +pts.map(q=>{const n=nxt(q);return `<tr><td>${q.year}</td><td class="n">${fmtN(q.population)}</td><td class="n">${q.n_countries}</td><td class="n">${q.n_projection}</td><td class="src">${esc(nameList(q.regional_fallback))}</td><td class="n">${n?fmtPct(n.rate):'—'}</td><td class="n">${n?n.n_countries:'—'}</td></tr>`;}).join('')+'</tbody>';
+  $('regionTable').innerHTML=`<caption class="sr-only">${esc(T('Total regional por año'))}</caption><thead><tr><th>${esc(T('Año'))}</th><th class="n">${esc(T('Población'))}</th><th class="n">${esc(T('Países'))}</th><th class="n">${esc(T('En proyección'))}</th><th>${esc(T('Con la ONU'))}</th><th class="n">${esc(T('Crecimiento anual medio hasta el siguiente'))}</th><th class="n">${esc(T('Países en esa tasa'))}</th></tr></thead><tbody>`
+    +pts.map(q=>{const n=nxt(q);return `<tr><td>${q.year}</td><td class="n">${fmtN(q.population)}</td><td class="n">${q.n_countries}</td><td class="n">${q.n_projection}</td><td class="src">${esc(nameList(fallbackOf(q)))}</td><td class="n">${n?fmtPct(n.rate):'—'}</td><td class="n">${n?n.n_countries:'—'}</td></tr>`;}).join('')+'</tbody>';
 }
 function renderRegionBars(){
   const pts=regPoints(),box=$('regionBars'),W=Math.max(300,box.clientWidth||340),H=196,top=22,bot=24,band=W/pts.length,bw=Math.min(46,band*.68);
@@ -731,7 +732,7 @@ function wireRegion(){
   const pickYear=y=>{REGION.year=y;track('region_year',{year:y});renderRegion();};
   bars.addEventListener('click',e=>{const b=e.target.closest('[data-year]');if(b)pickYear(+b.dataset.year);});
   bars.addEventListener('keydown',e=>{const b=e.target.closest('[data-year]');if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();pickYear(+b.dataset.year);}});
-  bars.addEventListener('pointermove',e=>{const b=e.target.closest&&e.target.closest('[data-year]');if(!b)return hideTip();const p=regPoint(+b.dataset.year);tip(e,`<b>${p.year}</b> · ${fmtN(p.population)}<br>${esc(F('{n} de 20 países en proyección',{n:p.n_projection}))}${p.regional_fallback.length?'<br>'+esc(F('Con CEPAL/CELADE: {c}',{c:nameList(p.regional_fallback)})):''}`);});
+  bars.addEventListener('pointermove',e=>{const b=e.target.closest&&e.target.closest('[data-year]');if(!b)return hideTip();const p=regPoint(+b.dataset.year);tip(e,`<b>${p.year}</b> · ${fmtN(p.population)}<br>${esc(F('{n} de 20 países en proyección',{n:p.n_projection}))}${fallbackOf(p).length?'<br>'+esc(F('Con la ONU: {c}',{c:nameList(fallbackOf(p))})):''}`);});
   bars.addEventListener('pointerleave',hideTip);
   $('regionWeights').addEventListener('click',e=>{const b=e.target.closest('[data-iso]');if(b){selectCountry(b.dataset.iso);setTab('pais');}});
   $('regionMore').addEventListener('click',()=>{REGION.all=!REGION.all;renderRegion();});

@@ -9,7 +9,7 @@ La pregunta que responde: **¿cuánta gente vive en la región, según quién ti
 ## Datos
 No tiene servidor ni paso de build. Lee en vivo los JSON de [`jaforero/latam-population-official`](https://github.com/jaforero/latam-population-official) desde raw.githubusercontent.com, con respaldo en jsDelivr. Actualizar los datos no requiere commits aquí.
 
-- **Regla de fuentes:** institución nacional primero; CEPAL/CELADE solo como respaldo declarado; ningún agregador. Lo que no se puede verificar queda pendiente, nunca rellenado.
+- **Regla de fuentes:** institución nacional primero; ONU, World Population Prospects 2024, solo como respaldo declarado; ningún agregador. Lo que no se puede verificar queda pendiente, nunca rellenado.
 - **Rupturas:** las uniones entre fuentes o vintages no se empalman. El crecimiento, el CAGR y el índice base 100 no las cruzan.
 - **Trazabilidad:** cada cifra enlaza a su institución y a su archivo en `data/raw/`.
 - **Región:** `region.json` llega calculado desde el repositorio de datos; aquí solo se dibuja. Hay total solo en años con los 20 países y pirámide regional solo si publican las 20. Si el archivo falta o viene vacío, la página sigue funcionando sin la región.
