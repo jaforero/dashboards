@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Población oficial de América Latina · series y proyecciones · Javier Forero</title>
+<meta name="description" content="Población total de América Latina según sus institutos nacionales: series anuales, proyecciones y panel de transparencia. Cada cifra lleva su institución, vintage y archivo fuente. CEPAL solo como respaldo declarado.">
+<meta name="author" content="Javier Forero">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://dashboards.javierforero.co/poblacion-latam/">
+<link rel="alternate" hreflang="es" href="https://dashboards.javierforero.co/poblacion-latam/">
+<link rel="alternate" hreflang="en" href="https://dashboards.javierforero.co/poblacion-latam/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://dashboards.javierforero.co/poblacion-latam/">
+<meta name="theme-color" content="#041c59">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Javier Forero">
+<meta property="og:locale" content="es_CO">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:url" content="https://dashboards.javierforero.co/poblacion-latam/">
+<meta property="og:title" content="Población oficial de América Latina · series y proyecciones">
+<meta property="og:description" content="Cada cifra, trazable hasta el archivo de su institución nacional. Los países sin fuente verificable quedan pendientes, nunca rellenados.">
+<meta property="og:image" content="https://dashboards.javierforero.co/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Población oficial de América Latina · series y proyecciones">
+<meta name="twitter:description" content="Cada cifra, trazable hasta el archivo de su institución nacional.">
+<meta name="twitter:image" content="https://dashboards.javierforero.co/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ3K8EVKV0"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js',new Date());
+  gtag('config','G-MQ3K8EVKV0',{content_group:'poblacion-latam',page_title:'Población oficial de América Latina'});
+  function track(n,p){try{if(typeof gtag==='function')gtag('event',n,p||{});}catch(e){}}
+</script>
+<script>
+  (function(){try{var t=localStorage.getItem('jf-theme');if(t!=='dark'&&t!=='light')t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+  (function(){var q=null,s=null;
+    try{q=new URLSearchParams(location.search).get('lang');}catch(e){}
+    try{s=localStorage.getItem('jf-lang')||localStorage.getItem('iac_lang');}catch(e){}
+    window.__lang0=(q==='en'||q==='es')?q:((s==='en'||s==='es')?s:(((navigator.language||'').toLowerCase().indexOf('es')!==0)?'en':'es'));
+    window.__titleEs=document.title;})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Dataset","name":"Población oficial de América Latina: series anuales y proyecciones",
+ "description":"Población total de 20 países de América Latina según sus instituciones nacionales, con CEPAL/CELADE solo como respaldo declarado.",
+ "url":"https://dashboards.javierforero.co/poblacion-latam/","creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
+ "isBasedOn":"https://github.com/jaforero/latam-population-official","inLanguage":["es","en"],
+ "distribution":{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://raw.githubusercontent.com/jaforero/latam-population-official/main/data/processed/latam.csv"}}
+</script>
+<style>
+  @font-face{font-family:'Igra Sans';
+    src:url('../assets/fonts/IgraSans.otf') format('opentype'),url('/assets/fonts/IgraSans.otf') format('opentype'),
+        url('../fonts/IgraSans.otf') format('opentype'),url('/fonts/IgraSans.otf') format('opentype');
+    font-weight:100 900;font-style:normal;font-display:swap;}
+  :root{color-scheme:light;
+    --primary:#4e00ff;--primary-lt:#7c4dff;--navy:#041c59;--blue:#0048ff;
+    --bg:#f5f4ff;--bg2:#edeaff;--surface:#ffffff;--border:#ddd6ff;--border-soft:#ebe7ff;
+    --heading:#041c59;--text:#0d0a1e;--text-soft:#4a4568;--text-muted:#625a86;--grid:#eceaf7;--topbar:#041c59;
+    --ok:#086a47;--ok-bg:rgba(8,106,71,.07);--ok-bd:rgba(8,106,71,.28);
+    --stale:#8f5200;--stale-bg:#fff6e5;--stale-bd:#f1cf8d;
+    --err:#b3123b;--err-bg:#fdecef;--err-bd:#f4b4c3;
+    --s1:#4e00ff;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#821779;--sx:#625a86;
+    --q1:#e4ddff;--q2:#c4b3ff;--q3:#9b7bff;--q4:#6a2bf0;--q5:#3a0fb4;--q6:#041c59;
+    --none:#eef0f6;--none-ink:#8a93ad;--ctx:#f0eff8;--hatch:#ffffff;--proj-bg:rgba(78,0,255,.06);
+    --shadow:0 10px 28px rgba(4,28,89,.07);--r:14px;
+    --font:'Igra Sans','IgraSans',Aptos,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  :root[data-theme="dark"]{color-scheme:dark;
+    --primary:#9a78ff;--primary-lt:#b59cff;--navy:#dfe6ff;--blue:#7a98ff;
+    --bg:#070c1c;--bg2:#121a38;--surface:#101732;--border:#243057;--border-soft:#1b2447;
+    --heading:#dfe6ff;--text:#eaeef9;--text-soft:#c3c9dc;--text-muted:#9aa4bf;--grid:#1d2748;--topbar:#050a1a;
+    --ok:#4cc9a0;--ok-bg:rgba(76,201,160,.10);--ok-bd:rgba(76,201,160,.35);
+    --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);
+    --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
+    --s1:#9a78ff;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#a12eb8;--sx:#9aa4bf;
+    --q1:#2a2560;--q2:#3f2f94;--q3:#5e3fd0;--q4:#8a68ff;--q5:#b9a4ff;--q6:#e8e2ff;
+    --none:#161e3b;--none-ink:#7884a3;--ctx:#121a38;--hatch:#070c1c;--proj-bg:rgba(154,120,255,.10);
+    --shadow:0 10px 28px rgba(0,0,0,.35);}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.45;min-height:100vh;-webkit-font-smoothing:antialiased;font-variant-ligatures:none;transition:background-color .25s ease,color .25s ease}
+  a{color:var(--blue);text-underline-offset:2px}
+  :focus-visible{outline:3px solid var(--primary-lt);outline-offset:2px;border-radius:6px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+  .jf-topbar{background:var(--topbar);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .jf-topbar-left,.jf-topbar-right{display:flex;align-items:center;gap:10px;min-width:0}
+  .jf-topbar-logo{font-size:1.02rem;color:#fff;font-weight:600;text-decoration:none}
+  .jf-topbar-logo span{color:#b9a6ff}
+  .jf-topbar-back{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:6px 12px;text-decoration:none;white-space:nowrap}
+  .jf-topbar-tag{display:none;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media(min-width:900px){.jf-topbar{padding:10px 24px;flex-wrap:nowrap}.jf-topbar-tag{display:block}}
+  .lang-toggle{display:flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:3px;gap:2px}
+  .lang-opt{font-family:var(--font);min-height:32px;padding:4px 12px;border:none;background:none;border-radius:100px;font-size:.7rem;font-weight:600;color:rgba(255,255,255,.85);cursor:pointer}
+  .lang-opt[aria-pressed="true"]{background:#4e00ff;color:#fff}
+  .theme-btn{font-size:.95rem;width:40px;height:38px;border-radius:100px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 16px 56px}
+  .header{padding:20px 0 6px}
+  .eyebrow{display:inline-block;font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--primary);background:color-mix(in srgb,var(--primary) 9%,transparent);border-radius:100px;padding:5px 11px;margin-bottom:8px}
+  .byline{display:block;font-size:.72rem;font-weight:600;color:var(--text-muted);margin-bottom:6px}
+  h1{font-size:clamp(1.45rem,3.4vw,2.05rem);font-weight:700;line-height:1.15;color:var(--heading);margin-bottom:6px}
+  .deck{font-size:clamp(.98rem,1.7vw,1.1rem);color:var(--text-soft);max-width:68ch}
+  .meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .pill{font-size:.74rem;font-weight:600;color:var(--text-soft);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 11px}
+  .pill:empty{display:none}
+  .pill.err{color:var(--err);background:var(--err-bg);border-color:var(--err-bd)}
+  .pill.warn{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd)}
+  .banner{margin-top:14px;border-radius:var(--r);padding:12px 14px;font-size:.9rem}
+  .banner.error{color:var(--err);background:var(--err-bg);border:1px solid var(--err-bd)}
+  .banner.warn{color:var(--stale);background:var(--stale-bg);border:1px solid var(--stale-bd)}
+  section.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin-top:16px;min-width:0}
+  @media(min-width:760px){section.card{padding:22px}}
+  h2{font-size:clamp(1.08rem,2vw,1.3rem);color:var(--heading);font-weight:700;line-height:1.2}
+  .sub{font-size:.88rem;color:var(--text-soft);margin:4px 0 12px;max-width:80ch}
+  .controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin-bottom:12px}
+  .field{display:flex;flex-direction:column;gap:3px;font-size:.74rem;font-weight:600;color:var(--text-muted);min-width:0}
+  select,input[type=number]{font-family:var(--font);font-size:.92rem;min-height:44px;padding:6px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);max-width:100%}
+  .btn{font-family:var(--font);font-size:.82rem;font-weight:600;min-height:44px;padding:8px 14px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--heading);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+  .btn:hover{border-color:var(--primary)}
+  .btn[disabled]{opacity:.55;cursor:not-allowed}
+  .yearline{display:flex;align-items:center;gap:10px;flex:1 1 280px;min-width:0}
+  input[type=range]{flex:1;min-width:0;accent-color:var(--primary);height:44px}
+  .year-big{font-size:1.5rem;font-weight:700;color:var(--heading);min-width:3.1em;font-variant-numeric:tabular-nums}
+  .mapgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+  @media(min-width:900px){.mapgrid{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}}
+  #map{width:100%;height:auto;display:block;max-height:640px}
+  #map path.c{stroke:var(--surface);stroke-width:.7;cursor:pointer;outline:none}
+  #map path.c:hover,#map path.c:focus{stroke:var(--text);stroke-width:1.6}
+  #map path.c.sel{stroke:var(--text);stroke-width:2}
+  #map path.ctx{fill:var(--ctx);stroke:none}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.74rem;color:var(--text-soft);margin-top:8px;align-items:center}
+  .lg{display:inline-flex;align-items:center;gap:5px}
+  .sw{display:inline-block;width:18px;height:12px;border-radius:3px;border:1px solid var(--border)}
+  .tablewrap{overflow:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+  .tablewrap.tall{max-height:640px}
+  table{border-collapse:collapse;width:100%;font-size:.84rem}
+  th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:.72rem;font-weight:700;color:var(--text-muted);padding:7px 8px;border-bottom:1px solid var(--border);white-space:nowrap}
+  td{padding:7px 8px;border-bottom:1px solid var(--border-soft);vertical-align:top}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  th.n{text-align:right}
+  tr.click{cursor:pointer}
+  tr.click:hover td{background:color-mix(in srgb,var(--primary) 6%,transparent)}
+  tr.sel td{background:color-mix(in srgb,var(--primary) 9%,transparent)}
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;border-radius:100px;padding:2px 8px;border:1px solid var(--border);color:var(--text-soft);white-space:nowrap}
+  .badge.proj{border-style:dashed;color:var(--primary);border-color:var(--primary)}
+  .badge.cepal{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd)}
+  .badge.ok{color:var(--ok);background:var(--ok-bg);border-color:var(--ok-bd)}
+  .badge.warn{color:var(--stale);background:var(--stale-bg);border-color:var(--stale-bd)}
+  .badge.err{color:var(--err);background:var(--err-bg);border-color:var(--err-bd)}
+  .src{font-size:.76rem;color:var(--text-muted)}
+  .chart{width:100%;min-height:340px}
+  @media(min-width:760px){.chart{min-height:420px}}
+  .srcbox{font-size:.84rem;color:var(--text-soft);border-left:4px solid var(--primary);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:10px 12px;border-radius:0 10px 10px 0;margin-top:8px}
+  .srcbox+.srcbox{margin-top:6px}
+  .srcbox.cepal{border-left-color:var(--stale);background:var(--stale-bg);color:var(--text)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+  .kpi{border:1px solid var(--border);border-radius:12px;padding:10px 12px;min-width:0}
+  .kpi b{display:block;font-size:1.12rem;color:var(--heading);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .kpi span{font-size:.74rem;color:var(--text-muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .chip{font-family:var(--font);font-size:.76rem;font-weight:600;min-height:40px;padding:4px 11px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+  .chip[aria-pressed="true"]{border-color:var(--text);color:var(--text)}
+  .chip[disabled]{opacity:.5;cursor:not-allowed}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .multi{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  @media(max-width:360px){.multi{grid-template-columns:minmax(0,1fr)}}
+  .mini{border:1px solid var(--border-soft);border-radius:12px;padding:8px;position:relative;min-width:0}
+  .mini h3{font-size:.78rem;color:var(--heading);font-weight:700;margin-bottom:2px;display:flex;justify-content:space-between;gap:4px}
+  .mini svg{width:100%;height:auto;display:block;touch-action:pan-y}
+  .mini .why{font-size:.72rem;color:var(--text-muted);padding:10px 0;min-height:70px}
+  .tip{position:fixed;z-index:30;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 10px;font-size:.78rem;box-shadow:var(--shadow);max-width:270px;display:none}
+  details{margin-top:12px}
+  summary{cursor:pointer;font-size:.85rem;font-weight:600;color:var(--blue);min-height:32px}
+  .matrix td.iso{font-weight:700;color:var(--heading);white-space:nowrap}
+  @media(max-width:759px){
+    table.matrix thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+    table.matrix tr{display:block;border:1px solid var(--border-soft);border-radius:12px;margin-bottom:8px;padding:6px}
+    table.matrix td{display:block;border:none;padding:4px 6px}
+    table.matrix td[data-th]::before{content:attr(data-th) ": ";font-weight:700;color:var(--text-muted);font-size:.72rem}
+  }
+  @media(max-width:759px){
+    #yearTable thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+    #yearTable tr{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--border-soft)}
+    #yearTable td{display:block;border:none;padding:0}
+    #yearTable td:nth-child(4){grid-column:1/-1}
+    .tablewrap.tall{max-height:none}
+    #countryTable,#compareTable{min-width:520px}
+  }
+  .method p,.method li{font-size:.9rem;color:var(--text-soft);margin:6px 0;max-width:80ch}
+  .method ul{padding-left:18px}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .jf-footer{margin-top:32px;border-top:1px solid var(--border);padding:16px 0 0;font-size:.78rem;color:var(--text-muted);text-align:center}
+  .jf-footer a{color:var(--blue);font-weight:700}
+  .jf-footer i{color:var(--primary);font-style:normal}
+</style>
+</head>
+<body>
+<nav class="jf-topbar">
+  <div class="jf-topbar-left">
+    <a class="jf-topbar-logo" href="https://javierforero.co">Javier<span>Forero</span>.co</a>
+    <a class="jf-topbar-back" href="https://dashboards.javierforero.co/claude/">&larr; Dashboards</a>
+  </div>
+  <div class="jf-topbar-right">
+    <span class="jf-topbar-tag" data-i18n>Divulgación · datos públicos verificables</span>
+    <div class="lang-toggle" id="langToggle" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-opt" data-lang="es" aria-pressed="true" lang="es">ES</button>
+      <button type="button" class="lang-opt" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button type="button" class="theme-btn" id="themeToggle" aria-pressed="false" aria-label="Cambiar a tema oscuro">🌙</button>
+  </div>
+</nav>
+<main class="wrap">
+  <header class="header">
+    <span class="eyebrow" data-i18n>Divulgación · Población oficial</span><span class="byline" data-i18n>Javier Forero · Estadístico con alma de narrador</span>
+    <h1 data-i18n>¿Cuánta gente vive en América Latina, según quién tiene el mandato de contarla?</h1>
+    <p class="deck" data-i18n>Series anuales y proyecciones de cada institución nacional. Cada cifra lleva su fuente y su archivo; lo que no se puede verificar queda pendiente, nunca rellenado.</p>
+    <div class="meta-row">
+      <span class="pill" id="pillDate" aria-live="polite" data-i18n>Cargando datos…</span>
+      <span class="pill" id="pillCoverage"></span>
+      <span class="pill" id="pillTier"></span>
+    </div>
+    <div id="banner" role="alert" hidden></div>
+  </header>
+
+  <div id="content" hidden>
+  <section class="card" id="s-map" aria-labelledby="h-map">
+    <h2 id="h-map" data-i18n>El mapa, de 1950 a la última proyección</h2>
+    <p class="sub" data-i18n>Mueve el año. La trama diagonal marca los países cuya cifra de ese año es una proyección. Las series no siempre se comparan con la misma fecha de referencia ni la misma vintage: la tabla lo declara fila por fila.</p>
+    <div class="controls">
+      <div class="yearline">
+        <label class="sr-only" for="yearRange" data-i18n>Año del mapa</label>
+        <input type="range" id="yearRange" min="1950" max="2100" step="1">
+        <output class="year-big" id="yearOut" for="yearRange"></output>
+      </div>
+      <button type="button" class="btn" id="playBtn" data-i18n>▶ Recorrer</button>
+      <button type="button" class="btn" id="csvMap" data-i18n>Descargar CSV de este año</button>
+    </div>
+    <div class="mapgrid">
+      <div>
+        <svg id="map" role="group" aria-label="Mapa de población de América Latina"><defs>
+          <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><rect width="2" height="6" fill="var(--hatch)" opacity=".75"></rect></pattern>
+        </defs><g id="ctxLayer"></g><g id="countryLayer"></g><g id="hatchLayer" pointer-events="none"></g></svg>
+        <div class="legend" id="mapLegend"></div>
+        <p class="src"><span data-i18n>Geometría:</span> <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a>. <span data-i18n>Límites ilustrativos.</span></p>
+      </div>
+      <div class="tablewrap tall" tabindex="0" role="region" aria-labelledby="h-map"><table id="yearTable"></table></div>
+    </div>
+  </section>
+
+  <section class="card" id="s-country" aria-labelledby="h-country">
+    <h2 id="h-country" data-i18n>Un país, con todas sus costuras a la vista</h2>
+    <p class="sub" data-i18n>Línea sólida: dato estimado u observado. Línea punteada sobre fondo sombreado: proyección. Una línea vertical marca cada ruptura: las fuentes distintas no se empalman.</p>
+    <div class="controls">
+      <label class="field"><span data-i18n>País</span><select id="countrySel"></select></label>
+      <label class="field"><span data-i18n>CAGR desde</span><select id="cagrA"></select></label>
+      <label class="field"><span data-i18n>hasta</span><select id="cagrB"></select></label>
+      <button type="button" class="btn" id="csvCountry" data-i18n>Descargar CSV del país</button>
+    </div>
+    <div class="kpis" id="countryKpis"></div>
+    <div id="countryChart" class="chart" role="img"></div>
+    <div id="countrySrc"></div>
+    <details><summary data-i18n>Ver la serie en una tabla</summary><div class="tablewrap tall" tabindex="0" role="region"><table id="countryTable"></table></div></details>
+  </section>
+
+  <section class="card" id="s-compare" aria-labelledby="h-compare">
+    <h2 id="h-compare" data-i18n>Comparar países con índice base 100</h2>
+    <p class="sub" data-i18n>Cada país vale 100 en el año elegido. Solo se dibuja la serie que contiene ese año: el índice no cruza rupturas, así que algunas líneas son más cortas. La zona sombreada empieza en la primera proyección de los países elegidos.</p>
+    <div class="controls">
+      <label class="field"><span data-i18n>Año base</span><select id="baseYear"></select></label>
+      <button type="button" class="btn" id="csvCompare" data-i18n>Descargar CSV de la comparación</button>
+    </div>
+    <div class="chips" id="compareChips" role="group"></div>
+    <div id="compareChart" class="chart" role="img"></div>
+    <p class="src" id="compareExcluded"></p>
+    <div id="compareSrc" class="src"></div>
+    <details><summary data-i18n>Ver la comparación en una tabla</summary><div class="tablewrap tall" tabindex="0" role="region"><table id="compareTable"></table></div></details>
+  </section>
+
+  <section class="card" id="s-growth" aria-labelledby="h-growth">
+    <h2 id="h-growth" data-i18n>Crecimiento anual, país por país</h2>
+    <p class="sub" data-i18n>Misma escala en todos los paneles. El crecimiento se calcula solo dentro de una misma serie: hay un hueco en cada ruptura y no hay línea en los tramos quinquenales.</p>
+    <div class="multi" id="multiples"></div>
+    <div class="actions"><button type="button" class="btn" id="csvGrowth" data-i18n>Descargar CSV de crecimiento</button></div>
+    <details><summary data-i18n>Ver años seleccionados en una tabla</summary><div class="tablewrap" tabindex="0" role="region"><table id="growthTable"></table></div></details>
+  </section>
+
+  <section class="card" id="s-peak" aria-labelledby="h-peak">
+    <h2 id="h-peak" data-i18n>¿Cuándo alcanza cada país su población máxima?</h2>
+    <p class="sub" data-i18n>Según la serie que contiene su proyección más reciente. Los horizontes son distintos: «no alcanza máximo» significa que sigue creciendo cuando termina la proyección, no que crezca para siempre.</p>
+    <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-peak"><table id="peakTable"></table></div>
+  </section>
+
+  <section class="card" id="s-trans" aria-labelledby="h-trans">
+    <h2 id="h-trans" data-i18n>Panel de transparencia</h2>
+    <p class="sub" data-i18n>Veinte países por dos series, leído en vivo del archivo de estado del pipeline: nivel de fuente, vintage, última fecha y estado.</p>
+    <table class="matrix" id="matrix"></table>
+    <div class="actions">
+      <a class="btn" href="https://github.com/jaforero/latam-population-official/blob/main/data/status.json" rel="noopener" data-i18n>Ver status.json</a>
+      <a class="btn" href="https://github.com/jaforero/latam-population-official/blob/main/sources.yaml" rel="noopener" data-i18n>Ver registro de fuentes</a>
+      <a class="btn" href="https://raw.githubusercontent.com/jaforero/latam-population-official/main/data/processed/latam.csv" rel="noopener" data-i18n>Descargar todos los datos</a>
+    </div>
+  </section>
+
+  <section class="card method" aria-labelledby="h-method">
+    <h2 id="h-method" data-i18n>Cómo se construyó y qué no dice</h2>
+    <ul>
+      <li data-i18n>Primero la institución nacional con mandato. CEPAL/CELADE solo por país y tipo de serie, cuando la nacional no publica esa serie de forma verificable y descargable. Ningún agregador.</li>
+      <li data-i18n>CEPALSTAT declara coproducción con la División de Población de la ONU y cita la Revisión 2022. Se usa como respaldo declarado y se marca en cada gráfico.</li>
+      <li data-i18n>No se interpola, no se encadena y no se ajusta. Los años sin dato quedan vacíos.</li>
+      <li data-i18n>La mayoría de las cifras históricas son estimaciones oficiales ancladas en censos, no conteos directos.</li>
+      <li data-i18n>No hay total regional: faltan países y las fechas de referencia difieren.</li>
+      <li data-i18n>Los términos de uso de cada fuente aún están por verificar. Consulta a cada institución antes de reutilizar sus datos.</li>
+    </ul>
+  </section>
+  </div>
+  <footer class="jf-footer"><span>Javier Forero</span> <i>·</i> <a href="https://javierforero.co">javierforero.co</a><br><span id="footOrigin"></span></footer>
+</main>
+<div class="tip" id="tip" role="status"></div>
+<script src="i18n-en.js?v=1"></script>
+<script src="latam-map.js?v=1"></script>
+<script src="pop-data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
