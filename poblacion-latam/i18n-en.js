@@ -144,6 +144,8 @@ window.TR_EN={
 "{n} de 20 países con datos": "{n} of 20 countries with data",
 "{n} series nacionales · {r} con la ONU de respaldo": "{n} national series · {r} with UN fallback",
 "No se pudo leer el repositorio de datos. Se muestran los últimos datos guardados en este navegador, con fecha {d}.": "The data repository could not be read. Showing the latest data saved in this browser, dated {d}.",
+"La fuente principal no respondió. Se muestra su copia de respaldo, con datos generados el {d}; puede no incluir lo más reciente.": "The primary source did not respond. Showing its backup copy, with data generated on {d}; it may not include the latest.",
+"No cargaron estos países: {c}.": "These countries did not load: {c}.",
 "No cargaron estos países: {c}. El resto está al día.": "These countries did not load: {c}. The rest are up to date.",
 "Series con su último dato válido porque la fuente no respondió en la última corrida: {n}. Revisa el panel de transparencia.": "Series keeping their last valid data because the source did not respond in the latest run: {n}. See the transparency panel.",
 "Datos:": "Data:",

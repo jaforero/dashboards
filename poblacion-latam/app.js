@@ -17,7 +17,7 @@ const fmtN=(v,d)=>v==null?'—':Number(v).toLocaleString(LOC(),{maximumFractionD
 const fmtPct=(p,d)=>p==null?'—':(p>0?'+':'')+(p*100).toLocaleString(LOC(),{minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d})+' %';
 const fmtDate=iso=>{if(!iso)return '—';const[y,m,d]=iso.split('-');return new Date(Date.UTC(+y,+m-1,+d)).toLocaleDateString(LOC(),{timeZone:'UTC',year:'numeric',month:'short',day:'numeric'});};
 
-const S={status:null,region:null,countries:{},failed:[],fromCache:false,year:NOW,country:'COL',compare:['COL','BRA','ARG','PER'],compareRegion:true,compareRange:'common',slots:{},base:2025,cagrA:null,cagrB:null,playing:null,plotly:null};
+const S={status:null,region:null,countries:{},failed:[],fromCache:false,viaBackup:false,year:NOW,country:'COL',compare:['COL','BRA','ARG','PER'],compareRegion:true,compareRange:'common',slots:{},base:2025,cagrA:null,cagrB:null,playing:null,plotly:null};
 const REG='REG';
 const SLOTS=['--s1','--s2','--s3','--s4','--s5','--s6','--s7'];
 const BINS=[[5e6,'--q1','< 5 M'],[1e7,'--q2','5–10 M'],[2e7,'--q3','10–20 M'],[5e7,'--q4','20–50 M'],[1e8,'--q5','50–100 M'],[Infinity,'--q6','≥ 100 M']];
@@ -676,6 +676,7 @@ function renderHead(){
   const stale=series.filter(s=>s.status==='stale').length;
   const b=$('banner');
   if(S.fromCache){b.hidden=false;b.className='banner warn';b.textContent=F('No se pudo leer el repositorio de datos. Se muestran los últimos datos guardados en este navegador, con fecha {d}.',{d:fmtDate(last)});}
+  else if(S.viaBackup){b.hidden=false;b.className='banner warn';b.textContent=F('La fuente principal no respondió. Se muestra su copia de respaldo, con datos generados el {d}; puede no incluir lo más reciente.',{d:fmtDate((S.status.generated_at||'').slice(0,10))})+(S.failed.length?' '+F('No cargaron estos países: {c}.',{c:S.failed.join(', ')}):'');}
   else if(S.failed.length){b.hidden=false;b.className='banner warn';b.textContent=F('No cargaron estos países: {c}. El resto está al día.',{c:S.failed.join(', ')});}
   else if(stale){b.hidden=false;b.className='banner warn';b.textContent=F('Series con su último dato válido porque la fuente no respondió en la última corrida: {n}. Revisa el panel de transparencia.',{n:stale});}
   else b.hidden=true;
@@ -810,9 +811,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('langToggle').addEventListener('click',e=>{const o=e.target.closest('.lang-opt');if(o)applyLang(o.dataset.lang,false);});
   $('themeToggle').addEventListener('click',()=>{applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');if(S.status)touch();});
   const q=(()=>{try{return new URLSearchParams(location.search).get('datos');}catch(e){return null;}})();
-  /* ?datos=prueba-error simula una caída para revisar el mensaje; no afecta a nadie más. */
-  PopData.loadAll(q==='prueba-error'?{sources:['https://raw.githubusercontent.com/jaforero/latam-population-official/main/no-existe']}:{}).then(r=>{
-    S.status=r.status;S.region=r.region;S.countries=r.countries;S.failed=r.failed;S.fromCache=r.fromCache;
+  /* ?datos=prueba-error simula una caída total y ?datos=prueba-respaldo una de la fuente principal, para revisar los mensajes; no afecta a nadie más. */
+  const NOEXISTE='https://raw.githubusercontent.com/jaforero/latam-population-official/main/no-existe';
+  PopData.loadAll(q==='prueba-error'?{sources:[NOEXISTE]}:q==='prueba-respaldo'?{sources:[NOEXISTE,PopData.SOURCES[1]]}:{}).then(r=>{
+    S.status=r.status;S.region=r.region;S.countries=r.countries;S.failed=r.failed;S.fromCache=r.fromCache;S.viaBackup=r.viaBackup;
     S.compare=S.compare.filter(i=>recs(i).length);S.compare.forEach(slotOf);
     if(!recs(S.country).length)S.country=PopData.ISO3.find(i=>recs(i).length);
     pyrRegionDoc();buildMap();wire();wirePyr();wireRegion();wireTabs();
