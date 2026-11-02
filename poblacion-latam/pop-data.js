@@ -127,5 +127,11 @@
     return fetchWithFallback("processed/licenses.json", SOURCES).then(function (r) { return r.json; });
   }
 
-  root.PopData = { ISO3: ISO3, loadAll: loadAll, loadPyramid: loadPyramid, loadLicenses: loadLicenses, REPO_BLOB: REPO_BLOB, PUBLISHED_DATA_DATE: PUBLISHED_DATA_DATE, SOURCES: SOURCES };
+  /* Se pide solo al abrir su pestaña. */
+  function loadAging() {
+    return fetchWithFallback("processed/aging.json", SOURCES)
+      .then(function (r) { return assertContract(r.json, "envejecimiento"); });
+  }
+
+  root.PopData = { ISO3: ISO3, loadAll: loadAll, loadPyramid: loadPyramid, loadLicenses: loadLicenses, loadAging: loadAging, REPO_BLOB: REPO_BLOB, PUBLISHED_DATA_DATE: PUBLISHED_DATA_DATE, SOURCES: SOURCES };
 })(typeof self !== "undefined" ? self : this);

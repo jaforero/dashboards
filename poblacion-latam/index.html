@@ -189,6 +189,7 @@
   .region-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-top:6px}
   @media(min-width:900px){.region-grid{grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:26px}}
   .bars svg,.rank svg{width:100%;height:auto;display:block;touch-action:pan-y}
+  #agingBody .h3{margin-top:18px}
   .bar-hit{fill:transparent;cursor:pointer;outline:none}
   .bar-hit:hover,.bar-hit:focus{fill:color-mix(in srgb,var(--text) 6%,transparent)}
   .weights{list-style:none}
@@ -292,6 +293,7 @@
     <button type="button" class="tab" role="tab" id="t-mapa" aria-controls="p-mapa" aria-selected="false" tabindex="-1" data-tab="mapa" data-i18n>Mapa</button>
     <button type="button" class="tab" role="tab" id="t-pais" aria-controls="p-pais" aria-selected="false" tabindex="-1" data-tab="pais" data-i18n>País</button>
     <button type="button" class="tab" role="tab" id="t-piramides" aria-controls="p-piramides" aria-selected="false" tabindex="-1" data-tab="piramides" data-i18n>Pirámides</button>
+    <button type="button" class="tab" role="tab" id="t-envejecimiento" aria-controls="p-envejecimiento" aria-selected="false" tabindex="-1" data-tab="envejecimiento" data-i18n>Envejecimiento</button>
     <button type="button" class="tab" role="tab" id="t-indice" aria-controls="p-indice" aria-selected="false" tabindex="-1" data-tab="indice" data-i18n>Índice 100</button>
     <button type="button" class="tab" role="tab" id="t-crecimiento" aria-controls="p-crecimiento" aria-selected="false" tabindex="-1" data-tab="crecimiento" data-i18n>Crecimiento</button>
     <button type="button" class="tab" role="tab" id="t-maximo" aria-controls="p-maximo" aria-selected="false" tabindex="-1" data-tab="maximo" data-i18n>Año máximo</button>
@@ -395,6 +397,33 @@
   </section>
   </div>
 
+  <div class="panel" id="p-envejecimiento" role="tabpanel" aria-labelledby="t-envejecimiento" tabindex="0" hidden>
+  <section class="card" aria-labelledby="h-aging">
+    <h2 id="h-aging" data-i18n>Índice de envejecimiento: personas mayores por cada 100 menores</h2>
+    <p class="sub" data-i18n>Cuántas personas de 65 años y más hay por cada 100 menores de 15. En 100 hay tantos mayores como menores; por encima, más mayores. Es un cálculo propio con las pirámides publicadas: un año sin pirámide queda sin índice.</p>
+    <p class="banner warn" id="agingEmpty" hidden></p>
+    <div id="agingBody" hidden>
+      <div class="controls"><div class="yearline">
+        <label class="sr-only" for="agingRange" data-i18n>Año del índice</label>
+        <input type="range" id="agingRange" min="1950" max="2100" step="1">
+        <output class="year-big" id="agingOut" for="agingRange"></output>
+      </div></div>
+      <div class="kpis" id="agingKpis"></div>
+      <h3 class="h3" data-i18n>Países ordenados en el año elegido</h3>
+      <div class="rank" id="agingRank"></div>
+      <div class="legend" id="agingLegend"></div>
+      <p class="src" id="agingMissing"></p>
+      <h3 class="h3" data-i18n>Evolución en el tiempo</h3>
+      <div class="chips scroll" id="agingChips" role="group"></div>
+      <div id="agingChart" class="chart" role="img"></div>
+      <p class="src" data-i18n>La línea se corta donde cambia la fuente o la edición: el índice no se empalma. La línea punteada es proyección y los rombos son la región, que solo tiene pirámide en algunos años.</p>
+      <p class="src" id="agingBreaks"></p>
+      <div class="actions"><button type="button" class="btn" id="csvAging" data-i18n>Descargar CSV del índice</button></div>
+      <details><summary data-i18n>Ver el índice en una tabla</summary><div class="tablewrap tall" tabindex="0" role="region"><table id="agingTable"></table></div></details>
+    </div>
+  </section>
+  </div>
+
   <div class="panel" id="p-indice" role="tabpanel" aria-labelledby="t-indice" tabindex="0" hidden>
   <section class="card" id="s-compare" aria-labelledby="h-compare">
     <h2 id="h-compare" data-i18n>Comparar países con índice base 100</h2>
@@ -453,7 +482,8 @@
       <li data-i18n>La pirámide regional suma las 20 pirámides publicadas de ese año. Si falta una, ese año no tiene pirámide regional.</li>
       <li data-i18n>El total regional es una base derivada que combina fuentes con condiciones de uso distintas, incluidas CC BY-SA y ODbL. Depende de la ONU para Cuba, Haití, la historia de Honduras y la proyección de Nicaragua: sin esas cifras no habría total de los 20 países.</li>
       <li data-i18n>Una pirámide se publica solo si hombres y mujeres suman el total oficial de ese año. Se agrupa en 80 años y más porque es el último grupo común a todas las fuentes; nada se desagrega ni se interpola.</li>
-      <li data-i18n>Frente a los archivos originales, esta pieza solo extrae totales, pasa los miles de la ONU a personas, suma edades en 17 grupos y calcula crecimiento, índice base 100, año máximo y total regional. Ninguna cifra se corrige.</li>
+      <li data-i18n>El índice de envejecimiento son las personas de 65 años y más por cada 100 menores de 15, calculado aquí con las pirámides publicadas. Coincide con lo que publican Costa Rica, Paraguay y Chile. INE Guatemala publica otra definición (60 años y más sobre 15 y menos), así que su cifra no es comparable con esta.</li>
+      <li data-i18n>Frente a los archivos originales, esta pieza solo extrae totales, pasa los miles de la ONU a personas, suma edades en 17 grupos y calcula crecimiento, índice base 100, año máximo, total regional e índice de envejecimiento. Ninguna cifra se corrige.</li>
       <li data-i18n>Cada cifra conserva las condiciones de su fuente: esta pieza no otorga una licencia nueva. Lo derivado de fuentes CC BY-SA 4.0 u ODbL se comparte bajo esa misma licencia.</li>
     </ul>
   </section>
@@ -477,9 +507,9 @@
   <footer class="jf-footer"><span>Javier Forero</span> <i>·</i> <a href="https://javierforero.co">javierforero.co</a><br><span id="footOrigin"></span></footer>
 </main>
 <div class="tip" id="tip" role="status"></div>
-<script src="i18n-en.js?v=10"></script>
+<script src="i18n-en.js?v=11"></script>
 <script src="latam-map.js?v=2"></script>
-<script src="pop-data.js?v=7"></script>
-<script src="app.js?v=14"></script>
+<script src="pop-data.js?v=8"></script>
+<script src="app.js?v=15"></script>
 </body>
 </html>

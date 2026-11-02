@@ -84,9 +84,9 @@ function applyLang(l,silent){
 }
 
 /* ---------- Pestañas: cada análisis se dibuja al abrirse, porque un gráfico oculto no conoce su ancho ---------- */
-const TABS=['region','mapa','pais','piramides','indice','crecimiento','maximo','fuentes'];
+const TABS=['region','mapa','pais','piramides','envejecimiento','indice','crecimiento','maximo','fuentes'];
 const UI={tab:'region',dirty:new Set(TABS)};
-const RENDER={region:()=>renderRegion(),mapa:()=>renderMap(),pais:()=>renderCountry(),piramides:()=>renderPyr(),indice:()=>renderCompare(),crecimiento:()=>renderGrowth(),maximo:()=>renderPeak(),fuentes:()=>{renderMatrix();renderLicenses();}};
+const RENDER={region:()=>renderRegion(),mapa:()=>renderMap(),pais:()=>renderCountry(),piramides:()=>renderPyr(),envejecimiento:()=>renderAging(),indice:()=>renderCompare(),crecimiento:()=>renderGrowth(),maximo:()=>renderPeak(),fuentes:()=>{renderMatrix();renderLicenses();}};
 function flushTab(){if(UI.dirty.delete(UI.tab))RENDER[UI.tab]();}
 function touch(...tabs){(tabs.length?tabs:TABS).forEach(t=>UI.dirty.add(t));flushTab();}
 const hashTab=()=>{const h=location.hash.slice(1);return TABS.includes(h)?h:'region';};
@@ -541,6 +541,117 @@ function renderCompare(){
   }).catch(()=>plotFail('compareChart'));
 }
 
+/* ---------- Envejecimiento ---------- */
+const AG={doc:null,failed:false,loading:false,year:null,countries:['CUB','URY','COL','GTM'],region:true,slots:{}};
+const fmt1=v=>Number(v).toLocaleString(LOC(),{minimumFractionDigits:1,maximumFractionDigits:1});
+const agRows=iso=>(AG.doc.countries[iso]||{rows:[]}).rows;
+const agAt=(iso,y)=>agRows(iso).find(r=>r.year===y);
+const agRegion=y=>AG.doc.region.find(r=>r.year===y);
+const agLabel=(iso,r)=>name(iso)+(isFallback(r.source_tier)?' · ONU':'');
+const agFirst100=iso=>{const r=agRows(iso).find(x=>x.aging_index>=100);return r?r.year:null;};
+function agSlot(iso){if(AG.slots[iso]==null){const used=new Set(AG.countries.map(i=>AG.slots[i]));for(let i=0;i<SLOTS.length;i++)if(!used.has(i)){AG.slots[iso]=i;break;}}return AG.slots[iso];}
+function agInit(){
+  const ys=PopData.ISO3.flatMap(i=>agRows(i).map(r=>r.year)),min=Math.min(...ys),max=Math.max(...ys),rg=$('agingRange');
+  rg.min=min;rg.max=max;AG.year=Math.min(max,Math.max(min,DEFAULT_YEAR));
+  AG.countries=AG.countries.filter(i=>agRows(i).length);AG.countries.forEach(agSlot);
+}
+function renderAgingYear(){
+  const y=AG.year,rows=ISOS().map(iso=>({iso,r:agAt(iso,y)})).filter(x=>x.r).sort((a,b)=>b.r.aging_index-a.r.aging_index),miss=ISOS().filter(i=>!agAt(i,y)),reg=agRegion(y);
+  $('agingRange').value=y;$('agingOut').textContent=y;
+  const top=rows[0],low=rows[rows.length-1],over=rows.filter(x=>x.r.aging_index>=100).length;
+  $('agingKpis').innerHTML=[
+    [reg?fmt1(reg.aging_index):'—',reg?T('Región · suma propia, no oficial'):F('Sin pirámide regional en {y}',{y})],
+    [top?`${name(top.iso)} · ${fmt1(top.r.aging_index)}`:'—',T('Índice más alto')],
+    [low?`${name(low.iso)} · ${fmt1(low.r.aging_index)}`:'—',T('Índice más bajo')],
+    [F('{n} de {m}',{n:over,m:rows.length}),T('Países con 100 o más')]
+  ].map(k=>`<div class="kpi"><b>${esc(k[0])}</b><span>${esc(k[1])}</span></div>`).join('');
+  const box=$('agingRank');
+  const W=Math.min(760,Math.max(300,box.clientWidth||340)),rowH=24,head=38,labelW=Math.min(170,Math.max(128,W*.33)),valW=52,H=head+rowH*rows.length+4;
+  const max=Math.max(100,...rows.map(x=>x.r.aging_index),reg?reg.aging_index:0),X=v=>labelW+v/max*(W-labelW-valW),x100=X(100);
+  const bars=rows.map((x,i)=>{const yy=head+rowH*i,proj=x.r.series_type==='projection';
+    const label=x.iso==='DOM'&&W<420?T('Rep. Dominicana'):agLabel(x.iso,x.r);
+    return `<text x="${labelW-6}" y="${yy+rowH*.68}" text-anchor="end" font-size="12" fill="var(--text-soft)">${esc(label)}</text>`
+      +`<rect x="${labelW}" y="${yy+5}" width="${Math.max(1.5,X(x.r.aging_index)-labelW).toFixed(1)}" height="${rowH-10}" rx="3" fill="${proj?'url(#agHatch)':'var(--s1)'}"${proj?' stroke="var(--s1)" stroke-width="1"':''}></rect>`
+      +`<text x="${W}" y="${yy+rowH*.68}" text-anchor="end" font-size="12" fill="var(--text)" style="font-variant-numeric:tabular-nums">${fmt1(x.r.aging_index)}</text>`
+      +`<rect class="bar-hit" data-iso="${x.iso}" x="0" y="${yy}" width="${W}" height="${rowH}"></rect>`;}).join('');
+  const rx=reg?X(reg.aging_index):0;
+  box.innerHTML=rows.length?`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(F('Índice de envejecimiento en {y} por país. Los valores están en la tabla de abajo.',{y}))}">`
+    +`<defs><pattern id="agHatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--s1)" stroke-width="3"></line></pattern></defs>`
+    +bars+`<line x1="${x100.toFixed(1)}" x2="${x100.toFixed(1)}" y1="${head-8}" y2="${H-2}" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"></line>`
+    +`<text x="${x100.toFixed(1)}" y="${head-12}" text-anchor="middle" font-size="11" fill="var(--text-muted)">100</text>`
+    +(reg?`<line x1="${rx.toFixed(1)}" x2="${rx.toFixed(1)}" y1="16" y2="${H-2}" stroke="var(--heading)" stroke-width="2"></line><text x="${rx.toFixed(1)}" y="12" text-anchor="middle" font-size="12" font-weight="700" fill="var(--heading)">${esc(F('Región {r}',{r:fmt1(reg.aging_index)}))}</text>`:'')
+    +'</svg>':`<p class="banner warn">${esc(F('Ningún país tiene pirámide en {y}.',{y}))}</p>`;
+  $('agingLegend').innerHTML=`<span class="lg"><span class="sw" style="background:var(--s1)"></span>${esc(typeText('estimate'))}</span>`
+    +`<span class="lg"><span class="sw" style="background:repeating-linear-gradient(45deg,var(--s1) 0 2px,transparent 2px 5px)"></span>${esc(typeText('projection'))}</span>`
+    +`<span class="lg">${esc(T('100: tantos mayores como menores'))}</span>`;
+  const notes=[];
+  if(miss.length)notes.push(F('Sin pirámide en {y}: {c}.',{y,c:nameList(miss)}));
+  if(!reg)notes.push(F('La región solo tiene pirámide en {list}.',{list:AG.doc.region.map(r=>r.year).join(', ')}));
+  $('agingMissing').textContent=notes.join(' ');
+  const hA=T('Índice'),hO=T('65 años y más'),hY=T('Menores de 15'),hF=T('Primer año publicado con 100 o más');
+  $('agingTable').innerHTML=`<caption class="sr-only">${esc(F('Índice de envejecimiento en {y} por país. Los valores están en la tabla de abajo.',{y}))}</caption><thead><tr><th>${esc(T('País'))}</th><th class="n">${esc(hA)}</th><th class="n">${esc(hO)}</th><th class="n">${esc(hY)}</th><th>${esc(T('Tipo'))}</th><th>${esc(T('Serie'))}</th><th class="n">${esc(hF)}</th></tr></thead><tbody>`
+    +(reg?`<tr><td><b>${esc(name(REG))}</b></td><td class="n"><b>${fmt1(reg.aging_index)}</b></td><td class="n">${fmtN(reg.pop_65_plus)}</td><td class="n">${fmtN(reg.pop_0_14)}</td><td colspan="2" class="src">${esc(T('Región · suma propia, no oficial'))}</td><td class="n">—</td></tr>`:'')
+    +rows.map(x=>{const f=agFirst100(x.iso);return `<tr><td>${esc(name(x.iso))}</td><td class="n">${fmt1(x.r.aging_index)}</td><td class="n">${fmtN(x.r.pop_65_plus)}</td><td class="n">${fmtN(x.r.pop_0_14)}</td><td>${esc(typeText(x.r.series_type))}</td><td class="src">${esc(x.r.vintage)}</td><td class="n">${f==null?esc(T('No en lo publicado')):f}</td></tr>`;}).join('')+'</tbody>';
+}
+function renderAgingChart(){
+  const chips=$('agingChips'),hasReg=AG.doc.region.length>0,regOn=AG.region&&hasReg;
+  chips.innerHTML=`<button type="button" class="chip" data-iso="${REG}" aria-pressed="${regOn}"${hasReg?'':' disabled'}>${regOn?'<span class="dot" style="background:var(--heading)"></span>':''}${esc(name(REG))}</button>`
+    +chipOrder(AG.countries).map(i=>{const on=AG.countries.includes(i),none=!agRows(i).length;
+      return `<button type="button" class="chip" data-iso="${i}" aria-pressed="${on}"${none||(!on&&AG.countries.length>=SLOTS.length)?' disabled':''}>${on?`<span class="dot" style="background:var(${SLOTS[agSlot(i)]})"></span>`:''}${esc(name(i))}</button>`;}).join('');
+  const series=AG.countries.map(iso=>({iso,rows:agRows(iso)})),box=$('agingChart');
+  box.setAttribute('aria-label',T('Índice de envejecimiento por año. Los valores están en la tabla de abajo.'));
+  const breaks=AG.countries.flatMap(i=>(AG.doc.countries[i].breaks||[]).map(b=>`${name(i)} ${b.year}: ${b.from_vintage} → ${b.to_vintage}`));
+  $('agingBreaks').textContent=breaks.length?F('Rupturas de serie: {list}.',{list:breaks.join(' · ')}):'';
+  if(!series.length&&!regOn){box.innerHTML=`<p class="banner warn">${esc(T('Elige al menos un país para ver la evolución.'))}</p>`;box.style.minHeight='0';return;}
+  box.style.minHeight='';
+  loadPlotly().then(()=>{
+    if($('p-envejecimiento').hidden){UI.dirty.add('envejecimiento');return;}
+    const data=[],L=baseLayout();L.shapes=[];L.annotations=[];
+    const wide=window.innerWidth>=700&&series.length<=4;if(wide)L.margin.r=110;
+    L.yaxis.rangemode='tozero';L.yaxis.title={text:T('Mayores por cada 100 menores'),font:{size:11}};
+    series.forEach(s=>{const col=css(SLOTS[agSlot(s.iso)]);
+      splitTraces(s.rows).forEach((t,i)=>data.push({type:'scatter',mode:t.rows.length<8?'lines+markers':'lines',x:t.rows.map(r=>r.year),y:t.rows.map(r=>r.aging_index),
+        name:agLabel(s.iso,t.group.src),legendgroup:s.iso,showlegend:i===0,line:{color:col,width:2,dash:t.type==='projection'?'dot':'solid'},marker:{size:8,color:col},
+        customdata:t.rows.map(r=>[agLabel(s.iso,r),typeText(r.series_type),r.vintage]),hovertemplate:'%{customdata[0]}: %{y:.1f} · %{customdata[1]} · %{customdata[2]}<extra></extra>'}));
+      if(wide){const e=s.rows[s.rows.length-1];L.annotations.push({x:e.year,y:e.aging_index,xanchor:'left',yanchor:'middle',showarrow:false,xshift:6,yshift:0,text:agLabel(s.iso,e),font:{size:11,color:css('--text-soft')}});}
+    });
+    if(regOn){const col=css('--heading'),g=AG.doc.region;
+      data.push({type:'scatter',mode:'lines+markers',x:g.map(r=>r.year),y:g.map(r=>r.aging_index),name:T('Región'),line:{color:col,width:3.5},marker:{size:10,color:col,symbol:'diamond'},hovertemplate:`${esc(T('Región'))}: %{y:.1f}<extra></extra>`});}
+    const all=data.flatMap(d=>d.y),span=(Math.max(...all)-Math.min(...all))||1;
+    L.annotations.sort((a,b)=>a.y-b.y).forEach((n,i,arr)=>{if(i&&Math.abs(n.x-arr[i-1].x)<8&&(n.y-arr[i-1].y)/span<.05)n.yshift=(arr[i-1].yshift||0)+13;});
+    L.shapes.push({type:'line',xref:'paper',x0:0,x1:1,y0:100,y1:100,line:{color:css('--text-muted'),width:1,dash:'dash'}});
+    if(window.innerWidth>=700)L.annotations.push({xref:'paper',x:0,y:100,xanchor:'left',yanchor:'bottom',showarrow:false,text:T('100: tantos mayores como menores'),font:{size:11,color:css('--text-muted')}});
+    box.innerHTML='';Plotly.newPlot(box,data,L,PCONF);
+  }).catch(()=>plotFail('agingChart'));
+}
+function renderAging(){
+  const empty=$('agingEmpty'),body=$('agingBody');
+  if(!AG.doc){
+    body.hidden=true;empty.hidden=false;
+    empty.textContent=T(AG.failed?'El índice de envejecimiento no cargó. Los demás datos siguen disponibles.':'Cargando datos…');
+    if(!AG.failed&&!AG.loading){AG.loading=true;
+      PopData.loadAging().then(d=>{AG.doc=d;agInit();}).catch(()=>{AG.failed=true;}).finally(()=>{AG.loading=false;UI.dirty.add('envejecimiento');flushTab();});}
+    return;
+  }
+  empty.hidden=true;body.hidden=false;renderAgingYear();renderAgingChart();
+}
+function wireAging(){
+  $('agingRange').addEventListener('input',e=>{AG.year=+e.target.value;renderAgingYear();});
+  $('agingChips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c||c.disabled)return;const i=c.dataset.iso;
+    if(i===REG)AG.region=!AG.region;
+    else if(AG.countries.includes(i)){AG.countries=AG.countries.filter(x=>x!==i);delete AG.slots[i];}
+    else{AG.countries.push(i);agSlot(i);}
+    renderAgingChart();});
+  const rank=$('agingRank');
+  rank.addEventListener('pointermove',e=>{const b=e.target.closest&&e.target.closest('[data-iso]');if(!b)return hideTip();const r=agAt(b.dataset.iso,AG.year);if(!r)return hideTip();
+    tip(e,`<b>${esc(name(b.dataset.iso))}</b> · ${AG.year}<br>${fmt1(r.aging_index)} ${esc(T('por cada 100 menores'))}<br>${fmtN(r.pop_65_plus)} ${esc(T('de 65 años y más'))} · ${fmtN(r.pop_0_14)} ${esc(T('menores de 15'))}<br>${esc(typeText(r.series_type))} · ${esc(r.vintage)}`);});
+  rank.addEventListener('pointerleave',hideTip);
+  $('csvAging').addEventListener('click',()=>{if(!AG.doc)return;
+    const rows=PopData.ISO3.flatMap(i=>agRows(i).map(r=>{const s=segInfo(i,r)||{};return {iso3:i,country:name(i),year:r.year,aging_index:r.aging_index,pop_0_14:r.pop_0_14,pop_65_plus:r.pop_65_plus,series_type:r.series_type,source_id:r.source_id,vintage:r.vintage,source_tier:r.source_tier,reference_date:r.reference_date,institution:s.institution||'',attribution:(lic(s.license)||{}).attribution||''};}));
+    AG.doc.region.forEach(r=>rows.push({iso3:REG,country:name(REG),year:r.year,aging_index:r.aging_index,pop_0_14:r.pop_0_14,pop_65_plus:r.pop_65_plus,series_type:'derived',source_id:'',vintage:'',source_tier:'derived',reference_date:'',institution:T('Suma propia de los 20 países'),attribution:''}));
+    downloadCSV('poblacion-latam-envejecimiento.csv',rows);});
+}
+
 /* ---------- Gráficos pequeños ---------- */
 const GR={period:null,range:'common'};
 function renderGrowth(){renderGrowthRank();renderMultiples();}
@@ -817,7 +928,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     S.status=r.status;S.region=r.region;S.countries=r.countries;S.failed=r.failed;S.fromCache=r.fromCache;S.viaBackup=r.viaBackup;
     S.compare=S.compare.filter(i=>recs(i).length);S.compare.forEach(slotOf);
     if(!recs(S.country).length)S.country=PopData.ISO3.find(i=>recs(i).length);
-    pyrRegionDoc();buildMap();wire();wirePyr();wireRegion();wireTabs();
+    pyrRegionDoc();buildMap();wire();wirePyr();wireRegion();wireAging();wireTabs();
     /* El rótulo sale de los datos; sin total regional solo queda la serie completa. */
     ['compareRange','growthRange'].forEach(id=>{const sel=$(id),o=sel.querySelector('[value=common]'),p=regPoints();
       if(p.length)o.textContent=`${p[0].year}–${p[p.length-1].year}`;else{o.remove();sel.value='all';}});

@@ -4,7 +4,7 @@
 
 An explainer built on real public data: [dashboards.javierforero.co/poblacion-latam/](https://dashboards.javierforero.co/poblacion-latam/?lang=en).
 
-The question it answers: **how many people live in the region, according to those mandated to count them?** It shows official annual series and projections in tabs: the regional total of the 20 countries, a map, a country series, population pyramids, a base-100 index, growth, peak-population year and sources. The region is the reference in every comparison. Each tab has a direct link: `#region`, `#mapa`, `#pais`, `#piramides`, `#indice`, `#crecimiento`, `#maximo` and `#fuentes`.
+The question it answers: **how many people live in the region, according to those mandated to count them?** It shows official annual series and projections in tabs: the regional total of the 20 countries, a map, a country series, population pyramids, the aging index, a base-100 index, growth, peak-population year and sources. The region is the reference in every comparison. Each tab has a direct link: `#region`, `#mapa`, `#pais`, `#piramides`, `#envejecimiento`, `#indice`, `#crecimiento`, `#maximo` and `#fuentes`.
 
 ## Data
 There is no server or build step. It reads the JSON files of [`jaforero/latam-population-official`](https://github.com/jaforero/latam-population-official) live from raw.githubusercontent.com. If that source fails, it reads the `respaldo-cdn` branch copy on jsDelivr by commit and says so on the page. Updating the data requires no commits here.
@@ -12,6 +12,7 @@ There is no server or build step. It reads the JSON files of [`jaforero/latam-po
 - **Source rule:** national institution first; UN World Population Prospects 2024 only as a declared fallback; no aggregators. What cannot be verified stays pending, never filled in.
 - **Breaks:** joins between sources or vintages are not spliced. Growth, CAGR and the base-100 index do not cross them.
 - **Traceability:** every figure links to its institution and to its file in `data/raw/`.
+- **Aging:** `aging.json` arrives calculated from the data repository: people aged 65 and over per 100 people under 15, from the published pyramids. That repository's tests compare it with what Costa Rica, Paraguay and Chile publish.
 - **Region:** `region.json` arrives calculated from the data repository; here it is only drawn. There is a total only in years with all 20 countries and a regional pyramid only if all 20 publish. If the file is missing or empty, the page keeps working without the region.
 - **Licences:** the page shows each source's terms and citation from `data/processed/licenses.json`. Each figure keeps its source's conditions.
 
