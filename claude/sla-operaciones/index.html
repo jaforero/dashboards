@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dashboard de Operaciones · Cumplimiento de SLA</title>
+<title>Dashboard de Operaciones · Cumplimiento de SLA · Javier Forero</title>
 <meta name="description" content="Dashboard de cumplimiento de SLA logístico: detección del quiebre, diagnóstico por ruta y región, gobernanza de la decisión y Q&A conversacional. Sube tus propios datos y todo se recalcula en el navegador."/>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
 <link rel="icon" href="/favicon.ico" sizes="32x32"/>
@@ -291,6 +291,8 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 
 /* ---- Mis datos ---- */
 .up-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;}
+.up-grid>*{min-width:0;}
+.up-card td{white-space:normal;}
 @media(max-width:860px){.up-grid{grid-template-columns:1fr;}}
 .up-card{border:1px solid var(--border);border-radius:14px;padding:16px;background:var(--bg);}
 .up-card h4{margin:0 0 10px;color:var(--text);}
@@ -386,9 +388,9 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
     <div class="sect-desc" data-i18n>Cumplimiento promedio por región en el rango seleccionado, con su meta SLA de referencia (◆).</div>
     <div class="card"><div id="plotEficiencia" class="plot"></div>
       <div class="legend">
-        <span><span class="sw" style="background:var(--ok)"></span>En meta o por encima</span>
-        <span><span class="sw" style="background:var(--warn)"></span>Brecha leve (0 a −3 pp)</span>
-        <span><span class="sw" style="background:var(--alert)"></span>Brecha &gt; −3 pp</span>
+        <span><span class="sw" style="background:var(--ok)"></span><span data-i18n>En meta o por encima</span></span>
+        <span><span class="sw" style="background:var(--warn)"></span><span data-i18n>Brecha leve (0 a −3 pp)</span></span>
+        <span><span class="sw" style="background:var(--alert)"></span><span data-i18n>Brecha &gt; −3 pp</span></span>
         <span data-i18n>◆ Meta SLA promedio de la región</span>
       </div>
     </div>
@@ -486,9 +488,9 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
         <div class="tbl-wrap"><table>
           <thead><tr><th data-i18n>Columna</th><th data-i18n>Requerida</th><th data-i18n>Notas</th></tr></thead>
           <tbody>
-            <tr><td data-i18n><b data-i18n>Fecha</b></td><td>Sí</td><td data-i18n>AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel. Alternativa: par <b data-i18n>Anio</b> + <b data-i18n>Mes</b>.</td></tr>
-            <tr><td data-i18n><b data-i18n>Ruta</b></td><td>Sí</td><td data-i18n>Identificador de ruta, carril o servicio.</td></tr>
-            <tr><td data-i18n><b data-i18n>Cumplimiento_pct</b></td><td>Sí</td><td data-i18n>0–100 (acepta 0–1 y lo convierte). Alternativa: <b data-i18n>Entregas_Totales</b> + <b data-i18n>Entregas_A_Tiempo</b>.</td></tr>
+            <tr><td data-i18n><b data-i18n>Fecha</b></td><td data-i18n>Sí</td><td data-i18n>AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel. Alternativa: par <b data-i18n>Anio</b> + <b data-i18n>Mes</b>.</td></tr>
+            <tr><td data-i18n><b data-i18n>Ruta</b></td><td data-i18n>Sí</td><td data-i18n>Identificador de ruta, carril o servicio.</td></tr>
+            <tr><td data-i18n><b data-i18n>Cumplimiento_pct</b></td><td data-i18n>Sí</td><td data-i18n>0–100 (acepta 0–1 y lo convierte). Alternativa: <b data-i18n>Entregas_Totales</b> + <b data-i18n>Entregas_A_Tiempo</b>.</td></tr>
             <tr><td data-i18n>SLA_Objetivo_pct</td><td>No</td><td data-i18n>Si falta, se asume 95%.</td></tr>
             <tr><td data-i18n>Region · Ciudad_Origen · Tipo_Cliente</td><td>No</td><td data-i18n>Habilitan filtros y análisis por segmento.</td></tr>
           </tbody>
@@ -502,7 +504,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
       </div>
       <div class="up-card">
         <h4 data-i18n>2 · Sube tu archivo</h4>
-        <div class="drop" id="dropSla">Arrastra aquí tu <b data-i18n>CSV / XLSX</b><br><span class="na" data-i18n>o haz clic para elegirlo</span></div>
+        <div class="drop" id="dropSla"><span data-i18n>Arrastra aquí tu <b>CSV / XLSX</b></span><br><span class="na" data-i18n>o haz clic para elegirlo</span></div>
         <input type="file" id="fileSla" accept=".csv,.xlsx,.xls" style="display:none;"/>
         <div id="valRepSla"></div>
         <p class="na" data-i18n>Tus datos se guardan solo en este navegador (localStorage) para que el tablero recuerde tu carga; con «Volver al demo» se eliminan.</p>
@@ -554,6 +556,19 @@ let MONTHS = ["ene_2025","feb_2025","mar_2025","abr_2025","may_2025","jun_2025",
 const MSHORT = {ene:"Ene",feb:"Feb",mar:"Mar",abr:"Abr",may:"May",jun:"Jun",jul:"Jul",ago:"Ago",sep:"Sep",oct:"Oct",nov:"Nov",dic:"Dic"};
 const MLONG = {ene:"Enero",feb:"Febrero",mar:"Marzo",abr:"Abril",may:"Mayo",jun:"Junio",jul:"Julio",ago:"Agosto",sep:"Septiembre",oct:"Octubre",nov:"Noviembre",dic:"Diciembre"};
 const MNAME = {enero:"ene",febrero:"feb",marzo:"mar",abril:"abr",mayo:"may",junio:"jun",julio:"jul",agosto:"ago",septiembre:"sep",setiembre:"sep",octubre:"oct",noviembre:"nov",diciembre:"dic"};
+const MSHORT_EN = {ene:"Jan",feb:"Feb",mar:"Mar",abr:"Apr",may:"May",jun:"Jun",jul:"Jul",ago:"Aug",sep:"Sep",oct:"Oct",nov:"Nov",dic:"Dec"};
+const MLONG_EN = {ene:"January",feb:"February",mar:"March",abr:"April",may:"May",jun:"June",jul:"July",ago:"August",sep:"September",oct:"October",nov:"November",dic:"December"};
+const MNAME_EN = {january:"ene",february:"feb",march:"mar",april:"abr",june:"jun",july:"jul",august:"ago",september:"sep",october:"oct",november:"nov",december:"dic"};
+/* Idioma: el texto dinámico se escribe en ES y EN desde el origen, no se traduce por fragmentos */
+const isEN = () => typeof LANG!=="undefined" && LANG==="en";
+const L = (es,en) => isEN() ? en : es;
+const TIPO_EN = {Distribuidor:"Distributor",Mayorista:"Wholesale",Industrial:"Industrial",Retail:"Retail",General:"General"};
+const tipoL = t => (isEN() && TIPO_EN[t]) ? TIPO_EN[t] : t;
+const M2 = (es,en) => ({es,en});
+const mTxt = m => typeof m==="string" ? m : (isEN() ? m.en : m.es);
+let __inited=false, LAST_Q=null, LAST_UPREP=null;
+/* La IA generativa solo existe dentro de un artifact de claude.ai; en el sitio público responde el motor local */
+const LLM_OK = /(^|\.)claudeusercontent\.com$/.test(location.hostname);
 let BREAK = "ene_2026";
 let LAST_DATA = new Date(2026,2,31);
 let CURSRC={name:"Demo simulado · 38 rutas",src:"demo"};
@@ -610,15 +625,28 @@ const DIAG = { causes:{
   operador:{label:"Cambio / falla del operador logístico o capacidad",          estado:"Pendiente", nota:""}
 }};
 const VAL = {c1:false,c2:false,c3:false};
+const GOV_LABEL_EN = {salud_cumplimiento:"Last-month compliance",salud_breach:"% routes in severe breach",eficiencia:"Efficiency by region",riesgo:"Routes in severe breach",prediccion:"Q2 projection",alerta_roja:"Red alert",alerta_amarilla:"Yellow alert"};
+const GOV_UMBRAL_EN = {salud_cumplimiento:"−5 pp vs 12m base",salud_breach:">20% in severe breach",eficiencia:"region below target",riesgo:"escalate if gap < −10 pp",prediccion:"projection < 85%",alerta_roja:"latest month −5 pp below the 12m base",alerta_amarilla:"quarterly gap < 0"};
+const GOV_UMBRAL_ES = {}; Object.keys(GOV.items).forEach(k=>{GOV_UMBRAL_ES[k]=GOV.items[k].umbral;});
+const govLabel = k => isEN() ? GOV_LABEL_EN[k] : GOV.items[k].label;
+/* Los umbrales por defecto siguen el idioma; los que el usuario escribió no se tocan */
+function syncGovDefaults(){Object.keys(GOV.items).forEach(k=>{const g=GOV.items[k];if(g.umbral===GOV_UMBRAL_ES[k]||g.umbral===GOV_UMBRAL_EN[k])g.umbral=isEN()?GOV_UMBRAL_EN[k]:GOV_UMBRAL_ES[k];});}
+const CAUSE_EN = {cliente:"New customer or volume (mix change)",habiles:"Fewer business days / calendar seasonality in the breakpoint period",operador:"Change / failure of the logistics operator, or capacity"};
+function causeLabel(k){
+  if(k==="medicion"){const cut=BREAK?mShort(prevM(BREAK))+" → "+mShort(BREAK):null;
+    return isEN()?"Change in the SLA definition / measurement at the "+(cut?cut+" cut-off":"breakpoint cut-off (none detected)"):"Cambio de definición / medición del SLA en el corte "+(cut||"del quiebre (no detectado)");}
+  if(k==="habiles"&&!isEN())return "Menos días hábiles / estacionalidad de calendario en el periodo del quiebre";
+  return isEN()?(CAUSE_EN[k]||DIAG.causes[k].label):DIAG.causes[k].label;
+}
 
 /* ---------- Utilidades ---------- */
 const avg = a => a.length ? a.reduce((s,x)=>s+x,0)/a.length : null;
-const fpct = x => x==null ? "N/D" : x.toFixed(1)+"%";
-const fpp = x => x==null ? "N/D" : (x>=0?"+":"")+x.toFixed(1)+" pp";
+const fpct = x => x==null ? L("N/D","N/A") : x.toFixed(1)+"%";
+const fpp = x => x==null ? L("N/D","N/A") : (x>=0?"+":"")+x.toFixed(1)+" pp";
 const norm = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-function mShort(c){const [m,y]=c.split("_");return MSHORT[m]+" "+y.slice(2);}
-function mLong(c){const [m,y]=c.split("_");return MLONG[m]+" "+y;}
+function mShort(c){const [m,y]=c.split("_");return (isEN()?MSHORT_EN:MSHORT)[m]+" "+y.slice(2);}
+function mLong(c){const [m,y]=c.split("_");return (isEN()?MLONG_EN:MLONG)[m]+" "+y;}
 function addMonths(code,k){const [m,y]=code.split("_");const o=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];let idx=o.indexOf(m)+parseInt(y)*12+k;return o[idx%12]+"_"+Math.floor(idx/12);}
 function subset(){return RAW_DATA.filter(r=>(state.region==="Todas"||r.region===state.region)&&(state.tipo==="Todos"||r.tipo_cliente===state.tipo));}
 function rangeMonths(){const i0=MONTHS.indexOf(state.desde),i1=MONTHS.indexOf(state.hasta);return MONTHS.slice(i0,i1+1);}
@@ -643,22 +671,40 @@ function renderAlerts(M){
   const el=document.getElementById("alertStack"); el.innerHTML=TH(""); let any=false;
   const dR=GOV.items.alerta_roja.decision, dY=GOV.items.alerta_amarilla.decision;
   if(M.delta!=null && M.delta<-5){ any=true;
-    el.innerHTML+=`<div class="banner red"><span class="dot">🔴</span><div><b>Alerta roja — caída severa.</b> ${mLong(M.hasta)} (<b>${fpct(M.lastVal)}</b>) está <b>${fpp(M.delta)}</b> bajo el promedio de 12 meses (${fpct(M.prev12Val)}). Umbral: −5 pp. Decisión: <b>${dR?esc(dR):"por definir"}</b>${GOV.items.alerta_roja.dueno?` · Dueño: ${esc(GOV.items.alerta_roja.dueno)}`:""}.</div></div>`; }
+    el.innerHTML+=isEN()?`<div class="banner red"><span class="dot">🔴</span><div><b>Red alert — severe drop.</b> ${mLong(M.hasta)} (<b>${fpct(M.lastVal)}</b>) is <b>${fpp(M.delta)}</b> below the 12-month average (${fpct(M.prev12Val)}). Threshold: −5 pp. Decision: <b>${dR?esc(dR):"to be defined"}</b>${GOV.items.alerta_roja.dueno?` · Owner: ${esc(GOV.items.alerta_roja.dueno)}`:""}.</div></div>`:`<div class="banner red"><span class="dot">🔴</span><div><b>Alerta roja — caída severa.</b> ${mLong(M.hasta)} (<b>${fpct(M.lastVal)}</b>) está <b>${fpp(M.delta)}</b> bajo el promedio de 12 meses (${fpct(M.prev12Val)}). Umbral: −5 pp. Decisión: <b>${dR?esc(dR):"por definir"}</b>${GOV.items.alerta_roja.dueno?` · Dueño: ${esc(GOV.items.alerta_roja.dueno)}`:""}.</div></div>`; }
   if(M.triBrecha!=null && M.triBrecha<0){ any=true;
-    el.innerHTML+=`<div class="banner yellow"><span class="dot">🟡</span><div><b>Alerta amarilla — trimestre bajo meta.</b> Brecha promedio del trimestre: <b>${fpp(M.triBrecha)}</b>. Decisión: <b>${dY?esc(dY):"por definir"}</b>.</div></div>`; }
+    el.innerHTML+=isEN()?`<div class="banner yellow"><span class="dot">🟡</span><div><b>Yellow alert — quarter below target.</b> Average gap for the quarter: <b>${fpp(M.triBrecha)}</b>. Decision: <b>${dY?esc(dY):"to be defined"}</b>.</div></div>`:`<div class="banner yellow"><span class="dot">🟡</span><div><b>Alerta amarilla — trimestre bajo meta.</b> Brecha promedio del trimestre: <b>${fpp(M.triBrecha)}</b>. Decisión: <b>${dY?esc(dY):"por definir"}</b>.</div></div>`; }
   const fd=freshnessDays();
   if(fd>(GOV.freshDias||35)){
-    el.innerHTML+=`<div class="banner orange"><span class="dot">🟠</span><div><b>Dato desactualizado — ${fd} días.</b> El dato más reciente es ${mShort(lastM())} y supera tu umbral de frescura (${GOV.freshDias||35} días). Una alerta que se dispara “todos los días” necesita data fresca para no ser un retrovisor. Cierra la cadencia en Gobernanza.</div></div>`;
+    el.innerHTML+=isEN()?`<div class="banner orange"><span class="dot">🟠</span><div><b>Stale data — ${fd} days.</b> The latest data point is ${mShort(lastM())}, beyond your freshness threshold (${GOV.freshDias||35} days). An alert that fires “every day” needs fresh data so it isn't a rear-view mirror. Set the refresh cadence in Governance.</div></div>`:`<div class="banner orange"><span class="dot">🟠</span><div><b>Dato desactualizado — ${fd} días.</b> El dato más reciente es ${mShort(lastM())} y supera tu umbral de frescura (${GOV.freshDias||35} días). Una alerta que se dispara “todos los días” necesita data fresca para no ser un retrovisor. Cierra la cadencia en Gobernanza.</div></div>`;
   }
-  if(!any) el.innerHTML+=`<div class="banner green"><span class="dot">🟢</span><div><b>Sin alertas de cumplimiento</b> para el filtro seleccionado.</div></div>`;
+  if(!any) el.innerHTML+=isEN()?`<div class="banner green"><span class="dot">🟢</span><div><b>No compliance alerts</b> for the selected filter.</div></div>`:`<div class="banner green"><span class="dot">🟢</span><div><b>Sin alertas de cumplimiento</b> para el filtro seleccionado.</div></div>`;
 }
 
 /* ---------- KPIs ---------- */
 function kClsDelta(d){ if(d==null)return"neutral"; if(d<-5)return"alert"; if(d<0)return"warn"; return"ok"; }
 function kClsBreach(p){ if(p==null)return"neutral"; if(p>50)return"alert"; if(p>=20)return"warn"; return"ok"; }
-function badge(id){ const g=GOV.items[id]; return `Umbral: ${esc(g.umbral)} · Dueño: ${g.dueno?esc(g.dueno):"por definir"}`; }
+function badge(id){ const g=GOV.items[id]; return isEN()?`Threshold: ${esc(g.umbral)} · Owner: ${g.dueno?esc(g.dueno):"to be defined"}`:`Umbral: ${esc(g.umbral)} · Dueño: ${g.dueno?esc(g.dueno):"por definir"}`; }
 function renderKPIs(M){
-  document.getElementById("kpiRow").innerHTML = `
+  document.getElementById("kpiRow").innerHTML = isEN()?`
+  <div class="card kpi ${kClsDelta(M.delta)}">
+    <div class="kpi-label">Compliance · ${mShort(M.hasta)}</div>
+    <div class="kpi-value">${fpct(M.lastVal)}</div>
+    <div class="kpi-sub">${M.delta==null?"":`<b>${fpp(M.delta)}</b> vs. the previous 12 months`}</div>
+    <div class="kpi-badge">${badge("salud_cumplimiento")}</div>
+  </div>
+  <div class="card kpi neutral">
+    <div class="kpi-label">Base · previous 12 months</div>
+    <div class="kpi-value">${fpct(M.prev12Val)}</div>
+    <div class="kpi-sub">Baseline (rolling window, ${M.prev12.length} months)</div>
+    <div class="kpi-badge">Reference · not a target</div>
+  </div>
+  <div class="card kpi ${kClsBreach(M.pctSevere)}">
+    <div class="kpi-label">Routes in breach · ${mShort(M.hasta)}</div>
+    <div class="kpi-value">${M.pctSevere==null?"N/A":M.pctSevere.toFixed(0)+"%"}</div>
+    <div class="kpi-sub">in <b>severe</b> breach (&lt; −5 pp) · ${M.pctUnder==null?"":M.pctUnder.toFixed(0)+"% below target"}</div>
+    <div class="kpi-badge">${badge("salud_breach")}</div>
+  </div>`:`
   <div class="card kpi ${kClsDelta(M.delta)}">
     <div class="kpi-label">Cumplimiento · ${mShort(M.hasta)}</div>
     <div class="kpi-value">${fpct(M.lastVal)}</div>
@@ -690,7 +736,7 @@ function regionDeltas(sub){
 }
 function renderNarratives(M){
   const sub=M.sub;
-  const scope=(state.region==="Todas"?"todo el portafolio":`la región ${state.region}`)+(state.tipo==="Todos"?"":` · cliente ${state.tipo}`);
+  const scope=isEN()?((state.region==="Todas"?"the whole portfolio":`the ${state.region} region`)+(state.tipo==="Todos"?"":` · ${tipoL(state.tipo)} customers`)):(state.region==="Todas"?"todo el portafolio":`la región ${state.region}`)+(state.tipo==="Todos"?"":` · cliente ${state.tipo}`);
   const rD=regionDeltas(sub).filter(x=>x.delta!=null);
   const nDown=rD.filter(x=>x.delta<0).length;
   const tipos=[...new Set(sub.map(r=>r.tipo_cliente))];
@@ -698,19 +744,40 @@ function renderNarratives(M){
   const worstQ1=rD.slice().sort((a,b)=>a.q1-b.q1)[0];
   const risk=riskRoutes(M), top3=risk.slice(0,3);
   const cliff=(()=>{const p=avg(sub.filter(r=>r.mes===prevM(BREAK)).map(r=>r.cumplimiento_pct));const q=avg(sub.filter(r=>r.mes===BREAK).map(r=>r.cumplimiento_pct));return(p!=null&&q!=null)?q-p:null;})();
-  const sev=M.delta==null?"":(M.delta<-5?"una caída severa":M.delta<0?"un deterioro moderado":"una mejora");
-  const resumen=`En ${scope}, el cumplimiento del último mes (${mLong(M.hasta)}) es <span class="pill-num">${fpct(M.lastVal)}</span>${M.delta==null?"":`, <span class="pill-num">${fpp(M.delta)}</span> frente a la base de 12 meses (${fpct(M.prev12Val)}) — ${sev}`}. ${cliff!=null?`El deterioro se concentra en un quiebre abrupto en ${mShort(BREAK)} (<span class="pill-num">${fpp(cliff)}</span> vs. ${mShort(prevM(BREAK))}).`:""} ${nDown>1?`Es transversal: <span class="pill-num">${nDown}</span> de ${rD.length} regiones y ${tipos.length} tipo(s) de cliente en la misma dirección, patrón que apunta a causa <b>sistémica</b>.`:""} Hipótesis a validar en la pestaña Diagnóstico.`;
-  const hallazgos=[cliff!=null?`Quiebre en <b>${mShort(BREAK)}</b> (${fpp(cliff)}): fecha común = evento único probable.`:null,
+  const sev=M.delta==null?"":(M.delta<-5?L("una caída severa","a severe drop"):M.delta<0?L("un deterioro moderado","a moderate deterioration"):L("una mejora","an improvement"));
+  const resumen=isEN()?`Across ${scope}, compliance in the latest month (${mLong(M.hasta)}) is <span class="pill-num">${fpct(M.lastVal)}</span>${M.delta==null?"":`, <span class="pill-num">${fpp(M.delta)}</span> against the 12-month base (${fpct(M.prev12Val)}) — ${sev}`}. ${cliff!=null?`The deterioration concentrates in an abrupt breakpoint in ${mShort(BREAK)} (<span class="pill-num">${fpp(cliff)}</span> vs. ${mShort(prevM(BREAK))}).`:""} ${nDown>1?`It cuts across the board: <span class="pill-num">${nDown}</span> of ${rD.length} regions and ${tipos.length} customer type(s) move in the same direction, a pattern that points to a <b>systemic</b> cause.`:""} A hypothesis to validate in the Diagnosis tab.`:`En ${scope}, el cumplimiento del último mes (${mLong(M.hasta)}) es <span class="pill-num">${fpct(M.lastVal)}</span>${M.delta==null?"":`, <span class="pill-num">${fpp(M.delta)}</span> frente a la base de 12 meses (${fpct(M.prev12Val)}) — ${sev}`}. ${cliff!=null?`El deterioro se concentra en un quiebre abrupto en ${mShort(BREAK)} (<span class="pill-num">${fpp(cliff)}</span> vs. ${mShort(prevM(BREAK))}).`:""} ${nDown>1?`Es transversal: <span class="pill-num">${nDown}</span> de ${rD.length} regiones y ${tipos.length} tipo(s) de cliente en la misma dirección, patrón que apunta a causa <b>sistémica</b>.`:""} Hipótesis a validar en la pestaña Diagnóstico.`;
+  const hallazgos=isEN()?[cliff!=null?`Breakpoint in <b>${mShort(BREAK)}</b> (${fpp(cliff)}): a common date = a single event is likely.`:null,
+    nDown>1?`Across the board: <b>${nDown}/${rD.length}</b> regions trending down.`:null,
+    worstReg?`Largest drop: <b>${worstReg.region}</b> (${fpp(worstReg.delta)}).`:null,
+    risk.length?`<b>${risk.length}</b> route(s) in severe breach; worst: <b>${top3[0].ruta}</b> (${fpp(top3[0].brecha)}).`:`No routes in severe breach.`].filter(Boolean):[cliff!=null?`Quiebre en <b>${mShort(BREAK)}</b> (${fpp(cliff)}): fecha común = evento único probable.`:null,
     nDown>1?`Transversal: <b>${nDown}/${rD.length}</b> regiones a la baja.`:null,
     worstReg?`Mayor caída: <b>${worstReg.region}</b> (${fpp(worstReg.delta)}).`:null,
     risk.length?`<b>${risk.length}</b> ruta(s) en breach severo; peor: <b>${top3[0].ruta}</b> (${fpp(top3[0].brecha)}).`:`Sin rutas en breach severo.`].filter(Boolean);
-  const riesgos=top3.length?top3.map(r=>`<b>${r.ruta}</b> · ${r.region}/${r.ciudad}: ${fpct(r.cumpl)} vs ${r.sla}% (${fpp(r.brecha)}).`):["Sin rutas en breach severo bajo el filtro."];
-  const cambios=`Último mes ${fpct(M.lastVal)} vs. base ${fpct(M.prev12Val)} → <span class="pill-num">${fpp(M.delta)}</span>. Brecha del trimestre: <span class="pill-num">${fpp(M.triBrecha)}</span>.${worstQ1?` Más bajo en Q1: <b>${worstQ1.region}</b> (${fpct(worstQ1.q1)}).`:""}`;
+  const riesgos=top3.length?top3.map(r=>`<b>${r.ruta}</b> · ${r.region}/${r.ciudad}: ${fpct(r.cumpl)} vs ${r.sla}% (${fpp(r.brecha)}).`):[L("Sin rutas en breach severo bajo el filtro.","No routes in severe breach under this filter.")];
+  const cambios=isEN()?`Latest month ${fpct(M.lastVal)} vs. base ${fpct(M.prev12Val)} → <span class="pill-num">${fpp(M.delta)}</span>. Quarterly gap: <span class="pill-num">${fpp(M.triBrecha)}</span>.${worstQ1?` Lowest in Q1: <b>${worstQ1.region}</b> (${fpct(worstQ1.q1)}).`:""}`:`Último mes ${fpct(M.lastVal)} vs. base ${fpct(M.prev12Val)} → <span class="pill-num">${fpp(M.delta)}</span>. Brecha del trimestre: <span class="pill-num">${fpp(M.triBrecha)}</span>.${worstQ1?` Más bajo en Q1: <b>${worstQ1.region}</b> (${fpct(worstQ1.q1)}).`:""}`;
   const dR=GOV.items.alerta_roja.decision, dRisk=GOV.items.riesgo.decision;
-  const recos=[`<b>Mesa de capacidad con el operador.</b> ${dR?esc(dR):'Dueño y decisión: <span class="tag-def">por definir</span> (Gobernanza).'}`,
+  const recos=isEN()?[`<b>Capacity review with the operator.</b> ${dR?esc(dR):'Owner and decision: <span class="tag-def">to be defined</span> (Governance).'}`,
+    top3.length?`<b>Contingency for critical routes</b> (${top3.map(r=>r.ruta).join(", ")}). ${dRisk?esc(dRisk):'Threshold −10 pp · <span class="tag-def">to be defined</span>.'}`:`<b>Define an escalation threshold</b> per route.`,
+    BREAK?`<b>Validate the breakpoint of ${mShort(BREAK)}</b> in the Diagnosis tab before committee.`:null].filter(Boolean):[`<b>Mesa de capacidad con el operador.</b> ${dR?esc(dR):'Dueño y decisión: <span class="tag-def">por definir</span> (Gobernanza).'}`,
     top3.length?`<b>Contingencia rutas críticas</b> (${top3.map(r=>r.ruta).join(", ")}). ${dRisk?esc(dRisk):'Umbral −10 pp · <span class="tag-def">por definir</span>.'}`:`<b>Definir umbral de escalamiento</b> por ruta.`,
     BREAK?`<b>Validar el quiebre de ${mShort(BREAK)}</b> en la pestaña Diagnóstico antes de comité.`:null].filter(Boolean);
-  document.getElementById("narrCard").innerHTML=TH(`
+  document.getElementById("narrCard").innerHTML=TH(isEN()?`
+    <h3>Executive summary</h3>
+    <div class="narr-block"><p>${resumen}</p></div>
+    <div class="narr-grid">
+      <div>
+        <div class="narr-block plain"><h4>Key findings</h4><ul>${hallazgos.map(h=>`<li>${h}</li>`).join("")}</ul></div>
+        <div class="narr-block plain" style="margin-top:12px;"><h4>Relevant KPIs</h4><ul>
+          <li>Compliance ${mShort(M.hasta)}: <b>${fpct(M.lastVal)}</b> — ${M.delta!=null&&M.delta<-5?"below the threshold.":"within tolerance."}</li>
+          <li>12m base: <b>${fpct(M.prev12Val)}</b>.</li>
+          <li>Severe breach: <b>${M.pctSevere==null?"N/A":M.pctSevere.toFixed(0)+"%"}</b>.</li></ul></div>
+      </div>
+      <div>
+        <div class="narr-block"><h4>Detected risks</h4><ul>${riesgos.map(r=>`<li>${r}</li>`).join("")}</ul></div>
+        <div class="narr-block plain" style="margin-top:12px;"><h4>Changes vs. history</h4><p>${cambios}</p></div>
+        <div class="narr-block" style="margin-top:12px;"><h4>Recommendations (draft)</h4><ul>${recos.map(r=>`<li>${r}</li>`).join("")}</ul></div>
+      </div>
+    </div>`:`
     <h3>Resumen ejecutivo</h3>
     <div class="narr-block"><p>${resumen}</p></div>
     <div class="narr-grid">
@@ -734,11 +801,11 @@ function renderEficiencia(M){
   if(typeof Plotly==="undefined")return;
   const rows=M.sub.filter(r=>rangeMonths().includes(r.mes));
   let data=[...new Set(rows.map(r=>r.region))].map(rg=>{const cu=avg(rows.filter(r=>r.region===rg).map(r=>r.cumplimiento_pct));const sl=avg(rows.filter(r=>r.region===rg).map(r=>r.sla_objetivo_pct));return{region:rg,cumpl:cu,sla:sl,gap:(cu!=null&&sl!=null)?cu-sl:null};}).filter(d=>d.cumpl!=null).sort((a,b)=>a.cumpl-b.cumpl);
-  if(!data.length){document.getElementById("plotEficiencia").innerHTML=TH('<p class="muted" style="padding:20px;text-align:center;">Sin datos para el filtro.</p>');return;}
+  if(!data.length){document.getElementById("plotEficiencia").innerHTML=TH('<p class="muted" style="padding:20px;text-align:center;">'+L("Sin datos para el filtro.","No data for this filter.")+'</p>');return;}
   const cf=g=>g==null?COL.muted:(g>=0?COL.ok:g>-3?COL.warn:COL.alert);
-  const bars={type:"bar",orientation:"h",y:data.map(d=>d.region),x:data.map(d=>+d.cumpl.toFixed(1)),marker:{color:data.map(d=>cf(d.gap))},text:data.map(d=>d.cumpl.toFixed(1)+"%"),textposition:"auto",textfont:{color:"#fff",size:11},customdata:data.map(d=>[d.sla?d.sla.toFixed(1):"N/D",d.gap!=null?(d.gap>=0?"+":"")+d.gap.toFixed(1):"N/D"]),hovertemplate:"<b>%{y}</b><br>Cumplimiento: %{x:.1f}%<br>Meta SLA: %{customdata[0]}%<br>Brecha: %{customdata[1]} pp<extra></extra>"};
-  const tg={type:"scatter",mode:"markers",y:data.map(d=>d.region),x:data.map(d=>d.sla?+d.sla.toFixed(1):null),marker:{symbol:"diamond",size:11,color:COL.deep,line:{color:"#fff",width:1}},hovertemplate:"Meta SLA %{y}: %{x:.1f}%<extra></extra>"};
-  Plotly.react("plotEficiencia",[bars,tg],{height:Math.max(240,data.length*42+90),margin:{l:96,r:22,t:10,b:36},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{title:"Cumplimiento SLA (%)",gridcolor:COL.border,zeroline:false,range:[Math.min(70,Math.min(...data.map(d=>d.cumpl))-4),100]},yaxis:{automargin:true},showlegend:false,bargap:0.35},{responsive:true,displayModeBar:false});
+  const bars={type:"bar",orientation:"h",y:data.map(d=>d.region),x:data.map(d=>+d.cumpl.toFixed(1)),marker:{color:data.map(d=>cf(d.gap))},text:data.map(d=>d.cumpl.toFixed(1)+"%"),textposition:"auto",textfont:{color:"#fff",size:11},customdata:data.map(d=>[d.sla?d.sla.toFixed(1):L("N/D","N/A"),d.gap!=null?(d.gap>=0?"+":"")+d.gap.toFixed(1):L("N/D","N/A")]),hovertemplate:L("<b>%{y}</b><br>Cumplimiento: %{x:.1f}%<br>Meta SLA: %{customdata[0]}%<br>Brecha: %{customdata[1]} pp<extra></extra>","<b>%{y}</b><br>Compliance: %{x:.1f}%<br>SLA target: %{customdata[0]}%<br>Gap: %{customdata[1]} pp<extra></extra>")};
+  const tg={type:"scatter",mode:"markers",y:data.map(d=>d.region),x:data.map(d=>d.sla?+d.sla.toFixed(1):null),marker:{symbol:"diamond",size:11,color:COL.deep,line:{color:"#fff",width:1}},hovertemplate:L("Meta SLA %{y}: %{x:.1f}%<extra></extra>","SLA target %{y}: %{x:.1f}%<extra></extra>")};
+  Plotly.react("plotEficiencia",[bars,tg],{height:Math.max(240,data.length*42+90),margin:{l:96,r:22,t:10,b:36},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{title:L("Cumplimiento SLA (%)","SLA compliance (%)"),gridcolor:COL.border,zeroline:false,range:[Math.min(70,Math.min(...data.map(d=>d.cumpl))-4),100]},yaxis:{automargin:true},showlegend:false,bargap:0.35},{responsive:true,displayModeBar:false});
 }
 
 /* ---------- Riesgo ---------- */
@@ -749,14 +816,14 @@ function riskRoutes(M){
 }
 function renderRiesgo(M){
   const risk=riskRoutes(M), total=[...new Set(M.sub.map(r=>r.ruta))].length;
-  document.getElementById("riskCount").innerHTML=TH(`<b>${risk.length}</b> de ${total} rutas en breach severo (&lt; −5 pp) en ${M.tri.map(mShort).join(" · ")}.`);
+  document.getElementById("riskCount").innerHTML=TH(isEN()?`<b>${risk.length}</b> of ${total} routes in severe breach (&lt; −5 pp) in ${M.tri.map(mShort).join(" · ")}.`:`<b>${risk.length}</b> de ${total} rutas en breach severo (&lt; −5 pp) en ${M.tri.map(mShort).join(" · ")}.`);
   const t=document.getElementById("riskTable");
   if(!risk.length){t.innerHTML=TH(`<tr><td style="border:none;color:var(--muted);padding:14px;">Ninguna ruta en breach severo bajo el filtro.</td></tr>`);return;}
-  const g=GOV.items.riesgo; const dueno=g.dueno?esc(g.dueno):'<span class="tag-def">por definir</span>'; const dec=g.decision?esc(g.decision):'<span class="tag-def">por definir</span>';
+  const g=GOV.items.riesgo; const tbd='<span class="tag-def">'+L("por definir","to be defined")+'</span>'; const dueno=g.dueno?esc(g.dueno):tbd; const dec=g.decision?esc(g.decision):tbd;
   const rojo=b=>{const a=Math.max(0,Math.min(1,(Math.abs(b)-5)/13));return`rgba(220,38,38,${(a*0.72+0.10).toFixed(2)})`;};
   const tc=b=>(Math.abs(b)-5)/13>0.55?"#fff":"#7a1010";
-  t.innerHTML=TH(`<thead><tr><th>Ruta</th><th>Región</th><th>Ciudad origen</th><th>Tipo</th><th>Meta</th><th>Cumpl.</th><th>Brecha (pp)</th><th>Dueño</th><th>Decisión</th></tr></thead>
-    <tbody>${risk.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.region}</td><td>${r.ciudad}</td><td>${r.tipo}</td><td>${r.sla}%</td><td>${r.cumpl.toFixed(1)}%</td>
+  t.innerHTML=TH(`${isEN()?'<thead><tr><th>Route</th><th>Region</th><th>Origin city</th><th>Type</th><th>Target</th><th>Compl.</th><th>Gap (pp)</th><th>Owner</th><th>Decision</th></tr></thead>':'<thead><tr><th>Ruta</th><th>Región</th><th>Ciudad origen</th><th>Tipo</th><th>Meta</th><th>Cumpl.</th><th>Brecha (pp)</th><th>Dueño</th><th>Decisión</th></tr></thead>'}
+    <tbody>${risk.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.region}</td><td>${r.ciudad}</td><td>${tipoL(r.tipo)}</td><td>${r.sla}%</td><td>${r.cumpl.toFixed(1)}%</td>
       <td style="background:${rojo(r.brecha)};color:${tc(r.brecha)};font-weight:800;text-align:center;">${r.brecha.toFixed(1)}</td><td>${dueno}</td><td>${dec}</td></tr>`).join("")}</tbody>`);
 }
 
@@ -765,7 +832,7 @@ function renderPrediccion(M){
   if(typeof Plotly==="undefined")return;
   const list=rangeMonths(), vals=monthlyAvg(M.sub,list), bIdx=bkIdx();
   const pts=list.map((m,i)=>({x:MONTHS.indexOf(m),y:vals[i]})).filter(p=>p.y!=null&&p.x>=bIdx);
-  const traces=[{type:"scatter",mode:"lines+markers",x:list.map(mShort),y:vals.map(v=>v==null?null:+v.toFixed(2)),line:{color:COL.purple,width:3},marker:{size:6,color:COL.purple},name:"Histórico",connectgaps:false,hovertemplate:"%{x}: %{y:.1f}%<extra></extra>"}];
+  const traces=[{type:"scatter",mode:"lines+markers",x:list.map(mShort),y:vals.map(v=>v==null?null:+v.toFixed(2)),line:{color:COL.purple,width:3},marker:{size:6,color:COL.purple},name:L("Histórico","Historical"),connectgaps:false,hovertemplate:"%{x}: %{y:.1f}%<extra></extra>"}];
   let projText="";
   if(pts.length>=2){
     const n=pts.length,sx=pts.reduce((s,p)=>s+p.x,0),sy=pts.reduce((s,p)=>s+p.y,0),sxx=pts.reduce((s,p)=>s+p.x*p.x,0),sxy=pts.reduce((s,p)=>s+p.x*p.y,0);
@@ -773,19 +840,19 @@ function renderPrediccion(M){
     const pIdx=[startIdx,startIdx+1,startIdx+2,startIdx+3];
     const pX=pIdx.map(i=>{const c=(i<MONTHS.length)?MONTHS[i]:addMonths(MONTHS[MONTHS.length-1],i-(MONTHS.length-1));return mShort(c);});
     const pY=pIdx.map(i=>+(slope*i+inter).toFixed(2));
-    traces.push({type:"scatter",mode:"lines+markers",x:pX,y:pY,line:{color:COL.warn,width:3,dash:"dot"},marker:{size:7,symbol:"diamond",color:COL.warn},name:"Proyección lineal (3m)",hovertemplate:"%{x} (proy.): %{y:.1f}%<extra></extra>"});
-    const q2=pY.slice(1); projText=`Pendiente ${slope>=0?"+":""}${slope.toFixed(2)} pp/mes. Escenario base ${nextQLbl()} ≈ ${Math.min(...q2).toFixed(1)}–${Math.max(...q2).toFixed(1)}%. Frágil (pocos puntos): señala tendencia, no compromete cifras.`;
-  } else projText="Proyección no disponible: se requieren ≥2 meses post-quiebre en el rango.";
-  const ann=[]; if(BREAK&&list.includes(BREAK)){const yB=vals[list.indexOf(BREAK)]; if(yB!=null)ann.push({x:mShort(BREAK),y:yB,text:"Quiebre "+mShort(BREAK),showarrow:true,arrowhead:3,ax:0,ay:-42,font:{color:COL.alert,size:11,family:"Aptos"},arrowcolor:COL.alert,bgcolor:"#fff",bordercolor:COL.alert,borderpad:3,borderwidth:1});}
+    traces.push({type:"scatter",mode:"lines+markers",x:pX,y:pY,line:{color:COL.warn,width:3,dash:"dot"},marker:{size:7,symbol:"diamond",color:COL.warn},name:L("Proyección lineal (3m)","Linear projection (3m)"),hovertemplate:L("%{x} (proy.): %{y:.1f}%<extra></extra>","%{x} (proj.): %{y:.1f}%<extra></extra>")});
+    const q2=pY.slice(1); projText=isEN()?`Slope ${slope>=0?"+":""}${slope.toFixed(2)} pp/month. Base scenario ${nextQLbl()} ≈ ${Math.min(...q2).toFixed(1)}–${Math.max(...q2).toFixed(1)}%. Fragile (few points): it signals a trend, it doesn't commit to figures.`:`Pendiente ${slope>=0?"+":""}${slope.toFixed(2)} pp/mes. Escenario base ${nextQLbl()} ≈ ${Math.min(...q2).toFixed(1)}–${Math.max(...q2).toFixed(1)}%. Frágil (pocos puntos): señala tendencia, no compromete cifras.`;
+  } else projText=L("Proyección no disponible: se requieren ≥2 meses post-quiebre en el rango.","Projection unavailable: at least 2 post-breakpoint months are needed in the range.");
+  const ann=[]; if(BREAK&&list.includes(BREAK)){const yB=vals[list.indexOf(BREAK)]; if(yB!=null)ann.push({x:mShort(BREAK),y:yB,text:L("Quiebre ","Breakpoint ")+mShort(BREAK),showarrow:true,arrowhead:3,ax:0,ay:-42,font:{color:COL.alert,size:11,family:"Aptos"},arrowcolor:COL.alert,bgcolor:"#fff",bordercolor:COL.alert,borderpad:3,borderwidth:1});}
   const slaRef=avg(M.sub.filter(r=>list.includes(r.mes)).map(r=>r.sla_objetivo_pct));
-  Plotly.react("plotPrediccion",traces,{height:360,margin:{l:48,r:20,t:16,b:40},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{gridcolor:COL.border,tickangle:-40},yaxis:{title:"Cumplimiento SLA (%)",gridcolor:COL.border,zeroline:false},legend:{orientation:"h",y:1.12,x:0},annotations:ann,shapes:slaRef!=null?[{type:"line",xref:"paper",x0:0,x1:1,y0:slaRef,y1:slaRef,line:{color:COL.muted,width:1,dash:"dash"}}]:[]},{responsive:true,displayModeBar:false});
-  document.getElementById("projNote").innerHTML=TH((slaRef!=null?`Línea gris = meta SLA promedio (${slaRef.toFixed(1)}%). `:"")+projText);
+  Plotly.react("plotPrediccion",traces,{height:360,margin:{l:48,r:20,t:16,b:40},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{gridcolor:COL.border,tickangle:-40},yaxis:{title:L("Cumplimiento SLA (%)","SLA compliance (%)"),gridcolor:COL.border,zeroline:false},legend:{orientation:"h",y:1.12,x:0},annotations:ann,shapes:slaRef!=null?[{type:"line",xref:"paper",x0:0,x1:1,y0:slaRef,y1:slaRef,line:{color:COL.muted,width:1,dash:"dash"}}]:[]},{responsive:true,displayModeBar:false});
+  document.getElementById("projNote").innerHTML=TH((slaRef!=null?(isEN()?`Grey line = average SLA target (${slaRef.toFixed(1)}%). `:`Línea gris = meta SLA promedio (${slaRef.toFixed(1)}%). `):"")+projText);
 }
 
 /* ================= DIAGNÓSTICO ================= */
 function renderDiagFacts(M){
   const el=document.getElementById("diagFacts");
-  if(!BREAK){el.innerHTML=TH(`<div class="narr-block"><p><b>Sin quiebre que diagnosticar.</b> En los datos cargados no se detecta una caída sistémica (≥3 pp de un mes al siguiente en el promedio del portafolio). Este panel se activa automáticamente cuando el monitoreo encuentre un quiebre.</p></div>`);return;}
+  if(!BREAK){el.innerHTML=TH(isEN()?`<div class="narr-block"><p><b>No breakpoint to diagnose.</b> The loaded data shows no systemic drop (≥3 pp from one month to the next in the portfolio average). This panel switches on automatically when monitoring finds a breakpoint.</p></div>`:`<div class="narr-block"><p><b>Sin quiebre que diagnosticar.</b> En los datos cargados no se detecta una caída sistémica (≥3 pp de un mes al siguiente en el promedio del portafolio). Este panel se activa automáticamente cuando el monitoreo encuentre un quiebre.</p></div>`);return;}
   const sub=M.sub, bP=prevM(BREAK);
   const dic=avg(sub.filter(r=>r.mes===bP).map(r=>r.cumplimiento_pct));
   const ene=avg(sub.filter(r=>r.mes===BREAK).map(r=>r.cumplimiento_pct));
@@ -796,22 +863,22 @@ function renderDiagFacts(M){
     return {rg,d:(a!=null&&b!=null)?b-a:null};
   }).filter(x=>x.d!=null).sort((a,b)=>a.d-b.d);
   const nDown=perReg.filter(x=>x.d<0).length;
-  const rango=perReg.length?`${perReg[0].d.toFixed(1)} a ${perReg[perReg.length-1].d.toFixed(1)} pp`:"N/D";
+  const rango=perReg.length?`${perReg[0].d.toFixed(1)} ${L("a","to")} ${perReg[perReg.length-1].d.toFixed(1)} pp`:L("N/D","N/A");
   el.innerHTML=TH(`
-    <div class="narr-block"><p><b>Hecho:</b> el cumplimiento cae de <b>${fpct(dic)}</b> (${mShort(bP)}) a <b>${fpct(ene)}</b> (${mShort(BREAK)}) — un salto de <span class="pill-num">${fpp(cliff)}</span> en un solo mes. La caída golpea a <b>${nDown}/${perReg.length}</b> regiones el <b>mismo mes</b>, en una banda de ${rango}. La simultaneidad es la evidencia más fuerte de un <b>evento único</b> (sistémico o de medición), no de fallas independientes.</p></div>
-    <div class="tbl-wrap" style="margin-top:10px;"><table><thead><tr><th>Región</th><th>${mShort(bP)} → ${mShort(BREAK)} (Δ pp)</th></tr></thead>
+    ${isEN()?`<div class="narr-block"><p><b>Fact:</b> compliance falls from <b>${fpct(dic)}</b> (${mShort(bP)}) to <b>${fpct(ene)}</b> (${mShort(BREAK)}) — a jump of <span class="pill-num">${fpp(cliff)}</span> in a single month. The drop hits <b>${nDown}/${perReg.length}</b> regions in the <b>same month</b>, within a band of ${rango}. That simultaneity is the strongest evidence of a <b>single event</b> (systemic or measurement-related), not of independent failures.</p></div>`:`<div class="narr-block"><p><b>Hecho:</b> el cumplimiento cae de <b>${fpct(dic)}</b> (${mShort(bP)}) a <b>${fpct(ene)}</b> (${mShort(BREAK)}) — un salto de <span class="pill-num">${fpp(cliff)}</span> en un solo mes. La caída golpea a <b>${nDown}/${perReg.length}</b> regiones el <b>mismo mes</b>, en una banda de ${rango}. La simultaneidad es la evidencia más fuerte de un <b>evento único</b> (sistémico o de medición), no de fallas independientes.</p></div>`}
+    <div class="tbl-wrap" style="margin-top:10px;"><table><thead><tr><th>${L("Región","Region")}</th><th>${mShort(bP)} → ${mShort(BREAK)} (Δ pp)</th></tr></thead>
       <tbody>${perReg.map(x=>`<tr><td>${x.rg}</td><td style="font-weight:800;color:${x.d<0?'#b91c1c':'#0d6b41'};">${x.d>=0?'+':''}${x.d.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`);
 }
 function renderDiagCauses(){
   const box=document.getElementById("diagCauses"); box.innerHTML=TH("");
   Object.entries(DIAG.causes).forEach(([k,c])=>{
     const row=document.createElement("div"); row.className="diag-cause";
-    row.innerHTML=TH(`<div class="lbl">${c.label}</div>
+    row.innerHTML=TH(`<div class="lbl">${causeLabel(k)}</div>
       <select data-k="${k}" class="est-${c.estado}">
-        <option ${c.estado==="Pendiente"?"selected":""}>Pendiente</option>
-        <option ${c.estado==="Descartada"?"selected":""}>Descartada</option>
-        <option ${c.estado==="Confirmada"?"selected":""}>Confirmada</option></select>
-      <textarea data-kn="${k}" placeholder="Evidencia / nota (opcional)">${esc(c.nota)}</textarea>`);
+        <option value="Pendiente" ${c.estado==="Pendiente"?"selected":""}>${L("Pendiente","Pending")}</option>
+        <option value="Descartada" ${c.estado==="Descartada"?"selected":""}>${L("Descartada","Ruled out")}</option>
+        <option value="Confirmada" ${c.estado==="Confirmada"?"selected":""}>${L("Confirmada","Confirmed")}</option></select>
+      <textarea data-kn="${k}" placeholder="${L("Evidencia / nota (opcional)","Evidence / note (optional)")}">${esc(c.nota)}</textarea>`);
     box.appendChild(row);
   });
   box.querySelectorAll("select").forEach(s=>s.onchange=e=>{DIAG.causes[e.target.dataset.k].estado=e.target.value; e.target.className="est-"+e.target.value; renderDiagVerdict();});
@@ -820,16 +887,16 @@ function renderDiagCauses(){
 function diagState(){
   const arr=Object.values(DIAG.causes);
   const pend=arr.filter(c=>c.estado==="Pendiente").length;
-  const conf=arr.filter(c=>c.estado==="Confirmada");
+  const conf=Object.keys(DIAG.causes).filter(k=>DIAG.causes[k].estado==="Confirmada").map(causeLabel);
   if(pend>0) return {kind:"block", pend, conf};
   if(conf.length) return {kind:"go", pend, conf};
   return {kind:"rev", pend, conf};
 }
 function renderDiagVerdict(){
   const st=diagState(), el=document.getElementById("diagVerdict");
-  if(st.kind==="block") el.innerHTML=TH(`<div class="verdict block">⛔ <b>Diagnóstico incompleto</b> — quedan ${st.pend} causa(s) sin evaluar. <b>No escalar a renegociación de contrato</b> hasta cerrar la causa (filtro de Consecuencias).</div>`);
-  else if(st.kind==="go") el.innerHTML=TH(`<div class="verdict go">✅ <b>Diagnóstico cerrado.</b> Causa(s) confirmada(s): ${st.conf.map(c=>"<b>"+c.label+"</b>").join(", ")}. Acción focalizada según la causa; documenta en el one-pager.</div>`);
-  else el.innerHTML=TH(`<div class="verdict rev">⚠️ <b>Todas las causas descartadas.</b> El deterioro no se explica por las hipótesis evaluadas: revisa nuevas hipótesis o la calidad del dato antes de decidir.</div>`);
+  if(st.kind==="block") el.innerHTML=TH(isEN()?`<div class="verdict block">⛔ <b>Diagnosis incomplete</b> — ${st.pend} cause(s) still unassessed. <b>Do not escalate to a contract renegotiation</b> until the cause is closed (Consequences filter).</div>`:`<div class="verdict block">⛔ <b>Diagnóstico incompleto</b> — quedan ${st.pend} causa(s) sin evaluar. <b>No escalar a renegociación de contrato</b> hasta cerrar la causa (filtro de Consecuencias).</div>`);
+  else if(st.kind==="go") el.innerHTML=TH(isEN()?`<div class="verdict go">✅ <b>Diagnosis closed.</b> Confirmed cause(s): ${st.conf.map(c=>"<b>"+c+"</b>").join(", ")}. Act on that cause; document it in the one-pager.</div>`:`<div class="verdict go">✅ <b>Diagnóstico cerrado.</b> Causa(s) confirmada(s): ${st.conf.map(c=>"<b>"+c+"</b>").join(", ")}. Acción focalizada según la causa; documenta en el one-pager.</div>`);
+  else el.innerHTML=TH(isEN()?`<div class="verdict rev">⚠️ <b>All causes ruled out.</b> The hypotheses assessed don't explain the deterioration: review new hypotheses or the data quality before deciding.</div>`:`<div class="verdict rev">⚠️ <b>Todas las causas descartadas.</b> El deterioro no se explica por las hipótesis evaluadas: revisa nuevas hipótesis o la calidad del dato antes de decidir.</div>`);
 }
 
 /* ================= GOBERNANZA ================= */
@@ -837,12 +904,12 @@ function renderGobernanza(){
   document.getElementById("govCadencia").value=GOV.cadencia;
   document.getElementById("govFresh").value=GOV.freshDias;
   const t=document.getElementById("govTable");
-  t.innerHTML=TH(`<thead><tr><th style="min-width:150px;">Indicador</th><th style="min-width:150px;">Umbral</th><th style="min-width:150px;">Dueño</th><th>Decisión asociada</th></tr></thead>
+  t.innerHTML=TH(`${isEN()?'<thead><tr><th style="min-width:150px;">Indicator</th><th style="min-width:150px;">Threshold</th><th style="min-width:150px;">Owner</th><th>Associated decision</th></tr></thead>':'<thead><tr><th style="min-width:150px;">Indicador</th><th style="min-width:150px;">Umbral</th><th style="min-width:150px;">Dueño</th><th>Decisión asociada</th></tr></thead>'}
     <tbody>${Object.entries(GOV.items).map(([k,g])=>`<tr>
-      <td><b>${g.label}</b></td>
+      <td><b>${govLabel(k)}</b></td>
       <td><input class="inp" data-g="${k}" data-f="umbral" value="${esc(g.umbral)}"/></td>
-      <td><input class="inp" data-g="${k}" data-f="dueno" value="${esc(g.dueno)}" placeholder="por definir"/></td>
-      <td><input class="inp" data-g="${k}" data-f="decision" value="${esc(g.decision)}" placeholder="por definir"/></td></tr>`).join("")}</tbody>`);
+      <td><input class="inp" data-g="${k}" data-f="dueno" value="${esc(g.dueno)}" placeholder="${L("por definir","to be defined")}"/></td>
+      <td><input class="inp" data-g="${k}" data-f="decision" value="${esc(g.decision)}" placeholder="${L("por definir","to be defined")}"/></td></tr>`).join("")}</tbody>`);
   t.querySelectorAll("input").forEach(inp=>inp.onchange=e=>{GOV.items[e.target.dataset.g][e.target.dataset.f]=e.target.value; refreshGovDependents();});
 }
 function refreshGovDependents(){ if(LAST_M){ renderAlerts(LAST_M); renderKPIs(LAST_M); renderRiesgo(LAST_M); renderNarratives(LAST_M); } }
@@ -857,13 +924,13 @@ function refreshValidation(){
 
 /* Exportar / importar gobernanza */
 function download(name,text){const b=new Blob([text],{type:"application/json"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
-function exportGov(){ download("gobernanza_sla.json", JSON.stringify({GOV,DIAG,VAL},null,2)); }
+function exportGov(){ download(L("gobernanza_sla.json","sla_governance.json"), JSON.stringify({GOV,DIAG,VAL},null,2)); }
 function importGov(file){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);
   if(o.GOV){GOV.cadencia=o.GOV.cadencia||GOV.cadencia;GOV.freshDias=o.GOV.freshDias||GOV.freshDias; if(o.GOV.items)for(const k in o.GOV.items)if(GOV.items[k])Object.assign(GOV.items[k],o.GOV.items[k]);}
   if(o.DIAG&&o.DIAG.causes)for(const k in o.DIAG.causes)if(DIAG.causes[k])Object.assign(DIAG.causes[k],o.DIAG.causes[k]);
   if(o.VAL){document.getElementById("valC1").checked=!!o.VAL.c1;document.getElementById("valC2").checked=!!o.VAL.c2;document.getElementById("valC3").checked=!!o.VAL.c3;}
   renderGobernanza();renderDiagCauses();renderDiagVerdict();refreshValidation();refreshGovDependents();
-}catch(e){alert("JSON inválido.");}};r.readAsText(file);}
+}catch(e){alert(L("JSON inválido.","Invalid JSON."));}};r.readAsText(file);}
 
 /* ================= ONE-PAGER ================= */
 function facts(M){
@@ -873,15 +940,26 @@ function facts(M){
 }
 function openOnePager(){
   const M=LAST_M; if(!M)return; const F=facts(M); const st=diagState();
-  const scope=(state.region==="Todas"?"Portafolio completo":state.region)+(state.tipo==="Todos"?"":" · "+state.tipo)+" · "+mShort(state.desde)+"→"+mShort(state.hasta);
-  const dataL=`El cumplimiento del último mes (${mLong(M.hasta)}) es ${fpct(M.lastVal)}, ${fpp(M.delta)} frente a la base de 12 meses. Caída transversal a ${F.nDown}/${F.nReg} regiones, con quiebre de ${fpp(F.cliff)} en Ene 2026.`;
-  const ideaL=`La uniformidad y la fecha común apuntan a una causa sistémica o de medición, no a fallas aisladas. `+(st.kind==="go"?`Diagnóstico cerrado: causa confirmada — ${st.conf.map(c=>c.label).join(", ")}.`:st.kind==="rev"?`Causas evaluadas descartadas: revisar nuevas hipótesis.`:`Diagnóstico aún incompleto (${st.pend} causa[s] pendiente[s]).`);
+  const scope=(state.region==="Todas"?L("Portafolio completo","Whole portfolio"):state.region)+(state.tipo==="Todos"?"":" · "+tipoL(state.tipo))+" · "+mShort(state.desde)+"→"+mShort(state.hasta);
+  const dataL=isEN()?`Compliance in the latest month (${mLong(M.hasta)}) is ${fpct(M.lastVal)}, ${fpp(M.delta)} against the 12-month base. A drop cutting across ${F.nDown}/${F.nReg} regions, with a breakpoint of ${fpp(F.cliff)} in ${BREAK?mLong(BREAK):"N/A"}.`:`El cumplimiento del último mes (${mLong(M.hasta)}) es ${fpct(M.lastVal)}, ${fpp(M.delta)} frente a la base de 12 meses. Caída transversal a ${F.nDown}/${F.nReg} regiones, con quiebre de ${fpp(F.cliff)} en ${BREAK?mLong(BREAK):"N/D"}.`;
+  const ideaL=isEN()?`The uniformity and the common date point to a systemic or measurement cause, not to isolated failures. `+(st.kind==="go"?`Diagnosis closed: confirmed cause — ${st.conf.join(", ")}.`:st.kind==="rev"?`The causes assessed were ruled out: review new hypotheses.`:`Diagnosis still incomplete (${st.pend} cause[s] pending).`):`La uniformidad y la fecha común apuntan a una causa sistémica o de medición, no a fallas aisladas. `+(st.kind==="go"?`Diagnóstico cerrado: causa confirmada — ${st.conf.join(", ")}.`:st.kind==="rev"?`Causas evaluadas descartadas: revisar nuevas hipótesis.`:`Diagnóstico aún incompleto (${st.pend} causa[s] pendiente[s]).`);
   const decL=st.kind==="block"
-    ? `Correr el diagnóstico del quiebre antes de escalar. NO renegociar contrato sin causa confirmada. Contingencia para rutas con brecha < −10 pp.`
-    : (GOV.items.alerta_roja.decision || GOV.items.riesgo.decision || "Definir decisión en Gobernanza.");
-  const rows=[["Cumplimiento último mes",fpct(M.lastVal)],["Base 12 meses",fpct(M.prev12Val)],["Delta vs base",fpp(M.delta)],["Breach severo (últ. mes)",M.pctSevere==null?"N/D":M.pctSevere.toFixed(0)+"%"],["Brecha del trimestre",fpp(M.triBrecha)],["Rutas en breach severo",F.riskN]];
-  const owners=Object.values(GOV.items).filter(g=>g.dueno).map(g=>`${g.label}: ${esc(g.dueno)}`);
-  document.getElementById("opBody").innerHTML=TH(`
+    ? L(`Correr el diagnóstico del quiebre antes de escalar. NO renegociar contrato sin causa confirmada. Contingencia para rutas con brecha < −10 pp.`,`Run the breakpoint diagnosis before escalating. Do NOT renegotiate the contract without a confirmed cause. Contingency for routes with a gap < −10 pp.`)
+    : (GOV.items.alerta_roja.decision || GOV.items.riesgo.decision || L("Definir decisión en Gobernanza.","Define the decision in Governance."));
+  const rows=[[L("Cumplimiento último mes","Last-month compliance"),fpct(M.lastVal)],[L("Base 12 meses","12-month base"),fpct(M.prev12Val)],["Delta vs base",fpp(M.delta)],[L("Breach severo (últ. mes)","Severe breach (latest month)"),M.pctSevere==null?L("N/D","N/A"):M.pctSevere.toFixed(0)+"%"],[L("Brecha del trimestre","Quarterly gap"),fpp(M.triBrecha)],[L("Rutas en breach severo","Routes in severe breach"),F.riskN]];
+  const owners=Object.entries(GOV.items).filter(([k,g])=>g.dueno).map(([k,g])=>`${govLabel(k)}: ${esc(g.dueno)}`);
+  document.getElementById("opBody").innerHTML=TH(isEN()?`
+    <div class="op-h"><h2>Committee brief — SLA compliance</h2>
+      <div class="op-meta">Scope: ${esc(scope)} · Generated: ${new Date().toLocaleDateString("en-US",{day:"2-digit",month:"long",year:"numeric"})} · Data through ${mShort(lastM())} (${freshnessDays()} days)</div></div>
+    <div class="op-did">
+      <div class="b"><b>DATA · what we observe</b><span>${dataL}</span></div>
+      <div class="b"><b>IDEA · what it means</b><span>${ideaL}</span></div>
+      <div class="b"><b>DECISION · what to do</b><span>${esc(decL)}</span></div>
+    </div>
+    <table class="op-facts"><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table>
+    ${F.risk.length?`<p style="margin:12px 0 4px;font-weight:800;color:var(--deep-blue);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;">Critical routes</p>
+      <table class="op-facts"><tbody>${F.risk.map(r=>`<tr><td>${r.ruta} · ${r.region}/${r.ciudad}</td><td>${fpp(r.brecha)}</td></tr>`).join("")}</tbody></table>`:""}
+    <div class="op-foot">Cadence: ${GOV.cadencia?esc(GOV.cadencia):"to be defined"} · Owners: ${owners.length?owners.join(" · "):"to be defined"} · Human validation: Correctness ${VAL.c1?"✔":"—"} · Context ${VAL.c2?"✔":"—"} · Consequences ${VAL.c3?"✔":"—"}<br>Javier Forero · javierforero.co</div>`:`
     <div class="op-h"><h2>Brief de comité — Cumplimiento de SLA</h2>
       <div class="op-meta">Ámbito: ${esc(scope)} · Generado: ${new Date().toLocaleDateString("es-CO",{day:"2-digit",month:"long",year:"numeric"})} · Datos hasta ${mShort(lastM())} (${freshnessDays()} días)</div></div>
     <div class="op-did">
@@ -900,17 +978,21 @@ function closeOnePager(){ document.getElementById("opModal").classList.remove("o
 /* ================= Q&A ================= */
 function buildEntities(){ ENT.regions=[...new Set(RAW_DATA.map(r=>r.region))]; ENT.tipos=[...new Set(RAW_DATA.map(r=>r.tipo_cliente))]; }
 function resolveMonths(n){
-  const qmap={1:["ene","feb","mar"],2:["abr","may","jun"],3:["jul","ago","sep"],4:["oct","nov","dic"]};const ord={primer:1,segundo:2,tercer:3,cuarto:4};
+  const qmap={1:["ene","feb","mar"],2:["abr","may","jun"],3:["jul","ago","sep"],4:["oct","nov","dic"]};const ord={primer:1,segundo:2,tercer:3,cuarto:4},ordEN={first:1,second:2,third:3,fourth:4};
   let qn=null,yr=null; const mq=n.match(/q\s?([1-4])/); if(mq)qn=+mq[1];
   if(n.includes("trimestre")){for(const k in ord)if(n.includes(k))qn=ord[k];}
+  if(/\bquarter\b/.test(n)){for(const k in ordEN)if(n.includes(k))qn=ordEN[k];}
   const my=n.match(/(20\d{2})/); if(my)yr=my[1];
   if(qn){const cand=yr?[yr]:yearsIn().map(String).reverse();
     for(const y of cand){const list=qmap[qn].map(m=>m+"_"+y).filter(c=>MONTHS.includes(c));if(list.length)return{list,label:"Q"+qn+" "+y};}}
-  if(n.includes("trimestre"))return{list:lastQ(),label:"último trimestre ("+lastQLbl()+")"};
+  if(n.includes("trimestre")||(/\bquarter\b/.test(n)&&!/\bnext quarter\b/.test(n)))return{list:lastQ(),label:L("último trimestre","the last quarter")+" ("+lastQLbl()+")"};
   for(const name in MNAME)if(n.includes(name)){const cand=yr?[yr]:yearsIn().map(String).reverse();
     for(const y of cand){const c=MNAME[name]+"_"+y;if(MONTHS.includes(c))return{list:[c],label:mLong(c)};}}
+  for(const name in MNAME_EN)if(n.includes(name)){const cand=yr?[yr]:yearsIn().map(String).reverse();
+    for(const y of cand){const c=MNAME_EN[name]+"_"+y;if(MONTHS.includes(c))return{list:[c],label:mLong(c)};}}
   const mc=n.match(/\b(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)[_ ]?(20\d{2})\b/); if(mc){const c=mc[1]+"_"+mc[2];if(MONTHS.includes(c))return{list:[c],label:mLong(c)};}
-  if(n.includes("ultimo mes")||n.includes("mes pasado"))return{list:[lastM()],label:"último mes ("+mShort(lastM())+")"};
+  const me=n.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[ _\-]?(20\d{2})\b/); if(me){const ab={jan:"ene",apr:"abr",aug:"ago",dec:"dic"};const c=(ab[me[1]]||me[1])+"_"+me[2];if(MONTHS.includes(c))return{list:[c],label:mLong(c)};}
+  if(n.includes("ultimo mes")||n.includes("mes pasado")||/\b(last|latest|previous) month\b/.test(n))return{list:[lastM()],label:L("último mes","the latest month")+" ("+mShort(lastM())+")"};
   return null;
 }
 function projectSeries(base){
@@ -920,52 +1002,59 @@ function projectSeries(base){
   return {slope:+slope.toFixed(2),proj:[1,2,3].map(k=>+(slope*(last+k)+inter).toFixed(1)),pts:pts.length};
 }
 function computeAnswer(q){
-  const n=norm(q);
-  const regs=ENT.regions.filter(r=>n.includes(norm(r))), tipos=ENT.tipos.filter(t=>n.includes(norm(t))), months=resolveMonths(n);
+  const n=norm(q), en=isEN();
+  const regs=ENT.regions.filter(r=>n.includes(norm(r))), tipos=ENT.tipos.filter(t=>n.includes(norm(t))||(TIPO_EN[t]&&TIPO_EN[t]!==t&&new RegExp("\\b"+norm(TIPO_EN[t])).test(n))), months=resolveMonths(n);
   let base=RAW_DATA.slice(); const lbl=[];
-  if(regs.length){base=base.filter(r=>regs.includes(r.region));lbl.push(regs.join(" y "));}
-  if(tipos.length){base=base.filter(r=>tipos.includes(r.tipo_cliente));lbl.push("cliente "+tipos.join(" y "));}
+  if(regs.length){base=base.filter(r=>regs.includes(r.region));lbl.push(regs.join(en?" and ":" y "));}
+  if(tipos.length){base=base.filter(r=>tipos.includes(r.tipo_cliente));lbl.push(en?tipos.map(tipoL).join(" and ")+" customers":"cliente "+tipos.join(" y "));}
   let scopeRows=base,mLbl=""; if(months){scopeRows=base.filter(r=>months.list.includes(r.mes));mLbl=months.label;lbl.push(mLbl);}
-  const scope=lbl.length?lbl.join(" · "):"todo el portafolio ("+mShort(MONTHS[0])+"–"+mShort(lastM())+")";
-  const isCompare=/(compar|versus| vs | vs\.|diferencia entre)/.test(n)&&(regs.length>=2||tipos.length>=2);
-  const isCount=/(cuant|numero|cuenta|rutas? en (breach|riesgo|incumpl))/.test(n);
-  const isWB=/(peor|mejor|top|ranking|mas baj|mas alt|critic)/.test(n);
-  const isProj=/(proyec|pronost|forecast|q2|siguiente trimestre|proxim|se ve.*q2)/.test(n);
-  const isBreak=/(quiebre|caida|cayo|que paso|drop|desplome|bajon)/.test(n);
+  const scope=lbl.length?lbl.join(" · "):(en?"the whole portfolio (":"todo el portafolio (")+mShort(MONTHS[0])+"–"+mShort(lastM())+")";
+  const isCompare=/(compar|versus| vs | vs\.|diferencia entre|difference between)/.test(n)&&(regs.length>=2||tipos.length>=2);
+  const isCount=/(cuant|numero|cuenta|rutas? en (breach|riesgo|incumpl)|how many|number of|\bcount\b|routes? in (severe )?breach)/.test(n);
+  const isWB=/(peor|mejor|top|ranking|mas baj|mas alt|critic|worst|best|lowest|highest|weakest|strongest)/.test(n);
+  const isProj=/(proyec|pronost|forecast|q2|siguiente trimestre|proxim|se ve.*q2|project|predict|outlook|next quarter|next month)/.test(n);
+  const isBreak=/(quiebre|caida|cayo|que paso|drop|desplome|bajon|break|what happened|fell|decline|plunge)/.test(n);
   if(isCompare){const keys=regs.length>=2?regs:tipos,field=regs.length>=2?"region":"tipo_cliente";
     const it=keys.map(k=>{let rr=RAW_DATA.filter(r=>r[field]===k);if(months)rr=rr.filter(r=>months.list.includes(r.mes));return{k,cu:avg(rr.map(r=>r.cumplimiento_pct)),br:avg(rr.map(r=>r.brecha_pp))};}).sort((a,b)=>b.cu-a.cu);
     const diff=it[0].cu-it[it.length-1].cu;
+    if(en)return {scope,text:`In ${mLbl||"the whole period"}, ${it.map(x=>`<b>${tipoL(x.k)}</b> ${fpct(x.cu)}`).join(" vs. ")}. A difference of <b>${diff.toFixed(1)} pp</b>, with ${tipoL(it[0].k)} ahead.`,support:it.map(x=>[tipoL(x.k)+" · compliance",fpct(x.cu)]).concat(it.map(x=>[tipoL(x.k)+" · gap",fpp(x.br)]))};
     return {scope,text:`En ${mLbl||"todo el periodo"}, ${it.map(x=>`<b>${x.k}</b> ${fpct(x.cu)}`).join(" vs. ")}. Diferencia de <b>${diff.toFixed(1)} pp</b> a favor de ${it[0].k}.`,support:it.map(x=>[x.k+" · cumplimiento",fpct(x.cu)]).concat(it.map(x=>[x.k+" · brecha",fpp(x.br)]))};}
-  if(isCount){const mm=months?months.list:[lastM()],when=months?mLbl:"último mes ("+mShort(lastM())+")";
+  if(isCount){const mm=months?months.list:[lastM()],when=months?mLbl:(en?"the latest month (":"último mes (")+mShort(lastM())+")";
     const rws=base.filter(r=>mm.includes(r.mes));const byR={};rws.forEach(r=>{(byR[r.ruta]=byR[r.ruta]||[]).push(r.brecha_pp);});
     const arr=Object.entries(byR).map(([k,v])=>({k,b:avg(v)})),under=arr.filter(o=>o.b<0).length,sev=arr.filter(o=>o.b<-5).length,tot=arr.length;
+    if(en)return {scope,text:`In ${when}, of ${tot} route(s), <b>${sev}</b> are in severe breach (&lt; −5 pp) and <b>${under}</b> are below target.`,support:[["Routes in scope",tot],["Severe breach (< −5 pp)",sev],["Below target (< 0)",under],["% severe breach",tot?(sev/tot*100).toFixed(0)+"%":"N/A"]],did:[`${sev} of ${tot} routes in severe breach in ${when}.`,`Broad exposure: it isn't a single route.`,`Prioritize contingency by severity; assign an owner per route.`]};
     return {scope,text:`En ${when}, de ${tot} ruta(s), <b>${sev}</b> en breach severo (&lt; −5 pp) y <b>${under}</b> bajo su meta.`,support:[["Rutas en ámbito",tot],["Breach severo (< −5 pp)",sev],["Bajo objetivo (< 0)",under],["% breach severo",tot?(sev/tot*100).toFixed(0)+"%":"N/D"]],did:[`${sev} de ${tot} rutas en breach severo en ${when}.`,`Exposición amplia: no es una sola ruta.`,`Priorizar contingencia por severidad; asignar dueño por ruta.`]};}
-  if(isWB){const wr=/ruta/.test(n),key=wr?"ruta":"region",g={};scopeRows.forEach(r=>{(g[r[key]]=g[r[key]]||[]).push(r.cumplimiento_pct);});
+  if(isWB){const wr=/(ruta|route)/.test(n),key=wr?"ruta":"region",g={};scopeRows.forEach(r=>{(g[r[key]]=g[r[key]]||[]).push(r.cumplimiento_pct);});
     let arr=Object.entries(g).map(([k,v])=>({k,cu:avg(v)})).sort((a,b)=>a.cu-b.cu);const w=arr[0],b=arr[arr.length-1];
-    return {scope,text:`En ${mLbl||"todo el periodo"}, ${wr?"la ruta":"la región"} con menor cumplimiento es <b>${w.k}</b> (${fpct(w.cu)}) y la mejor <b>${b.k}</b> (${fpct(b.cu)}).`,support:[["Peor "+key,w.k+" ("+fpct(w.cu)+")"],["Mejor "+key,b.k+" ("+fpct(b.cu)+")"],["Brecha",(b.cu-w.cu).toFixed(1)+" pp"]],did:[`${w.k} es el punto más débil (${fpct(w.cu)}).`,`Posible shock sistémico + debilidad estructural.`,`Diagnóstico focalizado en ${w.k} antes de escalar.`]};}
-  if(isProj){const pr=projectSeries(base);if(!pr)return{scope,text:`No hay suficientes meses post-quiebre para proyectar.`,support:[["Puntos post-quiebre","< 2"]]};
+    if(en)return {scope,text:`In ${mLbl||"the whole period"}, the ${wr?"route":"region"} with the lowest compliance is <b>${w.k}</b> (${fpct(w.cu)}) and the best is <b>${b.k}</b> (${fpct(b.cu)}).`,support:[["Worst "+(wr?"route":"region"),w.k+" ("+fpct(w.cu)+")"],["Best "+(wr?"route":"region"),b.k+" ("+fpct(b.cu)+")"],["Gap",(b.cu-w.cu).toFixed(1)+" pp"]],did:[`${w.k} is the weakest point (${fpct(w.cu)}).`,`A possible systemic shock + a structural weakness.`,`A focused diagnosis on ${w.k} before escalating.`]};
+    return {scope,text:`En ${mLbl||"todo el periodo"}, ${wr?"la ruta":"la región"} con menor cumplimiento es <b>${w.k}</b> (${fpct(w.cu)}) y la mejor <b>${b.k}</b> (${fpct(b.cu)}).`,support:[["Peor "+(wr?"ruta":"región"),w.k+" ("+fpct(w.cu)+")"],["Mejor "+(wr?"ruta":"región"),b.k+" ("+fpct(b.cu)+")"],["Brecha",(b.cu-w.cu).toFixed(1)+" pp"]],did:[`${w.k} es el punto más débil (${fpct(w.cu)}).`,`Posible shock sistémico + debilidad estructural.`,`Diagnóstico focalizado en ${w.k} antes de escalar.`]};}
+  if(isProj){const pr=projectSeries(base);if(!pr)return en?{scope,text:`There aren't enough post-breakpoint months to project.`,support:[["Post-breakpoint points","< 2"]]}:{scope,text:`No hay suficientes meses post-quiebre para proyectar.`,support:[["Puntos post-quiebre","< 2"]]};
+    if(en)return {scope,text:`With the post-breakpoint trend (${pr.slope>=0?"+":""}${pr.slope} pp/month), ${nextQLbl()} lands at ~<b>${Math.min(...pr.proj)}–${Math.max(...pr.proj)}%</b>. Without intervention, it won't recover on its own.`,support:[[mShort(nextMonths(3)[0]),pr.proj[0]+"%"],[mShort(nextMonths(3)[1]),pr.proj[1]+"%"],[mShort(nextMonths(3)[2]),pr.proj[2]+"%"],["Slope",pr.slope+" pp/month"],["Points",pr.pts+" (fragile)"]],did:[`${nextQLbl()} base ≈ ${Math.min(...pr.proj)}–${Math.max(...pr.proj)}%.`,`The drop has stabilized; it isn't reversing.`,`Define an intervention with a recovery target.`]};
     return {scope,text:`Con la tendencia post-quiebre (${pr.slope>=0?"+":""}${pr.slope} pp/mes), ${nextQLbl()} se ubica ~<b>${Math.min(...pr.proj)}–${Math.max(...pr.proj)}%</b>. Sin intervención, no se recupera solo.`,support:[[mShort(nextMonths(3)[0]),pr.proj[0]+"%"],[mShort(nextMonths(3)[1]),pr.proj[1]+"%"],[mShort(nextMonths(3)[2]),pr.proj[2]+"%"],["Pendiente",pr.slope+" pp/mes"],["Puntos",pr.pts+" (frágil)"]],did:[`${nextQLbl()} base ≈ ${Math.min(...pr.proj)}–${Math.max(...pr.proj)}%.`,`La caída se estabilizó, no se revierte.`,`Definir intervención con meta de recuperación.`]};}
   if(isBreak){
-    if(!BREAK)return {scope,text:`No se detecta un <b>quiebre sistémico</b> (caída ≥3 pp de un mes al siguiente a nivel portafolio) en los datos cargados. El monitoreo sigue activo: si aparece, este panel lo señalará.`,support:[["Quiebre","no detectado"]]};
+    if(!BREAK)return en?{scope,text:`No <b>systemic breakpoint</b> (a drop of ≥3 pp from one month to the next at portfolio level) is detected in the loaded data. Monitoring stays on: if one appears, this panel will flag it.`,support:[["Breakpoint","not detected"]]}:{scope,text:`No se detecta un <b>quiebre sistémico</b> (caída ≥3 pp de un mes al siguiente a nivel portafolio) en los datos cargados. El monitoreo sigue activo: si aparece, este panel lo señalará.`,support:[["Quiebre","no detectado"]]};
     const bP=prevM(BREAK), dic=avg(base.filter(r=>r.mes===bP).map(r=>r.cumplimiento_pct)),ene=avg(base.filter(r=>r.mes===BREAK).map(r=>r.cumplimiento_pct));
     const bi=bkIdx(), preL=MONTHS.slice(0,bi), postL=MONTHS.slice(bi);
     const p25=avg(base.filter(r=>preL.includes(r.mes)).map(r=>r.cumplimiento_pct)),q1=avg(base.filter(r=>postL.includes(r.mes)).map(r=>r.cumplimiento_pct));
     const cliff=(dic!=null&&ene!=null)?ene-dic:null;
-    return {scope,text:`El quiebre es en <b>${mLong(BREAK)}</b>: de ${fpct(dic)} a ${fpct(ene)} (<b>${fpp(cliff)}</b> en un mes). ${scope} pasó de ${fpct(p25)} (pre-quiebre) a ${fpct(q1)} (post-quiebre). Causa única probable, a validar en Diagnóstico.`,support:[[mShort(bP),fpct(dic)],[mShort(BREAK),fpct(ene)],["Salto",fpp(cliff)],["Promedio pre-quiebre",fpct(p25)],["Promedio post-quiebre",fpct(q1)]]};}
+    const bl=lbl.slice(0,months?lbl.length-1:lbl.length), subj0=bl.length?bl.join(" · "):(en?"the portfolio":"el portafolio"), subj=subj0.charAt(0).toUpperCase()+subj0.slice(1);
+    if(en)return {scope,text:`The breakpoint is in <b>${mLong(BREAK)}</b>: from ${fpct(dic)} to ${fpct(ene)} (<b>${fpp(cliff)}</b> in one month). ${subj} went from ${fpct(p25)} (pre-breakpoint) to ${fpct(q1)} (post-breakpoint). A single cause is likely, to be validated in Diagnosis.`,support:[[mShort(bP),fpct(dic)],[mShort(BREAK),fpct(ene)],["Jump",fpp(cliff)],["Pre-breakpoint average",fpct(p25)],["Post-breakpoint average",fpct(q1)]]};
+    return {scope,text:`El quiebre es en <b>${mLong(BREAK)}</b>: de ${fpct(dic)} a ${fpct(ene)} (<b>${fpp(cliff)}</b> en un mes). ${subj} pasó de ${fpct(p25)} (pre-quiebre) a ${fpct(q1)} (post-quiebre). Causa única probable, a validar en Diagnóstico.`,support:[[mShort(bP),fpct(dic)],[mShort(BREAK),fpct(ene)],["Salto",fpp(cliff)],["Promedio pre-quiebre",fpct(p25)],["Promedio post-quiebre",fpct(q1)]]};}
   const cu=avg(scopeRows.map(r=>r.cumplimiento_pct)),br=avg(scopeRows.map(r=>r.brecha_pp)),nrt=[...new Set(scopeRows.map(r=>r.ruta))].length;
+  if(en)return {scope,text:`Average compliance for ${scope} is <b>${fpct(cu)}</b>, with a gap of <b>${fpp(br)}</b> against the SLA${br!=null&&br<0?" (below target)":""}.`,support:[["Average compliance",fpct(cu)],["Average gap",fpp(br)],["Routes in scope",nrt],["Rows",scopeRows.length]]};
   return {scope,text:`El cumplimiento promedio de ${scope} es <b>${fpct(cu)}</b>, con brecha <b>${fpp(br)}</b> frente al SLA${br!=null&&br<0?" (bajo la meta)":""}.`,support:[["Cumplimiento promedio",fpct(cu)],["Brecha promedio",fpp(br)],["Rutas en ámbito",nrt],["Filas",scopeRows.length]]};
 }
-function qaSupportHTML(res){return `<div class="qa-support"><h4>Soporte de datos · ${res.scope}</h4><ul>${res.support.map(s=>`<li><span>${s[0]}</span><b>${s[1]}</b></li>`).join("")}</ul>${res.did?`<div class="qa-did"><b>DATA</b> ${res.did[0]}<br><b>IDEA</b> ${res.did[1]}<br><b>DECISIÓN</b> ${res.did[2]}</div>`:""}</div>`;}
-function renderAnswer(res,mode){document.getElementById("qaAnswer").innerHTML=TH(`<div class="qa-mode ${mode==='ia'?'ia':'local'}">${mode==='ia'?'Respuesta asistida por IA generativa · cifras verificadas localmente':'Respuesta local · verificada sobre tus datos'}</div><div class="qa-text">${res.llmText?res.llmText.replace(/\n/g,"<br>"):res.text}</div>`+qaSupportHTML(res));}
+function qaSupportHTML(res){return `<div class="qa-support"><h4>${L("Soporte de datos","Data support")} · ${res.scope}</h4><ul>${res.support.map(s=>`<li><span>${s[0]}</span><b>${s[1]}</b></li>`).join("")}</ul>${res.did?`<div class="qa-did"><b>DATA</b> ${res.did[0]}<br><b>IDEA</b> ${res.did[1]}<br><b>${L("DECISIÓN","DECISION")}</b> ${res.did[2]}</div>`:""}</div>`;}
+function renderAnswer(res,mode){document.getElementById("qaAnswer").innerHTML=TH(`<div class="qa-mode ${mode==='ia'?'ia':'local'}">${mode==='ia'?L('Respuesta asistida por IA generativa · cifras verificadas localmente','Answer drafted by generative AI · figures verified locally'):L('Respuesta local · verificada sobre tus datos','Local answer · verified on your data')}</div><div class="qa-text">${res.llmText?res.llmText.replace(/\n/g,"<br>"):res.text}</div>`+qaSupportHTML(res));}
 function withTimeout(p,ms){return Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);}
 async function askLLM(q,res){
   const payload={model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:
-    "Eres analista senior de operaciones logísticas B2B. Responde SOLO con base en los HECHOS ya calculados; no inventes ni recalcules cifras. Si no bastan, dilo.\n\nPREGUNTA: "+q+"\n\nÁMBITO: "+res.scope+"\n\nHECHOS:\n"+res.support.map(s=>"- "+s[0]+": "+s[1]).join("\n")+"\n\nCONTEXTO: "+(BREAK?"quiebre sistémico detectado en "+mLong(BREAK)+".":"sin quiebre sistémico detectado en el periodo.")+"\n\nResponde en español en 2 a 4 frases para comité y cierra con: DATA -> IDEA -> DECISIÓN."}]};
+    isEN()?"You are a senior B2B logistics operations analyst. Answer ONLY from the FACTS already computed; do not invent or recompute figures. If they are not enough, say so.\n\nQUESTION: "+q+"\n\nSCOPE: "+res.scope+"\n\nFACTS:\n"+res.support.map(s=>"- "+s[0]+": "+s[1]).join("\n")+"\n\nCONTEXT: "+(BREAK?"systemic breakpoint detected in "+mLong(BREAK)+".":"no systemic breakpoint detected in the period.")+"\n\nAnswer in English in 2 to 4 sentences for a committee and close with: DATA -> IDEA -> DECISION.":"Eres analista senior de operaciones logísticas B2B. Responde SOLO con base en los HECHOS ya calculados; no inventes ni recalcules cifras. Si no bastan, dilo.\n\nPREGUNTA: "+q+"\n\nÁMBITO: "+res.scope+"\n\nHECHOS:\n"+res.support.map(s=>"- "+s[0]+": "+s[1]).join("\n")+"\n\nCONTEXTO: "+(BREAK?"quiebre sistémico detectado en "+mLong(BREAK)+".":"sin quiebre sistémico detectado en el periodo.")+"\n\nResponde en español en 2 a 4 frases para comité y cierra con: DATA -> IDEA -> DECISIÓN."}]};
   const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
   if(!r.ok)throw new Error("http "+r.status);const d=await r.json();const t=(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();if(!t)throw new Error("empty");return t;
 }
-async function onAsk(){const q=document.getElementById("qaInput").value.trim();if(!q)return;const res=computeAnswer(q);res.llmText=null;renderAnswer(res,'local');
-  const ans=document.getElementById("qaAnswer");const t=document.createElement("div");t.className="qa-thinking";t.textContent=TH("Consultando IA generativa… (si no hay conexión, se mantiene la respuesta local).");ans.appendChild(t);
+async function onAsk(){const q=document.getElementById("qaInput").value.trim();if(!q)return;LAST_Q=q;const res=computeAnswer(q);res.llmText=null;renderAnswer(res,'local');if(!LLM_OK)return;
+  const ans=document.getElementById("qaAnswer");const t=document.createElement("div");t.className="qa-thinking";t.textContent=TH(L("Consultando IA generativa… (si no hay conexión, se mantiene la respuesta local).","Asking generative AI… (without a connection, the local answer stays)."));ans.appendChild(t);
   try{const txt=await withTimeout(askLLM(q,res),14000);res.llmText=txt;renderAnswer(res,'ia');}catch(e){const el=ans.querySelector(".qa-thinking");if(el)el.remove();}}
 function setQ(t){document.getElementById("qaInput").value=t;onAsk();}
 
@@ -973,30 +1062,31 @@ function setQ(t){document.getElementById("qaInput").value=t;onAsk();}
 function showTab(id){
   document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id));
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
-  if(typeof Plotly!=="undefined"&&LAST_M){ if(id==="tab-eficiencia")renderEficiencia(LAST_M); if(id==="tab-prediccion")renderPrediccion(LAST_M); }
+  if(typeof Plotly!=="undefined"&&LAST_M){ if(id==="tab-eficiencia")renderEficiencia(LAST_M); if(id==="tab-prediccion")renderPrediccion(LAST_M);
+    const pe=document.getElementById(id==="tab-eficiencia"?"plotEficiencia":id==="tab-prediccion"?"plotPrediccion":"_"); if(pe&&pe.data){try{Plotly.Plots.resize(pe);}catch(e){}} }
 }
 
 /* ---------- Orquestación ---------- */
 function renderAll(){
   const M=metrics(); LAST_M=M;
-  document.getElementById("chip-periodo").textContent=TH("Periodo: "+mShort(state.desde)+" → "+mShort(state.hasta));
-  document.getElementById("chip-rutas").textContent=TH([...new Set(M.sub.map(r=>r.ruta))].length+" rutas · "+M.sub.length+" filas");
-  const _ch=document.getElementById("chip-hasta"); if(_ch)_ch.textContent=TH("Datos hasta: "+mShort(lastM()));
+  document.getElementById("chip-periodo").textContent=TH(L("Periodo: ","Period: ")+mShort(state.desde)+" → "+mShort(state.hasta));
+  document.getElementById("chip-rutas").textContent=TH([...new Set(M.sub.map(r=>r.ruta))].length+L(" rutas · "," routes · ")+M.sub.length+L(" filas"," rows"));
+  const _ch=document.getElementById("chip-hasta"); if(_ch)_ch.textContent=TH(L("Datos hasta: ","Data through: ")+mShort(lastM()));
   renderSource();
-  const _dT=document.getElementById("diagTitle"); if(_dT)_dT.textContent=TH("Diagnóstico del quiebre"+(BREAK?" · "+mShort(BREAK):" · sin quiebre detectado"));
+  const _dT=document.getElementById("diagTitle"); if(_dT)_dT.textContent=TH(L("Diagnóstico del quiebre","Breakpoint diagnosis")+(BREAK?" · "+mShort(BREAK):L(" · sin quiebre detectado"," · no breakpoint detected")));
   renderAlerts(M); renderKPIs(M); renderNarratives(M); renderRiesgo(M); renderDiagFacts(M);
   if(typeof Plotly!=="undefined"){ renderEficiencia(M); renderPrediccion(M); } else chartsPending();
 }
-function chartsPending(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;">Cargando librería de gráficos…</p>');});}
+function chartsPending(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;">'+L("Cargando librería de gráficos…","Loading the charting library…")+'</p>');});}
 
 /* ---------- Init ---------- */
 function opt(v,t){const o=document.createElement("option");o.value=v;o.textContent=TH(t||v);return o;}
 function rebuildFilters(){
   ["fRegion","fTipo","fDesde","fHasta"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=TH("");});
   const regs=[...new Set(RAW_DATA.map(r=>r.region))].sort(), tipos=[...new Set(RAW_DATA.map(r=>r.tipo_cliente))].sort();
-  const R=document.getElementById("fRegion");R.appendChild(opt("Todas"));regs.forEach(x=>R.appendChild(opt(x)));
-  const T=document.getElementById("fTipo");T.appendChild(opt("Todos"));tipos.forEach(x=>T.appendChild(opt(x)));
-  const D=document.getElementById("fDesde"),H=document.getElementById("fHasta");MONTHS.forEach(m=>{D.appendChild(opt(m,mShort(m)));H.appendChild(opt(m,mShort(m)));});D.value=state.desde;H.value=state.hasta;
+  const R=document.getElementById("fRegion");R.appendChild(opt("Todas",L("Todas","All regions")));regs.forEach(x=>R.appendChild(opt(x)));
+  const T=document.getElementById("fTipo");T.appendChild(opt("Todos",L("Todos","All customers")));tipos.forEach(x=>T.appendChild(opt(x,tipoL(x))));
+  const D=document.getElementById("fDesde"),H=document.getElementById("fHasta");MONTHS.forEach(m=>{D.appendChild(opt(m,mShort(m)));H.appendChild(opt(m,mShort(m)));});D.value=state.desde;H.value=state.hasta;R.value=state.region;T.value=state.tipo;
   R.onchange=e=>{state.region=e.target.value;renderAll();};T.onchange=e=>{state.tipo=e.target.value;renderAll();};
   D.onchange=e=>{state.desde=e.target.value;if(MONTHS.indexOf(state.desde)>MONTHS.indexOf(state.hasta)){state.hasta=state.desde;H.value=state.hasta;}renderAll();};
   H.onchange=e=>{state.hasta=e.target.value;if(MONTHS.indexOf(state.hasta)<MONTHS.indexOf(state.desde)){state.desde=state.hasta;D.value=state.desde;}renderAll();};
@@ -1006,13 +1096,13 @@ function buildQAChips(){
   const qc=document.getElementById("qaChips"); if(qc)qc.innerHTML=TH("");
   const worstNow=(()=>{const g={};RAW_DATA.filter(r=>lastQ().includes(r.mes)).forEach(r=>{(g[r.region]=g[r.region]||[]).push(r.cumplimiento_pct);});return Object.entries(g).map(([k,v])=>({k,cu:avg(v)})).sort((a,b)=>a.cu-b.cu)[0].k;})();
   const tw=ENT.tipos.slice(0,2);
-  [`¿Cuál es la peor región en ${lastQLbl()}?`,`¿Cuántas rutas están en breach severo?`,tw.length>=2?`Compara ${tw[0]} vs ${tw[1]}`:`¿Cómo va ${ENT.regions[0]}?`,BREAK?`¿Qué pasó en ${mLong(BREAK)}?`:`¿Hay algún quiebre en la serie?`,`¿Cómo se ve la proyección para ${nextQLbl()}?`,`¿Cómo va ${worstNow}?`].forEach(c=>{const b=document.createElement("button");b.className="qa-chip";b.textContent=TH(c);b.onclick=()=>setQ(c);document.getElementById("qaChips").appendChild(b);});
+  (isEN()?[`Which was the worst region in ${lastQLbl()}?`,`How many routes are in severe breach?`,tw.length>=2?`Compare ${tipoL(tw[0])} vs ${tipoL(tw[1])}`:`How is ${ENT.regions[0]} doing?`,BREAK?`What happened in ${mLong(BREAK)}?`:`Is there a breakpoint in the series?`,`What does the projection look like for ${nextQLbl()}?`,`How is ${worstNow} doing?`]:[`¿Cuál es la peor región en ${lastQLbl()}?`,`¿Cuántas rutas están en breach severo?`,tw.length>=2?`Compara ${tw[0]} vs ${tw[1]}`:`¿Cómo va ${ENT.regions[0]}?`,BREAK?`¿Qué pasó en ${mLong(BREAK)}?`:`¿Hay algún quiebre en la serie?`,`¿Cómo se ve la proyección para ${nextQLbl()}?`,`¿Cómo va ${worstNow}?`]).forEach(c=>{const b=document.createElement("button");b.className="qa-chip";b.textContent=TH(c);b.onclick=()=>setQ(c);document.getElementById("qaChips").appendChild(b);});
 }
 function init(){
   try{const u=JSON.parse(safeStore.get("jf-sla-userdata")||"null");if(u&&u.rows&&u.rows.length){RAW_DATA=u.rows;CURSRC={name:u.name||"archivo",src:"user"};}}catch(e){}
   deriveStructure(); state.desde=MONTHS[0]; state.hasta=lastM();
   buildEntities(); initTheme();
-  document.getElementById("chip-gen").textContent=TH("Vista generada: "+new Date().toLocaleDateString("es-CO",{day:"2-digit",month:"short",year:"numeric"}));
+  syncGovDefaults(); setGenChip();
   rebuildFilters();
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
   document.getElementById("themeToggle").onclick=toggleTheme;
@@ -1034,21 +1124,35 @@ function init(){
   renderAll();
   renderGobernanza(); renderDiagCauses(); renderDiagVerdict(); refreshValidation();
   wireDataTab();
+  __inited=true;
   ensurePlotly(renderAll);
+}
+function setGenChip(){const el=document.getElementById("chip-gen");if(el)el.textContent=TH(L("Vista generada: ","View generated: ")+new Date().toLocaleDateString(L("es-CO","en-US"),{day:"2-digit",month:"short",year:"numeric"}));}
+/* Al cambiar de idioma se vuelve a pintar todo lo dinámico, conservando filtros, gobernanza y la última pregunta */
+function rerenderAll(){
+  if(!__inited)return;
+  syncGovDefaults(); setGenChip();
+  rebuildFilters(); buildQAChips();
+  renderAll(); renderGobernanza(); renderDiagCauses(); renderDiagVerdict();
+  applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light");
+  if(LAST_UPREP)upReport(LAST_UPREP);
+  if(LAST_Q){const res=computeAnswer(LAST_Q);res.llmText=null;renderAnswer(res,'local');}
+  const op=document.getElementById("opModal"); if(op&&op.classList.contains("open"))openOnePager();
 }
 function ensurePlotly(cb){
   if(typeof Plotly!=="undefined"){cb();return;}
   const cdns=["https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js","https://cdn.plot.ly/plotly-2.35.2.min.js","https://unpkg.com/plotly.js@2.35.2/dist/plotly.min.js"];
   (function next(i){if(typeof Plotly!=="undefined"){cb();return;}if(i>=cdns.length){plotlyFailed();return;}const s=document.createElement("script");s.src=cdns[i];s.onload=()=>(typeof Plotly!=="undefined")?cb():next(i+1);s.onerror=()=>next(i+1);document.head.appendChild(s);})(0);
 }
-function plotlyFailed(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#b45309;font-size:.85rem;padding:22px;text-align:center;">No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.</p>');});}
+function plotlyFailed(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#b45309;font-size:.85rem;padding:22px;text-align:center;">'+L("No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.","The charting library could not be loaded. The rest of the dashboard (KPIs, narrative, risk, diagnosis, governance and local Q&A) works offline.")+'</p>');});}
 
 const safeStore=(()=>{const mem={};let ok=false;try{const k='__jf__';localStorage.setItem(k,'1');localStorage.removeItem(k);ok=true;}catch(e){}return{get:k=>{try{return ok?localStorage.getItem(k):(k in mem?mem[k]:null);}catch(e){return k in mem?mem[k]:null;}},set:(k,v)=>{try{ok?localStorage.setItem(k,v):(mem[k]=v);}catch(e){mem[k]=v;}},del:k=>{try{ok?localStorage.removeItem(k):(delete mem[k]);}catch(e){delete mem[k];}}};})();
-function applyTheme(t){document.documentElement.setAttribute("data-theme",t);const b=document.getElementById("themeToggle");if(b){b.textContent=TH(t==="dark"?"☀️":"🌙");b.setAttribute("aria-pressed",String(t==="dark"));b.setAttribute("aria-label",t==="dark"?"Cambiar a tema claro":"Cambiar a tema oscuro");}}
+function applyTheme(t){document.documentElement.setAttribute("data-theme",t);const b=document.getElementById("themeToggle");if(b){b.textContent=TH(t==="dark"?"☀️":"🌙");b.setAttribute("aria-pressed",String(t==="dark"));b.setAttribute("aria-label",t==="dark"?L("Cambiar a tema claro","Switch to light theme"):L("Cambiar a tema oscuro","Switch to dark theme"));}}
 function initTheme(){let t=safeStore.get("jf-theme");if(!t)t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";applyTheme(t);}
 function toggleTheme(){const cur=document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light";const nxt=cur==="dark"?"light":"dark";applyTheme(nxt);safeStore.set("jf-theme",nxt);}
 /* ================= Mis datos (carga de usuario) ================= */
 const MABBR_U=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const MABBR_EN_U=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
 function uNormH(s){return (s||"").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");}
 function uToNum(v){ if(v==null)return null; if(typeof v==="number")return isFinite(v)?v:null;
   let t=v.toString().trim().replace(/%/g,"").replace(/\s/g,""); if(t==="")return null;
@@ -1060,6 +1164,7 @@ function uToNum(v){ if(v==null)return null; if(typeof v==="number")return isFini
 function uParseYM(val, anio, mes){
   if(anio!=null&&mes!=null){ const y=parseInt(uToNum(anio)); let mm=mes.toString().trim().toLowerCase();
     let mi=MABBR_U.indexOf(mm.slice(0,3).normalize("NFD").replace(/[\u0300-\u036f]/g,""));
+    if(mi<0)mi=MABBR_EN_U.indexOf(mm.slice(0,3));
     if(mi<0){const mn=parseInt(uToNum(mes)); if(mn>=1&&mn<=12)mi=mn-1;}
     if(mi>=0&&y)return MABBR_U[mi]+"_"+y;
   }
@@ -1069,9 +1174,10 @@ function uParseYM(val, anio, mes){
   }
   let t=val.toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   let m=t.match(/^(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)[a-z]*[ _\-\/]?(\d{4})$/); if(m)return m[1]+"_"+m[2];
+  m=t.match(/^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[ _\-\/]?(\d{4})$/); if(m)return MABBR_U[MABBR_EN_U.indexOf(m[1])]+"_"+m[2];
   m=t.match(/^(\d{4})[\-\/](\d{1,2})/); if(m){const mi=parseInt(m[2]); if(mi>=1&&mi<=12)return MABBR_U[mi-1]+"_"+m[1];}
   m=t.match(/^(\d{1,2})[\-\/](\d{1,2})[\-\/](\d{4})$/); if(m){const mi=parseInt(m[2]); if(mi>=1&&mi<=12)return MABBR_U[mi-1]+"_"+m[3];}
-  m=t.match(/^([a-z]+)[ _\-\/](\d{4})$/); if(m){const full={enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,setiembre:8,octubre:9,noviembre:10,diciembre:11};if(m[1] in full)return MABBR_U[full[m[1]]]+"_"+m[2];}
+  m=t.match(/^([a-z]+)[ _\-\/](\d{4})$/); if(m){const full={enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,setiembre:8,octubre:9,noviembre:10,diciembre:11,january:0,february:1,march:2,april:3,june:5,july:6,august:7,september:8,october:9,november:10,december:11};if(m[1] in full)return MABBR_U[full[m[1]]]+"_"+m[2];}
   const d=new Date(val); if(!isNaN(d))return MABBR_U[d.getMonth()]+"_"+d.getFullYear();
   return null;
 }
@@ -1099,25 +1205,26 @@ function buildSlaDataset(headers, rows){
   const warn=[], err=[];
   const H=name=>headers.includes(name);
   const get=(o,names)=>{for(const n of names){if(o[n]!=null&&o[n]!=="")return o[n];}return null;};
-  const hFecha=["fecha","periodo","mes_anio","month","date"].find(H);
-  const hAnio=["anio","ano","year","aa"].find(H), hMes=["mes","month_name"].find(H);
+  let hFecha=["fecha","periodo","mes_anio","month","date"].find(H);
+  const hAnio=["anio","ano","year","aa"].find(H); let hMes=["mes","month_name"].find(H);
+  if(hFecha==="month"&&hAnio&&!hMes){hMes="month";hFecha=undefined;}
   const hRuta=["ruta","route","carril","lane","servicio","id_ruta"].find(H);
-  const hCump=["cumplimiento_pct","cumplimiento","sla_pct","sla","compliance","otif","on_time_pct","porcentaje"].find(H);
-  const hTot=["entregas_totales","total_entregas","envios","pedidos","n"].find(H);
-  const hOT=["entregas_a_tiempo","a_tiempo","on_time","cumplidas","entregas_cumplidas"].find(H);
-  const hObj=["sla_objetivo_pct","objetivo","meta","target","sla_meta"].find(H);
-  const hReg=["region","zona","area"].find(H), hCiu=["ciudad_origen","ciudad","origen","city"].find(H), hTipo=["tipo_cliente","segmento","cliente","tipo"].find(H);
-  if(!hRuta)err.push("Falta la columna <b>Ruta</b> (o carril/servicio).");
-  if(!hFecha&&!(hAnio&&hMes))err.push("Falta <b>Fecha</b> (o el par <b>Anio</b> + <b>Mes</b>).");
-  if(!hCump&&!(hTot&&hOT))err.push("Falta <b>Cumplimiento_pct</b> (o el par <b>Entregas_Totales</b> + <b>Entregas_A_Tiempo</b> para derivarlo).");
+  const hCump=["cumplimiento_pct","cumplimiento","compliance_pct","sla_pct","sla","compliance","otif","on_time_pct","porcentaje"].find(H);
+  const hTot=["entregas_totales","total_entregas","total_deliveries","deliveries","envios","shipments","pedidos","orders","n"].find(H);
+  const hOT=["entregas_a_tiempo","a_tiempo","on_time_deliveries","on_time","cumplidas","entregas_cumplidas"].find(H);
+  const hObj=["sla_objetivo_pct","objetivo","meta","sla_target_pct","sla_target","target_pct","target","sla_meta"].find(H);
+  const hReg=["region","zona","area"].find(H), hCiu=["ciudad_origen","ciudad","origen","origin_city","city"].find(H), hTipo=["tipo_cliente","segmento","cliente","tipo","customer_type","client_type","segment","customer","client"].find(H);
+  if(!hRuta)err.push(M2("Falta la columna <b>Ruta</b> (o carril/servicio).","Missing the <b>Route</b> column (or lane/service)."));
+  if(!hFecha&&!(hAnio&&hMes))err.push(M2("Falta <b>Fecha</b> (o el par <b>Anio</b> + <b>Mes</b>).","Missing <b>Date</b> (or the <b>Year</b> + <b>Month</b> pair)."));
+  if(!hCump&&!(hTot&&hOT))err.push(M2("Falta <b>Cumplimiento_pct</b> (o el par <b>Entregas_Totales</b> + <b>Entregas_A_Tiempo</b> para derivarlo).","Missing <b>Compliance_pct</b> (or the <b>Total_Deliveries</b> + <b>On_Time_Deliveries</b> pair to derive it)."));
   if(err.length)return {ok:false,err,warn,rows:[]};
 
   // Heurística fracción (0–1 → ×100)
   let rawC=[]; if(hCump)rows.forEach(o=>{const v=uToNum(o[hCump]);if(v!=null)rawC.push(v);});
   const asFraction = rawC.length && Math.max(...rawC)<=1.5;
-  if(asFraction&&hCump)warn.push("Los valores de cumplimiento parecen fracciones (0–1); se multiplicaron por 100.");
-  if(!hObj)warn.push("No hay columna de objetivo; se asume <b>SLA objetivo = 95%</b>.");
-  if(!hReg)warn.push("Sin columna de región; se usa «General» para todas las filas.");
+  if(asFraction&&hCump)warn.push(M2("Los valores de cumplimiento parecen fracciones (0–1); se multiplicaron por 100.","Compliance values look like fractions (0–1); they were multiplied by 100."));
+  if(!hObj)warn.push(M2("No hay columna de objetivo; se asume <b>SLA objetivo = 95%</b>.","No target column; assuming <b>SLA target = 95%</b>."));
+  if(!hReg)warn.push(M2("Sin columna de región; se usa «General» para todas las filas.","No region column; “General” is used for every row."));
 
   const out=[]; let bad=0;
   rows.forEach(o=>{
@@ -1135,16 +1242,16 @@ function buildSlaDataset(headers, rows){
       sla_objetivo_pct:Math.round(obj*10)/10, cumplimiento_pct:Math.round(cump*10)/10,
       brecha_pp:Math.round((cump-obj)*10)/10});
   });
-  if(bad>0)warn.push(bad+" fila(s) se descartaron por fecha, ruta o cumplimiento inválidos.");
-  if(!out.length){err.push("No quedó ninguna fila válida tras la limpieza.");return {ok:false,err,warn,rows:[]};}
+  if(bad>0)warn.push(M2(bad+" fila(s) se descartaron por fecha, ruta o cumplimiento inválidos.",bad+" row(s) were dropped for an invalid date, route or compliance value."));
+  if(!out.length){err.push(M2("No quedó ninguna fila válida tras la limpieza.","No valid rows were left after cleaning."));return {ok:false,err,warn,rows:[]};}
 
   // Validaciones de continuidad y unicidad
   const months=[...new Set(out.map(r=>r.mes))].sort((a,b)=>{const ky=m=>(+m.split("_")[1])*12+MABBR_U.indexOf(m.split("_")[0]);return ky(a)-ky(b);});
-  if(months.length<6)err.push("Se requieren al menos <b>6 meses</b>; el archivo trae "+months.length+".");
+  if(months.length<6)err.push(M2("Se requieren al menos <b>6 meses</b>; el archivo trae "+months.length+".","At least <b>6 months</b> are required; the file has "+months.length+"."));
   const ky=m=>(+m.split("_")[1])*12+MABBR_U.indexOf(m.split("_")[0]);
-  for(let i=1;i<months.length;i++){ if(ky(months[i])-ky(months[i-1])!==1){err.push("Hueco temporal entre <b>"+months[i-1]+"</b> y <b>"+months[i]+"</b>: la serie del portafolio debe ser mensual continua.");break;} }
+  for(let i=1;i<months.length;i++){ if(ky(months[i])-ky(months[i-1])!==1){err.push(M2("Hueco temporal entre <b>"+months[i-1]+"</b> y <b>"+months[i]+"</b>: la serie del portafolio debe ser mensual continua.","Time gap between <b>"+months[i-1]+"</b> and <b>"+months[i]+"</b>: the portfolio series must be monthly and continuous."));break;} }
   const seen={},dups=new Set(); out.forEach(r=>{const k=r.ruta+"|"+r.mes; if(seen[k])dups.add(r.ruta); seen[k]=1;});
-  if(dups.size)err.push("Duplicados ruta+mes en: "+[...dups].slice(0,5).join(", ")+(dups.size>5?"…":"")+". Debe haber una fila por ruta y mes.");
+  if(dups.size)err.push(M2("Duplicados ruta+mes en: "+[...dups].slice(0,5).join(", ")+(dups.size>5?"…":"")+". Debe haber una fila por ruta y mes.","Duplicate route+month in: "+[...dups].slice(0,5).join(", ")+(dups.size>5?"…":"")+". There must be one row per route and month."));
   if(err.length)return {ok:false,err,warn,rows:[]};
 
   return {ok:true,err,warn,rows:out,months,nRutas:[...new Set(out.map(r=>r.ruta))].length};
@@ -1160,11 +1267,11 @@ function applyDataset(rows, name, src){
 function restoreDemo(){
   safeStore.del("jf-sla-userdata");
   applyDataset(RAW_DEMO,"Demo simulado · 38 rutas","demo");
-  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML=TH("");
+  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML=TH(""); LAST_UPREP=null;
 }
 function renderSource(){
   const el=document.getElementById("chip-fuente"); if(!el)return;
-  if(CURSRC.src==="user"){ el.style.display=""; el.innerHTML=TH("Fuente: "+esc(CURSRC.name)+" · <a href=\"#\" id=\"lnkDemoBack\" style=\"color:inherit;text-decoration:underline;\">volver al demo</a>");
+  if(CURSRC.src==="user"){ el.style.display=""; el.innerHTML=TH(L("Fuente: ","Source: ")+esc(CURSRC.name)+" · <a href=\"#\" id=\"lnkDemoBack\" style=\"color:inherit;text-decoration:underline;\">"+L("volver al demo","back to the demo")+"</a>");
     const l=document.getElementById("lnkDemoBack"); if(l)l.onclick=e=>{e.preventDefault();restoreDemo();};
   } else { el.style.display="none"; el.textContent=TH(""); }
 }
@@ -1172,10 +1279,11 @@ function renderSource(){
 function keyToLabel(m){return m;} // clave ya es abr_2025
 function toCsvSla(rows){
   const cols=["ruta","mes","region","ciudad_origen","tipo_cliente","sla_objetivo_pct","cumplimiento_pct","brecha_pp"];
-  const head=["Ruta","Fecha","Region","Ciudad_Origen","Tipo_Cliente","SLA_Objetivo_pct","Cumplimiento_pct","Brecha_pp"];
+  const head=isEN()?["Route","Date","Region","Origin_City","Customer_Type","SLA_Target_pct","Compliance_pct","Gap_pp"]:["Ruta","Fecha","Region","Ciudad_Origen","Tipo_Cliente","SLA_Objetivo_pct","Cumplimiento_pct","Brecha_pp"];
+  const iso=m=>{const [a,y]=m.split("_");return y+"-"+String(MABBR_U.indexOf(a)+1).padStart(2,"0");};
   const esc2=v=>{v=(v==null?"":v).toString(); return /[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   const lines=[head.join(",")];
-  rows.forEach(r=>lines.push(cols.map(c=>esc2(r[c])).join(",")));
+  rows.forEach(r=>lines.push(cols.map(c=>esc2(c==="mes"&&isEN()?iso(r[c]):r[c])).join(",")));
   return lines.join("\n");
 }
 function downloadText(name, text, mime){
@@ -1184,7 +1292,7 @@ function downloadText(name, text, mime){
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);
 }
 function slaTemplateCSV(){
-  return ["Fecha,Ruta,Region,Ciudad_Origen,Tipo_Cliente,SLA_Objetivo_pct,Cumplimiento_pct",
+  return [isEN()?"Date,Route,Region,Origin_City,Customer_Type,SLA_Target_pct,Compliance_pct":"Fecha,Ruta,Region,Ciudad_Origen,Tipo_Cliente,SLA_Objetivo_pct,Cumplimiento_pct",
     "2025-01,R-01,Oriente,Cúcuta,Retail,95,92.4",
     "2025-01,R-02,Centro,Bogotá,Industrial,95,96.1",
     "2025-02,R-01,Oriente,Cúcuta,Retail,95,93.0",
@@ -1192,36 +1300,37 @@ function slaTemplateCSV(){
 }
 /* Reporte de validación en pantalla */
 function upReport(res){
-  const el=document.getElementById("valRepSla"); if(!el)return;
+  LAST_UPREP=res; const el=document.getElementById("valRepSla"); if(!el)return;
   if(res.ok){
-    const items=[]; items.push("<b>"+res.rows.length+"</b> filas · <b>"+res.nRutas+"</b> rutas · <b>"+res.months.length+"</b> meses ("+mShort(res.months[0])+"→"+mShort(res.months[res.months.length-1])+").");
-    if(BREAK)items.push("Quiebre detectado en <b>"+mShort(BREAK)+"</b>."); else items.push("Sin quiebre sistémico detectado en el periodo.");
-    el.innerHTML=TH('<div class="vr vr-ok"><b>✓ Datos cargados.</b><ul><li>'+items.join("</li><li>")+"</li>"+(res.warn.length?("<li>"+res.warn.join("</li><li>")+"</li>"):"")+"</ul></div>");
+    const items=[]; items.push("<b>"+res.rows.length+L("</b> filas · <b>","</b> rows · <b>")+res.nRutas+L("</b> rutas · <b>","</b> routes · <b>")+res.months.length+L("</b> meses (","</b> months (")+mShort(res.months[0])+"→"+mShort(res.months[res.months.length-1])+").");
+    if(BREAK)items.push(L("Quiebre detectado en <b>","Breakpoint detected in <b>")+mShort(BREAK)+"</b>."); else items.push(L("Sin quiebre sistémico detectado en el periodo.","No systemic breakpoint detected in the period."));
+    el.innerHTML=TH('<div class="vr vr-ok"><b>'+L("✓ Datos cargados.","✓ Data loaded.")+'</b><ul><li>'+items.join("</li><li>")+"</li>"+(res.warn.length?("<li>"+res.warn.map(mTxt).join("</li><li>")+"</li>"):"")+"</ul></div>");
   } else {
-    el.innerHTML=TH('<div class="vr vr-err"><b>No se pudo cargar el archivo.</b><ul><li>'+res.err.join("</li><li>")+"</li></ul>"+(res.warn.length?('<div class="na" style="margin-top:6px;">Además: '+res.warn.join(" · ")+"</div>"):"")+"</div>");
+    el.innerHTML=TH('<div class="vr vr-err"><b>'+L("No se pudo cargar el archivo.","The file could not be loaded.")+'</b><ul><li>'+res.err.map(mTxt).join("</li><li>")+"</li></ul>"+(res.warn.length?('<div class="na" style="margin-top:6px;">'+L("Además: ","Also: ")+res.warn.map(mTxt).join(" · ")+"</div>"):"")+"</div>");
   }
 }
 function handleSlaFile(file){
-  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML=TH('<div class="vr">Procesando <b>'+esc(file.name)+'</b>…</div>');
+  const vr=document.getElementById("valRepSla"); if(vr)vr.innerHTML=TH('<div class="vr">'+L("Procesando","Processing")+' <b>'+esc(file.name)+'</b>…</div>');
   const ext=(file.name.split(".").pop()||"").toLowerCase();
-  const finish=(headers,rows)=>{ const res=buildSlaDataset(headers,rows); upReport(res);
+  const finish=(headers,rows)=>{ const res=buildSlaDataset(headers,rows);
     if(res.ok){ applyDataset(res.rows,file.name,"user");
       try{safeStore.set("jf-sla-userdata",JSON.stringify({rows:res.rows,name:file.name}));}catch(e){}
       renderSource();
     }
+    upReport(res);
   };
   if(ext==="xlsx"||ext==="xls"){
-    if(typeof XLSX==="undefined"){upReport({ok:false,err:["No se pudo cargar el lector de Excel (sin conexión). Exporta tu archivo como CSV e inténtalo de nuevo."],warn:[]});return;}
+    if(typeof XLSX==="undefined"){upReport({ok:false,err:[M2("No se pudo cargar el lector de Excel (sin conexión). Exporta tu archivo como CSV e inténtalo de nuevo.","The Excel reader could not be loaded (offline). Export your file as CSV and try again.")],warn:[]});return;}
     const fr=new FileReader();
     fr.onload=e=>{try{const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array",cellDates:false});
       const ws=wb.Sheets[wb.SheetNames[0]]; const mat=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
       const {headers,rows}=uRowsFromMatrix(mat); finish(headers,rows);
-    }catch(err){upReport({ok:false,err:["Error leyendo el Excel: "+err.message],warn:[]});}};
+    }catch(err){upReport({ok:false,err:[M2("Error leyendo el Excel: "+err.message,"Error reading the Excel file: "+err.message)],warn:[]});}};
     fr.readAsArrayBuffer(file);
   } else {
     const fr=new FileReader();
     fr.onload=e=>{try{const mat=uParseCSV(e.target.result); const {headers,rows}=uRowsFromMatrix(mat); finish(headers,rows);}
-      catch(err){upReport({ok:false,err:["Error leyendo el CSV: "+err.message],warn:[]});}};
+      catch(err){upReport({ok:false,err:[M2("Error leyendo el CSV: "+err.message,"Error reading the CSV: "+err.message)],warn:[]});}};
     fr.readAsText(file,"utf-8");
   }
 }
@@ -1234,8 +1343,8 @@ function wireDataTab(){
     ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over");}));
     drop.addEventListener("drop",e=>{if(e.dataTransfer.files&&e.dataTransfer.files[0])handleSlaFile(e.dataTransfer.files[0]);});
   }
-  const bP=document.getElementById("btnPlantillaSla"); if(bP)bP.onclick=()=>downloadText("plantilla_sla.csv",slaTemplateCSV(),"text/csv");
-  const bD=document.getElementById("btnDemoCsvSla"); if(bD)bD.onclick=()=>downloadText("demo_sla_operaciones.csv",toCsvSla(RAW_DEMO),"text/csv");
+  const bP=document.getElementById("btnPlantillaSla"); if(bP)bP.onclick=()=>downloadText(L("plantilla_sla.csv","sla_template.csv"),slaTemplateCSV(),"text/csv");
+  const bD=document.getElementById("btnDemoCsvSla"); if(bD)bD.onclick=()=>downloadText(L("demo_sla_operaciones.csv","sla_operations_demo.csv"),toCsvSla(RAW_DEMO),"text/csv");
   const bR=document.getElementById("btnRestoreSla"); if(bR)bR.onclick=restoreDemo;
   const gd=document.getElementById("goData"); if(gd)gd.onclick=()=>{const t=document.querySelector('.tab[data-tab="tab-datos"]'); if(t)t.click();};
 }
@@ -1245,6 +1354,7 @@ document.addEventListener("DOMContentLoaded",init);
 <script>
 /* ===== Bilingüe ES/EN · mismo motor que el resto del portafolio ===== */
 let LANG='es';const TR={"Mes":"Month","Ruta":"Route","Anio":"Year","Fecha":"Date","Salud":"Health","Desde":"From","Hasta":"To","Notas":"Notes","Cerrar":"Close","Leer →":"Read →","Riesgo":"Risk","Claude":"Claude","Región":"Region","Perfil":"Profile","GitHub":"GitHub","Embudo":"Funnel","Plotly":"Plotly","Offline":"Offline","Columna":"Column","Fuente:":"Source:","Resumen":"Summary","Alertas:":"Alerts:","Backtest":"Backtest","LinkedIn":"LinkedIn","Perfil ↗":"Profile ↗","Propuesta":"Proposal","— fuentes":"— sources","Requerida":"Required","5 niveles":"5 levels","Preguntar":"Ask","Contexto.":"Context.","Secciones":"Sections","sintéticos":"synthetic","Eficiencia":"Efficiency","CSV / XLSX":"CSV / XLSX","Predicción":"Forecasting","brecha_pp:":"gap_pp:","Periodo: —":"Period: —","Gobernanza":"Governance","Navegación:":"Navigation:","Diagnóstico":"Diagnosis","Restablecer":"Reset","Snapshot: —":"Snapshot: —","⤒ Mis datos":"⤒ My data","↺ Reiniciar":"↺ Reset","Proyección:":"Projection:","— vendedores":"— reps","Holt-Winters":"Holt-Winters","Próximamente":"Coming soon","ChatGPT Work":"ChatGPT Work","Correctitud.":"Correctness.","determinista":"deterministic","Q&amp;A · IA":"Q&amp;A · AI","SLA objetivo:":"Target SLA:","2 portafolios":"2 portfolios","¿Por qué dos?":"Why two?","← Portafolios":"← Portfolios","Javier Forero":"Javier Forero","Datos hasta: —":"Data through: —","Consecuencias.":"Consequences.","Rango de meses":"Month range","Capa 1 · Salud":"Layer 1 · Health","Breach severo:":"Severe breach:","Base 12 meses:":"12-month base:","javierforero.co":"javierforero.co","Y el siguiente…":"And the next one…","⭳ Plantilla CSV":"⭳ CSV template","Ver dashboard →":"View dashboard →","Tipo de cliente":"Customer type","2 motores de IA":"2 AI engines","SLA_Objetivo_pct":"SLA_Target_pct","↺ Volver al demo":"↺ Back to the demo","Decisión · PULSE":"Decision · PULSE","Entregas_Totales":"Total_Deliveries","Cumplimiento_pct":"Compliance_pct","Filtros globales":"Global filters","IA conversacional":"Conversational AI","Entregas_A_Tiempo":"On_Time_Deliveries","Lectura ejecutiva":"Executive read","cumplimiento_pct:":"compliance_pct:","Vista generada: —":"View generated: —","KPIs Inteligentes":"Smart KPIs","Marco · 5 niveles":"Framework · 5 levels","POVs de Analítica":"Analytics POVs","— rutas · — filas":"— routes · — rows","Pipeline ponderado":"Weighted pipeline","Demos interactivos":"Interactive demos","2 · Sube tu archivo":"2 · Upload your file","Capa 4 · Predicción":"Layer 4 · Forecasting","Elige un portafolio":"Choose a portfolio","← Hub de dashboards":"← Dashboard hub","1 · Formato esperado":"1 · Expected format","100% en tu navegador":"100% in your browser","Perfil profesional ↗":"Professional profile ↗","Dashboards con Claude":"Dashboards with Claude","Cambiar a tema oscuro":"Switch to dark theme","Ranking de vendedores":"Sales rep ranking","Decision Intelligence":"Decision Intelligence","1 dirección analítica":"1 analytical direction","Pipeline &amp; Riesgo":"Pipeline &amp; Risk","<b data-i18n>Ruta</b>":"<b data-i18n>Route</b>","Dashboards con ChatGPT":"Dashboards with ChatGPT","Pregúntale a los datos":"Ask the data","<b data-i18n>Fecha</b>":"<b data-i18n>Date</b>","Diagnóstico del embudo":"Funnel diagnosis","✦ Construido con Claude":"✦ Built with Claude","Cumplimiento por región":"Compliance by region","Ventas &amp; Vendedores":"Sales &amp; Reps","Si falta, se asume 95%.":"If missing, 95% is assumed.","Marco conceptual · POVs":"Conceptual framework · POVs","Diagnóstico del quiebre":"Breakpoint diagnosis","🖨 Imprimir / Guardar PDF":"🖨 Print / Save as PDF","o haz clic para elegirlo":"or click to choose it","Sube tus datos (CSV/XLSX)":"Upload your data (CSV/XLSX)","Gobernanza de la decisión":"Decision governance","⭳ Demo como CSV (570 filas)":"⭳ Demo as CSV (570 rows)","Win rate por canal de origen":"Win rate by lead source","⤓ Exportar gobernanza (JSON)":"⤓ Export governance (JSON)","Ej: semanal · lunes 8:00 a.m.":"E.g.: weekly · Monday 8:00 a.m.","✦ Construido con ChatGPT Work":"✦ Built with ChatGPT Work","Entrar al portafolio Claude →":"Enter the Claude portfolio →","Entrar al portafolio ChatGPT →":"Enter the ChatGPT portfolio →","Capa 2 · Eficiencia por región":"Layer 2 · Efficiency by region","Javier Forero · javierforero.co":"Javier Forero · javierforero.co","Ventas vs. meta · serie mensual":"Revenue vs. target · monthly series","Analítica de Datos en 5 Niveles":"Data Analytics in 5 Levels","Diagnóstico de pipeline y riesgo":"Pipeline and risk diagnosis","⤒ Mis datos · sube tu propio SLA":"⤒ My data · upload your own SLA","◆ Meta SLA promedio de la región":"◆ Average target SLA for the region","<b data-i18n>Cumplimiento_pct</b>":"<b data-i18n>Compliance_pct</b>","Modelo, validación y advertencias":"Model, validation and caveats","¡Adiós a los dashboards aburridos!":"Goodbye to boring dashboards!","Dashboards que narran la operación":"Dashboards that narrate operations","Cadencia de actualización del dato":"Data refresh cadence","Acerca de este dashboard · resumen":"About this dashboard · summary","Desempeño Comercial · Dirección B2B":"Sales Performance · B2B Leadership","Hipótesis de causa — evalúa cada una":"Cause hypotheses — assess each one","Smart Narratives · Lectura ejecutiva":"Smart Narratives · Executive read","Definiciones y método (auditabilidad)":"Definitions and method (auditability)","Cumplimiento de SLA · Operaciones B2B":"SLA Compliance · B2B Operations","Region · Ciudad_Origen · Tipo_Cliente":"Region · Origin_City · Customer_Type","Gobernanza · Dueño · Umbral · Decisión":"Governance · Owner · Threshold · Decision","Proyección de ventas · próximos 3 meses":"Revenue projection · next 3 months","PULSE: decidir mejor que tu competencia":"PULSE: decide better than your competition","Desempeño Comercial · embudo y pipeline":"Sales Performance · funnel and pipeline","Analítica · IA · Transformación Digital":"Analytics · AI · Digital Transformation","Pipeline abierto · nominal vs. ponderado":"Open pipeline · nominal vs. weighted","El pensamiento detrás de estos tableros.":"The thinking behind these dashboards.","Pulso Financiero · Finanzas Corporativas":"Financial Pulse · Corporate Finance","Capa 3 · Riesgo · Rutas en breach severo":"Layer 3 · Risk · Routes in severe breach","Predicción financiera 2025 · Holt-Winters":"2025 financial forecast · Holt-Winters","Identificador de ruta, carril o servicio.":"Identifier for the route, lane or service.","Alertar frescura si el dato supera (días)":"Flag staleness if the data exceeds (days)","Cumplimiento SLA B2B · desempeño comercial":"B2B SLA compliance · sales performance","Ahora acepta tus propios datos (CSV/XLSX):":"It now accepts your own data (CSV/XLSX):","Habilitan filtros y análisis por segmento.":"They enable filters and analysis by segment.","Q&amp;A · Conversational AI sobre tus datos":"Q&amp;A · Conversational AI over your data","Dashboards de decisión · construidos con IA":"Decision dashboards · built with AI","Método pregunta → evidencia → señal → acción":"Method: question → evidence → signal → action","Pulso Financiero · cuatro modelos comparados":"Financial Pulse · four models compared","% de entregas dentro del SLA en el mes-ruta.":"% of deliveries within SLA for the route-month.","Dashboard de Operaciones · Cumplimiento de SLA":"Operations Dashboard · SLA Compliance","Ej: ¿dónde está el cuello de botella del embudo?":"E.g.: where is the bottleneck in the funnel?","✦ Construido con Claude · Colección de dashboards":"✦ Built with Claude · Dashboard collection","Ej: ¿cuál es la peor región del último trimestre?":"E.g.: which was the worst region last quarter?","🖨 Exportar a comité (one-pager DATA→IDEA→DECISIÓN)":"🖨 Export for committee (one-pager DATA→IDEA→DECISION)","🎛 Interactivos — cámbialos para explorar los datos":"🎛 Interactive — change them to explore the data","Dos portafolios. Dos IAs. El mismo criterio analítico.":"Two portfolios. Two AIs. The same analytical judgement.","cumplimiento_pct − sla_objetivo_pct (puntos porcentuales).":"compliance_pct − target_sla_pct (percentage points).","Validación humana — obligatoria antes de exportar a comité":"Human validation — required before exporting to committee","Conversión por etapa · primera vs. segunda mitad del periodo":"Conversion by stage · first vs. second half of the period","En este dominio · <code>dashboards.javierforero.co/claude/</code>":"On this domain · <code>dashboards.javierforero.co/claude/</code>","nivel de cumplimiento comprometido por ruta (90–98%), no uniforme.":"the compliance level committed per route (90–98%), not uniform.","Sitio externo · <code>javier-dashboards.jforero.chatgpt.site</code>":"External site · <code>javier-dashboards.jforero.chatgpt.site</code>","Preguntar a los datos en lenguaje natural, con el humano en control.":"Ask the data in plain language, with the human in control.","De la señal a la acción con dueño, umbral y mecanismo de aprendizaje.":"From signal to action, with an owner, a threshold and a learning loop.","Del descriptivo al cognitivo: por qué más complejidad no es más valor.":"From descriptive to cognitive: why more complexity isn't more value.","Dueño y decisión: <span class=\"tag-def\">por definir</span> (Gobernanza).":"Owner and decision: <span class=\"tag-def\">to be defined</span> (Governance).","brecha &lt; −5 pp (señal accionable; brecha &lt; 0 = bajo meta, hoy 100%).":"gap &lt; −5 pp (actionable signal; gap &lt; 0 = below target, today 100%).","Estado del cumplimiento en el mes más reciente frente a su línea base histórica.":"Compliance status in the most recent month against its historical baseline.","Tómale el pulso a tus decisiones: velocidad, verdad, ventaja, aprendizaje y aguante.":"Take the pulse of your decisions: speed, truth, edge, learning and stamina.","Cada tablero es autónomo, con datos reales embebidos y pensado para un comité que decide.":"Each dashboard is self-contained, with real embedded data, built for a committee that decides.","Barras = ventas del mes (verde ≥100%, morado 90–100%, rojo &lt;90%). Línea punteada = meta.":"Bars = revenue for the month (green ≥100%, purple 90–100%, red &lt;90%). Dotted line = target.","Tasa de cierre de oportunidades ya cerradas, por canal. Verde ≥ promedio, ámbar por debajo.":"Win rate on already-closed opportunities, by channel. Green ≥ average, amber below.","Ventas acumuladas ÷ meta acumulada en el periodo seleccionado. La marca vertical es el 100%.":"Cumulative revenue ÷ cumulative target over the selected period. The vertical mark is 100%.","promedio de los hasta 12 meses previos al último mes (ventana móvil; es referencia, no meta).":"average of up to the 12 months before the latest month (rolling window; a reference, not a target).","Cumplimiento promedio por región en el rango seleccionado, con su meta SLA de referencia (◆).":"Average compliance by region over the selected range, with its reference target SLA (◆).","Dashboards que no solo grafican: interpretan, diagnostican y convierten los datos en decisión.":"Dashboards that don't just plot: they interpret, diagnose and turn data into decisions.","Ordenado por cumplimiento del periodo. La última columna muestra el cumplimiento del mes más reciente.":"Sorted by compliance for the period. The last column shows compliance for the most recent month.","Rutas con brecha promedio &lt; −5 pp en el último trimestre del rango. Intensidad de rojo = severidad.":"Routes with an average gap &lt; −5 pp in the last quarter of the range. Red intensity = severity.","Rojo señala las etapas que se deterioran (caída &gt; 2 pp) entre la primera y la segunda mitad del rango.":"Red marks the stages that deteriorate (a drop &gt; 2 pp) between the first and second half of the range.","La IA es el músculo; el criterio humano es el cerebro. Confirma los 3 filtros para habilitar el one-pager.":"AI is the muscle; human judgement is the brain. Confirm the 3 filters to unlock the one-pager.","cumplimiento_sla_tidy.csv — 570 filas (38 rutas × 15 meses), 8 regiones, 4 tipos de cliente, sin faltantes.":"cumplimiento_sla_tidy.csv — 570 rows (38 routes × 15 months), 8 regions, 4 customer types, no gaps.","Marca el estado y anota la evidencia. Mientras haya causas “Pendiente”, el veredicto bloquea el escalamiento.":"Mark the status and record the evidence. While any cause is “Pending”, the verdict blocks escalation.","AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel. Alternativa: par <b data-i18n>Anio</b> + <b data-i18n>Mes</b>.":"YYYY-MM, dd/mm/yyyy, jan_2025 or an Excel date. Alternative: the pair <b data-i18n>Year</b> + <b data-i18n>Month</b>.","Desempeño por región o cliente, conteo de rutas en breach, qué pasó en un mes, comparaciones o proyección de Q2.":"Performance by region or customer, count of routes in breach, what happened in a month, comparisons or the Q2 projection.","Oportunidades por etapa y porcentaje que llega desde el tope del embudo, en el último mes del rango seleccionado.":"Opportunities by stage and the share reaching each one from the top of the funnel, for the last month of the selected range.","0–100 (acepta 0–1 y lo convierte). Alternativa: <b data-i18n>Entregas_Totales</b> + <b data-i18n>Entregas_A_Tiempo</b>.":"0–100 (it accepts 0–1 and converts). Alternative: <b data-i18n>Total_Deliveries</b> + <b data-i18n>On_Time_Deliveries</b>.","Serie mensual con el quiebre detectado anotado (si existe) y proyección lineal a 3 meses (punteada) separada del histórico.":"Monthly series with the detected breakpoint annotated (if any) and a 3-month linear projection (dotted) kept separate from history.","🔴 último mes &gt; 5 pp bajo la base 12m · 🟡 brecha promedio del trimestre &lt; 0 · 🟠 frescura: dato supera el umbral de días.":"🔴 latest month &gt; 5 pp below the 12m base · 🟡 average quarterly gap &lt; 0 · 🟠 staleness: data exceeds the day threshold.","La colección crece agregando carpetas hermanas de <code>sla-operaciones/</code>, cada una con su propio <code>index.html</code>.":"The collection grows by adding sibling folders to <code>sla-operaciones/</code>, each with its own <code>index.html</code>.","Cada colección es autónoma, con datos reales embebidos y pensada para un comité que decide. Misma metodología, dos motores de IA.":"Each collection is self-contained, with real embedded data, built for a committee that decides. Same methodology, two AI engines.","Suavizado de Holt (nivel + tendencia) con parámetros ajustados por backtest. Banda sombreada = incertidumbre (±1.5σ de residuos).":"Holt smoothing (level + trend) with parameters tuned by backtest. Shaded band = uncertainty (±1.5σ of residuals).","Tus datos se guardan solo en este navegador (localStorage) para que el tablero recuerde tu carga; con «Volver al demo» se eliminan.":"Your data is stored only in this browser (localStorage) so the dashboard remembers your upload; “Back to the demo” clears it.","Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad.":"A statistician with a storyteller's soul, born in Bogotá. He turns data and technical concepts into accessible stories, with feeling and clarity.","Monitoreo del cumplimiento de SLA del portafolio logístico. No descubre el hallazgo: lo vigila, lo defiende y lo convierte en decisión.":"SLA compliance monitoring for the logistics portfolio. It doesn't discover the finding: it watches it, defends it and turns it into a decision.","<b data-i18n>Contexto.</b> Consideré eventos del negocio (paro, cambio de operador, cambio de medición, calendario) que la IA no conoce.":"<b data-i18n>Context.</b> I considered business events (strikes, a change of carrier, a change in measurement, the calendar) that the AI doesn't know about.","Gris = valor nominal por etapa. Morado = valor ponderado por la probabilidad empírica de cierre de cada etapa (etiqueta = probabilidad).":"Grey = nominal value by stage. Purple = value weighted by the empirical close probability of each stage (label = probability).","<b data-i18n>Correctitud.</b> Verifiqué que las cifras del brief cuadran con el sistema fuente (conteos, rangos, suma del KPI principal).":"<b data-i18n>Correctness.</b> I checked that the figures in the brief reconcile with the source system (counts, ranges, total of the headline KPI).","Narrativa generada a partir de los datos filtrados. Las causas se plantean como hipótesis y deben pasar validación humana antes de comité.":"Narrative generated from the filtered data. Causes are stated as hypotheses and must pass human validation before committee.","Reglas: mínimo 6 meses continuos (sin huecos a nivel portafolio) y sin duplicados ruta+mes. Acepta separador «,» o «;» y decimales con coma.":"Rules: at least 6 continuous months (no gaps at portfolio level) and no duplicate route+month. It accepts “,” or “;” separators and comma decimals.","<b data-i18n>Consecuencias.</b> Evalué el impacto y la reversibilidad de la decisión; si afecta clientes/finanzas, exijo evidencia adicional.":"<b data-i18n>Consequences.</b> I assessed the impact and reversibility of the decision; if it affects customers or finances, I require further evidence.","Una colección de seis casos que revela señales, explica trade-offs y orienta la acción, organizada como un ciclo de decisión de principio a fin.":"A collection of six cases that surfaces signals, explains trade-offs and guides action, organised as a decision cycle from start to finish.","Escribe una pregunta o elige una sugerencia. Puedo responder sobre cumplimiento, vendedores, regiones, el embudo, el pipeline, canales y la proyección.":"Type a question or pick a suggestion. I can answer on compliance, reps, regions, the funnel, the pipeline, channels and the projection.","Tableros con IA conversacional determinista, gobernanza de la decisión y capa «trae tus datos»: sube tu propio CSV/Excel y todo se recalcula en el navegador.":"Dashboards with deterministic conversational AI, decision governance and a “bring your data” layer: upload your own CSV/Excel and everything recalculates in the browser.","La configuración de gobernanza vive en memoria durante la sesión; usa “Exportar gobernanza (JSON)” para guardarla y “Importar” para recuperarla en otra sesión.":"The governance settings live in memory for the session; use “Export governance (JSON)” to save them and “Import” to restore them in another session.","Filtros y alertas globales. Pestañas: 4 capas + Resumen + Diagnóstico + Gobernanza + Q&amp;A. El detalle de métodos está en Gobernanza → “Definiciones y método”.":"Global filters and alerts. Tabs: 4 layers + Summary + Diagnosis + Governance + Q&amp;A. Method details live in Governance → “Definitions and method”.","De la meta y la conversión a una cartera priorizada de acciones. No solo muestra las ventas: explica por qué caen y dónde intervenir para recuperar el crecimiento.":"From target and conversion to a prioritised portfolio of actions. It doesn't just show revenue: it explains why it falls and where to intervene to restore growth.","Motor conversacional <b data-i18n>determinista</b>: las respuestas se calculan directamente sobre los datos, sin generación de texto libre — cero riesgo de alucinación.":"A <b data-i18n>deterministic</b> conversational engine: answers are computed directly over the data, with no free text generation — zero hallucination risk.","Adiós a los dashboards aburridos. Analítica que no solo grafica: interpreta, diagnostica y convierte los datos en decisión — con IA conversacional y gobernanza de la decisión.":"Goodbye to boring dashboards. Analytics that doesn't just plot: it interprets, diagnoses and turns data into decisions — with conversational AI and decision governance.","regresión lineal (mínimos cuadrados) sobre el régimen post-quiebre (desde el quiebre detectado, o los últimos 6 meses si no lo hay), 3 meses adelante. Frágil por pocos puntos.":"linear regression (least squares) over the post-breakpoint regime (from the detected breakpoint, or the last 6 months if there is none), 3 months ahead. Fragile given the few points.","Estadístico con alma de narrador, nacido en Bogotá. Traduce datos y conceptos técnicos en relatos accesibles, con emoción y claridad. Consultor en Analítica, IA y Transformación Digital.":"A statistician with a storyteller's soul, born in Bogotá. He turns data and technical concepts into accessible stories, with feeling and clarity. Consultant in Analytics, AI and Digital Transformation.","Construido con Claude, bajo la dirección analítica de Javier Forero · Datos de demostración (ventas, embudo y CRM simulados) · Los hallazgos requieren validación operativa antes de uso en comité.":"Built with Claude, under the analytical direction of Javier Forero · Demonstration data (simulated sales, funnel and CRM) · Findings require operational validation before committee use.","Un KPI sin dueño ni decisión es un adorno. Completa aquí la casa permanente del hallazgo: quién responde, con qué umbral y qué decisión se dispara. Se refleja en las tarjetas y alertas al instante.":"A KPI with no owner and no decision is decoration. Fill in the permanent home of the finding here: who answers for it, against which threshold and which decision it triggers. It is reflected in the cards and alerts instantly.","Antes de escalar a una decisión de alto impacto (renegociar operador), descompón la causa. La IA no sabe del paro de la semana 32 ni de un cambio de fórmula: tú sí. Este panel estructura tu filtro de Contexto.":"Before escalating to a high-impact decision (renegotiating the carrier), break down the cause. The AI doesn't know about the week-32 strike or a change of formula: you do. This panel structures your Context filter.","Pregunta en lenguaje natural. Las cifras se calculan en vivo sobre tu dataset (deterministas, sin alucinación). Si hay IA generativa disponible, redacta sobre esas cifras verificadas; si no, responde el motor local.":"Ask in plain language. The figures are computed live over your dataset (deterministic, no hallucination). If generative AI is available it writes over those verified figures; if not, the local engine answers.","Adiós a los dashboards aburridos. Dos colecciones interactivas que interpretan, diagnostican y convierten datos en decisión — una construida con <b data-i18n>Claude</b> y otra con <b data-i18n>ChatGPT Work</b>, ambas bajo mi dirección analítica. Elige con cuál quieres explorar.":"Goodbye to boring dashboards. Two interactive collections that interpret, diagnose and turn data into decisions — one built with <b data-i18n>Claude</b> and the other with <b data-i18n>ChatGPT Work</b>, both under my analytical direction. Choose which one to explore.","<b data-i18n>¿Por qué dos?</b> No es una competencia de herramientas: es una demostración de que el valor está en el criterio —la pregunta de negocio, la evidencia que merece confianza y la decisión que habilita—, y de que distintas IAs pueden materializar ese criterio en productos analíticos funcionales.":"<b data-i18n>Why two?</b> This isn't a contest between tools: it's a demonstration that the value lies in the judgement —the business question, the evidence that deserves trust and the decision it enables— and that different AIs can turn that judgement into working analytical products.","Crecimiento, margen, caja y liquidez con puente precio-volumen, dos modelos predictivos validados por backtest (descomposición + Holt-Winters) y KPIs Inteligentes con incertidumbre declarada y gobernanza. <b data-i18n>Ahora acepta tus propios datos (CSV/XLSX):</b> todo se recalcula e interpreta localmente en tu navegador.":"Growth, margin, cash and liquidity with a price-volume bridge, four forecasting models validated by backtest (decomposition, Holt-Winters, Fourier and SARIMA) and Smart KPIs with stated uncertainty and governance. <b data-i18n>It now accepts your own data (CSV/XLSX):</b> everything recalculates and is interpreted locally in your browser.","Carga un CSV o Excel con tu histórico ruta×mes y todo el tablero —KPIs, alertas, narrativa, diagnóstico, predicción y Q&amp;A— se recalcula e interpreta <b data-i18n>100% en tu navegador</b>: nada se envía a ningún servidor. El quiebre se detecta automáticamente (caída ≥3 pp de un mes al siguiente en el promedio del portafolio).":"Upload a CSV or Excel with your route×month history and the entire dashboard —KPIs, alerts, narrative, diagnosis, forecast and Q&amp;A— recalculates and is interpreted <b data-i18n>100% in your browser</b>: nothing is sent to any server. The breakpoint is detected automatically (a drop of ≥3 pp from one month to the next in the portfolio average).","Monitorea la caída sistémica de SLA de un portafolio logístico. 8 capas, alertas automáticas, diagnóstico del quiebre, gobernanza (umbral·dueño·decisión), Q&amp;A conversacional y brief exportable. <b data-i18n>Ahora acepta tus propios datos (CSV/XLSX):</b> el quiebre se detecta solo y todo el tablero se recalcula en tu navegador.":"It monitors the systemic SLA decline of a logistics portfolio. 8 layers, automatic alerts, breakpoint diagnosis, governance (threshold·owner·decision), conversational Q&amp;A and an exportable brief. <b data-i18n>It now accepts your own data (CSV/XLSX):</b> the breakpoint is detected on its own and the whole dashboard recalculates in your browser.","Convierte ventas, embudo y CRM en una cartera priorizada de acciones. Cumplimiento vs. meta por vendedor y región, diagnóstico del embudo que aísla el cuello en <b data-i18n>Propuesta</b>, pipeline ponderado por la probabilidad real de cierre, predicción con backtest y Q&amp;A conversacional determinista — con gobernanza de la decisión.":"It turns sales, funnel and CRM into a prioritised portfolio of actions. Attainment vs. target by rep and region, a funnel diagnosis that isolates the bottleneck at <b data-i18n>Proposal</b>, a pipeline weighted by the real close probability, backtested forecasting and deterministic conversational Q&amp;A — with decision governance.","<div class=\"na\" style=\"margin-top:6px;\">Además: ":"<div class=\"na\" style=\"margin-top:6px;\">Also: ","<div class=\"vr vr-err\"><b>No se pudo cargar el archivo.</b><ul><li>":"<div class=\"vr vr-err\"><b>The file could not be loaded.</b><ul><li>","<p class=\"muted\" style=\"padding:20px;text-align:center;\">Sin datos para el filtro.</p>":"<p class=\"muted\" style=\"padding:20px;text-align:center;\">No data for this filter.</p>","<p style=\"color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;\">Cargando librería de gráficos…</p>":"<p style=\"color:#5f6b7a;font-size:.85rem;padding:22px;text-align:center;\">Loading the charting library…</p>","<p class=\"na\" style=\"padding:24px;text-align:center;\">El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo.</p>":"<p class=\"na\" style=\"padding:24px;text-align:center;\">The selected range is too short to project (≥ 4 months are needed). Widen the period.</p>","<p style=\"color:#b45309;font-size:.85rem;padding:22px;text-align:center;\">No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.</p>":"<p style=\"color:#b45309;font-size:.85rem;padding:22px;text-align:center;\">The charting library could not be loaded. The rest of the dashboard (KPIs, narrative, risk, diagnosis, governance and local Q&A) works offline.</p>","Idioma / Language":"Idioma / Language","Cambiar tema":"Switch theme","__title_selector":"AI Dashboards · Javier Forero","__title_hub":"Dashboards with Claude · Javier Forero","__title_sla":"Operations Dashboard · SLA Compliance · Javier Forero","__title_com":"B2B Sales Performance · Javier Forero","pasó de":"went from","</b> de":"</b> of","· Dueño:":"· Owner:","</b>: de":"</b>: from","¿Cómo va":"How is","la región":"the region","· Dueños:":"· Owners:","Último mes":"Latest month","de brecha)":"gap)","facturó <b>":"billed <b>",", la región":", the region","</b> con <b>":"</b> with <b>","¿Qué pasó en":"What happened in","en Ene 2026.":"in Jan 2026.","¿Cómo vamos en":"How are we doing in","Quiebre en <b>":"Breakpoint in <b>","</b>) está <b>":"</b>) is <b>","Cumplimiento de":"Compliance of","</b> en un mes).":"</b> in one month).","Mayor caída: <b>":"Largest drop: <b>","</b> abiertos en":"</b> open across",") y la mejor <b>":") and the best <b>","</b> de la meta (":"</b> of target (","pp</b> a favor de":"pp</b> in favour of","antes de escalar.":"before escalating.","</b>. Decisión: <b>":"</b>. Decision: <b>","</b>, con brecha <b>":"</b>, with a gap of <b>","El quiebre es en <b>":"The breakpoint is in <b>","</b>, con banda de ±":"</b>, with a band of ±","las ventas fueron <b>":"revenue was <b>","%); el más débil, <b>":"%); the weakest, <b>","es el punto más débil (":"is the weakest point (","¿Cuál es el mejor canal?":"Which is the best channel?","<b>Validar el quiebre de":"<b>Validate the breakpoint of","</b> regiones a la baja.":"</b> regions declining.","regiones, con quiebre de":"regions, with a breakpoint of","rutas en breach severo en":"routes in severe breach in","Diagnóstico focalizado en":"Diagnosis focused on","¿Cuánto vale el pipeline?":"How much is the pipeline worth?","¿Cuál es el peor vendedor?":"Who is the weakest rep?","¿Cuál es la peor región en":"Which was the worst region in","El cumplimiento promedio de":"Average compliance for","El cuello de botella es <b>":"The bottleneck is <b>","Sin rutas en breach severo.":"No routes in severe breach.","Diagnóstico aún incompleto (":"Diagnosis still incomplete (","con menor cumplimiento es <b>":"with the lowest compliance is <b>",".</b> De las cinco etapas, <b>":".</b> Of the five stages, <b>","¿Cómo se ve la proyección para":"What does the projection look like for","). Umbral: −5 pp. Decisión: <b>":"). Threshold: −5 pp. Decision: <b>",", el menor cumplimiento fue <b>":", the lowest compliance was <b>","Con la tendencia post-quiebre (":"With the post-breakpoint trend (","¿Hay algún quiebre en la serie?":"Is there a breakpoint in the series?",", el mejor cumplimiento fue <b>":", the highest compliance was <b>","El cumplimiento del último mes (":"Compliance in the latest month (","y supera tu umbral de frescura (":"and it exceeds your staleness threshold (","Línea gris = meta SLA promedio (":"Grey line = average target SLA (","· Validación humana: Correctitud":"· Human validation: Correctness","el cumplimiento agregado pasó de":"aggregate compliance went from","días.</b> El dato más reciente es":"days.</b> The most recent data point is","¿Dónde está el cuello de botella?":"Where is the bottleneck?","</b> respecto de la meta del mes (":"</b> against the monthly target (",", el cumplimiento del último mes (":", compliance in the latest month (","(últimos 6 meses), con la tendencia":"(last 6 months), with the trend","</b> bajo el promedio de 12 meses (":"</b> below the 12-month average (","</b> lidera el pipeline abierto con":"</b> leads the open pipeline with","meses. La proyección a 3 meses para":"months. The 3-month projection for","<b>Contingencia rutas críticas</b> (":"<b>Contingency for critical routes</b> (","</b> es la que más se deteriora: <b>":"</b> is the one that deteriorates most: <b>","rutas en breach severo (&lt; −5 pp) en":"routes in severe breach (&lt; −5 pp) in","¿Cuántas rutas están en breach severo?":"How many routes are in severe breach?","Exposición amplia: no es una sola ruta.":"Broad exposure: this isn't a single route.",") — un salto de <span class=\"pill-num\">":") — a jump of <span class=\"pill-num\">","): fecha común = evento único probable.":"): a common date = a single event is likely.","La caída se estabilizó, no se revierte.":"The drop has stabilised, it isn't reversing.","Diagnóstico cerrado: causa confirmada —":"Diagnosis closed: cause confirmed —","</b> ruta(s) en breach severo; peor: <b>":"</b> route(s) in severe breach; worst: <b>","</b> en breach severo (&lt; −5 pp) y <b>":"</b> in severe breach (&lt; −5 pp) and <b>","¿Qué proyección hay para el próximo mes?":"What is the projection for next month?","<b>Mesa de capacidad con el operador.</b>":"<b>Capacity review with the carrier.</b>","%), la conversión de punta a punta es de <b>":"%), end-to-end conversion is <b>","Ningún vendedor alcanzó el 90% de su meta en":"No rep reached 90% of their target in","</span> en un solo mes. La caída golpea a <b>":"</span> in a single month. The drop hits <b>","el cumplimiento de los últimos meses promedia":"compliance over the last months averages","%</b>. Sin intervención, no se recupera solo.":"%</b>. Without intervention, it won't recover on its own.","Definir intervención con meta de recuperación.":"Define an intervention with a recovery target.","<div class=\"qa-support\"><h4>Soporte de datos ·":"<div class=\"qa-support\"><h4>Data support ·","<b>Definir umbral de escalamiento</b> por ruta.":"<b>Set an escalation threshold</b> per route.","</b> en la pestaña Diagnóstico antes de comité.":"</b> in the Diagnosis tab before committee.","Posible shock sistémico + debilidad estructural.":"Possible systemic shock + structural weakness.","<option value=\"Todas\">Todas las regiones</option>":"<option value=\"Todas\">All regions</option>","frente a la base de 12 meses. Caída transversal a":"against the 12-month base. A drop cutting across","</b> regiones el <b>mismo mes</b>, en una banda de":"</b> regions in the <b>same month</b>, within a band of",". Por canal, los mejores win rates provienen de <b>":". By channel, the best win rates come from <b>","<div class=\"qa-thinking\">Analizando los datos…</div>":"<div class=\"qa-thinking\">Analysing the data…</div>","No hay suficientes meses post-quiebre para proyectar.":"There aren't enough post-breakpoint months to project.","Causas evaluadas descartadas: revisar nuevas hipótesis.":"Assessed causes ruled out: review new hypotheses.","</b> oportunidades de ticket alto (&gt;$25K) concentran":"</b> high-ticket opportunities (&gt;$25K) hold","opp), pero ponderado por probabilidad de cierre vale <b>":"opps), but weighted by close probability it is worth <b>","Priorizar contingencia por severidad; asignar dueño por ruta.":"Prioritise contingency by severity; assign an owner per route.","(post-quiebre). Causa única probable, a validar en Diagnóstico.":"(post-breakpoint). A single cause is likely, to be validated in Diagnosis.","%. Frágil (pocos puntos): señala tendencia, no compromete cifras.":"%. Fragile (few points): it indicates a trend, it doesn't commit to figures.","<div class=\"verdict block\">⛔ <b>Diagnóstico incompleto</b> — quedan":"<div class=\"verdict block\">⛔ <b>Diagnosis incomplete</b> — there are still","<div class=\"narr-block\"><p><b>Hecho:</b> el cumplimiento cae de <b>":"<div class=\"narr-block\"><p><b>Fact:</b> compliance falls from <b>",". Acción focalizada según la causa; documenta en el one-pager.</div>":". Targeted action based on the cause; document it in the one-pager.</div>","× una meta mensual: el embudo abierto no basta para cerrar la brecha.":"× one monthly target: the open funnel isn't enough to close the gap.","× una meta mensual. La brecha no se cierra solo con lo que está abierto.":"× one monthly target. The gap won't close with what is open alone.","elegidos por búsqueda en malla minimizando el error en un <i>holdout</i> de":"chosen by grid search minimising the error on a <i>holdout</i> of","<div class=\"verdict go\">✅ <b>Diagnóstico cerrado.</b> Causa(s) confirmada(s):":"<div class=\"verdict go\">✅ <b>Diagnosis closed.</b> Confirmed cause(s):","La proyección de ventas (Holt, nivel+tendencia) para los próximos 3 meses es <b>":"The revenue projection (Holt, level+trend) for the next 3 months is <b>","oportunidades, pero ponderados por la probabilidad de cierre de cada etapa valen <b>":"opportunities, but weighted by the close probability of each stage they are worth <b>","<div class=\"banner red\"><span class=\"dot\">🔴</span><div><b>Alerta roja — caída severa.</b>":"<div class=\"banner red\"><span class=\"dot\">🔴</span><div><b>Red alert — severe drop.</b>","La uniformidad y la fecha común apuntan a una causa sistémica o de medición, no a fallas aisladas.":"The uniformity and the common date point to a systemic or measurement cause, not to isolated failures.","El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo en los filtros.":"The selected range is too short to project (≥ 4 months are needed). Widen the period in the filters.","<tr><td style=\"border:none;color:var(--muted);padding:14px;\">Ninguna ruta en breach severo bajo el filtro.</td></tr>":"<tr><td style=\"border:none;color:var(--muted);padding:14px;\">No routes in severe breach under this filter.</td></tr>","causa(s) sin evaluar. <b>No escalar a renegociación de contrato</b> hasta cerrar la causa (filtro de Consecuencias).</div>":"cause(s) unassessed. <b>Do not escalate to contract renegotiation</b> until the cause is closed (Consequences filter).</div>","%</b> — que coincide con el win rate observado en el CRM. Los dos sistemas cuentan la misma historia: de cada 100 prospectos, ~":"%</b> — which matches the win rate observed in the CRM. Both systems tell the same story: out of every 100 prospects, ~","Correr el diagnóstico del quiebre antes de escalar. NO renegociar contrato sin causa confirmada. Contingencia para rutas con brecha < −10 pp.":"Run the breakpoint diagnosis before escalating. Do NOT renegotiate the contract without a confirmed cause. Contingency for routes with a gap < −10 pp.","No tengo una respuesta determinista para esa pregunta. Prueba con: cumplimiento del mes, peor/mejor vendedor o región, cuello de botella del embudo, valor del pipeline, win rate por canal, o la proyección de ventas.":"I don't have a deterministic answer for that question. Try: compliance for the month, weakest/best rep or region, the funnel bottleneck, pipeline value, win rate by channel, or the revenue projection.","No se detecta un <b>quiebre sistémico</b> (caída ≥3 pp de un mes al siguiente a nivel portafolio) en los datos cargados. El monitoreo sigue activo: si aparece, este panel lo señalará.":"No <b>systemic breakpoint</b> is detected (a drop of ≥3 pp from one month to the next at portfolio level) in the loaded data. Monitoring stays active: if one appears, this panel will flag it.","<div class=\"verdict rev\">⚠️ <b>Todas las causas descartadas.</b> El deterioro no se explica por las hipótesis evaluadas: revisa nuevas hipótesis o la calidad del dato antes de decidir.</div>":"<div class=\"verdict rev\">⚠️ <b>All causes ruled out.</b> The deterioration isn't explained by the hypotheses assessed: review new hypotheses or the data quality before deciding.</div>","× una meta mensual. La mayor parte del valor nominal está en etapas tempranas (Prospección y Propuesta), donde la probabilidad de cierre es baja.</p>":"× one monthly target. Most of the nominal value sits in early stages (Prospecting and Proposal), where the close probability is low.</p>","<div class=\"narr-block\"><p><b>Sin quiebre que diagnosticar.</b> En los datos cargados no se detecta una caída sistémica (≥3 pp de un mes al siguiente en el promedio del portafolio). Este panel se activa automáticamente cuando el monitoreo encuentre un quiebre.</p></div>":"<div class=\"narr-block\"><p><b>No breakpoint to diagnose.</b> No systemic drop is detected in the loaded data (≥3 pp from one month to the next in the portfolio average). This panel activates automatically when monitoring finds a breakpoint.</p></div>","Datos hasta: ":"Data through: ","Alerta roja — caída severa.":"Red alert — severe drop.",") está ":") is ","bajo el promedio de 12 meses (":"below the 12-month average (","). Umbral: −5 pp. Decisión: ":"). Threshold: −5 pp. Decision: ","Brecha promedio del trimestre:":"Average gap for the quarter:",". Decisión: ":". Decision: ","Dato desactualizado — ":"Stale data — "," días.":" days.","En todo el portafolio, ":"Across the whole portfolio, ","frente a la base de 12 meses (":"against the 12-month base (",") — una caída severa. El deterioro se concentra en un quiebre abrupto en ":") — a severe drop. The deterioration concentrates in an abrupt breakpoint in ","de 8 regiones y 4 tipo(s) de cliente en la misma dirección, patrón que apunta a causa ":"of 8 regions and 4 customer type(s) in the same direction, a pattern that points to a ","sistémica":"systemic",". Hipótesis a validar en la pestaña Diagnóstico.":". A hypothesis to validate in the Diagnosis tab.","— bajo el umbral.":"— below the threshold.","Cambios vs. histórico":"Changes vs. history","Último mes ":"Latest month "," vs. base ":" vs. base ",". Brecha del trimestre: ":". Quarterly gap: ",". Más bajo en Q1: ":". Lowest in Q1: ","Pacífico":"Pacific","Histórico":"Historical","Proyección lineal (3m)":"Linear projection (3m)","Demostración educativa del ejercicio “Métricas y eficiencia operativa”. Datos de ejemplo":"Educational demonstration of the “Operational metrics and efficiency” exercise. Sample data","; no representan operaciones ni clientes reales. Construido con Plotly.js. ©":"; they do not represent real operations or customers. Built with Plotly.js. ©","Región y fechas afectan ventas, cumplimiento y tendencia. El pipeline es una foto del estado actual (solo región).":"Region and dates affect revenue, attainment and trend. The pipeline is a snapshot of the current state (region only)."," meta · prob. del embudo":" target · funnel prob.","Situación.":"Situation.","En junio de 2026, el portafolio comercial facturó ":"In June 2026, the commercial portfolio billed ","ningún vendedor":"no rep","llegó al 90% de su cuota.":"reached 90% of quota.","Señal, no ruido.":"Signal, not noise.","No es un tropiezo aislado: ":"This isn't an isolated stumble: "," (semestre previo) a ":" (prior half-year) to ",", with the trend a la baja":", with the trend falling",", 3.4× la meta), pero al ponderarlo por la probabilidad real de cierre de cada etapa apenas cubre ":", 3.4× the target), but weighted by the real close probability of each stage it barely covers ","una meta mensual.":"one monthly target.","El problema no es de volumen de leads sino de ":"The problem isn't lead volume but ","conversión":"conversion",": la etapa ":": the ","es la única que se deteriora en el embudo. Agregar más prospectos sin corregir ese punto solo ensancha la boca del embudo sin mover el cierre.":"stage is the only one deteriorating in the funnel. Adding more prospects without fixing that point only widens the mouth of the funnel without moving closings.","Negociación":"Negotiation","Calificación":"Qualification","Prospección":"Prospecting","Conversión (%)":"Conversion (%)","Proyección":"Projection","Causa probable.":"Probable cause."};
+Object.assign(TR,{"En meta o por encima":"On or above target","Brecha leve (0 a −3 pp)":"Slight gap (0 to −3 pp)","Brecha &gt; −3 pp":"Gap beyond −3 pp","Arrastra aquí tu <b>CSV / XLSX</b>":"Drop your <b>CSV / XLSX</b> here","Sí":"Yes"});
 function T(s){if(LANG!=='en'||s==null)return s;const k=String(s);return TR[k]!==undefined?TR[k]:k;}
 function TH(h){if(LANG!=='en'||h==null)return h;let x=String(h);
   for(let i=0;i<TRK.length;i++){const k=TRK[i];if(x.indexOf(k)>=0)x=x.split(k).join(TR[k]);}
@@ -1276,7 +1386,8 @@ function applyLang(l,silent){
   try{if(typeof rerenderAll==='function')rerenderAll();}catch(e){}
   if(LANG==='en'){const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
     let nd,c=0;while((nd=w.nextNode())&&c<600){const t=nd.textContent.trim();
-      if(t.length>2&&TR[t]!==undefined&&TR[t]!==t){nd.textContent=nd.textContent.replace(t,TR[t]);c++;}}}
+      if(t.length>2&&TR[t]!==undefined&&TR[t]!==t){if(nd.__esTxt===undefined){nd.__esTxt=nd.textContent;(window.__trNodes=window.__trNodes||[]).push(nd);}nd.textContent=nd.textContent.replace(t,TR[t]);c++;}}}
+  else if(window.__trNodes){window.__trNodes.forEach(nd=>{if(nd.__esTxt!==undefined){nd.textContent=nd.__esTxt;delete nd.__esTxt;}});window.__trNodes=[];}
   if(!silent){try{
     localStorage.setItem('jf-lang',LANG);localStorage.setItem('iac_lang',LANG);
     const u=new URL(location.href);

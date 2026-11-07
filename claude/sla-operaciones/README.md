@@ -41,11 +41,13 @@ Una fila por **ruta × mes**. El validador revisa formato y continuidad antes de
 
 | Columna | Formato | Uso |
 |---|---|---|
-| `Fecha` (o `Anio` + `Mes`) | AAAA-MM, dd/mm/aaaa o fecha de Excel | Requerida |
+| `Fecha` (o `Anio` + `Mes`) | AAAA-MM, dd/mm/aaaa, ene_2025 o fecha de Excel | Requerida |
 | `Ruta` | texto | Requerida |
 | `Cumplimiento_pct` | 0–100 (acepta 0–1 y convierte) | Requerida — alternativa: `Entregas_Totales` + `Entregas_A_Tiempo` |
 | `SLA_Objetivo_pct` | número | Opcional (si falta, se asume 95%) |
 | `Region` · `Ciudad_Origen` · `Tipo_Cliente` | texto | Opcionales — habilitan filtros y segmentación |
+
+También acepta los nombres en inglés: `Date` (o `Year` + `Month`), `Route`, `Compliance_pct` (o `Total_Deliveries` + `On_Time_Deliveries`), `SLA_Target_pct`, `Origin_City` y `Customer_Type`.
 
 Reglas: mínimo **6 meses continuos** sin huecos a nivel portafolio y sin duplicados ruta+mes. Acepta separador `,` o `;` y decimales con coma. **Todo se procesa en tu navegador**: ningún dato sale de tu equipo.
 
@@ -57,7 +59,7 @@ Reglas: mínimo **6 meses continuos** sin huecos a nivel portafolio y sin duplic
 ## Tecnología
 HTML + CSS + JavaScript vanilla, sin build. [Plotly.js](https://plotly.com/javascript/) 2.35.2. El Q&A usa un motor local determinista; el *upgrade* generativo requiere backend, así que en GitHub Pages responde el motor local.
 
-El sistema bilingüe usa un mapa único ES→EN donde el español es la clave. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`), de modo que un enlace compartido conserva el idioma.
+El texto fijo se traduce con un mapa único ES→EN donde el español es la clave; el texto dinámico (narrativa, alertas, Q&A, validación de archivos, one-pager) se escribe en ambos idiomas desde el origen. Al cambiar de idioma se vuelve a pintar todo sin perder filtros, gobernanza ni la última pregunta. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`), de modo que un enlace compartido conserva el idioma.
 
 ---
 **Javier Forero** · [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/)

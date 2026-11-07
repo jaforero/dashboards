@@ -41,11 +41,13 @@ One row per **route × month**. The validator checks format and continuity befor
 
 | Column | Format | Use |
 |---|---|---|
-| `Fecha` (or `Anio` + `Mes`) | YYYY-MM, dd/mm/yyyy or an Excel date | Required |
-| `Ruta` | text | Required |
-| `Cumplimiento_pct` | 0–100 (it accepts 0–1 and converts) | Required — alternative: `Entregas_Totales` + `Entregas_A_Tiempo` |
-| `SLA_Objetivo_pct` | number | Optional (if missing, 95% is assumed) |
-| `Region` · `Ciudad_Origen` · `Tipo_Cliente` | text | Optional — they enable filters and segmentation |
+| `Date` (or `Year` + `Month`) | YYYY-MM, dd/mm/yyyy, jan_2025 or an Excel date | Required |
+| `Route` | text | Required |
+| `Compliance_pct` | 0–100 (it accepts 0–1 and converts) | Required — alternative: `Total_Deliveries` + `On_Time_Deliveries` |
+| `SLA_Target_pct` | number | Optional (if missing, 95% is assumed) |
+| `Region` · `Origin_City` · `Customer_Type` | text | Optional — they enable filters and segmentation |
+
+The Spanish column names also work: `Fecha` (or `Anio` + `Mes`), `Ruta`, `Cumplimiento_pct` (or `Entregas_Totales` + `Entregas_A_Tiempo`), `SLA_Objetivo_pct`, `Ciudad_Origen` and `Tipo_Cliente`.
 
 Rules: at least **6 continuous months** with no gaps at portfolio level and no duplicate route+month. It accepts `,` or `;` separators and comma decimals. **Everything is processed in your browser**: no data leaves your machine.
 
@@ -57,7 +59,7 @@ Rules: at least **6 continuous months** with no gaps at portfolio level and no d
 ## Technology
 Vanilla HTML + CSS + JavaScript, no build step. [Plotly.js](https://plotly.com/javascript/) 2.35.2. The Q&A uses a deterministic local engine; the generative upgrade needs a backend, so on GitHub Pages the local engine answers.
 
-The bilingual system uses a single ES→EN map with Spanish as the key. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`), so a shared link keeps its language.
+Static text is translated with a single ES→EN map keyed in Spanish; dynamic text (narrative, alerts, Q&A, file validation, one-pager) is written in both languages at source. Switching language re-renders everything without losing filters, governance or the last question. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`), so a shared link keeps its language.
 
 ---
 **Javier Forero** · [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/)
