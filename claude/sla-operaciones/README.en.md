@@ -53,7 +53,7 @@ Rules: at least **6 continuous months** with no gaps at portfolio level and no d
 
 ## Usage
 - **Web:** `index.html` (Plotly via CDN, with multi-CDN fallback).
-- **Offline:** open `dashboard-offline.html` by double-clicking, no internet needed. It carries Plotly embedded and excludes analytics on purpose.
+- **Offline:** open `dashboard-offline.html` by double-clicking, no internet needed. It carries Plotly and the Excel reader (SheetJS) embedded, so it also accepts .xlsx offline, and excludes analytics on purpose.
 - **Data:** `data/cumplimiento_sla_tidy.csv` (570 rows: 38 routes × 15 months). It is embedded in the HTML; the CSV is published purely for transparency and auditability.
 
 ## Technology

@@ -53,7 +53,7 @@ Reglas: mínimo **6 meses continuos** sin huecos a nivel portafolio y sin duplic
 
 ## Uso
 - **Web:** `index.html` (Plotly vía CDN, con respaldo multi-CDN).
-- **Offline:** abre `dashboard-offline.html` con doble clic, sin internet. Lleva Plotly embebido y excluye la analítica a propósito.
+- **Offline:** abre `dashboard-offline.html` con doble clic, sin internet. Lleva Plotly y el lector de Excel (SheetJS) embebidos, así que también acepta .xlsx sin conexión, y excluye la analítica a propósito.
 - **Datos:** `data/cumplimiento_sla_tidy.csv` (570 filas: 38 rutas × 15 meses). Van embebidos en el HTML; el CSV se publica solo para transparencia y auditoría.
 
 ## Tecnología
