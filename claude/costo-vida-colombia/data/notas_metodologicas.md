@@ -445,10 +445,11 @@ afirmar cosas que el dato no dice:
 |---|---|---|
 | **Tono pleno** | El territorio efectivamente medido: el municipio, o los municipios del A.M. | — |
 | **Tono suave** (34 % claro / 40 % oscuro sobre el gris base) | El departamento de esa ciudad, como contexto geográfico | **No es una medición departamental.** El índice de Riohacha no describe a toda La Guajira |
-| **Gris** | Los nueve departamentos sin ninguna ciudad medida | — |
+| **Gris** | Los nueve departamentos continentales sin ninguna ciudad medida | — |
 
 Los nueve en gris: **Cundinamarca, Arauca, Casanare, Putumayo, Amazonas, Guainía, Guaviare,
-Vaupés y Vichada**. Cundinamarca queda en gris porque Bogotá es distrito propio, así que el
+Vaupés y Vichada**. El archipiélago de San Andrés, Providencia y Santa Catalina tampoco tiene
+una ciudad medida y no aparece en el mapa. Cundinamarca queda en gris porque Bogotá es distrito propio, así que el
 departamento que rodea a la ciudad más cara del país no tiene medición propia. Ese vacío no es
 un defecto del mapa: es el estado real de la estadística de precios en Colombia, y se lee de un
 golpe.
@@ -479,8 +480,8 @@ visible está incrustada en la vista—. La preferencia se guarda con `safeStore
 memoria donde `localStorage` está bloqueado, y comparte las llaves `jf-lang` / `iac_lang` con el
 resto del portafolio.
 
-GA4 `G-MQ3K8EVKV0` con eventos propios: `select_city`, `change_view`, `toggle_theme`,
-`toggle_lang`. **Solo mide en el despliegue de GitHub Pages**: la política de contenido del
+GA4 `G-MQ3K8EVKV0` con eventos propios: `select_city`, `change_year`, `change_view`,
+`toggle_theme`, `toggle_lang`. **Solo mide en el despliegue de GitHub Pages**: la política de contenido del
 visor de artifacts bloquea `googletagmanager.com`, así que ahí el contador no dispara. La página
 no depende de él para funcionar.
 
