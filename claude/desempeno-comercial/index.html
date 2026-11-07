@@ -209,7 +209,7 @@ html{transition:background-color .25s ease,color .25s ease;}
 body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:background-color .25s ease,color .25s ease,border-color .25s ease;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
 :focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:6px;}
-.plot{background:#ffffff;border-radius:12px;padding:6px;}
+.plot{background:#ffffff;border-radius:12px;padding:0;}
 /* NAV */
 .brandnav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:6px 2px 16px;flex-wrap:wrap;}
 .bn-left{display:flex;align-items:center;gap:12px;}
@@ -532,6 +532,9 @@ function baseLayout(extra){
     hoverlabel:{font:{family:"'IgraSans',Aptos,Helvetica,Arial,sans-serif"}}}, extra||{});
 }
 const PCFG={displayModeBar:false,responsive:true};
+/* Con responsive:true, Plotly exige que el contenedor tenga alto propio: al redimensionar (cambio de pestaña,
+   zoom o ventana) borra layout.height y toma el 100% del contenedor; sin alto fijo, el gráfico se desborda. */
+function plotInto(id,data,layout,cfg){const el=document.getElementById(id);if(el&&layout&&layout.height)el.style.height=layout.height+"px";return Plotly.react(id,data,layout,cfg);}
 
 /* ==================== ESTRUCTURA DERIVADA ==================== */
 const MESES=[...new Set(VD.map(r=>r.m))].sort();
@@ -645,7 +648,7 @@ function plotTrend(){
   const t=tc();
   const barV={type:"bar",x:ms.map(mAb),y:v,name:LG("Ventas","Revenue"),marker:{color:ms.map(m=>{const c=cumpl(monthTotals(m,reg).ventas,monthTotals(m,reg).meta);return c>=100?COL.ok:c>=90?COL.purple:COL.alert;})},hovertemplate:LG("<b>%{x}</b><br>Ventas: %{y:$,.0f}<extra></extra>","<b>%{x}</b><br>Revenue: %{y:$,.0f}<extra></extra>")};
   const lineM={type:"scatter",mode:"lines+markers",x:ms.map(mAb),y:mt,name:LG("Meta","Target"),line:{color:t.deep,width:2,dash:"dot"},marker:{size:5,color:t.deep},hovertemplate:LG("Meta %{x}: %{y:$,.0f}<extra></extra>","Target %{x}: %{y:$,.0f}<extra></extra>")};
-  Plotly.react("plotTrend",[barV,lineM],baseLayout({height:320,margin:{l:64,r:16,t:10,b:44},yaxis:{gridcolor:t.grid,zeroline:false,tickprefix:"$",tickformat:",.3~s"},xaxis:{gridcolor:"rgba(0,0,0,0)"},showlegend:true,legend:{orientation:"h",y:1.12,x:0}}),PCFG);
+  plotInto("plotTrend",[barV,lineM],baseLayout({height:320,margin:{l:64,r:16,t:10,b:44},yaxis:{gridcolor:t.grid,zeroline:false,tickprefix:"$",tickformat:",.3~s"},xaxis:{gridcolor:"rgba(0,0,0,0)"},showlegend:true,legend:{orientation:"h",y:1.12,x:0}}),PCFG);
 }
 
 /* ==================== NARRATIVA EJECUTIVA ==================== */
@@ -708,7 +711,7 @@ function plotRegion(){
     text:reg.map(d=>d.c.toFixed(1)+"%"),textposition:"auto",textfont:{color:"#fff",size:11},
     customdata:reg.map(d=>[d.v,d.mt]),hovertemplate:LG("<b>%{y}</b><br>Cumpl: %{x:.1f}%<br>Ventas: %{customdata[0]:$,.0f}<br>Meta: %{customdata[1]:$,.0f}<extra></extra>","<b>%{y}</b><br>Attainment: %{x:.1f}%<br>Revenue: %{customdata[0]:$,.0f}<br>Target: %{customdata[1]:$,.0f}<extra></extra>")};
   const tgt={type:"scatter",mode:"markers",y:reg.map(d=>d.rg),x:reg.map(()=>100),marker:{symbol:"line-ns-open",size:16,color:t.deep,line:{width:2}},hovertemplate:LG("Meta 100%<extra></extra>","Target 100%<extra></extra>")};
-  Plotly.react("plotRegion",[bars,tgt],baseLayout({height:Math.max(200,reg.length*54+70),margin:{l:78,r:20,t:10,b:36},xaxis:{gridcolor:t.grid,zeroline:false,title:LG("Cumplimiento (%)","Attainment (%)"),range:[Math.min(80,Math.min(...reg.map(d=>d.c))-5),Math.max(110,Math.max(...reg.map(d=>d.c))+3)]},yaxis:{automargin:true,gridcolor:"rgba(0,0,0,0)"}}),PCFG);
+  plotInto("plotRegion",[bars,tgt],baseLayout({height:Math.max(200,reg.length*54+70),margin:{l:78,r:20,t:10,b:36},xaxis:{gridcolor:t.grid,zeroline:false,title:LG("Cumplimiento (%)","Attainment (%)"),range:[Math.min(80,Math.min(...reg.map(d=>d.c))-5),Math.max(110,Math.max(...reg.map(d=>d.c))+3)]},yaxis:{automargin:true,gridcolor:"rgba(0,0,0,0)"}}),PCFG);
 }
 function renderVendTable(){
   const RM=refMonth();
@@ -740,7 +743,7 @@ function plotFunnel(){
   const tr={type:"funnel",y:stg.map(stL),x:opp,textinfo:"value+percent initial",
     marker:{color:[COL.deep,COL.blue,COL.purple,COL.light,COL.ok]},
     hovertemplate:LG("<b>%{y}</b><br>Oportunidades: %{x}<extra></extra>","<b>%{y}</b><br>Opportunities: %{x}<extra></extra>")};
-  Plotly.react("plotFunnel",[tr],baseLayout({height:340,margin:{l:96,r:20,t:12,b:20}}),PCFG);
+  plotInto("plotFunnel",[tr],baseLayout({height:340,margin:{l:96,r:20,t:12,b:20}}),PCFG);
   const lbl=$("funnelMonthLbl"); if(lbl) lbl.textContent=TH(mAb(lastMF));
 }
 function plotConv(){
@@ -752,7 +755,7 @@ function plotConv(){
   const t=tc();
   const b1={type:"bar",name:LG("Primera mitad","First half"),x:stg.map(stL),y:gA,marker:{color:t.border},hovertemplate:LG("%{x} (inicio): %{y:.1f}%<extra></extra>","%{x} (start): %{y:.1f}%<extra></extra>")};
   const b2={type:"bar",name:LG("Segunda mitad","Second half"),x:stg.map(stL),y:gB,marker:{color:stg.map((e,i)=>gB[i]<gA[i]-2?COL.alert:COL.purple)},hovertemplate:LG("%{x} (reciente): %{y:.1f}%<extra></extra>","%{x} (recent): %{y:.1f}%<extra></extra>")};
-  Plotly.react("plotConv",[b1,b2],baseLayout({height:300,barmode:"group",margin:{l:52,r:16,t:10,b:40},showlegend:true,legend:{orientation:"h",y:1.14,x:0},yaxis:{gridcolor:t.grid,zeroline:false,title:LG("Conversión (%)","Conversion (%)"),ticksuffix:"%"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
+  plotInto("plotConv",[b1,b2],baseLayout({height:300,barmode:"group",margin:{l:52,r:16,t:10,b:40},showlegend:true,legend:{orientation:"h",y:1.14,x:0},yaxis:{gridcolor:t.grid,zeroline:false,title:LG("Conversión (%)","Conversion (%)"),ticksuffix:"%"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
 }
 function renderFunnelNarr(){
   const deltas=funnelDeltas(), worst=deltas[0], W=stL(worst.e);
@@ -797,7 +800,7 @@ function plotPipeStage(){
   const t=tc();
   const b1={type:"bar",name:LG("Valor nominal","Nominal value"),x:stg.map(stL),y:val,marker:{color:t.border},text:val.map(v=>fK(v)),textposition:"outside",textfont:{size:10,color:t.muted},hovertemplate:"%{x}<br>Nominal: %{y:$,.0f}<extra></extra>"};
   const b2={type:"bar",name:LG("Ponderado (prob. cierre)","Weighted (close prob.)"),x:stg.map(stL),y:pond,marker:{color:COL.purple},text:stg.map((e,i)=>((FWD[e]||0)*100).toFixed(0)+"%"),textposition:"outside",textfont:{size:10,color:COL.purple},hovertemplate:LG("%{x}<br>Ponderado: %{y:$,.0f}<br>Prob. cierre: %{text}<extra></extra>","%{x}<br>Weighted: %{y:$,.0f}<br>Close prob.: %{text}<extra></extra>")};
-  Plotly.react("plotPipeStage",[b1,b2],baseLayout({height:320,barmode:"overlay",margin:{l:60,r:16,t:24,b:40},showlegend:true,legend:{orientation:"h",y:1.16,x:0},yaxis:{gridcolor:t.grid,zeroline:false,tickprefix:"$",tickformat:",.3~s"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
+  plotInto("plotPipeStage",[b1,b2],baseLayout({height:320,barmode:"overlay",margin:{l:60,r:16,t:24,b:40},showlegend:true,legend:{orientation:"h",y:1.16,x:0},yaxis:{gridcolor:t.grid,zeroline:false,tickprefix:"$",tickformat:",.3~s"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
 }
 function plotSource(){
   const src=channelRates().sort((a,b)=>a.wr-b.wr);
@@ -806,7 +809,7 @@ function plotSource(){
     marker:{color:src.map(d=>d.wr>=avg(src.map(s=>s.wr))?COL.ok:COL.warn)},
     text:src.map(d=>d.wr.toFixed(1)+"%"),textposition:"auto",textfont:{color:"#fff",size:11},
     customdata:src.map(d=>[d.w,d.tot]),hovertemplate:LG("<b>%{y}</b><br>Win rate: %{x:.1f}%<br>%{customdata[0]}/%{customdata[1]} cerradas<extra></extra>","<b>%{y}</b><br>Win rate: %{x:.1f}%<br>%{customdata[0]}/%{customdata[1]} closed<extra></extra>")};
-  Plotly.react("plotSource",[bars],baseLayout({height:Math.max(220,src.length*40+60),margin:{l:120,r:20,t:10,b:36},xaxis:{gridcolor:t.grid,zeroline:false,title:"Win rate (%)"},yaxis:{automargin:true,gridcolor:"rgba(0,0,0,0)"}}),PCFG);
+  plotInto("plotSource",[bars],baseLayout({height:Math.max(220,src.length*40+60),margin:{l:120,r:20,t:10,b:36},xaxis:{gridcolor:t.grid,zeroline:false,title:"Win rate (%)"},yaxis:{automargin:true,gridcolor:"rgba(0,0,0,0)"}}),PCFG);
 }
 function renderPipeNarr(){
   const reg=state.region, en=isEN();
@@ -893,7 +896,7 @@ function nextMonths(k, start){
 function plotForecast(){
   const ms=MESES.filter(m=>m>=state.desde && m<=state.hasta);
   const y=ms.map(m=>monthTotals(m,state.region).ventas);
-  if(y.length<4){ try{Plotly.purge("plotForecast");}catch(e){} $("plotForecast").innerHTML=TH('<p class="na" style="padding:24px;text-align:center;">'+LG('El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo.','The selected range is too short to project (≥ 4 months are needed). Widen the period.')+'</p>'); $("fcNarr").innerHTML=TH(""); return; }
+  if(y.length<4){ try{Plotly.purge("plotForecast");}catch(e){} $("plotForecast").style.height=""; $("plotForecast").innerHTML=TH('<p class="na" style="padding:24px;text-align:center;">'+LG('El rango seleccionado es demasiado corto para proyectar (se necesitan ≥ 4 meses). Amplía el periodo.','The selected range is too short to project (≥ 4 months are needed). Widen the period.')+'</p>'); $("fcNarr").innerHTML=TH(""); return; }
   const f=fitForecast(y,3);
   const fm=nextMonths(3);
   const t=tc();
@@ -901,7 +904,7 @@ function plotForecast(){
   const proj={type:"scatter",mode:"lines+markers",x:fm.map(mAb),y:f.proj,name:LG("Proyección","Projection"),line:{color:COL.blue,width:2,dash:"dash"},marker:{size:6,symbol:"diamond"},hovertemplate:LG("%{x} (proy): %{y:$,.0f}<extra></extra>","%{x} (proj.): %{y:$,.0f}<extra></extra>")};
   const up={type:"scatter",mode:"lines",x:fm.map(mAb),y:f.proj.map(v=>v+f.band),line:{width:0},showlegend:false,hoverinfo:"skip"};
   const lo={type:"scatter",mode:"lines",x:fm.map(mAb),y:f.proj.map(v=>v-f.band),fill:"tonexty",fillcolor:"rgba(0,72,255,0.12)",line:{width:0},showlegend:false,hoverinfo:"skip"};
-  Plotly.react("plotForecast",[hist,proj,up,lo],baseLayout({height:340,margin:{l:64,r:16,t:10,b:44},showlegend:true,legend:{orientation:"h",y:1.12,x:0},yaxis:{gridcolor:t.grid,zeroline:false,tickprefix:"$",tickformat:",.3~s"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
+  plotInto("plotForecast",[hist,proj,up,lo],baseLayout({height:340,margin:{l:64,r:16,t:10,b:44},showlegend:true,legend:{orientation:"h",y:1.12,x:0},yaxis:{gridcolor:t.grid,zeroline:false,tickprefix:"$",tickformat:",.3~s"},xaxis:{gridcolor:"rgba(0,0,0,0)"}}),PCFG);
   // narrativa
   const better=f.naiveMape!=null && f.mape<f.naiveMape, en=isEN();
   const who=state.region==="Todas"?LG("el portafolio","the portfolio"):(en?"the "+state.region+" region":"la región "+state.region);
@@ -1091,7 +1094,7 @@ function renderAll(){
     plotTrend(); plotRegion(); plotFunnel(); plotConv(); plotPipeStage(); plotSource(); plotForecast();
   } else if(window.__plotlyFailed){
     /* sin librería de gráficos: cifras, narrativa, gobernanza y Q&A siguen funcionando */
-    document.querySelectorAll(".plot").forEach(d=>{d.innerHTML='<p class="na" style="padding:22px;text-align:center;">'+LG("No se pudo cargar la librería de gráficos. Cifras, narrativa, gobernanza y Q&amp;A siguen funcionando.","The charting library could not be loaded. Figures, narrative, governance and Q&amp;A still work.")+'</p>';});
+    document.querySelectorAll(".plot").forEach(d=>{d.style.height="";d.innerHTML='<p class="na" style="padding:22px;text-align:center;">'+LG("No se pudo cargar la librería de gráficos. Cifras, narrativa, gobernanza y Q&amp;A siguen funcionando.","The charting library could not be loaded. Figures, narrative, governance and Q&amp;A still work.")+'</p>';});
     const lbl=$("funnelMonthLbl"); if(lbl) lbl.textContent=mAb(funnelMonths()[funnelMonths().length-1]);
   }
 }
