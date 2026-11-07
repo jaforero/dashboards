@@ -1,0 +1,55 @@
+# Dashboards · pruebas de humo
+#
+# Abre cada tablero en Chromium y revisa errores de JavaScript, gráficas que no caben en su tarjeta
+# (al cargar, al cambiar de pestaña y al redimensionar), desborde en móvil, texto en español en la
+# versión inglesa, enlaces e imágenes, las versiones offline sin red y sitemap.xml.
+# Detalle y uso local: .github/smoke/README.md
+#
+# Corre en cada push a main, en cada pull request, los lunes (para detectar CDN o fuentes de datos
+# que dejan de responder) y a mano desde la pestaña Actions. Si algo falla, la ejecución queda en
+# rojo y GitHub avisa por correo; el resumen de la ejecución lista cada fallo en español.
+
+name: Dashboards · pruebas de humo
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - "claude/grafo-conocimiento/data/**"
+  pull_request:
+  schedule:
+    - cron: "41 11 * * 1"   # lunes, 06:41 en Bogotá
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # el control de sitemap.xml compara con la fecha del último cambio de cada página
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright + Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund --prefix /tmp/smoke playwright@1.52.0
+          /tmp/smoke/node_modules/.bin/playwright install --with-deps chromium
+
+      - name: Run smoke tests
+        env:
+          NODE_PATH: /tmp/smoke/node_modules
+        run: node .github/smoke/smoke.js .
