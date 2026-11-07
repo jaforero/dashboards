@@ -31,7 +31,8 @@ concurrency:
 
 jobs:
   smoke:
-    runs-on: ubuntu-latest
+    # versión fija: ubuntu-latest pasó a Ubuntu 26.04 y Playwright 1.52 no instala dependencias ahí
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -42,7 +43,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install Playwright + Chromium
         run: |
