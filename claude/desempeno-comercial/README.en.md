@@ -29,7 +29,8 @@ Because *analytics doesn't fail for lack of models, it fails for lack of judgeme
 - **The funnel isn't filtered by region.** The monthly funnel series has no such dimension, so the filter is hidden on that tab rather than offering a control that would lie.
 - **The pipeline isn't filtered by date.** It is a snapshot of the current state of open opportunities, not a time series.
 - **Forecasting with an honest backtest.** Holt with parameters tuned by validation; the MAPE is stated against the naïve model, with the caveat that 18 months don't cover two annual cycles, so **seasonality is not modelled**.
-- **Deterministic Q&A.** Answers are computed over the data, with no free text generation: zero hallucination risk.
+- **Narratives that recompute with the filters.** Bottleneck, trend direction, triggered thresholds and the proposed decision come from the data for the chosen region and range; there are no fixed sentences that could contradict the figures.
+- **Deterministic Q&A.** Answers are computed over the data, with no free text generation: zero hallucination risk. It understands questions in Spanish and English.
 - **Governance with a rigour filter.** Before taking this to committee, the dashboard lists what to validate: calendar effects, the CRM's real definition of “opportunity”, and the opportunity cost of the account plan.
 
 ## Dashboard structure
@@ -43,14 +44,14 @@ Seven tabs: **Summary · Sales & Reps · Funnel · Pipeline & Risk · Forecastin
 | File | Contents |
 |---|---|
 | `ventas_vendedor_mensual.csv` | 144 rows · 8 reps × 18 months: target, revenue, attainment and opportunities won |
-| `funnel_conversion_mensual.csv` | 89 rows · 5 stages × 18 months: opportunities, advanced and conversion rate |
+| `funnel_conversion_mensual.csv` | 90 rows · 5 stages × 18 months: opportunities, advanced and conversion rate |
 | `pipeline_crm_demo.csv` | 721 opportunities: customer, industry, region, lead source, rep, stage, value, status and cycle days |
 | `diccionario_datos_comercial.csv` | Definition of every field |
 
 ## Technology
 Vanilla HTML + CSS + JavaScript, no build step. [Plotly.js](https://plotly.com/javascript/) 2.35.2. The forecasting engine (Holt with parameter search and backtest) and the deterministic Q&A are implemented from scratch, so the dashboard remains a single self-contained file.
 
-The bilingual system uses a single ES→EN map with Spanish as the key. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`).
+The bilingual system uses an ES→EN map for fixed text, with Spanish as the key; computed text (alerts, KPIs, narratives, charts and Q&A answers) is written in both languages at the source. Switching language re-renders everything while keeping filters, tab and the last question. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`).
 
 ---
 **Javier Forero** · [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/)

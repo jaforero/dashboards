@@ -29,7 +29,8 @@ Porque *la analítica no falla por falta de modelos, falla por falta de criterio
 - **El embudo no se filtra por región.** La serie mensual del embudo no tiene esa dimensión, así que el filtro se oculta en esa pestaña en vez de ofrecer un control que mentiría.
 - **El pipeline no se filtra por fechas.** Es una foto del estado actual de las oportunidades abiertas, no una serie temporal.
 - **Predicción con backtest honesto.** Holt con parámetros ajustados por validación; se declara el MAPE frente al modelo ingenuo y se advierte que con 18 meses no hay dos ciclos anuales, así que **no se modela estacionalidad**.
-- **Q&A determinista.** Las respuestas se calculan sobre los datos, sin generación de texto libre: cero riesgo de alucinación.
+- **Narrativas que se recalculan con los filtros.** Cuello de botella, dirección de la tendencia, umbrales disparados y decisión propuesta salen de los datos de la región y el rango elegidos; no hay frases fijas que puedan contradecir las cifras.
+- **Q&A determinista.** Las respuestas se calculan sobre los datos, sin generación de texto libre: cero riesgo de alucinación. Entiende preguntas en español y en inglés.
 - **Gobernanza con filtro de rigor.** Antes de llevar esto a comité, el tablero lista qué validar: efecto calendario, definición real de “oportunidad” en el CRM y el costo de oportunidad del plan por cuenta.
 
 ## Estructura del tablero
@@ -43,14 +44,14 @@ Siete pestañas: **Resumen · Ventas & Vendedores · Embudo · Pipeline & Riesgo
 | Archivo | Contenido |
 |---|---|
 | `ventas_vendedor_mensual.csv` | 144 filas · 8 vendedores × 18 meses: meta, ventas, cumplimiento y oportunidades ganadas |
-| `funnel_conversion_mensual.csv` | 89 filas · 5 etapas × 18 meses: oportunidades, avanzaron y tasa de conversión |
+| `funnel_conversion_mensual.csv` | 90 filas · 5 etapas × 18 meses: oportunidades, avanzaron y tasa de conversión |
 | `pipeline_crm_demo.csv` | 721 oportunidades: cliente, industria, región, origen del lead, vendedor, etapa, valor, estado y días de ciclo |
 | `diccionario_datos_comercial.csv` | Definición de cada campo |
 
 ## Tecnología
 HTML + CSS + JavaScript vanilla, sin build. [Plotly.js](https://plotly.com/javascript/) 2.35.2. El motor de predicción (Holt con búsqueda de parámetros y backtest) y el Q&A determinista están implementados desde cero, para que el tablero siga siendo un único archivo autónomo.
 
-El sistema bilingüe usa un mapa único ES→EN donde el español es la clave. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`).
+El sistema bilingüe usa un mapa ES→EN para los textos fijos, donde el español es la clave; los textos calculados (alertas, KPI, narrativas, gráficos y respuestas del Q&A) se redactan en ambos idiomas desde el origen. Al cambiar de idioma todo se vuelve a renderizar conservando filtros, pestaña y última pregunta. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`).
 
 ---
 **Javier Forero** · [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/)
