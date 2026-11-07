@@ -99,8 +99,11 @@ There is no model that is good for every series: there is the one that gets it l
 - **Analytics**: GA4 `G-MQ3K8EVKV0` on every published page, each with its own `content_group` so they can be separated in reports. Offline versions exclude it on purpose.
 - **Zero metric hallucination**: every published figure must be traceable to a cited source. A target is never presented as an achievement.
 
+## Automated tests
+Every push to `main` (and every pull request, every Monday or by hand from *Actions*) runs `.github/workflows/smoke-dashboards.yml`: it opens each page in Chromium and checks JavaScript errors, charts that don't fit their card after switching tabs or resizing, horizontal overflow on mobile, Spanish left in the English version, links, the offline versions without a network, and `sitemap.xml`. If anything fails, the run turns red and GitHub sends an email. When you add a page, add it to the `PAGES` array in `.github/smoke/smoke.js`. Details (in Spanish) in [`.github/smoke/README.md`](.github/smoke/README.md).
+
 ## Publishing (GitHub Pages)
-Settings → Pages → *Deploy from a branch* → `main` / `/ (root)`. The `.nojekyll` and `CNAME` files are already at the root.
+Settings → Pages → *Deploy from a branch* → `main` / `/ (root)`. The `CNAME` is at the root. **There is no `.nojekyll`**: it isn't needed today because no path starts with `_`, but add it before creating one that does.
 
 ## Author
 **Javier Forero** — [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/) · [GitHub](https://github.com/jaforero)

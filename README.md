@@ -23,7 +23,7 @@ Todo el sitio es **bilingüe ES/EN** con un selector único en la barra superior
 ```
 El portafolio de **ChatGPT Work** vive en un sitio externo: `https://javier-dashboards.jforero.chatgpt.site/` (su versión inglesa, en `/en`).
 
-> La URL antigua `/pulso-financiero/` redirige automáticamente a `/claude/pulso-financiero/`. El stub usa ruta absoluta, nunca relativa: una ruta relativa reintroduce el bug de anidamiento `claude/claude/<caso>/`. **`/sla-operaciones/` en la raíz ya no existe**: si quieres conservar los enlaces viejos de ese tablero, hay que volver a crear su stub.
+> La URL antigua `/pulso-financiero/` redirige automáticamente a `/claude/pulso-financiero/`. El stub usa ruta absoluta, nunca relativa: una ruta relativa reintroduce el bug de anidamiento `claude/claude/<caso>/`. `/sla-operaciones/` hace lo mismo hacia `/claude/sla-operaciones/`.
 
 ## Dos tipos de contenido — no confundirlos
 
@@ -98,6 +98,9 @@ No existe un modelo bueno para todas las series: existe el que menos se equivoca
 - **Imagen social**: `og-image.png` (1200×630) vive en la raíz y es genérica del sitio.
 - **Analítica**: GA4 `G-MQ3K8EVKV0` en todas las páginas publicadas, con `content_group` propio para separarlas en los informes. Las versiones offline lo excluyen a propósito.
 - **Cero alucinación en métricas**: toda cifra publicada debe ser trazable a una fuente citada. Un objetivo nunca se presenta como logro.
+
+## Pruebas automáticas
+Cada push a `main` (y cada pull request, los lunes o a mano desde *Actions*) corre `.github/workflows/smoke-dashboards.yml`: abre cada página en Chromium y revisa errores de JavaScript, gráficas que no caben en su tarjeta al cambiar de pestaña o redimensionar, desborde en móvil, español que queda en la versión inglesa, enlaces, versiones offline sin red y `sitemap.xml`. Si algo falla, la ejecución queda en rojo y GitHub avisa por correo. Al crear una página nueva, agrégala al arreglo `PAGES` de `.github/smoke/smoke.js`. Detalle en [`.github/smoke/README.md`](.github/smoke/README.md).
 
 ## Publicar (GitHub Pages)
 Settings → Pages → *Deploy from a branch* → `main` / `/ (root)`. El `CNAME` está en la raíz. **No hay `.nojekyll`**: hoy no hace falta porque ninguna ruta empieza por `_`, pero conviene agregarlo antes de crear una que sí.
