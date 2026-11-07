@@ -28,7 +28,7 @@ Porque *la analítica no falla por falta de modelos, falla por falta de criterio
 - **Pipeline ponderado por probabilidades empíricas del propio embudo**, no por pesos arbitrarios. Es más conservador y defendible ante un comité que preguntará de dónde sale cada porcentaje.
 - **El embudo no se filtra por región.** La serie mensual del embudo no tiene esa dimensión, así que el filtro se oculta en esa pestaña en vez de ofrecer un control que mentiría.
 - **El pipeline no se filtra por fechas.** Es una foto del estado actual de las oportunidades abiertas, no una serie temporal.
-- **Predicción con backtest honesto.** Holt con parámetros ajustados por validación; se declara el MAPE frente al modelo ingenuo y se advierte que con 18 meses no hay dos ciclos anuales, así que **no se modela estacionalidad**.
+- **Predicción con backtest honesto.** Holt con parámetros ajustados por validación; se declara el MAPE frente al modelo ingenuo y se advierte que con 18 meses no hay dos ciclos anuales, así que **no se modela estacionalidad**. La banda de incertidumbre se abre con el horizonte (error a h pasos del método de Holt).
 - **Narrativas que se recalculan con los filtros.** Cuello de botella, dirección de la tendencia, umbrales disparados y decisión propuesta salen de los datos de la región y el rango elegidos; no hay frases fijas que puedan contradecir las cifras.
 - **Q&A determinista.** Las respuestas se calculan sobre los datos, sin generación de texto libre: cero riesgo de alucinación. Entiende preguntas en español y en inglés.
 - **Gobernanza con filtro de rigor.** Antes de llevar esto a comité, el tablero lista qué validar: efecto calendario, definición real de “oportunidad” en el CRM y el costo de oportunidad del plan por cuenta.

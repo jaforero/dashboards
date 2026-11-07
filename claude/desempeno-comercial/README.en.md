@@ -28,7 +28,7 @@ Because *analytics doesn't fail for lack of models, it fails for lack of judgeme
 - **Pipeline weighted by the funnel's own empirical probabilities**, not by arbitrary weights. It is more conservative and defensible before a committee that will ask where each percentage comes from.
 - **The funnel isn't filtered by region.** The monthly funnel series has no such dimension, so the filter is hidden on that tab rather than offering a control that would lie.
 - **The pipeline isn't filtered by date.** It is a snapshot of the current state of open opportunities, not a time series.
-- **Forecasting with an honest backtest.** Holt with parameters tuned by validation; the MAPE is stated against the naïve model, with the caveat that 18 months don't cover two annual cycles, so **seasonality is not modelled**.
+- **Forecasting with an honest backtest.** Holt with parameters tuned by validation; the MAPE is stated against the naïve model, with the caveat that 18 months don't cover two annual cycles, so **seasonality is not modelled**. The uncertainty band widens with the horizon (Holt's h-step error).
 - **Narratives that recompute with the filters.** Bottleneck, trend direction, triggered thresholds and the proposed decision come from the data for the chosen region and range; there are no fixed sentences that could contradict the figures.
 - **Deterministic Q&A.** Answers are computed over the data, with no free text generation: zero hallucination risk. It understands questions in Spanish and English.
 - **Governance with a rigour filter.** Before taking this to committee, the dashboard lists what to validate: calendar effects, the CRM's real definition of “opportunity”, and the opportunity cost of the account plan.
