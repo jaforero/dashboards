@@ -46,6 +46,8 @@ There is no model that is good for every series: there is **the one that gets it
 - **Approximate bands, and said so.** The 80% band uses the standard deviation of the fit residuals; it does not include parameter uncertainty and does not widen with the horizon.
 - **Smart KPIs computed, not requested.** The trend and price factors are derived from your own data; no AI columns need to be supplied.
 - **Zero hallucination.** No figure is invented: whatever the file doesn't support disables its layer and is declared.
+- **The Q&A and the brief name the model that actually forecasts.** Next quarter's figure comes from the model recommended by the rolling-origin validation, shown with its blind MAPE against the seasonal naive method.
+- **Bilingual at the source.** Verdict, alerts, story, Q&A, brief, upload report and exports are written in Spanish and in English; switching language rewrites everything without reloading or losing your data. English exports use English headers that the validator recognises on re-upload.
 
 ## Bring your own data
 
@@ -66,14 +68,14 @@ You don't need year, month or month-name columns. On validation, the dashboard r
 Four datasets ready to load in `casos/`, each with a different story: a warning, a turnaround, a real monthly case (TSMC) and a real quarterly case (Apple). See [`casos/README.en.md`](casos/README.en.md).
 
 ## Usage
-- **Web:** `index.html` (Plotly and SheetJS via CDN, with multi-CDN fallback).
-- **Offline:** open `dashboard-offline.html` by double-clicking, no internet needed. It carries Plotly and SheetJS embedded —so you can upload your Excel offline— and excludes analytics on purpose.
+- **Web:** `index.html` (Plotly 2.35.2 and SheetJS via CDN, with multi-CDN fallback). If no charting library loads, figures, narrative and Q&A keep working. Visits are measured with Google Analytics 4, the same property as the rest of the site.
+- **Offline:** open `dashboard-offline.html` by double-clicking, no internet needed. It carries Plotly, SheetJS and the typeface embedded —so you can upload your Excel offline— and excludes analytics on purpose.
 - **Data:** `data/demo_finanzas.csv` (the 36 demo months). It is embedded in the HTML; the CSV is published for transparency and as a reference template.
 
 ## Technology
 Vanilla HTML + CSS + JavaScript, no build step. [Plotly.js](https://plotly.com/javascript/) 2.35.2 and [SheetJS](https://sheetjs.com/) 0.18.5. The four models are implemented from scratch in JavaScript —including the Fourier least-squares fit and SARIMA estimation by conditional sum of squares— so the dashboard remains a single self-contained file.
 
-The bilingual system uses a single ES→EN map with Spanish as the key. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`).
+The bilingual system combines an ES→EN map for fixed text (Spanish is the key) with templates written in both languages for all computed text. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`).
 
 ---
 **Javier Forero** · [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/)

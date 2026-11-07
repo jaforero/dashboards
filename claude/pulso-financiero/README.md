@@ -46,6 +46,8 @@ No existe un modelo bueno para todas las series: existe **el que menos se equivo
 - **Bandas aproximadas, y dicho.** La banda del 80% usa la desviación de los residuos del ajuste; no incorpora la incertidumbre de los parámetros ni se ensancha con el horizonte.
 - **KPIs Inteligentes calculados, no pedidos.** Los factores de tendencia y precio se derivan de tus propios datos; no hay que aportar columnas de IA.
 - **Cero alucinación.** Ninguna cifra se inventa: lo que el archivo no soporta desactiva su capa y se declara.
+- **El Q&A y el brief nombran el modelo que de verdad proyecta.** La cifra del próximo trimestre sale del modelo recomendado por la validación de origen móvil, y se presenta con su MAPE a ciegas frente al ingenuo estacional.
+- **Bilingüe desde el origen.** Veredicto, alertas, historia, Q&A, brief, reporte de carga y exportaciones se redactan en español y en inglés; cambiar de idioma reescribe todo sin recargar ni perder tus datos. Las exportaciones en inglés usan encabezados en inglés que el validador vuelve a reconocer.
 
 ## Trae tus propios datos
 
@@ -66,14 +68,14 @@ No hacen falta columnas de año, mes ni nombre del mes. Al validar, el tablero i
 Cuatro datasets listos para cargar en `casos/`, cada uno con una historia distinta: alerta, turnaround, caso real mensual (TSMC) y caso real trimestral (Apple). Ver [`casos/README.md`](casos/README.md).
 
 ## Uso
-- **Web:** `index.html` (Plotly y SheetJS vía CDN, con respaldo multi-CDN).
-- **Offline:** abre `dashboard-offline.html` con doble clic, sin internet. Lleva Plotly y SheetJS embebidos —así puedes subir tu Excel sin conexión— y excluye la analítica a propósito.
+- **Web:** `index.html` (Plotly 2.35.2 y SheetJS vía CDN, con respaldo multi-CDN). Si ninguna librería de gráficos carga, cifras, narrativa y Q&A siguen funcionando. Mide visitas con Google Analytics 4, la misma propiedad del sitio.
+- **Offline:** abre `dashboard-offline.html` con doble clic, sin internet. Lleva Plotly, SheetJS y la tipografía embebidos —así puedes subir tu Excel sin conexión— y excluye la analítica a propósito.
 - **Datos:** `data/demo_finanzas.csv` (36 meses del demo). Van embebidos en el HTML; el CSV se publica para transparencia y como plantilla de referencia.
 
 ## Tecnología
 HTML + CSS + JavaScript vanilla, sin build. [Plotly.js](https://plotly.com/javascript/) 2.35.2 y [SheetJS](https://sheetjs.com/) 0.18.5. Los cuatro modelos están implementados desde cero en JavaScript —incluidos el ajuste por mínimos cuadrados de Fourier y la estimación SARIMA por suma de cuadrados condicional— para que el tablero siga siendo un único archivo autónomo.
 
-El sistema bilingüe usa un mapa único ES→EN donde el español es la clave. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`).
+El sistema bilingüe combina un mapa ES→EN para el texto fijo (el español es la clave) con plantillas escritas en ambos idiomas para todo el texto que se calcula. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`).
 
 ---
 **Javier Forero** · [javierforero.co](https://javierforero.co) · [LinkedIn](https://www.linkedin.com/in/jforero/)
