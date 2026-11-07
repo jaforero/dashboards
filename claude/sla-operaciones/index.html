@@ -210,7 +210,7 @@ html{transition:background-color .25s ease,color .25s ease;}
 body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:background-color .25s ease,color .25s ease,border-color .25s ease;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
 :focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:6px;}
-.plot{background:#ffffff;border-radius:12px;padding:6px;}
+.plot{background:#ffffff;border-radius:12px;padding:0;}
 /* NAV */
 .brandnav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:6px 2px 16px;flex-wrap:wrap;}
 .bn-left{display:flex;align-items:center;gap:12px;}
@@ -796,16 +796,20 @@ function renderNarratives(M){
     </div>`);
 }
 
+/* Con responsive:true, Plotly exige que el contenedor tenga alto propio: al redimensionar (cambio de pestaña,
+   zoom o ventana) borra layout.height y toma el 100% del contenedor; sin alto fijo, el gráfico se desborda. */
+function plotInto(id,data,layout,cfg){const el=document.getElementById(id);if(el&&layout&&layout.height)el.style.height=layout.height+"px";return Plotly.react(id,data,layout,cfg);}
+
 /* ---------- Eficiencia ---------- */
 function renderEficiencia(M){
   if(typeof Plotly==="undefined")return;
   const rows=M.sub.filter(r=>rangeMonths().includes(r.mes));
   let data=[...new Set(rows.map(r=>r.region))].map(rg=>{const cu=avg(rows.filter(r=>r.region===rg).map(r=>r.cumplimiento_pct));const sl=avg(rows.filter(r=>r.region===rg).map(r=>r.sla_objetivo_pct));return{region:rg,cumpl:cu,sla:sl,gap:(cu!=null&&sl!=null)?cu-sl:null};}).filter(d=>d.cumpl!=null).sort((a,b)=>a.cumpl-b.cumpl);
-  if(!data.length){document.getElementById("plotEficiencia").innerHTML=TH('<p class="muted" style="padding:20px;text-align:center;">'+L("Sin datos para el filtro.","No data for this filter.")+'</p>');return;}
+  if(!data.length){document.getElementById("plotEficiencia").style.height="";document.getElementById("plotEficiencia").innerHTML=TH('<p class="muted" style="padding:20px;text-align:center;">'+L("Sin datos para el filtro.","No data for this filter.")+'</p>');return;}
   const cf=g=>g==null?COL.muted:(g>=0?COL.ok:g>-3?COL.warn:COL.alert);
   const bars={type:"bar",orientation:"h",y:data.map(d=>d.region),x:data.map(d=>+d.cumpl.toFixed(1)),marker:{color:data.map(d=>cf(d.gap))},text:data.map(d=>d.cumpl.toFixed(1)+"%"),textposition:"auto",textfont:{color:"#fff",size:11},customdata:data.map(d=>[d.sla?d.sla.toFixed(1):L("N/D","N/A"),d.gap!=null?(d.gap>=0?"+":"")+d.gap.toFixed(1):L("N/D","N/A")]),hovertemplate:L("<b>%{y}</b><br>Cumplimiento: %{x:.1f}%<br>Meta SLA: %{customdata[0]}%<br>Brecha: %{customdata[1]} pp<extra></extra>","<b>%{y}</b><br>Compliance: %{x:.1f}%<br>SLA target: %{customdata[0]}%<br>Gap: %{customdata[1]} pp<extra></extra>")};
   const tg={type:"scatter",mode:"markers",y:data.map(d=>d.region),x:data.map(d=>d.sla?+d.sla.toFixed(1):null),marker:{symbol:"diamond",size:11,color:COL.deep,line:{color:"#fff",width:1}},hovertemplate:L("Meta SLA %{y}: %{x:.1f}%<extra></extra>","SLA target %{y}: %{x:.1f}%<extra></extra>")};
-  Plotly.react("plotEficiencia",[bars,tg],{height:Math.max(240,data.length*42+90),margin:{l:96,r:22,t:10,b:36},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{title:L("Cumplimiento SLA (%)","SLA compliance (%)"),gridcolor:COL.border,zeroline:false,range:[Math.min(70,Math.min(...data.map(d=>d.cumpl))-4),100]},yaxis:{automargin:true},showlegend:false,bargap:0.35},{responsive:true,displayModeBar:false});
+  plotInto("plotEficiencia",[bars,tg],{height:Math.max(240,data.length*42+90),margin:{l:96,r:22,t:10,b:36},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{title:L("Cumplimiento SLA (%)","SLA compliance (%)"),gridcolor:COL.border,zeroline:false,range:[Math.min(70,Math.min(...data.map(d=>d.cumpl))-4),100]},yaxis:{automargin:true},showlegend:false,bargap:0.35},{responsive:true,displayModeBar:false});
 }
 
 /* ---------- Riesgo ---------- */
@@ -843,9 +847,9 @@ function renderPrediccion(M){
     traces.push({type:"scatter",mode:"lines+markers",x:pX,y:pY,line:{color:COL.warn,width:3,dash:"dot"},marker:{size:7,symbol:"diamond",color:COL.warn},name:L("Proyección lineal (3m)","Linear projection (3m)"),hovertemplate:L("%{x} (proy.): %{y:.1f}%<extra></extra>","%{x} (proj.): %{y:.1f}%<extra></extra>")});
     const q2=pY.slice(1); projText=isEN()?`Slope ${slope>=0?"+":""}${slope.toFixed(2)} pp/month. Base scenario ${nextQLbl()} ≈ ${Math.min(...q2).toFixed(1)}–${Math.max(...q2).toFixed(1)}%. Fragile (few points): it signals a trend, it doesn't commit to figures.`:`Pendiente ${slope>=0?"+":""}${slope.toFixed(2)} pp/mes. Escenario base ${nextQLbl()} ≈ ${Math.min(...q2).toFixed(1)}–${Math.max(...q2).toFixed(1)}%. Frágil (pocos puntos): señala tendencia, no compromete cifras.`;
   } else projText=L("Proyección no disponible: se requieren ≥2 meses post-quiebre en el rango.","Projection unavailable: at least 2 post-breakpoint months are needed in the range.");
-  const ann=[]; if(BREAK&&list.includes(BREAK)){const yB=vals[list.indexOf(BREAK)]; if(yB!=null)ann.push({x:mShort(BREAK),y:yB,text:L("Quiebre ","Breakpoint ")+mShort(BREAK),showarrow:true,arrowhead:3,ax:0,ay:-42,font:{color:COL.alert,size:11,family:"Aptos"},arrowcolor:COL.alert,bgcolor:"#fff",bordercolor:COL.alert,borderpad:3,borderwidth:1});}
+  const ann=[]; if(BREAK&&list.includes(BREAK)){const yB=vals[list.indexOf(BREAK)]; if(yB!=null)ann.push({x:mShort(BREAK),y:yB,text:L("Quiebre ","Breakpoint ")+mShort(BREAK),showarrow:true,arrowhead:3,ax:0,ay:-42,font:{color:COL.alert,size:11,family:"Aptos,Helvetica,Arial,sans-serif"},arrowcolor:COL.alert,bgcolor:"#fff",bordercolor:COL.alert,borderpad:3,borderwidth:1});}
   const slaRef=avg(M.sub.filter(r=>list.includes(r.mes)).map(r=>r.sla_objetivo_pct));
-  Plotly.react("plotPrediccion",traces,{height:360,margin:{l:48,r:20,t:16,b:40},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{gridcolor:COL.border,tickangle:-40},yaxis:{title:L("Cumplimiento SLA (%)","SLA compliance (%)"),gridcolor:COL.border,zeroline:false},legend:{orientation:"h",y:1.12,x:0},annotations:ann,shapes:slaRef!=null?[{type:"line",xref:"paper",x0:0,x1:1,y0:slaRef,y1:slaRef,line:{color:COL.muted,width:1,dash:"dash"}}]:[]},{responsive:true,displayModeBar:false});
+  plotInto("plotPrediccion",traces,{height:360,margin:{l:48,r:20,t:16,b:40},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Aptos,Helvetica,Arial,sans-serif",color:COL.deep,size:12},xaxis:{gridcolor:COL.border,tickangle:-40},yaxis:{title:L("Cumplimiento SLA (%)","SLA compliance (%)"),gridcolor:COL.border,zeroline:false},legend:{orientation:"h",yanchor:"bottom",y:1.02,x:0},annotations:ann,shapes:slaRef!=null?[{type:"line",xref:"paper",x0:0,x1:1,y0:slaRef,y1:slaRef,line:{color:COL.muted,width:1,dash:"dash"}}]:[]},{responsive:true,displayModeBar:false});
   document.getElementById("projNote").innerHTML=TH((slaRef!=null?(isEN()?`Grey line = average SLA target (${slaRef.toFixed(1)}%). `:`Línea gris = meta SLA promedio (${slaRef.toFixed(1)}%). `):"")+projText);
 }
 
