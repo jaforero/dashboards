@@ -41,8 +41,7 @@
   gtag('config', 'G-MQ3K8EVKV0');
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-basic-dist-min@2.35.2/plotly-basic.min.js" charset="utf-8"></script>
 <style>
 :root{
   --purple:#4e00ff; --purple-light:#7c4dff; --deep-blue:#041c59; --vibrant-blue:#0048ff;
@@ -50,6 +49,7 @@
   --text:#1f2937; --muted:#5f6b7a;
   --ok:#12b76a; --warn:#f79009; --alert:#dc2626; --orange:#ea6a0a;
   --ok-soft:#e7f8ef; --warn-soft:#fef4e6; --alert-soft:#fdeaea; --orange-soft:#fdefe1;
+  --heat-ink:#450a0a; --neg-ink:#b91c1c; --pos-ink:#0d6b41;
   --shadow:0 8px 24px rgba(4,28,89,0.05);
   --font:'IgraSans',Aptos,Helvetica,Arial,sans-serif;
 }
@@ -91,7 +91,7 @@ a{color:var(--vibrant-blue);text-decoration:none;}
 .tabbar{display:flex;gap:5px;flex-wrap:wrap;margin:22px 0 16px;border-bottom:2px solid var(--border);}
 .tab{border:none;background:none;padding:11px 14px;font-family:var(--font);font-weight:700;font-size:.84rem;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:8px 8px 0 0;}
 .tab:hover{color:var(--deep-blue);background:var(--soft-lilac);}
-.tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+.tab.active{color:var(--purple-ink,var(--purple));border-bottom-color:var(--purple);}
 .panel{display:none;} .panel.active{display:block;animation:fade .25s ease;}
 @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
 
@@ -111,14 +111,14 @@ a{color:var(--vibrant-blue);text-decoration:none;}
 .narr-block.plain{background:#fff;border-left:5px solid var(--border);}
 .narr-block h4{margin:0 0 6px;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--deep-blue);font-weight:800;}
 .narr-block p{margin:0;font-size:.88rem;color:var(--text);} .narr-block ul{margin:2px 0 0;padding-left:18px;}
-.narr-block li{font-size:.86rem;margin:4px 0;} .pill-num{font-weight:800;color:var(--purple);}
+.narr-block li{font-size:.86rem;margin:4px 0;} .pill-num{font-weight:800;color:var(--purple-ink,var(--purple));}
 
 .tbl-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:.84rem;}
 th{background:var(--deep-blue);color:#fff;text-align:left;padding:9px 10px;font-weight:700;white-space:nowrap;}
 td{padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
 tr:hover td{background:#fafbff;}
-.tag-def{background:var(--soft-lilac);border:1px dashed var(--purple);color:var(--purple);border-radius:999px;padding:2px 9px;font-size:.72rem;font-weight:700;}
+.tag-def{background:var(--soft-lilac);border:1px dashed var(--purple);color:var(--purple-ink,var(--purple));border-radius:999px;padding:2px 9px;font-size:.72rem;font-weight:700;}
 .tag-ok{background:var(--ok-soft);border:1px solid #bfe9d1;color:#0d6b41;border-radius:999px;padding:2px 9px;font-size:.72rem;font-weight:700;}
 .count-note{font-size:.82rem;color:var(--muted);margin:0 0 10px;}
 .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.76rem;color:var(--muted);margin-top:10px;}
@@ -161,7 +161,7 @@ tr:hover td{background:#fafbff;}
 .qa-ask{background:linear-gradient(90deg,#041c59,#4e00ff);color:#fff;border:none;border-radius:12px;padding:12px 22px;font-family:var(--font);font-weight:800;font-size:.9rem;cursor:pointer;}
 .qa-chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;}
 .qa-chip{background:var(--soft-lilac);border:1px solid var(--border);border-radius:999px;padding:7px 13px;font-size:.8rem;font-weight:600;color:var(--deep-blue);cursor:pointer;}
-.qa-chip:hover{border-color:var(--purple);color:var(--purple);}
+.qa-chip:hover{border-color:var(--purple);color:var(--purple-ink,var(--purple));}
 #qaAnswer{margin-top:16px;}
 .qa-mode{display:inline-block;font-size:.72rem;font-weight:800;padding:4px 10px;border-radius:999px;margin-bottom:8px;}
 .qa-mode.ia{background:#eef0ff;color:#3a1bd6;border:1px solid #d9dcff;}
@@ -173,12 +173,12 @@ tr:hover td{background:#fafbff;}
 .qa-support li{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;border-bottom:1px dashed var(--border);padding:3px 0;}
 .qa-support li b{color:var(--deep-blue);}
 .qa-did{margin-top:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.84rem;line-height:1.55;}
-.qa-did b{color:var(--purple);}
+.qa-did b{color:var(--purple-ink,var(--purple));}
 .qa-thinking{font-size:.8rem;color:var(--muted);margin-top:10px;font-style:italic;}
 @media(max-width:640px){.qa-support ul{grid-template-columns:1fr;}}
 
 .footer{text-align:center;border-top:1px solid var(--border);margin-top:30px;padding:16px 0 8px;color:var(--muted);font-size:.82rem;}
-.footer .sep{color:var(--purple);font-weight:800;} .footer .dom{color:var(--vibrant-blue);}
+.footer .sep{color:var(--purple-ink,var(--purple));font-weight:800;} .footer .dom{color:var(--vibrant-blue);}
 details{margin-top:14px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:4px 16px;}
 summary{cursor:pointer;font-weight:800;color:var(--deep-blue);padding:10px 0;font-size:.9rem;}
 details p,details li{font-size:.84rem;color:var(--text);} .muted{color:var(--muted);} .plot{width:100%;}
@@ -219,7 +219,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 .bn-tag{color:var(--muted);font-size:.75rem;}
 .bn-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .bn-link{font-weight:700;font-size:.82rem;color:var(--deep-blue);border:1px solid var(--border);background:var(--white);border-radius:999px;padding:8px 14px;text-decoration:none;}
-.bn-link:hover{border-color:var(--purple);color:var(--purple);}
+.bn-link:hover{border-color:var(--purple);color:var(--purple-ink,var(--purple));}
 .bn-link.cta{background:linear-gradient(90deg,#041c59,#4e00ff);color:#fff;border:none;}
 .brand-pill{font-family:var(--font);font-weight:700;font-size:1rem;background:var(--white);color:var(--deep-blue);border:1px solid var(--border);border-radius:999px;width:42px;height:40px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 .brand-pill:hover{border-color:var(--purple);}
@@ -232,7 +232,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 .bf-note{font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);margin-top:16px;padding-top:12px;}
 /* ===== TEMA OSCURO ===== */
 [data-theme="dark"]{
-  --purple:#7c4dff;--purple-light:#9a78ff;--deep-blue:#dfe6ff;--vibrant-blue:#7a98ff;
+  --purple:#7c4dff;--purple-ink:#a487ff;--heat-ink:#fff;--neg-ink:#ff8a8a;--pos-ink:#5fe0a6;--purple-light:#9a78ff;--deep-blue:#dfe6ff;--vibrant-blue:#7a98ff;
   --bg:#070c1c;--white:#101732;--border:#243057;--soft-lilac:#181c3e;
   --text:#eaeef9;--muted:#9aa4bf;--shadow:0 12px 32px rgba(0,0,0,.35);
   --ok-soft:rgba(18,183,106,.16);--warn-soft:rgba(247,144,9,.16);--alert-soft:rgba(220,38,38,.16);--orange-soft:rgba(234,106,10,.16);
@@ -259,7 +259,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 /* 2) FILTROS con color / affordance de que se pueden cambiar */
 .filters-card{border:1.5px solid var(--purple);box-shadow:0 10px 28px rgba(78,0,255,.13);}
 .filters-hint{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:800;color:#fff;background:linear-gradient(90deg,#4e00ff,#7c4dff);border-radius:999px;padding:6px 14px;margin-bottom:14px;}
-.field label{color:var(--purple);}
+.field label{color:var(--purple-ink,var(--purple));}
 .field select{background:var(--soft-lilac) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234e00ff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 11px center;padding-right:34px;border:1.5px solid #cbb8ff;color:var(--deep-blue);font-weight:600;}
 .field select:hover{border-color:var(--purple);}
 .btn-reset{background:var(--purple);color:#fff;border-color:var(--purple);}
@@ -298,7 +298,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 .up-card h4{margin:0 0 10px;color:var(--text);}
 .up-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 .up-btn{border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:10px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;}
-.up-btn.ghost{background:transparent;color:var(--purple);}
+.up-btn.ghost{background:transparent;color:var(--purple-ink,var(--purple));}
 .up-btn:hover{filter:brightness(1.08);}
 .drop{border:2px dashed var(--border);border-radius:14px;padding:34px 16px;text-align:center;color:var(--text);cursor:pointer;transition:border-color .15s, background .15s;}
 .drop.over{border-color:var(--purple);background:var(--soft-lilac);}
@@ -311,7 +311,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
 .lang-toggle{display:inline-flex;align-items:center;border-radius:100px;padding:3px;gap:2px;user-select:none;
   background:rgba(120,120,160,.12);border:1px solid rgba(120,120,160,.25);}
 .lang-opt{font-family:inherit;padding:5px 11px;border:none;background:none;border-radius:100px;
-  font-size:.7rem;font-weight:800;letter-spacing:.05em;color:inherit;opacity:.65;cursor:pointer;transition:all .2s ease;}
+  font-size:.7rem;font-weight:800;letter-spacing:.05em;color:inherit;opacity:.8;cursor:pointer;transition:all .2s ease;}
 .lang-opt:hover{opacity:1;}
 .lang-opt:focus-visible{outline:3px solid #0048ff;outline-offset:2px;}
 .lang-opt[aria-pressed="true"]{background:#4e00ff;color:#fff;opacity:1;}
@@ -353,7 +353,7 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
       <div class="field"><label for="fRegion" data-i18n>Región</label><select id="fRegion"></select></div>
       <div class="field"><label for="fTipo" data-i18n>Tipo de cliente</label><select id="fTipo"></select></div>
       <div class="field" style="flex:1.6;"><label data-i18n>Rango de meses</label>
-        <div class="range-row"><select id="fDesde"></select><select id="fHasta"></select></div>
+        <div class="range-row"><select id="fDesde" aria-label="Desde"></select><select id="fHasta" aria-label="Hasta"></select></div>
       </div>
       <button class="btn-reset" id="btnReset" data-i18n>Restablecer</button>
     </div>
@@ -432,8 +432,8 @@ body,.card,.badge,.inp,.tab,.banner,.narr-block,.qa-text,.qa-support{transition:
     <div class="sect-desc" data-i18n>Un KPI sin dueño ni decisión es un adorno. Completa aquí la casa permanente del hallazgo: quién responde, con qué umbral y qué decisión se dispara. Se refleja en las tarjetas y alertas al instante.</div>
     <div class="card">
       <div class="gov-head">
-        <div class="field"><label data-i18n>Cadencia de actualización del dato</label><input class="inp" id="govCadencia" placeholder="Ej: semanal · lunes 8:00 a.m."/></div>
-        <div class="field" style="max-width:230px;"><label data-i18n>Alertar frescura si el dato supera (días)</label><input class="inp" id="govFresh" type="number" min="1" value="35"/></div>
+        <div class="field"><label for="govCadencia" data-i18n>Cadencia de actualización del dato</label><input class="inp" id="govCadencia" placeholder="Ej: semanal · lunes 8:00 a.m."/></div>
+        <div class="field" style="max-width:230px;"><label for="govFresh" data-i18n>Alertar frescura si el dato supera (días)</label><input class="inp" id="govFresh" type="number" min="1" value="35"/></div>
       </div>
       <div class="tbl-wrap"><table class="gov-table" id="govTable"></table></div>
       <div class="btnrow">
@@ -824,8 +824,8 @@ function renderRiesgo(M){
   const t=document.getElementById("riskTable");
   if(!risk.length){t.innerHTML=TH(`<tr><td style="border:none;color:var(--muted);padding:14px;">Ninguna ruta en breach severo bajo el filtro.</td></tr>`);return;}
   const g=GOV.items.riesgo; const tbd='<span class="tag-def">'+L("por definir","to be defined")+'</span>'; const dueno=g.dueno?esc(g.dueno):tbd; const dec=g.decision?esc(g.decision):tbd;
-  const rojo=b=>{const a=Math.max(0,Math.min(1,(Math.abs(b)-5)/13));return`rgba(220,38,38,${(a*0.72+0.10).toFixed(2)})`;};
-  const tc=b=>(Math.abs(b)-5)/13>0.55?"#fff":"#7a1010";
+  const rojo=b=>{const a=Math.max(0,Math.min(1,(Math.abs(b)-5)/13));return`rgba(220,38,38,${(a*0.60+0.10).toFixed(2)})`;};
+  const tc=()=>"var(--heat-ink)";
   t.innerHTML=TH(`${isEN()?'<thead><tr><th>Route</th><th>Region</th><th>Origin city</th><th>Type</th><th>Target</th><th>Compl.</th><th>Gap (pp)</th><th>Owner</th><th>Decision</th></tr></thead>':'<thead><tr><th>Ruta</th><th>Región</th><th>Ciudad origen</th><th>Tipo</th><th>Meta</th><th>Cumpl.</th><th>Brecha (pp)</th><th>Dueño</th><th>Decisión</th></tr></thead>'}
     <tbody>${risk.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.region}</td><td>${r.ciudad}</td><td>${tipoL(r.tipo)}</td><td>${r.sla}%</td><td>${r.cumpl.toFixed(1)}%</td>
       <td style="background:${rojo(r.brecha)};color:${tc(r.brecha)};font-weight:800;text-align:center;">${r.brecha.toFixed(1)}</td><td>${dueno}</td><td>${dec}</td></tr>`).join("")}</tbody>`);
@@ -871,18 +871,18 @@ function renderDiagFacts(M){
   el.innerHTML=TH(`
     ${isEN()?`<div class="narr-block"><p><b>Fact:</b> compliance falls from <b>${fpct(dic)}</b> (${mShort(bP)}) to <b>${fpct(ene)}</b> (${mShort(BREAK)}) — a jump of <span class="pill-num">${fpp(cliff)}</span> in a single month. The drop hits <b>${nDown}/${perReg.length}</b> regions in the <b>same month</b>, within a band of ${rango}. That simultaneity is the strongest evidence of a <b>single event</b> (systemic or measurement-related), not of independent failures.</p></div>`:`<div class="narr-block"><p><b>Hecho:</b> el cumplimiento cae de <b>${fpct(dic)}</b> (${mShort(bP)}) a <b>${fpct(ene)}</b> (${mShort(BREAK)}) — un salto de <span class="pill-num">${fpp(cliff)}</span> en un solo mes. La caída golpea a <b>${nDown}/${perReg.length}</b> regiones el <b>mismo mes</b>, en una banda de ${rango}. La simultaneidad es la evidencia más fuerte de un <b>evento único</b> (sistémico o de medición), no de fallas independientes.</p></div>`}
     <div class="tbl-wrap" style="margin-top:10px;"><table><thead><tr><th>${L("Región","Region")}</th><th>${mShort(bP)} → ${mShort(BREAK)} (Δ pp)</th></tr></thead>
-      <tbody>${perReg.map(x=>`<tr><td>${x.rg}</td><td style="font-weight:800;color:${x.d<0?'#b91c1c':'#0d6b41'};">${x.d>=0?'+':''}${x.d.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`);
+      <tbody>${perReg.map(x=>`<tr><td>${x.rg}</td><td style="font-weight:800;color:${x.d<0?'var(--neg-ink)':'var(--pos-ink)'};">${x.d>=0?'+':''}${x.d.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`);
 }
 function renderDiagCauses(){
   const box=document.getElementById("diagCauses"); box.innerHTML=TH("");
   Object.entries(DIAG.causes).forEach(([k,c])=>{
     const row=document.createElement("div"); row.className="diag-cause";
     row.innerHTML=TH(`<div class="lbl">${causeLabel(k)}</div>
-      <select data-k="${k}" class="est-${c.estado}">
+      <select data-k="${k}" class="est-${c.estado}" aria-label="${esc(L("Estado de la causa","Cause status")+": "+causeLabel(k))}">
         <option value="Pendiente" ${c.estado==="Pendiente"?"selected":""}>${L("Pendiente","Pending")}</option>
         <option value="Descartada" ${c.estado==="Descartada"?"selected":""}>${L("Descartada","Ruled out")}</option>
         <option value="Confirmada" ${c.estado==="Confirmada"?"selected":""}>${L("Confirmada","Confirmed")}</option></select>
-      <textarea data-kn="${k}" placeholder="${L("Evidencia / nota (opcional)","Evidence / note (optional)")}">${esc(c.nota)}</textarea>`);
+      <textarea data-kn="${k}" aria-label="${esc(L("Evidencia","Evidence")+": "+causeLabel(k))}" placeholder="${L("Evidencia / nota (opcional)","Evidence / note (optional)")}">${esc(c.nota)}</textarea>`);
     box.appendChild(row);
   });
   box.querySelectorAll("select").forEach(s=>s.onchange=e=>{DIAG.causes[e.target.dataset.k].estado=e.target.value; e.target.className="est-"+e.target.value; renderDiagVerdict();});
@@ -911,9 +911,9 @@ function renderGobernanza(){
   t.innerHTML=TH(`${isEN()?'<thead><tr><th style="min-width:150px;">Indicator</th><th style="min-width:150px;">Threshold</th><th style="min-width:150px;">Owner</th><th>Associated decision</th></tr></thead>':'<thead><tr><th style="min-width:150px;">Indicador</th><th style="min-width:150px;">Umbral</th><th style="min-width:150px;">Dueño</th><th>Decisión asociada</th></tr></thead>'}
     <tbody>${Object.entries(GOV.items).map(([k,g])=>`<tr>
       <td><b>${govLabel(k)}</b></td>
-      <td><input class="inp" data-g="${k}" data-f="umbral" value="${esc(g.umbral)}"/></td>
-      <td><input class="inp" data-g="${k}" data-f="dueno" value="${esc(g.dueno)}" placeholder="${L("por definir","to be defined")}"/></td>
-      <td><input class="inp" data-g="${k}" data-f="decision" value="${esc(g.decision)}" placeholder="${L("por definir","to be defined")}"/></td></tr>`).join("")}</tbody>`);
+      <td><input class="inp" data-g="${k}" data-f="umbral" aria-label="${esc(L("Umbral","Threshold")+": "+govLabel(k))}" value="${esc(g.umbral)}"/></td>
+      <td><input class="inp" data-g="${k}" data-f="dueno" aria-label="${esc(L("Dueño","Owner")+": "+govLabel(k))}" value="${esc(g.dueno)}" placeholder="${L("por definir","to be defined")}"/></td>
+      <td><input class="inp" data-g="${k}" data-f="decision" aria-label="${esc(L("Decisión","Decision")+": "+govLabel(k))}" value="${esc(g.decision)}" placeholder="${L("por definir","to be defined")}"/></td></tr>`).join("")}</tbody>`);
   t.querySelectorAll("input").forEach(inp=>inp.onchange=e=>{GOV.items[e.target.dataset.g][e.target.dataset.f]=e.target.value; refreshGovDependents();});
 }
 function refreshGovDependents(){ if(LAST_M){ renderAlerts(LAST_M); renderKPIs(LAST_M); renderRiesgo(LAST_M); renderNarratives(LAST_M); } }
@@ -1143,9 +1143,25 @@ function rerenderAll(){
   if(LAST_Q){const res=computeAnswer(LAST_Q);res.llmText=null;renderAnswer(res,'local');}
   const op=document.getElementById("opModal"); if(op&&op.classList.contains("open"))openOnePager();
 }
+/* Lector de Excel (SheetJS 0.20.3) bajo demanda: se descarga solo al subir o exportar un .xlsx, no en cada visita.
+   La 0.20.3 corrige CVE-2023-30533 y CVE-2024-22363 de la 0.18.5. Integridad SRI fija; el respaldo es la
+   copia de npm (@e965/xlsx), idéntica byte a byte a la oficial de cdn.sheetjs.com. */
+var XLSX_SRC=["https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js","https://cdn.jsdelivr.net/npm/@e965/xlsx@0.20.3/dist/xlsx.full.min.js"];
+var XLSX_SRI="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT";
+var __xlsxP=null;
+function loadXLSX(){
+  if(typeof XLSX!=="undefined")return Promise.resolve(true);
+  if(__xlsxP)return __xlsxP;
+  __xlsxP=new Promise(function(res){(function next(i){
+    if(i>=XLSX_SRC.length){__xlsxP=null;res(false);return;}
+    var sc=document.createElement("script");sc.src=XLSX_SRC[i];sc.integrity=XLSX_SRI;sc.crossOrigin="anonymous";
+    sc.onload=function(){if(typeof XLSX!=="undefined")res(true);else next(i+1);};
+    sc.onerror=function(){sc.remove();next(i+1);};
+    document.head.appendChild(sc);})(0);});
+  return __xlsxP;}
 function ensurePlotly(cb){
   if(typeof Plotly!=="undefined"){cb();return;}
-  const cdns=["https://cdn.jsdelivr.net/npm/plotly.js@2.35.2/dist/plotly.min.js","https://cdn.plot.ly/plotly-2.35.2.min.js","https://unpkg.com/plotly.js@2.35.2/dist/plotly.min.js"];
+  const cdns=["https://cdn.jsdelivr.net/npm/plotly.js-basic-dist-min@2.35.2/plotly-basic.min.js","https://cdn.plot.ly/plotly-basic-2.35.2.min.js","https://unpkg.com/plotly.js-basic-dist-min@2.35.2/plotly-basic.min.js"];
   (function next(i){if(typeof Plotly!=="undefined"){cb();return;}if(i>=cdns.length){plotlyFailed();return;}const s=document.createElement("script");s.src=cdns[i];s.onload=()=>(typeof Plotly!=="undefined")?cb():next(i+1);s.onerror=()=>next(i+1);document.head.appendChild(s);})(0);
 }
 function plotlyFailed(){["plotEficiencia","plotPrediccion"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=TH('<p style="color:#b45309;font-size:.85rem;padding:22px;text-align:center;">'+L("No se pudo cargar la librería de gráficos. El resto del tablero (KPIs, narrativa, riesgo, diagnóstico, gobernanza y Q&A local) funciona sin conexión.","The charting library could not be loaded. The rest of the dashboard (KPIs, narrative, risk, diagnosis, governance and local Q&A) works offline.")+'</p>');});}
@@ -1324,13 +1340,14 @@ function handleSlaFile(file){
     upReport(res);
   };
   if(ext==="xlsx"||ext==="xls"){
-    if(typeof XLSX==="undefined"){upReport({ok:false,err:[M2("No se pudo cargar el lector de Excel (sin conexión). Exporta tu archivo como CSV e inténtalo de nuevo.","The Excel reader could not be loaded (offline). Export your file as CSV and try again.")],warn:[]});return;}
+    loadXLSX().then(ok=>{
+    if(!ok){upReport({ok:false,err:[M2("No se pudo cargar el lector de Excel (sin conexión). Exporta tu archivo como CSV e inténtalo de nuevo.","The Excel reader could not be loaded (offline). Export your file as CSV and try again.")],warn:[]});return;}
     const fr=new FileReader();
     fr.onload=e=>{try{const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array",cellDates:false});
       const ws=wb.Sheets[wb.SheetNames[0]]; const mat=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
       const {headers,rows}=uRowsFromMatrix(mat); finish(headers,rows);
     }catch(err){upReport({ok:false,err:[M2("Error leyendo el Excel: "+err.message,"Error reading the Excel file: "+err.message)],warn:[]});}};
-    fr.readAsArrayBuffer(file);
+    fr.readAsArrayBuffer(file);});
   } else {
     const fr=new FileReader();
     fr.onload=e=>{try{const mat=uParseCSV(e.target.result); const {headers,rows}=uRowsFromMatrix(mat); finish(headers,rows);}
