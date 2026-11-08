@@ -494,7 +494,7 @@
           <div class="ctl"><span class="ctl-l" id="lbl-range" data-i18n>Rango</span><div class="seg" id="rangeSeg" role="group" aria-labelledby="lbl-range"></div></div>
           <label class="chk"><input type="checkbox" id="histLog"><span data-i18n>Escala logarítmica</span></label>
         </div>
-        <div class="chart" id="histChart" role="img" aria-label=""><div class="msg" data-i18n>Cargando el histórico…</div></div>
+        <div class="chart" id="histChart" role="status"><div class="msg" data-i18n>Cargando el histórico…</div></div>
         <div class="legend-note">
           <span class="ln"><i aria-hidden="true"></i><span data-i18n>Día con publicación oficial</span></span>
           <span class="ln"><i class="dot" aria-hidden="true"></i><span data-i18n>Fin de semana o festivo: repite el último valor oficial</span></span>
@@ -517,7 +517,7 @@
       </div>
       <div class="chart-h"><div class="chart-t" id="b100Title"></div><div class="chart-s zone-key" id="b100Sub"></div></div>
       <div class="b100-legend" id="b100Legend" hidden></div>
-      <div class="chart" id="b100Chart" role="img" aria-label=""><div class="msg" data-i18n>Cargando el histórico…</div></div>
+      <div class="chart" id="b100Chart" role="status"><div class="msg" data-i18n>Cargando el histórico…</div></div>
       <div class="reading" id="b100Reading" aria-live="polite"></div>
       <p class="foot" id="b100Foot"></p>
       <details class="alt" id="b100Alt"><summary data-i18n>Ver los datos del gráfico en una tabla</summary><div class="tbl-wrap scroll" id="b100Table" tabindex="0" role="region" aria-label="Tabla de datos del gráfico" data-i18n-attr="aria-label"></div></details>
@@ -1055,7 +1055,7 @@ function tickLabels(vals){
 function plotConfig(){return {displayModeBar:false,responsive:true,locale:LANG==='en'?'en-US':'es',scrollZoom:false};}
 function purge(el){try{if(window.Plotly&&el&&el.classList.contains('js-plotly-plot'))Plotly.purge(el);}catch(e){}}
 function clearMsg(el){Array.prototype.slice.call(el.children).forEach(c=>{if(c.classList.contains('msg'))c.remove();});}
-function chartMsg(id,html,cls){const el=$(id);purge(el);el.innerHTML='<div class="msg '+(cls||'')+'">'+html+'</div>';}
+function chartMsg(id,html,cls){const el=$(id);purge(el);el.setAttribute('role','status');el.removeAttribute('aria-label');el.innerHTML='<div class="msg '+(cls||'')+'">'+html+'</div>';}
 
 function renderCharts(){
   const ids=['histChart','b100Chart'];
@@ -1102,7 +1102,7 @@ function renderHistory(){
   const rg=RANGES.find(r=>r[0]===S.range);const from=rg&&rg[1]?isoShift(end,rg[1]):all[0].date;
   const pts=all.filter(p=>p.date>=from);
   const el=$('histChart');
-  el.setAttribute('aria-label',F('Gráfico de línea de {name} ({pair}) entre el {a} y el {b}.',{name:sname(id),pair:e.pair,a:fmtD(pts[0].date),b:fmtD(end)}));
+  el.setAttribute('role','img');el.setAttribute('aria-label',F('Gráfico de línea de {name} ({pair}) entre el {a} y el {b}.',{name:sname(id),pair:e.pair,a:fmtD(pts[0].date),b:fmtD(end)}));
 
   /* Eventos (texto accesible, siempre visible aunque el gráfico falle) */
   const evs=eventsFor(id).map(ev=>({ev:ev,st:eventStats(id,ev)})).filter(x=>x.st);
@@ -1200,7 +1200,7 @@ function renderB100(){
   const allPts=[];series.forEach(s=>s.pts.forEach(p=>allPts.push(p)));
   const log=S.b100Log!=null?S.b100Log:autoLog(allPts);$('b100Log').checked=log;
   const el=$('b100Chart');
-  el.setAttribute('aria-label',F('Gráfico base 100 de {list} desde el {date}.',{list:series.map(s=>s.e.pair).join(', '),date:fromTxt})+' '+T('Sobre 100: la moneda se depreció; bajo 100: se apreció.'));
+  el.setAttribute('role','img');el.setAttribute('aria-label',F('Gráfico base 100 de {list} desde el {date}.',{list:series.map(s=>s.e.pair).join(', '),date:fromTxt})+' '+T('Sobre 100: la moneda se depreció; bajo 100: se apreció.'));
   /* Tabla alternativa */
   const tbl=$('b100Table'),det=$('b100Alt');tbl.innerHTML='';
   const build=()=>{const dates=[];const map={};series.forEach(s=>s.pts.forEach(p=>{if(!map[p.date]){map[p.date]={};dates.push(p.date);}map[p.date][s.id]=p.value;}));
