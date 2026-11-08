@@ -383,7 +383,7 @@ Object.assign(window.KB_T.en, {
     tourEco: function (n, top, k, zero) { return 'Los cuadrados son tu <b>ecosistema</b>: ' + n + ' sitios propios. <b>' + E(top) + '</b> recibe lectores desde ' + k + ' artículos' + (zero.length ? '; en cambio, <b>' + zero.map(E).join(', ') + '</b> no reciben ningún enlace desde el blog.' : ', y todos los sitios reciben al menos un enlace.'); },
     ecoZero: function (n) { return n === 1 ? '1 sitio no recibe ningún enlace desde el blog: el blog no le envía lectores.' : n + ' sitios no reciben ningún enlace desde el blog: el blog no les envía lectores.'; },
     ecoFrom: function (k) { return k === 1 ? '1 artículo lo enlaza' : k + ' artículos lo enlazan'; }, ecoNone: 'sin enlaces desde el blog',
-    legacyH: 'Apuntan a tu dominio anterior', accept: 'Dejar así', acceptTip: 'Decisión del autor: esta nota se queda sin enlaces a propósito',
+    legacyH: 'Apuntan a tu dominio anterior', ecoEmbeds: 'La página incrusta este sitio', wpDynamicPage: '*Página dinámica: su contenido se dibuja con JavaScript al abrirla en el blog, por eso aquí no se ve. Sus enlaces se declaran en la configuración del explorador.*', renderedLink: 'Enlace de una página dinámica (visible al abrirla en el blog)', accept: 'Dejar así', acceptTip: 'Decisión del autor: esta nota se queda sin enlaces a propósito',
     acceptedN: function (n) { return 'Sin enlaces por decisión del autor · ' + n; }, unaccept: 'Devolver a la lista'
   });
   Object.assign(en, {
@@ -393,7 +393,7 @@ Object.assign(window.KB_T.en, {
     tourEco: function (n, top, k, zero) { return 'The squares are your <b>ecosystem</b>: ' + n + ' sites of your own. <b>' + E(top) + '</b> gets readers from ' + k + ' posts' + (zero.length ? '; <b>' + zero.map(E).join(', ') + '</b>, instead, get no link from the blog.' : ', and every site gets at least one link.'); },
     ecoZero: function (n) { return n === 1 ? '1 site receives no link from the blog: the blog sends it no readers.' : n + ' sites receive no link from the blog: the blog sends them no readers.'; },
     ecoFrom: function (k) { return k === 1 ? '1 post links to it' : k + ' posts link to it'; }, ecoNone: 'no links from the blog',
-    legacyH: 'Pointing to your former domain', accept: 'Leave as is', acceptTip: 'Author decision: this note stays unlinked on purpose',
+    legacyH: 'Pointing to your former domain', ecoEmbeds: 'The page embeds this site', wpDynamicPage: '*Dynamic page: its content is drawn with JavaScript when opened on the blog, so it does not show here. Its links are declared in the explorer configuration.*', renderedLink: 'Link from a dynamic page (visible when opened on the blog)', accept: 'Leave as is', acceptTip: 'Author decision: this note stays unlinked on purpose',
     acceptedN: function (n) { return 'Unlinked by author decision · ' + n; }, unaccept: 'Back to the list'
   });
   Object.assign(es.help, {

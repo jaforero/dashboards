@@ -47,7 +47,7 @@ function loadVault(files, assets, meta, opts = {}) {
     for (const l of v.links) { if (l.type !== 'markdown' || !l.target) continue; const i = left.findIndex(x => x.from === l.source && x.to === l.target); if (i >= 0) { l.resolution = 'legacy'; l.raw = left[i].href; left.splice(i, 1); } }
   }
   if (meta.extraLinks) v.links.push(...meta.extraLinks.filter(l => v.notes.some(n => n.id === l.source)));
-  for (const l of v.links) if (l.type === 'ecosystem' && l.target) for (const id of [l.source, l.target]) { const n = v.notes.find(x => x.id === id); if (n) n.orphan = false; }
+  for (const l of v.links) if ((l.type === 'ecosystem' || l.resolution === 'rendered') && l.target) for (const id of [l.source, l.target]) { const n = v.notes.find(x => x.id === id); if (n) n.orphan = false; }
   // inferred links (shared tags) start switched on only when the written network leaves many notes isolated
   const orphanRate = v.notes.length ? v.notes.filter(n => n.orphan).length / v.notes.length : 0;
   const extraOn = (meta.defaultTypesExtra || []).filter(k => !meta.extraIfOrphanRate || orphanRate > meta.extraIfOrphanRate);
@@ -1371,8 +1371,11 @@ async function loadWordpress(input, opts = {}) {
           const key = it.path + '\u0000' + byKey.get(k); curated.set(key, (curated.get(key) || 0) + 1);
         });
       });
+      doc.body.querySelectorAll('iframe[src]').forEach(f => { const eh = ecoHostOf(f.getAttribute('src')); if (eh) ecoLinks.push({ from: it.path, host: eh, text: t('ecoEmbeds') }); });
+      const dynamic = !!doc.body.querySelector('#root, #app') && !(doc.body.textContent || '').trim();
       let md = '';
       try { md = td.turndown(doc.body); } catch (e) { md = htmlText(it.content && it.content.rendered); }
+      if (dynamic && !md.trim()) md = t('wpDynamicPage');
       const title = decodeHtml(it.title && it.title.rendered) || it.slug;
       const desc = htmlText(it.excerpt && it.excerpt.rendered).replace(/\s*(\[…\]|\[&hellip;\]|…|Continue reading.*|Seguir leyendo.*)$/i, '');
       const descShort = desc.length > 300 ? desc.slice(0, 300).replace(/\s+\S*$/, '') + '…' : desc;
@@ -1399,6 +1402,8 @@ async function loadWordpress(input, opts = {}) {
     for (const it of files) { const n = (it.text.match(/^part: (.*)$/m) || [])[1]; if (n) { const name = JSON.parse(n); groupLabels[VaultParser.normPart(name, it.path)] = { es: name, en: name }; } }
     // optional link type: articles that share at least WP_MIN_SHARED_TAGS tags (both directions, so it reads as a backlink too)
     const extraLinks = [];
+    for (const [src, tos] of Object.entries(((AUTH_CFG || {})[host] || {}).pageLinks || {})) for (const to of tos) if (items.some(x => x.path === src) && items.some(x => x.path === to))
+      extraLinks.push({ source: src, target: to, raw: to, type: 'markdown', resolution: 'rendered', reason: null, heading: null, display: null, section: null, context: t('renderedLink') });
     const seenEco = new Set();
     for (const x of ecoLinks) { const k3 = x.from + '|' + x.host; if (seenEco.has(k3)) continue; seenEco.add(k3);
       extraLinks.push({ source: x.from, target: `ecosistema/${x.host}.md`, raw: 'https://' + x.host, type: 'ecosystem', resolution: 'ecosystem', reason: null, heading: null, display: x.text, section: null, context: x.text }); }
