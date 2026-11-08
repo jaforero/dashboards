@@ -92,6 +92,30 @@
           "es": "Tutor IA Saber Pro en Derecho (URL técnica de Cloud Run)",
           "en": "Saber Pro Law AI Tutor (Cloud Run technical URL)"
         }
+      },
+      "youtube": {
+        "url": "https://www.youtube.com/c/JavierForeroRuiz",
+        "label": {
+          "es": "Canal de YouTube",
+          "en": "YouTube channel"
+        },
+        "channels": [
+          "youtube.com/c/JavierForeroRuiz",
+          "youtube.com/@JavierForeroRuiz",
+          "youtube.com/channel/UCQFzSonhdJwm69ilZCemH1Q"
+        ],
+        "videos": [
+          "zOTZKeb0lCs",
+          "ylNOz2dhLyU",
+          "YFoBLAik6_w",
+          "eHmBvXvpm1k",
+          "x78U07yU0kc",
+          "bdJHNoIjuds",
+          "9Eo2ClZmaAM",
+          "oc82iyS1FPU",
+          "U2yREu62ZX4"
+        ],
+        "note": "Videos verificados como del canal @JavierForeroRuiz (oEmbed de YouTube, 2026-11-08). Los videos de otros autores incrustados en el blog no cuentan."
       }
     },
     "pageLinks": {

@@ -1323,7 +1323,13 @@ async function loadWordpress(input, opts = {}) {
     const baseDom = host.split('.').slice(-2).join('.');
     const legacyHosts = new Set((ecoCfg.legacy || []).map(x => x.toLowerCase()));
     const ignoreHosts = new Set((ecoCfg.ignore || []).map(x => x.toLowerCase()));
-    const ecoSites = ecoCfg.sites || {};
+    const ecoSites = Object.assign({}, ecoCfg.sites || {});
+    // the author's video channel: only the author's own videos (listed ids) or links to the channel count
+    const yt = ecoCfg.youtube || null, ytVideos = new Set((yt && yt.videos) || []);
+    if (yt) ecoSites['youtube-canal'] = Object.assign({ url: yt.url }, yt.label || {});
+    const ytId = u => { const m = String(u || '').match(/(?:youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?v=|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/); return m ? m[1] : null; };
+    const ytChannel = u => yt && (yt.channels || []).some(c => String(u || '').toLowerCase().includes(c.toLowerCase()));
+    const ownVideo = u => yt && (ytVideos.has(ytId(u)) || ytChannel(u));
     const ecoHostOf = href => { let h; try { h = new URL(href, 'https://' + host + '/').hostname.toLowerCase(); } catch (e) { return null; }
       if (h === host || h === 'www.' + host || ignoreHosts.has(h) || legacyHosts.has(h)) return null;
       return (ecoSites[h] || (h.endsWith('.' + baseDom) && !/^(i\d|s\d|stats|pixel)\./.test(h))) ? h : null; };
@@ -1345,6 +1351,7 @@ async function loadWordpress(input, opts = {}) {
         const href = node.getAttribute('href'); const k = wpKey(href, host); const from = node.ownerDocument.__kbPath;
         let target = href;
         const eh = ecoHostOf(href); if (eh) ecoLinks.push({ from, host: eh, text });
+        if (ownVideo(href)) ecoLinks.push({ from, host: 'youtube-canal', text });
         const lg = !k && legacyTarget(href); if (lg) { legacyLinks.push({ from, href, to: lg.path }); target = relPath(from, lg.path); }
         if (k && byKey.has(k)) target = relPath(from, byKey.get(k));
         else if (k && isPostUrl(k)) target = relPath(from, `${k.split('/')[1]}/${k.split('/').pop()}.md`);
@@ -1371,7 +1378,7 @@ async function loadWordpress(input, opts = {}) {
           const key = it.path + '\u0000' + byKey.get(k); curated.set(key, (curated.get(key) || 0) + 1);
         });
       });
-      doc.body.querySelectorAll('iframe[src]').forEach(f => { const eh = ecoHostOf(f.getAttribute('src')); if (eh) ecoLinks.push({ from: it.path, host: eh, text: t('ecoEmbeds') }); });
+      doc.body.querySelectorAll('iframe[src]').forEach(f => { const src = f.getAttribute('src'); const eh = ecoHostOf(src); if (eh) ecoLinks.push({ from: it.path, host: eh, text: t('ecoEmbeds') }); if (ownVideo(src)) ecoLinks.push({ from: it.path, host: 'youtube-canal', text: t('ecoVideo') }); });
       const dynamic = !!doc.body.querySelector('#root, #app') && !(doc.body.textContent || '').trim();
       let md = '';
       try { md = td.turndown(doc.body); } catch (e) { md = htmlText(it.content && it.content.rendered); }
@@ -1393,9 +1400,9 @@ async function loadWordpress(input, opts = {}) {
     const ecoHosts = new Set([...Object.keys(ecoSites), ...ecoLinks.map(x => x.host)]);
     for (const h of ecoHosts) {
       const lab = ecoSites[h] || {}; const title = lab[UI] || lab.es || h;
-      const p = `ecosistema/${h}.md`; metaLinks[p] = 'https://' + h + '/';
-      const fm = { title, part: t('ecoGroup'), status: 'ecosistema', ecosistema: true, description: h };
-      files.push({ path: p, text: `---\n${Object.entries(fm).map(([k2, v2]) => `${k2}: ${JSON.stringify(v2)}`).join('\n')}\n---\n\n# ${title}\n\n${t('ecoBody', h)}\n` });
+      const p = `ecosistema/${h}.md`; const siteUrl = lab.url || 'https://' + h + '/'; metaLinks[p] = siteUrl;
+      const fm = { title, part: t('ecoGroup'), status: 'ecosistema', ecosistema: true, description: siteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') };
+      files.push({ path: p, text: `---\n${Object.entries(fm).map(([k2, v2]) => `${k2}: ${JSON.stringify(v2)}`).join('\n')}\n---\n\n# ${title}\n\n${t('ecoBody', siteUrl)}\n` });
     }
     // group labels exactly as the categories are named on the blog
     const groupLabels = {};
