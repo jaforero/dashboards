@@ -1859,7 +1859,9 @@ function tourSteps() {
     steps.push({ k: 'central', run() { resetTypes(); setView('graph'); setMode('global'); openNote(central.id, { focus: true }); }, text: () => t('tour2', central.title, writtenIn(central.id)) });
     steps.push({ k: 'local', run() { resetTypes(); setView('graph'); if (S.cur !== central.id) openNote(central.id); setMode('local'); }, text: () => t('tour3', central.title) });
   }
-  const ar = (S.authorRels || []).slice().sort((a, b) => (b.verb === 'evolves') - (a.verb === 'evolves'))[0];
+  // the author's own axis first: relations between pillars, then those touching one, then «evolves»
+  const pil = r => (S.pillars.has(r.from) ? 1 : 0) + (S.pillars.has(r.to) ? 1 : 0);
+  const ar = (S.authorRels || []).slice().sort((a, b) => pil(b) - pil(a) || (b.verb === 'evolves') - (a.verb === 'evolves'))[0];
   if (ar) steps.push({ k: 'author', run() { resetTypes(); setView('graph'); openNote(ar.from); setMode('local'); setTimeout(() => focusNode(ar.from), 80); },
     text: () => t('tourAuthor', S.notes.get(ar.from).title, verbLabel(ar.verb), S.notes.get(ar.to).title) });
   if (!ar && central) steps.push({ k: 'authorEmpty', run() { resetTypes(); openNote(central.id); setMode('global'); setView('split'); setReaderTab('links'); $('#rel-add').classList.add('pulse'); },
