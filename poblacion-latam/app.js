@@ -813,7 +813,7 @@ function renderRegion(){
   renderRegionBars();
   $('regionWeightsTitle').textContent=F('Cuánto pesa cada país en {y}',{y});
   const mx=top[0][1];
-  $('regionWeights').innerHTML=(REGION.all?top:top.slice(0,6)).map(([iso,s])=>`<li><button type="button" class="wrow${iso===S.country?' sel':''}" data-iso="${iso}" aria-label="${esc(F('{c}: {p} de la región en {y}. Ver el país.',{c:name(iso),p:fmtPct2(s),y}))}"><span class="wname">${esc(name(iso))}</span><span class="wtrack"><span class="wbar" style="width:${(s/mx*100).toFixed(1)}%"></span></span><span class="wval">${fmtPct2(s)}</span></button></li>`).join('');
+  $('regionWeights').innerHTML=(REGION.all?top:top.slice(0,6)).map(([iso,s])=>`<li><button type="button" class="wrow${iso===S.country?' sel':''}" data-iso="${iso}" aria-label="${esc(F('{c}: {p} de la región en {y}. Ver el país.',{c:name(iso),p:fmtPct2(s),y}))}"><span class="wname">${esc(name(iso))}</span> <span class="wtrack"><span class="wbar" style="width:${(s/mx*100).toFixed(1)}%"></span></span> <span class="wval">${fmtPct2(s)}</span></button></li>`).join('');
   const more=$('regionMore');more.textContent=REGION.all?T('Ver menos'):T('Ver los 20 países');more.setAttribute('aria-expanded',String(REGION.all));
   const odd=p.components.filter(c=>!['07-01','06-30','mid-year'].includes(c.reference_date));
   const notes=[T('Funciona como una media ponderada por población: los países grandes mueven más el total. No es el promedio simple de 20 países.')];
