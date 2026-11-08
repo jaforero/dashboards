@@ -14,6 +14,7 @@
 | Offline | `dashboard-offline.html` no dibuja gráficas sin red, o su título pierde `[Offline]` (también en inglés) |
 | Redirecciones | `/pulso-financiero/` y `/sla-operaciones/` no llevan a su ruta en `/claude/` |
 | sitemap.xml | una URL no existe en el repo (fallo); su `lastmod` es anterior al último commit de la página (solo aviso) |
+| Accesibilidad | [axe-core](https://github.com/dequelabs/axe-core) encuentra una infracción de las reglas WCAG 2.0/2.1 nivel A o AA (contraste, nombres de controles, roles ARIA…): al cargar y en cada pestaña, en tema claro y, si la página lo tiene, en tema oscuro |
 
 La analítica (GA4) siempre se bloquea: las pruebas no generan visitas. Los avisos no hacen fallar la ejecución; aparecen en el resumen.
 
@@ -24,9 +25,11 @@ Añade una línea al arreglo `PAGES` de `smoke.js` con su ruta. Si tiene versió
 ## Correrla en local
 
 ```bash
-npm install --no-save --prefix /tmp/smoke playwright@1.52.0
+npm install --no-save --prefix /tmp/smoke playwright@1.52.0 axe-core@4.14.0
 /tmp/smoke/node_modules/.bin/playwright install chromium
 NODE_PATH=/tmp/smoke/node_modules node .github/smoke/smoke.js .
 ```
+
+Sin `axe-core` instalado, la prueba omite la accesibilidad con un aviso en local y falla en GitHub Actions.
 
 Variables opcionales: `SMOKE_ONLY=sla,pulso` (solo esas páginas, por `id`), `SMOKE_NET=0` (sin red externa) y `SMOKE_ROUTES=mapa.json` (sirve librerías de CDN desde archivos locales: `{"https://cdn…/lib.js": "/ruta/lib.js"}`).

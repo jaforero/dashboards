@@ -13,7 +13,9 @@
  *   6. versiones offline: deben dibujar sus gráficas sin red;
  *   7. redirecciones de las rutas antiguas;
  *   8. sitemap.xml: cada URL existe y su <lastmod> no es anterior al último cambio de la página
- *      (esto último solo avisa, no hace fallar la prueba).
+ *      (esto último solo avisa, no hace fallar la prueba);
+ *   9. accesibilidad: axe-core (reglas WCAG 2.0/2.1 nivel A y AA) en cada pestaña, en tema claro y,
+ *      si la página lo tiene, en tema oscuro. Requiere el paquete axe-core junto a Playwright.
  *
  * Uso:  node .github/smoke/smoke.js [raíz-del-repo]
  * Variables opcionales:
@@ -35,6 +37,10 @@ const ANALYTICS = /googletagmanager\.com|google-analytics\.com|analytics\.google
 const ROUTES = process.env.SMOKE_ROUTES ? JSON.parse(fs.readFileSync(process.env.SMOKE_ROUTES, 'utf8')) : {};
 const NET = process.env.SMOKE_NET !== '0';
 const ONLY = process.env.SMOKE_ONLY ? process.env.SMOKE_ONLY.split(',').map(s => s.trim()) : null;
+/* axe-core se instala junto a Playwright (ver el workflow); sin él, el control de accesibilidad falla en CI y solo avisa en local */
+let AXE = null;
+try { AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8'); } catch (e) { }
+const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
 /* Páginas a revisar. en:false = no buscar español en la versión inglesa (contenido propio en español). */
 const PAGES = [
@@ -97,10 +103,10 @@ function startServer() {
 }
 
 /* ---------- utilidades de navegador ---------- */
-async function newContext(browser, base, { mobile = false, offline = false, lang = 'es' } = {}) {
+async function newContext(browser, base, { mobile = false, offline = false, lang = 'es', dark = false } = {}) {
   const ctx = await browser.newContext(mobile
     ? { viewport: { width: 375, height: 812 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'es-CO' }
-    : { viewport: { width: 1366, height: 900 }, locale: 'es-CO' });
+    : { viewport: { width: 1366, height: 900 }, locale: 'es-CO', colorScheme: dark ? 'dark' : 'light' });
   ctx.__external = [];
   await ctx.route('**/*', async r => {
     const u = r.request().url();
@@ -112,7 +118,7 @@ async function newContext(browser, base, { mobile = false, offline = false, lang
     }
     if (offline) { ctx.__external.push(u); return r.abort(); }
     const mapped = ROUTES[u.split('?')[0]];
-    if (mapped) return r.fulfill({ status: 200, contentType: typeOf(mapped), body: fs.readFileSync(mapped) });
+    if (mapped) return r.fulfill({ status: 200, contentType: typeOf(mapped), headers: { 'access-control-allow-origin': '*' }, body: fs.readFileSync(mapped) });
     if (!NET) return r.abort();
     return r.continue();
   });
@@ -214,6 +220,26 @@ async function linksAndImages(page, base, pageId) {
   }
 }
 
+/* Infracciones de axe-core en el estado actual de la página; se acumulan por regla en `acc` */
+async function axeCheck(page, acc, tag) {
+  if (!AXE) return;
+  if (!await page.evaluate(() => !!window.axe)) await page.addScriptTag({ content: AXE });
+  const v = await page.evaluate(async tags => {
+    const r = await window.axe.run(document, { runOnly: { type: 'tag', values: tags }, resultTypes: ['violations'] });
+    return r.violations.map(x => ({ id: x.id, help: x.help, nodes: x.nodes.map(n => n.target.join(' ').slice(0, 80)) }));
+  }, AXE_TAGS);
+  for (const x of v) {
+    const e = acc[x.id] || (acc[x.id] = { help: x.help, nodes: new Set(), where: new Set() });
+    x.nodes.forEach(n => e.nodes.add(n)); e.where.add(tag);
+  }
+}
+function axeReport(pageId, acc, theme) {
+  for (const [id, e] of Object.entries(acc)) {
+    const n = [...e.nodes];
+    fail(pageId, `accesibilidad (${theme}): ${id} — ${e.help}: ${n.length} elemento(s), p. ej. ${n.slice(0, 2).join(' · ')} (${[...e.where].slice(0, 3).join(', ')})`);
+  }
+}
+
 /* ---------- pruebas por página ---------- */
 async function checkDesktop(browser, base, pg) {
   const ctx = await newContext(browser, base);
@@ -227,20 +253,22 @@ async function checkDesktop(browser, base, pg) {
     await ctx.close(); return;
   }
   await linksAndImages(page, base, pg.id);
+  const a11y = {};
   const report = async tag => {
     for (const p of await plotProblems(page)) fail(pg.id, `gráfica desbordada (${tag}): ${p}`);
     const o = await overflow(page); if (o) fail(pg.id, `desborde horizontal en escritorio (${tag}): ${o}`);
   };
-  await report('al cargar');
+  await report('al cargar'); await axeCheck(page, a11y, 'al cargar');
   const n = Math.min(await tabCount(page), 12);
   for (let i = 0; i < n; i++) {
     const name = await clickTab(page, i); await sleep(450);
-    await report(`pestaña «${name}»`);
+    await report(`pestaña «${name}»`); await axeCheck(page, a11y, `«${name}»`);
     await page.setViewportSize({ width: 1100, height: 900 }); await sleep(350);
     await page.setViewportSize({ width: 1366, height: 900 }); await sleep(450);
     await report(`pestaña «${name}» tras redimensionar`);
   }
   if (n) { await clickTab(page, 0); await sleep(400); }
+  axeReport(pg.id, a11y, 'tema claro');
 
   // idioma: inglés sin restos de español, y vuelta exacta al español
   if (pg.en !== false && await page.evaluate(() => !!(document.querySelector('.lang-opt[data-lang="en"]') || document.getElementById('langToggle')))) {
@@ -261,6 +289,28 @@ async function checkDesktop(browser, base, pg) {
     if (pg.offline === undefined && /^\[Offline\]/.test(enTitle)) warn(pg.id, 'título con [Offline] fuera de la versión offline');
   }
   for (const u of new Set(ctx.__external)) warn(pg.id, `externo bloqueado: ${u.slice(0, 120)}`);
+  await ctx.close();
+}
+
+async function checkDark(browser, base, pg) {
+  if (pg.redirect || !AXE) return;
+  const ctx = await newContext(browser, base, { dark: true });
+  const page = await ctx.newPage();
+  watch(page, base, 'tema oscuro', pg.id);
+  await page.goto(base + pg.path, { waitUntil: 'load' });
+  await sleep(2000);
+  const ok = await page.evaluate(() => {
+    if (document.documentElement.getAttribute('data-theme') === 'dark') return true;
+    const t = document.getElementById('themeToggle'); if (!t) return false;
+    t.click(); return document.documentElement.getAttribute('data-theme') === 'dark';
+  });
+  if (!ok) { await ctx.close(); return; }   // página sin tema oscuro
+  await sleep(400);
+  const a11y = {};
+  await axeCheck(page, a11y, 'al cargar');
+  const n = Math.min(await tabCount(page), 12);
+  for (let i = 0; i < n; i++) { const name = await clickTab(page, i); await sleep(450); await axeCheck(page, a11y, `«${name}»`); }
+  axeReport(pg.id, a11y, 'tema oscuro');
   await ctx.close();
 }
 
@@ -329,10 +379,12 @@ function checkSitemap() {
   const base = `http://127.0.0.1:${srv.address().port}`;
   const browser = await chromium.launch(process.env.SMOKE_CHROME ? { executablePath: process.env.SMOKE_CHROME, args: ['--no-sandbox'] } : {});
   const t0 = Date.now();
+  if (!AXE) (process.env.CI ? fail : warn)('accesibilidad', 'axe-core no está instalado: se omitió el control de accesibilidad (npm install axe-core junto a Playwright)');
   for (const pg of PAGES) {
     const t = Date.now();
     try {
       await checkDesktop(browser, base, pg);
+      await checkDark(browser, base, pg);
       await checkMobile(browser, base, pg);
       await checkOffline(browser, base, pg);
     } catch (e) { fail(pg.id, `la prueba no pudo completarse: ${String(e.message).split('\n')[0].slice(0, 200)}`); }
