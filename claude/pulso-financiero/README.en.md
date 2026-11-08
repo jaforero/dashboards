@@ -73,7 +73,7 @@ Four datasets ready to load in `casos/`, each with a different story: a warning,
 - **Data:** `data/demo_finanzas.csv` (the 36 demo months). It is embedded in the HTML; the CSV is published for transparency and as a reference template.
 
 ## Technology
-Vanilla HTML + CSS + JavaScript, no build step. [Plotly.js](https://plotly.com/javascript/) 2.35.2 and [SheetJS](https://sheetjs.com/) 0.18.5. The four models are implemented from scratch in JavaScript —including the Fourier least-squares fit and SARIMA estimation by conditional sum of squares— so the dashboard remains a single self-contained file.
+Vanilla HTML + CSS + JavaScript, no build step. [Plotly.js](https://plotly.com/javascript/) 2.35.2 (the *finance* bundle, only the chart types the dashboard uses) and [SheetJS](https://sheetjs.com/) 0.20.3, downloaded only when you upload or export an Excel file (the offline file has it embedded). The four models are implemented from scratch in JavaScript —including the Fourier least-squares fit and SARIMA estimation by conditional sum of squares— so the dashboard remains a single self-contained file.
 
 The bilingual system combines an ES→EN map for fixed text (Spanish is the key) with templates written in both languages for all computed text. The switcher writes `jf-lang` to `localStorage` and reflects the language in the URL (`?lang=en`).
 

@@ -73,7 +73,7 @@ Cuatro datasets listos para cargar en `casos/`, cada uno con una historia distin
 - **Datos:** `data/demo_finanzas.csv` (36 meses del demo). Van embebidos en el HTML; el CSV se publica para transparencia y como plantilla de referencia.
 
 ## Tecnología
-HTML + CSS + JavaScript vanilla, sin build. [Plotly.js](https://plotly.com/javascript/) 2.35.2 y [SheetJS](https://sheetjs.com/) 0.18.5. Los cuatro modelos están implementados desde cero en JavaScript —incluidos el ajuste por mínimos cuadrados de Fourier y la estimación SARIMA por suma de cuadrados condicional— para que el tablero siga siendo un único archivo autónomo.
+HTML + CSS + JavaScript vanilla, sin build. [Plotly.js](https://plotly.com/javascript/) 2.35.2 (paquete *finance*, solo los tipos de gráfica que usa el tablero) y [SheetJS](https://sheetjs.com/) 0.20.3, que se descarga solo al subir o exportar un Excel (el archivo offline lo trae embebido). Los cuatro modelos están implementados desde cero en JavaScript —incluidos el ajuste por mínimos cuadrados de Fourier y la estimación SARIMA por suma de cuadrados condicional— para que el tablero siga siendo un único archivo autónomo.
 
 El sistema bilingüe combina un mapa ES→EN para el texto fijo (el español es la clave) con plantillas escritas en ambos idiomas para todo el texto que se calcula. El selector escribe `jf-lang` en `localStorage` y refleja el idioma en la URL (`?lang=en`).
 
