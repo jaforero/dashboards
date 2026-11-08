@@ -2,7 +2,8 @@
 #
 # Abre cada tablero en Chromium y revisa errores de JavaScript, gráficas que no caben en su tarjeta
 # (al cargar, al cambiar de pestaña y al redimensionar), desborde en móvil, texto en español en la
-# versión inglesa, enlaces e imágenes, las versiones offline sin red y sitemap.xml.
+# versión inglesa, enlaces e imágenes, las versiones offline sin red, sitemap.xml y accesibilidad
+# (axe-core, WCAG 2.1 A/AA, en cada pestaña y en tema claro y oscuro).
 # Detalle y uso local: .github/smoke/README.md
 #
 # Corre en cada push a main, en cada pull request, los lunes (para detectar CDN o fuentes de datos
@@ -36,18 +37,18 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0   # el control de sitemap.xml compara con la fecha del último cambio de cada página
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "22"
 
-      - name: Install Playwright + Chromium
+      - name: Install Playwright + Chromium + axe-core
         run: |
-          npm install --no-save --no-audit --no-fund --prefix /tmp/smoke playwright@1.52.0
+          npm install --no-save --no-audit --no-fund --prefix /tmp/smoke playwright@1.52.0 axe-core@4.14.0
           /tmp/smoke/node_modules/.bin/playwright install --with-deps chromium
 
       - name: Run smoke tests

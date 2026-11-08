@@ -25,19 +25,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout dashboards
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkout Handbook
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: jaforero/health-insurance-reserving-handbook
           path: _handbook
           fetch-depth: 1
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"   # Node 20 dejó de tener soporte en abril de 2026
 
       - name: Install js-yaml
         run: npm install --no-save --prefix /tmp/grafo js-yaml@4.1.0
