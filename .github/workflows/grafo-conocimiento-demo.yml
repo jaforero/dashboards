@@ -25,17 +25,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout dashboards
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Checkout Handbook
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: jaforero/health-insurance-reserving-handbook
           path: _handbook
           fetch-depth: 1
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: "22"   # Node 20 dejó de tener soporte en abril de 2026
 
