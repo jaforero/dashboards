@@ -14,7 +14,8 @@ const track = (n, p) => { try { if (typeof window.track === 'function') window.t
 const t = (k, ...a) => { const v = T[UI][k]; return typeof v === 'function' ? v(...a) : v; };
 
 // ======================= state =======================
-const TYPES = ['author', 'markdown', 'wikilink', 'prerequisite', 'related', 'translation', 'tag'];
+const TYPES = ['author', 'markdown', 'wikilink', 'prerequisite', 'related', 'ecosystem', 'translation', 'tag'];
+const isEco = n => !!(n && n.frontmatter && n.frontmatter.ecosistema);   // a site of the author's own ecosystem (subdomain), not an article
 const S = {
   source: 'demo', meta: null, vault: null, notes: new Map(), assets: new Map(), objectUrls: [],
   groups: [], groupIdx: new Map(), hubs: new Set(), search: new Map(),
@@ -40,11 +41,17 @@ function loadVault(files, assets, meta, opts = {}) {
       if (c) { l.type = 'related'; left.set(k, c - 1); }
     }
   }
+  // links written with the blog's former domain: same target, but the address should be updated in the post
+  if (meta.legacy && meta.legacy.length) {
+    const left = meta.legacy.slice();
+    for (const l of v.links) { if (l.type !== 'markdown' || !l.target) continue; const i = left.findIndex(x => x.from === l.source && x.to === l.target); if (i >= 0) { l.resolution = 'legacy'; l.raw = left[i].href; left.splice(i, 1); } }
+  }
   if (meta.extraLinks) v.links.push(...meta.extraLinks.filter(l => v.notes.some(n => n.id === l.source)));
+  for (const l of v.links) if (l.type === 'ecosystem' && l.target) for (const id of [l.source, l.target]) { const n = v.notes.find(x => x.id === id); if (n) n.orphan = false; }
   // inferred links (shared tags) start switched on only when the written network leaves many notes isolated
   const orphanRate = v.notes.length ? v.notes.filter(n => n.orphan).length / v.notes.length : 0;
   const extraOn = (meta.defaultTypesExtra || []).filter(k => !meta.extraIfOrphanRate || orphanRate > meta.extraIfOrphanRate);
-  S.defaultTypes = new Set(['markdown', 'wikilink', 'prerequisite', 'related', ...extraOn]);
+  S.defaultTypes = new Set(['markdown', 'wikilink', 'prerequisite', 'related', 'ecosystem', ...extraOn]);
   S.f.types = new Set(S.defaultTypes);
   S.vault = v; S.meta = meta; S.assets = assets; S.source = meta.source;
   S.notes = new Map(v.notes.map(n => [n.id, n]));
@@ -149,6 +156,7 @@ function renderMeta() {
     h = `<span class="src-pill">WordPress</span><a class="repo" href="https://${esc(m.host)}/" target="_blank" rel="noopener"><b>${esc(m.host)}</b></a>`;
     const tagPairs = v.links.filter(l => l.type === 'tag').length / 2;
     if (tagPairs) sum += `<span class="snap">${esc(t('wpTagPairs', tagPairs))}</span>`;
+    const ecoN = v.notes.filter(isEco).length; if (ecoN) sum += `<span class="snap">${esc(t('ecoSites', ecoN))}</span>`;
   } else {
     h = `<span class="src-pill">${esc(t('folderPill'))}</span><b>${esc(m.name)}</b>`;
   }
@@ -280,7 +288,7 @@ function rebuildGraph() {
   const ls = gLinks.selectAll('line').data(edges, e => e.source + '|' + e.target);
   ls.exit().remove();
   const lsAll = ls.enter().append('line').merge(ls)
-    .attr('class', e => 'g-link' + (e.types.size === 1 && e.types.has('author') ? ' au' : '') + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.size === 1 && e.types.has('translation') ? ' tr' : e.types.size === 1 && e.types.has('tag') ? ' tg' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
+    .attr('class', e => 'g-link' + (e.types.size === 1 && e.types.has('author') ? ' au' : '') + (e.types.size === 1 && e.types.has('ecosystem') ? ' ecol' : '') + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.size === 1 && e.types.has('translation') ? ' tr' : e.types.size === 1 && e.types.has('tag') ? ' tg' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
   const ns = gNodes.selectAll('g.g-node').data(nodes, d => d.id);
   ns.exit().remove();
   const nEnter = ns.enter().append('g').attr('class', 'g-node').attr('tabindex', -1);
@@ -289,7 +297,8 @@ function rebuildGraph() {
   const nAll = nEnter.merge(ns);
   nAll.classed('hub', d => d.hub).classed('far', d => local && d.depth === 2);
   nAll.select('.ring').attr('r', d => d.r + 4);
-  nAll.select('.body').attr('d', d => d.hub ? diamond(d.r + 1.5) : circle(d.r)).style('fill', d => groupColor(d.note.part));
+  nAll.select('.body').attr('d', d => d.hub ? diamond(d.r + 1.5) : isEco(d.note) ? square(d.r + 1) : circle(d.r)).style('fill', d => groupColor(d.note.part));
+  nAll.classed('eco', d => isEco(d.note));
   nAll.on('click', (e, d) => { e.stopPropagation(); openNote(d.id, { push: true, fromGraph: true }); })
     .on('dblclick', (e, d) => { e.stopPropagation(); openNote(d.id, { push: true, fromGraph: true }); if (S.view === 'graph') setView('split'); })
     .on('mouseenter', (e, d) => { hoverId = d.id; showTip(e, d); styleGraph(); })
@@ -318,7 +327,7 @@ function rebuildGraph() {
   styleGraph();
   if (S.ghost) drawGhost();
   drawAuthor();
-  $('#g-count').textContent = t('showing', nodes.length, edges.length);
+  $('#g-count').textContent = countText(nodes, edges);
   $('#g-hint').textContent = local ? t('hintLocal', short(S.notes.get(S.cur).title, 40)) : t('hintGlobal');
 }
 // Hubs sit just above the settled cluster, spread across its width, outside the force layout
@@ -330,6 +339,8 @@ function placeHubs(nodes) {
   const inset = (x1 - x0) * 0.12;
   hubs.forEach((n, i) => { n.fx = n.x = hubs.length === 1 ? (x0 + x1) / 2 : (x0 + inset) + i * ((x1 - x0 - 2 * inset) / (hubs.length - 1)); n.fy = n.y = y0 - 70; });
 }
+function countText(nodes, edges) { const e = nodes.filter(d => isEco(d.note)).length; return e ? t('showingEco', nodes.length - e, e, edges.length) : t('showing', nodes.length, edges.length); }
+function square(r) { const q = r * 0.9; return `M${-q},${-q + 2}q0,-2 2,-2h${2 * q - 4}q2,0 2,2v${2 * q - 4}q0,2 -2,2h${-2 * q + 4}q-2,0 -2,-2Z`; }
 function circle(r) { return `M${-r},0a${r},${r} 0 1,0 ${2 * r},0a${r},${r} 0 1,0 ${-2 * r},0`; }
 function diamond(r) { const s = r * 1.25; return `M0,${-s}L${s},0L0,${s}L${-s},0Z`; }
 function short(s, n = 30) { s = String(s); return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s; }
@@ -558,7 +569,7 @@ function renderNote(n, anchor, keepScroll) {
   setReaderTab(S.readerTab, true);
   const siteUrl = L.site && L.site.urls && L.site.urls[n.id];
   $('#crumb').innerHTML = `<span class="dot" style="--c:${groupColor(n.part)}"></span><span>${esc(groupLabel(n.part))}</span><span class="path">${esc(n.id)}</span>` +
-    `<span class="ext-links">${siteUrl != null ? `<a class="site-link" href="${esc(L.site.root + siteUrl)}" target="_blank" rel="noopener">${esc(L.site.label ? L.site.label[UI] || L.site.label.es : t('onSite'))} ↗</a>` : ''}` +
+    `<span class="ext-links">${siteUrl != null ? `<a class="site-link" href="${esc(L.site.root + siteUrl)}" target="_blank" rel="noopener">${esc(isEco(n) ? t('ecoOpen') : L.site.label ? L.site.label[UI] || L.site.label.es : t('onSite'))} ↗</a>` : ''}` +
     `${L.github ? `<a class="site-link" href="${esc(L.github.base + encPath(n.id))}" target="_blank" rel="noopener">GitHub ↗</a>` : ''}</span>`;
   syncPillarBtn(n.id);
   const hb = $('#hub-toggle'); hb.setAttribute('aria-pressed', S.hubs.has(n.id)); hb.title = t(S.hubs.has(n.id) ? 'unHub' : 'makeHub'); hb.setAttribute('aria-label', hb.title);
@@ -689,16 +700,24 @@ function highlight(ctx, display) {
 // ======================= vault health =======================
 function renderQuality() {
   const v = S.vault;
-  const orphans = v.notes.filter(n => n.orphan);
+  const acc = acceptedSet();
+  const orphans = v.notes.filter(n => n.orphan && !isEco(n) && !acc.has(n.id));
   const broken = v.links.filter(l => !l.target);
   let h = `<div class="f-row" style="grid-template-columns:1fr;padding-top:4px"><span>${esc(t('orphans'))} · ${orphans.length}</span></div>`;
   if (S.source === 'wordpress' && orphans.some(n => n.status === 'page')) h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpPagesNote'))}</p>`;
-  h += orphans.length ? orphans.map(n => { const s = topSug(n.id); return `<button type="button" class="q-item" data-note="${esc(n.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span><span class="q-t">${esc(n.title)}</span>${s ? `<span class="src q-sug" title="${esc(t('sugHead'))}">✦ ${esc(short(S.notes.get(s.id).title, 34))}</span>` : ''}</button>`; }).join('')
+  h += orphans.length ? orphans.map(n => { const s = topSug(n.id); return `<button type="button" class="q-item" data-note="${esc(n.id)}"><span class="dot" style="--c:${groupColor(n.part)}"></span><span class="q-t">${esc(n.title)}</span>${s ? `<span class="src q-sug" title="${esc(t('sugHead'))}">✦ ${esc(short(S.notes.get(s.id).title, 34))}</span>` : ''}</button><button type="button" class="au-x acc-btn" data-accept="${esc(n.id)}" title="${esc(t('acceptTip'))}" aria-label="${esc(t('acceptTip'))}">${esc(t('accept'))}</button>`; }).map(x => `<div class="au-row">${x}</div>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noOrphans'))}</span></div>`;
+  if (acc.size) h += `<div class="au-sub">${esc(t('acceptedN', acc.size))}: ${[...acc].filter(id => S.notes.has(id)).map(id => `<button type="button" class="au-link" data-note="${esc(id)}">${esc(short(S.notes.get(id).title, 34))}</button>${acceptedLocal().includes(id) ? ` <button type="button" class="au-x" data-unaccept="${esc(id)}" aria-label="${esc(t('unaccept'))}" title="${esc(t('unaccept'))}">×</button>` : ''}`).join(' · ')}</div>`;
   h += `<div class="f-row" style="grid-template-columns:1fr;padding-top:12px"><span>${esc(t('brokenH'))} · ${broken.length}</span></div>`;
   if (broken.length && S.source === 'wordpress') h += `<p class="help" style="margin:4px 0 6px">${esc(t('wpBrokenNote'))}</p>`;
   h += broken.length ? broken.map(l => `<button type="button" class="q-item" data-note="${esc(l.source)}" title="${esc(l.reason || '')}"><code>${esc(l.raw)}</code><span class="src">← ${esc(S.notes.get(l.source).title)}</span></button>`).join('')
     : `<div class="ok-line">✓ <span>${esc(t('noBroken'))}</span></div>`;
+  const legacy = v.links.filter(l => l.resolution === 'legacy');
+  if (legacy.length) {
+    h += `<div class="q-h"><span>${esc(t('legacyH'))} · ${legacy.length}</span><button type="button" class="hint" data-help="legacy" aria-expanded="false">i</button></div>`;
+    h += legacy.map(l => `<button type="button" class="q-item" data-note="${esc(l.source)}" title="${esc(l.raw)}"><span class="q-t">${esc(short(S.notes.get(l.source).title, 40))}</span><span class="src">→ ${esc(short(S.notes.get(l.target).title, 34))}</span></button>`).join('');
+  }
+  h += ecoHealthHtml();
   h += authorHealthHtml();
   h += diagHtml();
   $('#quality').innerHTML = h; helpApply();
@@ -783,7 +802,7 @@ function renderPeek() {
     `<div class="p-s"><span><b>${inN}</b> ${esc(t('inLabel'))}</span><span><b>${outN}</b> ${esc(t('outLabel'))}</span></div>` +
     (S.pillars.has(n.id) || relsOf(n.id).length ? `<div class="p-au">${S.pillars.has(n.id) ? `<span class="au-pill">★ ${esc(t('pillar'))}</span>` : ''}${relsOf(n.id).slice(0, 2).map(r => { const p = relPhrase(r, n.id); return `<span class="p-au-r">${esc(p.verb)} <b>${esc(short(S.notes.get(p.other).title, 36))}</b></span>`; }).join('')}</div>` : '') +
     (() => { const w = linkedSet(n.id).size; const sg = w <= 1 ? suggest(n.id) : []; return sg.length ? `<button type="button" class="p-sug" data-peek="sug">✦ ${esc(t('peekSug', sg.length))}</button>` : ''; })() +
-    `<button type="button" class="p-rel" data-peek="rel">＋ ${esc(t('relAddShort'))}</button>` +
+    (isEco(n) ? '' : `<button type="button" class="p-rel" data-peek="rel">＋ ${esc(t('relAddShort'))}</button>`) +
     `<div class="p-a"><button class="btn btn-primary" type="button" data-peek="read">${esc(t('peekRead'))}</button><button class="btn" type="button" data-peek="links">${esc(t('peekLinks'))}</button>` +
     (S.mode === 'global' ? `<button class="btn" type="button" data-peek="local">${esc(t('peekLocal'))}</button>` : `<button class="btn" type="button" data-peek="global">${esc(t('peekGlobal'))}</button>`) + `</div>`;
   box.hidden = false;
@@ -915,7 +934,7 @@ function applyUI() {
   document.title = t('pageTitle');
   updateThemeBtn(); helpApply();
   const ex = $('#r-expand'); ex.title = t(S.view === 'read' ? 'reduceReader' : 'expandReader'); ex.setAttribute('aria-label', ex.title);
-  if (S.vault) { renderPeek(); renderMeta(); buildFilters(); renderList(); renderLegend(G.m); renderLinks(); renderQuality(); const n = S.notes.get(S.cur); if (n) { renderNote(n, null, true); } $('#g-count').textContent = t('showing', G.nodes.length, G.edges.length); $('#g-hint').textContent = S.mode === 'local' && n ? t('hintLocal', short(n.title, 40)) : t('hintGlobal'); }
+  if (S.vault) { renderPeek(); renderMeta(); buildFilters(); renderList(); renderLegend(G.m); renderLinks(); renderQuality(); const n = S.notes.get(S.cur); if (n) { renderNote(n, null, true); } $('#g-count').textContent = countText(G.nodes, G.edges); $('#g-hint').textContent = S.mode === 'local' && n ? t('hintLocal', short(n.title, 40)) : t('hintGlobal'); }
 }
 function setLang(l) {
   UI = l === 'en' ? 'en' : 'es';
@@ -1298,6 +1317,23 @@ async function loadWordpress(input, opts = {}) {
     const items = posts.items.map(p => ({ ...p, kind: 'post', path: `${String(p.date).slice(0, 4)}/${p.slug}.md` }))
       .concat(pages.items.map(p => ({ ...p, kind: 'page', path: `paginas/${p.slug}.md` })));
     const byKey = new Map(items.map(it => [wpKey(it.link, host), it.path]));
+    // the author's ecosystem: subdomains of the blog's own domain, plus hosts named in data/author-relations.json
+    try { await Promise.race([AUTH_READY, new Promise(r => setTimeout(r, 4000))]); } catch (e) {}
+    const ecoCfg = (((AUTH_CFG || {})[host] || {}).ecosystem) || {};
+    const baseDom = host.split('.').slice(-2).join('.');
+    const legacyHosts = new Set((ecoCfg.legacy || []).map(x => x.toLowerCase()));
+    const ignoreHosts = new Set((ecoCfg.ignore || []).map(x => x.toLowerCase()));
+    const ecoSites = ecoCfg.sites || {};
+    const ecoHostOf = href => { let h; try { h = new URL(href, 'https://' + host + '/').hostname.toLowerCase(); } catch (e) { return null; }
+      if (h === host || h === 'www.' + host || ignoreHosts.has(h) || legacyHosts.has(h)) return null;
+      return (ecoSites[h] || (h.endsWith('.' + baseDom) && !/^(i\d|s\d|stats|pixel)\./.test(h))) ? h : null; };
+    // links written with the blog's former domain (e.g. Blogger's /2021/01/slug.html) still point at articles that live here now
+    const bySlug = items.filter(it => it.kind === 'post').map(it => ({ slug: it.slug, year: String(it.date).slice(0, 4), path: it.path }));
+    const legacyTarget = href => { let u; try { u = new URL(href); } catch (e) { return null; } if (!legacyHosts.has(u.hostname.toLowerCase())) return null;
+      const m = u.pathname.match(/^\/(\d{4})\/\d{2}\/([^/]+?)(?:\.html?)?\/?$/); if (!m) return null;
+      const hit = bySlug.filter(x => x.slug.startsWith(m[2]) || m[2].startsWith(x.slug)); const same = hit.filter(x => x.year === m[1]);
+      return (same.length === 1 ? same[0] : hit.length === 1 ? hit[0] : null); };
+    const ecoLinks = [], legacyLinks = [];
     const isPostUrl = k => /^\/\d{4}\/\d{2}\/\d{2}\/[^/]+$/.test(k) || /^\/\d{4}\/\d{2}\/[^/]+$/.test(k);
     // links to other articles become relative note paths; a post-like URL with no matching article stays as a
     // note path too, so it is reported as broken (it may redirect to a renamed article, or return 404)
@@ -1308,6 +1344,8 @@ async function loadWordpress(input, opts = {}) {
         if (!text) return '';
         const href = node.getAttribute('href'); const k = wpKey(href, host); const from = node.ownerDocument.__kbPath;
         let target = href;
+        const eh = ecoHostOf(href); if (eh) ecoLinks.push({ from, host: eh, text });
+        const lg = !k && legacyTarget(href); if (lg) { legacyLinks.push({ from, href, to: lg.path }); target = relPath(from, lg.path); }
         if (k && byKey.has(k)) target = relPath(from, byKey.get(k));
         else if (k && isPostUrl(k)) target = relPath(from, `${k.split('/')[1]}/${k.split('/').pop()}.md`);
         return `[${text.replace(/\]/g, '\\]')}](<${target}>)`;
@@ -1348,11 +1386,22 @@ async function loadWordpress(input, opts = {}) {
       const yaml = Object.entries(fm).map(([k2, v]) => `${k2}: ${JSON.stringify(v)}`).join('\n');
       return { path: it.path, text: `---\n${yaml}\n---\n\n${md}\n` };
     });
+    // ecosystem sites become square nodes of their own group; listed sites appear even when no article links to them
+    const ecoHosts = new Set([...Object.keys(ecoSites), ...ecoLinks.map(x => x.host)]);
+    for (const h of ecoHosts) {
+      const lab = ecoSites[h] || {}; const title = lab[UI] || lab.es || h;
+      const p = `ecosistema/${h}.md`; metaLinks[p] = 'https://' + h + '/';
+      const fm = { title, part: t('ecoGroup'), status: 'ecosistema', ecosistema: true, description: h };
+      files.push({ path: p, text: `---\n${Object.entries(fm).map(([k2, v2]) => `${k2}: ${JSON.stringify(v2)}`).join('\n')}\n---\n\n# ${title}\n\n${t('ecoBody', h)}\n` });
+    }
     // group labels exactly as the categories are named on the blog
     const groupLabels = {};
     for (const it of files) { const n = (it.text.match(/^part: (.*)$/m) || [])[1]; if (n) { const name = JSON.parse(n); groupLabels[VaultParser.normPart(name, it.path)] = { es: name, en: name }; } }
     // optional link type: articles that share at least WP_MIN_SHARED_TAGS tags (both directions, so it reads as a backlink too)
     const extraLinks = [];
+    const seenEco = new Set();
+    for (const x of ecoLinks) { const k3 = x.from + '|' + x.host; if (seenEco.has(k3)) continue; seenEco.add(k3);
+      extraLinks.push({ source: x.from, target: `ecosistema/${x.host}.md`, raw: 'https://' + x.host, type: 'ecosystem', resolution: 'ecosystem', reason: null, heading: null, display: x.text, section: null, context: x.text }); }
     const tagged = items.filter(it => (it.tags || []).length);
     for (let i = 0; i < tagged.length; i++) for (let j = i + 1; j < tagged.length; j++) {
       const a = tagged[i], b = tagged[j]; const shared = a.tags.filter(x => b.tags.includes(x));
@@ -1363,7 +1412,7 @@ async function loadWordpress(input, opts = {}) {
     S.filesMode = false;
     loadVault(files, new Map(), {
       source: 'wordpress', name: host, host, api: api.base.includes('public-api') ? 'wpcom' : 'site', total: posts.total, truncated: posts.items.length < posts.total,
-      hubs: [], groupLabels, extraLinks, curated, declared, defaultTypesExtra: ['tag'], extraIfOrphanRate: 0.25,
+      hubs: [], groupLabels, extraLinks, curated, declared, legacy: legacyLinks, defaultTypesExtra: ['tag'], extraIfOrphanRate: 0.25,
       links: { site: { root: '', label: { es: 'Ver en el blog', en: 'View on the blog' }, urls: metaLinks } }
     }, { startNote: opts.note });
     syncUrl(); closeSheet(); st.hidden = true;
@@ -1454,11 +1503,11 @@ const SUG_MIN = 0.1;
 function suggest(id, k = 3, o = {}) {
   const ix = simIndex(); const key = id + '|' + k + '|' + (o.includeLinked ? 1 : 0) + '|' + S.f.lang;
   if (ix.cache.has(key)) return ix.cache.get(key);
-  const a = ix.vec.get(id); if (!a || !a.size) return [];
+  const a = ix.vec.get(id); if (!a || !a.size || isEco(S.notes.get(id))) return [];
   const linked = o.includeLinked ? new Set() : linkedSet(id);
   const out = [];
   for (const n of S.vault.notes) {
-    if (n.id === id || linked.has(n.id) || !visibleNote(n)) continue;
+    if (n.id === id || linked.has(n.id) || !visibleNote(n) || isEco(n)) continue;
     const b = ix.vec.get(n.id); if (!b || !b.size) continue;
     let sc = 0; const shared = [];
     const [small, big] = a.size < b.size ? [a, b] : [b, a];
@@ -1510,9 +1559,11 @@ function drawGhost() {
 // Sobre los enlaces escritos (sin etiquetas ni pares de traducción) entre las notas visibles.
 let DIAG = null;
 function diagnose() {
-  const key = S.vault.links.length + '|' + S.f.lang;
+  const key = S.vault.links.length + '|' + S.f.lang + '|' + acceptedSet().size;
   if (DIAG && DIAG.vault === S.vault && DIAG.key === key) return DIAG;
-  const notes = S.vault.notes.filter(visibleNote), ids = new Set(notes.map(n => n.id));
+  const acc = acceptedSet();
+  const notes = S.vault.notes.filter(n => visibleNote(n) && !isEco(n)), ids = new Set(notes.map(n => n.id));
+  const ecoOut = new Set(S.vault.links.filter(l => l.type === 'ecosystem' && l.target).map(l => l.source));
   const adj = new Map(notes.map(n => [n.id, new Set()])), outN = new Map(), inN = new Map();
   for (const l of S.vault.links) {
     if (!STRUCT(l) || l.type === 'translation' || !ids.has(l.source) || !ids.has(l.target) || l.source === l.target) continue;
@@ -1520,7 +1571,7 @@ function diagnose() {
     (outN.get(l.source) || outN.set(l.source, new Set()).get(l.source)).add(l.target);
     (inN.get(l.target) || inN.set(l.target, new Set()).get(l.target)).add(l.source);
   }
-  const deadEnds = notes.filter(n => (inN.get(n.id) || new Set()).size > 0 && !(outN.get(n.id) || new Set()).size && !S.hubs.has(n.id))
+  const deadEnds = notes.filter(n => (inN.get(n.id) || new Set()).size > 0 && !(outN.get(n.id) || new Set()).size && !ecoOut.has(n.id) && !S.hubs.has(n.id) && !acc.has(n.id))
     .sort((a, b) => inN.get(b.id).size - inN.get(a.id).size);
   // components (notes with at least one link)
   const comp = new Map(); const comps = [];
@@ -1571,7 +1622,7 @@ function diagnose() {
   for (const n of notes) { const p = n.part; if (!sec.has(p)) sec.set(p, { part: p, notes: 0, inside: 0, outside: 0 }); sec.get(p).notes++; }
   for (const k of pairs) { const [a, b] = k.split('\u0000'); const pa = S.notes.get(a).part, pb = S.notes.get(b).part; if (pa === pb) sec.get(pa).inside++; else { sec.get(pa).outside++; sec.get(pb).outside++; } }
   const sections = [...sec.values()].filter(s => s.notes >= 3 && s.inside + s.outside > 0).map(s => ({ ...s, share: s.outside / (s.inside + s.outside) })).sort((a, b) => a.share - b.share);
-  DIAG = { vault: S.vault, key, pairs: pairs.size, notes, deadEnds, islands, bridges, sections, inN, outN, orphans: notes.filter(n => !adj.get(n.id).size) };
+  DIAG = { vault: S.vault, key, pairs: pairs.size, notes, deadEnds, islands, bridges, sections, inN, outN, orphans: notes.filter(n => !adj.get(n.id).size && !ecoOut.has(n.id) && !acc.has(n.id)) };
   return DIAG;
 }
 // best single suggestion for the to-do list
@@ -1622,9 +1673,9 @@ const AV_LEAD = {
   'es actualizado por': ['updates', 1], 'is updated by': ['updates', 1], 'is applied in': ['applies', 1]
 };
 const AV_RE = new RegExp('^(' + Object.keys(AV_LEAD).sort((a, b) => b.length - a.length).join('|') + ')\\s*:', 'i');
-let AUTH_CFG = null;
-fetch('data/author-relations.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-  .then(j => { AUTH_CFG = j || {}; if (S.vault) applyAuthor(true); });
+var AUTH_CFG = null;
+var AUTH_READY = fetch('data/author-relations.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+  .then(j => { AUTH_CFG = j || {}; if (S.vault && S.source !== 'wordpress') applyAuthor(true); else if (S.vault) applyAuthor(true); });
 function authKey() { const m = S.meta || {}; return String(S.source === 'wordpress' ? m.host : (m.repo || m.name || '')).toLowerCase(); }
 function authLocal() { try { return JSON.parse(store.get('kb-author:' + authKey()) || '{}') || {}; } catch (e) { return {}; } }
 function authSave(o) { store.set('kb-author:' + authKey(), JSON.stringify(o)); }
@@ -1658,6 +1709,7 @@ function relsOf(id) { return (S.authorRels || []).filter(r => r.from === id || r
 function relPhrase(r, id) { const out = r.from === id; return { verb: verbLabel(r.verb, !out), other: out ? r.to : r.from, out }; }
 function authorBoxHtml(id) {
   const rs = relsOf(id); const pillar = S.pillars.has(id);
+  if (isEco(S.notes.get(id))) return '';
   if (!rs.length && !pillar) return `<button type="button" class="au-cta" data-au-new="${esc(id)}">＋ ${esc(t('relAddLong'))}</button>`;
   let h = `<div class="q-h au-head"><span>${esc(t('authHead'))}${rs.length ? ' · ' + rs.length : ''}</span><button type="button" class="hint" data-help="author" aria-expanded="false">i</button></div>`;
   if (pillar) h += `<div class="au-pill">★ ${esc(t('pillarIs'))}</div>`;
@@ -1671,7 +1723,7 @@ function authCandidates(limit = 6) {
   const declared = new Set((S.authorRels || []).flatMap(r => [r.from + '|' + r.to, r.to + '|' + r.from]));
   const pairs = new Map();
   for (const l of S.vault.links) {
-    if (!l.target || l.source === l.target || l.type === 'tag' || l.type === 'author' || l.type === 'translation') continue;
+    if (!l.target || l.source === l.target || l.type === 'tag' || l.type === 'author' || l.type === 'translation' || l.type === 'ecosystem') continue;
     const a = S.notes.get(l.source), b = S.notes.get(l.target); if (!visibleNote(a) || !visibleNote(b) || S.hubs.has(a.id) || S.hubs.has(b.id)) continue;
     const k = l.source < l.target ? l.source + '|' + l.target : l.target + '|' + l.source;
     if (declared.has(k)) continue;
@@ -1723,7 +1775,7 @@ $('#quality').addEventListener('click', e => {
     (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast(t('authCopied')), () => toast(txt, 8000));
   } else if (e.target.closest('#au-export')) {
     const cfg = (AUTH_CFG || {})[authKey()] || {}, loc = authLocal();
-    const body = { pillars: [...S.pillars], relations: (S.authorRels || []).filter(r => r.src !== 'blog' && r.src !== 'note').map(({ from, verb, to }) => ({ from, verb, to })) };
+    const body = { pillars: [...S.pillars], accepted: [...acceptedSet()], relations: (S.authorRels || []).filter(r => r.src !== 'blog' && r.src !== 'note').map(({ from, verb, to }) => ({ from, verb, to })) };
     if (cfg.note) body.note = cfg.note;
     const own = S.source === 'github' || S.source === 'folder';   // goes at the root of the user's own repository / folder
     const out = own ? body : { [authKey()]: body };
@@ -1844,6 +1896,26 @@ $('#rel-pop').addEventListener('keydown', e => {
 $('#rel-add').addEventListener('click', () => S.cur && relOpen(S.cur));
 document.addEventListener('click', e => { const b = e.target.closest('[data-au-new]'); if (b) { e.preventDefault(); relOpen(b.dataset.auNew || S.cur || (S.vault.notes[0] || {}).id); } });
 document.addEventListener('pointerdown', e => { if (!$('#rel-pop').hidden && !e.target.closest('#rel-pop, #rel-add, [data-peek="rel"], [data-au-new]')) $('#rel-pop').hidden = true; });
+// ======================= ecosistema del autor y decisiones «dejar así» =======================
+// Los subdominios propios (dashboards, cv, herramientas…) no son artículos ni enlaces externos cualquiera:
+// son el ecosistema que el blog alimenta. Se dibujan como nodos cuadrados y Salud mide cuánto los alimenta el blog.
+function acceptedLocal() { return authLocal().accepted || []; }
+function acceptedSet() { const cfg = (AUTH_CFG || {})[authKey()] || {}; const rf = (S.meta && S.meta.relationsFile) || {}; return new Set([...(cfg.accepted || []), ...(rf.accepted || []), ...acceptedLocal()].filter(id => S.notes && S.notes.has(id))); }
+function ecoHealthHtml() {
+  const eco = S.vault.notes.filter(isEco); if (!eco.length) return '';
+  const inc = id => { const src = new Set(S.vault.links.filter(l => l.type === 'ecosystem' && l.target === id).map(l => l.source)); return src.size; };
+  const rows = eco.map(n => ({ n, k: inc(n.id) })).sort((a, b) => a.k - b.k || a.n.title.localeCompare(b.n.title));
+  const zero = rows.filter(r => !r.k).length;
+  let h = `<div class="q-h"><span>${esc(t('ecoH'))} · ${eco.length}</span><button type="button" class="hint" data-help="ecosystem" aria-expanded="false">i</button></div>`;
+  if (zero) h += `<p class="help" style="margin:2px 0 6px">${esc(t('ecoZero', zero))}</p>`;
+  h += rows.map(r => `<button type="button" class="q-item${r.k ? '' : ' eco-zero'}" data-note="${esc(r.n.id)}"><span class="dot sq" style="--c:${groupColor(r.n.part)}"></span><span class="q-t">${esc(r.n.title)}</span><span class="src">${esc(r.k ? t('ecoFrom', r.k) : t('ecoNone'))}</span></button>`).join('');
+  return h;
+}
+$('#quality').addEventListener('click', e => {
+  const a = e.target.closest('[data-accept]'), u = e.target.closest('[data-unaccept]'); if (!a && !u) return;
+  e.stopPropagation(); const loc = authLocal(); loc.accepted = (loc.accepted || []).filter(x => x !== (a || u).dataset[a ? 'accept' : 'unaccept']);
+  if (a) loc.accepted.push(a.dataset.accept); authSave(loc); DIAG = null; renderQuality();
+}, true);
 
 // ======================= recorrido guiado =======================
 var TOUR = { on: false, i: 0, steps: [] };
@@ -1874,6 +1946,13 @@ function tourSteps() {
   steps.push({ k: 'health', run() { resetTypes(); setView('graph'); setMode('global'); closePops(); $('#health-pop').hidden = false; $('#health-btn').setAttribute('aria-expanded', 'true'); }, text: () => (d.orphans.length + d.deadEnds.length + d.bridges.length + d.islands.length + S.vault.links.filter(l => !l.target).length)
     ? t('tour5', d.orphans.length, d.deadEnds.length, d.bridges.length)
     : t('tour5ok', d.sections[0] ? groupLabel(d.sections[0].part) : '', d.sections[0] ? Math.round(d.sections[0].share * 100) : 0), after() { closePops(); } });
+  const ecoNotes = S.vault.notes.filter(isEco);
+  if (ecoNotes.length) {
+    const fed = id => new Set(S.vault.links.filter(l => l.type === 'ecosystem' && l.target === id).map(l => l.source)).size;
+    const zero = ecoNotes.filter(n => !fed(n.id)), top = ecoNotes.slice().sort((a, b) => fed(b.id) - fed(a.id))[0];
+    steps.push({ k: 'eco', run() { resetTypes(); setView('graph'); setMode('global'); openNote(top.id, { focus: true }); },
+      text: () => t('tourEco', ecoNotes.length, top.title, fed(top.id), zero.map(n => n.title)) });
+  }
   // the note that most needs links and has a convincing suggestion
   const needy = d.notes.filter(n => !S.hubs.has(n.id)).map(n => ({ n, deg: writtenIn(n.id) + (d.outN.get(n.id) || new Set()).size, s: topSug(n.id) }))
     .filter(x => x.s).sort((a, b) => (a.s.score >= 0.2 ? 0 : 1) - (b.s.score >= 0.2 ? 0 : 1) || a.deg - b.deg || b.s.score - a.s.score)[0];

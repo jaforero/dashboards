@@ -54,6 +54,9 @@ How to declare them, in any source:
 
 Verbs: `evolves` (evolves into / evolved from), `founds` (underpins / builds on), `applies` (applies / is applied in), `updates` (updates / is updated by), in Spanish or English. Health → **Author decisions** suggests the pairs the graph cannot qualify.
 
+### Author ecosystem and "leave as is" decisions (blogs)
+Links to subdomains of the blog's own domain (and to sites declared in `data/author-relations.json` → `ecosystem.sites`) are drawn as **square nodes in the Ecosystem group**: neither posts nor ordinary external links, they show how the content feeds the author's products. Health lists each site with how many posts link to it and flags those receiving none. Links written with the blog's **former domain** (`ecosystem.legacy`, e.g. Blogger addresses `/2021/01/slug.html`) resolve to the current post and are listed as a task. A note the author decides to leave unlinked is marked **Leave as is** (or in `accepted`) and leaves the to-do list.
+
 ## Four sources
 | Source | How it loads | What can be shared |
 |---|---|---|

@@ -54,6 +54,9 @@ Cómo declararlas, en cualquier fuente:
 
 Verbos: `evolves` (evoluciona en / evoluciona de), `founds` (fundamenta / se fundamenta en), `applies` (aplica / se aplica en), `updates` (actualiza a / es actualizado por), en español o inglés. Salud → **Decisiones del autor** propone los pares que el grafo no puede calificar.
 
+### Ecosistema del autor y decisiones «dejar así» (blogs)
+Los enlaces a subdominios del mismo dominio del blog (y a los sitios que se declaren en `data/author-relations.json` → `ecosystem.sites`) se dibujan como **nodos cuadrados del grupo Ecosistema**: no son artículos ni enlaces externos cualquiera, muestran cómo el contenido alimenta los productos del autor. Salud lista cada sitio con cuántos artículos lo enlazan y marca los que no reciben ninguno. Los enlaces escritos con el **dominio anterior** del blog (`ecosystem.legacy`, p. ej. direcciones de Blogger `/2021/01/slug.html`) se resuelven al artículo actual y quedan como tarea. Una nota que el autor decide dejar sin enlaces se marca con **Dejar así** (o en `accepted`) y sale de la lista de tareas.
+
 ## Cuatro fuentes
 | Fuente | Cómo se carga | Qué se puede compartir |
 |---|---|---|

@@ -370,6 +370,43 @@ Object.assign(window.KB_T.en, {
   es.help.relAdd = { h: 'Relación del autor', b: 'Declara cómo se conecta esta nota con otra en tu pensamiento: evoluciona en, fundamenta, aplica o actualiza. Aparece como flecha gruesa y el panel te da el fragmento para guardarla en el blog, en la nota o en el repositorio.', tip: 'Lo que el grafo deduce puede cambiar con cada lectura; lo que declaras tú es una decisión.' };
   en.help.relAdd = { h: 'Author relation', b: 'Declare how this note connects to another in your thinking: evolves into, underpins, applies or updates. It shows as a thick arrow, and the panel gives you the snippet to keep it on the blog, in the note or in the repository.', tip: 'What the graph infers may change with every reading; what you declare is a decision.' };
 })();
+/* Ecosistema del autor (subdominios propios), enlaces al dominio anterior y decisiones «dejar así». */
+(function () {
+  var E = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var es = window.KB_T.es, en = window.KB_T.en;
+  es.type.ecosystem = 'Ecosistema'; en.type.ecosystem = 'Ecosystem';
+  es.typeLong.ecosystem = 'Enlace a un sitio del ecosistema del autor (subdominio propio)'; en.typeLong.ecosystem = 'Link to a site in the author’s ecosystem (own subdomain)';
+  Object.assign(es, {
+    ecoGroup: 'Ecosistema', ecoBody: function (h) { return 'Sitio del ecosistema del autor: https://' + h + '/ — la pestaña Conexiones muestra qué artículos llevan lectores hacia él.'; },
+    ecoOpen: 'Abrir el sitio', ecoH: 'Ecosistema del autor', ecoSites: function (n) { return n + ' sitios del ecosistema'; },
+    showingEco: function (n, e, c) { return 'Mostrando ' + n + ' notas + ' + e + ' sitios · ' + c + ' conexiones'; },
+    tourEco: function (n, top, k, zero) { return 'Los cuadrados son tu <b>ecosistema</b>: ' + n + ' sitios propios. <b>' + E(top) + '</b> recibe lectores desde ' + k + ' artículos' + (zero.length ? '; en cambio, <b>' + zero.map(E).join(', ') + '</b> no reciben ningún enlace desde el blog.' : ', y todos los sitios reciben al menos un enlace.'); },
+    ecoZero: function (n) { return n === 1 ? '1 sitio no recibe ningún enlace desde el blog: el blog no le envía lectores.' : n + ' sitios no reciben ningún enlace desde el blog: el blog no les envía lectores.'; },
+    ecoFrom: function (k) { return k === 1 ? '1 artículo lo enlaza' : k + ' artículos lo enlazan'; }, ecoNone: 'sin enlaces desde el blog',
+    legacyH: 'Apuntan a tu dominio anterior', accept: 'Dejar así', acceptTip: 'Decisión del autor: esta nota se queda sin enlaces a propósito',
+    acceptedN: function (n) { return 'Sin enlaces por decisión del autor · ' + n; }, unaccept: 'Devolver a la lista'
+  });
+  Object.assign(en, {
+    ecoGroup: 'Ecosystem', ecoBody: function (h) { return 'A site in the author’s ecosystem: https://' + h + '/ — the Connections tab shows which posts send readers to it.'; },
+    ecoOpen: 'Open the site', ecoH: 'Author ecosystem', ecoSites: function (n) { return n + ' ecosystem sites'; },
+    showingEco: function (n, e, c) { return 'Showing ' + n + ' notes + ' + e + ' sites · ' + c + ' connections'; },
+    tourEco: function (n, top, k, zero) { return 'The squares are your <b>ecosystem</b>: ' + n + ' sites of your own. <b>' + E(top) + '</b> gets readers from ' + k + ' posts' + (zero.length ? '; <b>' + zero.map(E).join(', ') + '</b>, instead, get no link from the blog.' : ', and every site gets at least one link.'); },
+    ecoZero: function (n) { return n === 1 ? '1 site receives no link from the blog: the blog sends it no readers.' : n + ' sites receive no link from the blog: the blog sends them no readers.'; },
+    ecoFrom: function (k) { return k === 1 ? '1 post links to it' : k + ' posts link to it'; }, ecoNone: 'no links from the blog',
+    legacyH: 'Pointing to your former domain', accept: 'Leave as is', acceptTip: 'Author decision: this note stays unlinked on purpose',
+    acceptedN: function (n) { return 'Unlinked by author decision · ' + n; }, unaccept: 'Back to the list'
+  });
+  Object.assign(es.help, {
+    'type-ecosystem': { h: 'Ecosistema', b: 'Enlaces desde los artículos hacia tus propios sitios (subdominios: dashboards, hoja de vida, herramientas…). No son artículos ni enlaces externos cualquiera: muestran cómo el contenido alimenta tus productos.' },
+    ecosystem: { h: 'Ecosistema del autor', b: 'Tus sitios propios (subdominios del mismo dominio, más los que declares en la configuración) y cuántos artículos llevan lectores hacia cada uno. Un sitio sin enlaces desde el blog depende solo de otros canales para recibir visitas.', tip: 'Enlaza cada producto desde los artículos que resuelven el problema que ese producto ataca, y que cada sitio enlace de vuelta al blog.' },
+    legacy: { h: 'Dominio anterior', b: 'Enlaces escritos con la dirección del blog anterior (por ejemplo, Blogger) que apuntan a artículos que hoy viven aquí. El grafo los conecta, pero el lector depende de que la dirección antigua siga redirigiendo.', tip: 'Reemplaza la dirección antigua por la actual en cada artículo.' }
+  });
+  Object.assign(en.help, {
+    'type-ecosystem': { h: 'Ecosystem', b: 'Links from posts to your own sites (subdomains: dashboards, CV, tools…). Neither posts nor ordinary external links: they show how the content feeds your products.' },
+    ecosystem: { h: 'Author ecosystem', b: 'Your own sites (subdomains of the same domain, plus the ones declared in the configuration) and how many posts send readers to each. A site with no links from the blog relies only on other channels for visits.', tip: 'Link each product from the posts that solve the problem it tackles, and make each site link back to the blog.' },
+    legacy: { h: 'Former domain', b: 'Links written with the former blog address (e.g. Blogger) that point to posts living here now. The graph connects them, but readers depend on the old address still redirecting.', tip: 'Replace the old address with the current one in each post.' }
+  });
+})();
 (function () {
   var L = window.__lang0 === 'en' ? 'en' : 'es', T = window.KB_T[L];
   document.documentElement.lang = L;
