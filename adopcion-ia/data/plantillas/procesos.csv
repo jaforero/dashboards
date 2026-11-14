@@ -1,0 +1,3 @@
+id_proceso,area,nombre,ia_aplicable,ev_procedimiento,ev_registros,ev_entregables,ev_dueno
+PR-001,Comercial,Cotizaciones comerciales,1,1,1,0,1
+PR-002,Finanzas,Conciliaciones bancarias,1,0,0,0,0

@@ -1,0 +1,53 @@
+id_proceso,area,nombre,ia_aplicable,ev_procedimiento,ev_registros,ev_entregables,ev_dueno
+PR-001,Comercial,Cotizaciones comerciales,1,1,1,1,1
+PR-002,Comercial,Propuestas para licitaciones,1,0,1,1,0
+PR-003,Comercial,Seguimiento de oportunidades,1,1,1,0,0
+PR-004,Comercial,Preparación de visitas a clientes,1,0,1,0,0
+PR-005,Comercial,Respuesta a solicitudes de información,1,0,0,0,1
+PR-006,Comercial,Actualización de listas de precios,1,0,0,0,0
+PR-007,Comercial,Informes de ventas por zona,1,0,0,0,0
+PR-008,Comercial,Elaboración de contratos de suministro,1,0,0,0,0
+PR-009,Comercial,Atención de reclamos comerciales,1,0,0,0,0
+PR-010,Comercial,Entrega de muestras,0,0,0,0,0
+PR-011,Comercial,Montaje de exhibiciones,0,0,0,0,0
+PR-012,Operaciones,Programación de despachos,1,1,0,0,1
+PR-013,Operaciones,Reportes de novedades de entrega,1,0,1,0,0
+PR-014,Operaciones,Órdenes de compra a proveedores,1,0,0,0,1
+PR-015,Operaciones,Planeación de inventario,1,0,0,0,0
+PR-016,Operaciones,Conciliación de inventario,1,0,0,0,0
+PR-017,Operaciones,Gestión de devoluciones,1,0,0,0,0
+PR-018,Operaciones,Evaluación de transportadores,1,0,0,0,0
+PR-019,Operaciones,Instructivos de bodega,1,0,0,0,0
+PR-020,Operaciones,Seguimiento de pedidos,1,0,0,0,0
+PR-021,Operaciones,Reclamos a proveedores,1,0,0,0,0
+PR-022,Operaciones,Informes de nivel de servicio,1,0,0,0,0
+PR-023,Operaciones,Cargue y descargue,0,0,0,0,0
+PR-024,Operaciones,Alistamiento de pedidos,0,0,0,0,0
+PR-025,Operaciones,Mantenimiento de montacargas,0,0,0,0,0
+PR-026,Finanzas,Conciliaciones bancarias,1,1,0,1,0
+PR-027,Finanzas,Cierre contable mensual,1,0,0,0,1
+PR-028,Finanzas,Análisis de cartera,1,0,1,0,0
+PR-029,Finanzas,Causación de facturas de proveedores,1,0,0,0,0
+PR-030,Finanzas,Informes para la junta,1,0,0,0,0
+PR-031,Finanzas,Presupuesto anual,1,0,0,0,0
+PR-032,Finanzas,Respuesta a requerimientos de auditoría,1,0,0,0,0
+PR-033,Finanzas,Arqueo de caja,0,0,0,0,0
+PR-034,Finanzas,Custodia de títulos,0,0,0,0,0
+PR-035,Atención al cliente,Respuesta a casos por correo,1,0,1,0,0
+PR-036,Atención al cliente,Clasificación de casos,1,0,0,0,1
+PR-037,Atención al cliente,Base de respuestas frecuentes,1,0,0,0,0
+PR-038,Atención al cliente,Seguimiento de garantías,1,0,0,0,0
+PR-039,Atención al cliente,Informes de motivos de contacto,1,0,0,0,0
+PR-040,Atención al cliente,Escalamiento de reclamos,1,0,0,0,0
+PR-041,Atención al cliente,Atención en mostrador,0,0,0,0,0
+PR-042,Gestión humana,Descripciones de cargo y vacantes,1,1,0,1,0
+PR-043,Gestión humana,Filtro de hojas de vida,1,0,0,0,1
+PR-044,Gestión humana,Respuesta a solicitudes de empleados,1,0,0,0,0
+PR-045,Gestión humana,Material de inducción,1,0,0,0,0
+PR-046,Gestión humana,Exámenes médicos de ingreso,0,0,0,0,0
+PR-047,Gestión humana,Entrega de dotación,0,0,0,0,0
+PR-048,Analítica,Informes periódicos de gestión,1,0,1,0,0
+PR-049,Analítica,Análisis a solicitud,1,0,0,0,0
+PR-050,Analítica,Documentación de modelos,1,0,0,0,0
+PR-051,Analítica,Administración de accesos a datos,0,0,0,0,0
+PR-052,Analítica,Respaldo de bases de datos,0,0,0,0,0

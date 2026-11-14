@@ -1,0 +1,31 @@
+file,column,type,required,description,source
+people.csv,person_id,text,yes,"Pseudonymized identifier. Never a name, email or ID number",HR directory and license inventory
+people.csv,department,text,yes,Department or organizational unit on the cutoff date,HR directory and license inventory
+people.csv,eligible,0/1,yes,1 if the role includes tasks the tool applies to,HR directory and license inventory
+people.csv,has_access,0/1,yes,1 if the person holds a license or enabled access on the cutoff date,HR directory and license inventory
+weekly_usage.csv,person_id,text,yes,Same identifier as in people.csv,Export from the tool's admin dashboard
+weekly_usage.csv,week_start,date YYYY-MM-DD (Monday),yes,Monday of the calendar week,Export from the tool's admin dashboard
+weekly_usage.csv,actions,integer,yes,"Intentional actions (prompts sent, summaries requested, suggestions accepted). Opening the panel does not count",Export from the tool's admin dashboard
+processes.csv,process_id,text,yes,Process inventory code,Process inventory and owners
+processes.csv,department,text,yes,Department that owns the process,Process inventory and owners
+processes.csv,name,text,yes,"Process name (for example, ""Sales quotes"")",Process inventory and owners
+processes.csv,ai_applicable,0/1,yes,1 if AI is applicable. A judgment call by the process owner,Process inventory and owners
+processes.csv,ev_procedure,0/1,yes,1 if the written procedure mentions the assisted step,Process inventory and owners
+processes.csv,ev_logs,0/1,yes,1 if there are usage logs from the last 4 weeks,Process inventory and owners
+processes.csv,ev_deliverables,0/1,yes,1 if a sample of deliverables produced with the step exists,Process inventory and owners
+processes.csv,ev_owner,0/1,yes,1 if the process owner confirms it with volumes,Process inventory and owners
+units.csv,process_id,text,yes,"Process code, same as in processes.csv","The system the process runs in (CRM, ERP, help desk)"
+units.csv,team,text,yes,"Team, region or cell","The system the process runs in (CRM, ERP, help desk)"
+units.csv,group,text,yes,with_ai or comparison,"The system the process runs in (CRM, ERP, help desk)"
+units.csv,week_start,date YYYY-MM-DD (Monday),yes,Monday of the calendar week,"The system the process runs in (CRM, ERP, help desk)"
+units.csv,period,text,yes,before or after the assisted step was introduced,"The system the process runs in (CRM, ERP, help desk)"
+units.csv,units_closed,integer,yes,"Quotes, cases or reconciliations closed in the week","The system the process runs in (CRM, ERP, help desk)"
+units.csv,units_assisted,integer,yes,"Of the closed units, how many carry the assisted-step flag","The system the process runs in (CRM, ERP, help desk)"
+units.csv,outcome_sum,number,yes,"Sum of the outcome metric (for example, cycle hours across all closed units)","The system the process runs in (CRM, ERP, help desk)"
+units.csv,units_rework,integer,yes,"Units returned, corrected or reopened","The system the process runs in (CRM, ERP, help desk)"
+units.csv,drafting_min_sum,number,no,Sum of measured drafting minutes. Optional,"The system the process runs in (CRM, ERP, help desk)"
+units.csv,review_min_sum,number,no,Sum of measured review and correction minutes. Optional,"The system the process runs in (CRM, ERP, help desk)"
+alerts.csv,month,date YYYY-MM-DD (day 1),yes,First day of the month,IT security and accounting
+alerts.csv,type,text,yes,network_traffic or spend,IT security and accounting
+alerts.csv,unapproved_services,integer,yes,AI services not provided by the company with traffic or payments in the month,IT security and accounting
+alerts.csv,events,integer,yes,Aggregate network requests or expense lines. No individuals identified,IT security and accounting

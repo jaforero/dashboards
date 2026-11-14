@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tablero de adopción de IA: cuatro preguntas, ocho indicadores · Javier Forero</title>
+<meta name="description" content="Tablero mínimo para medir la adopción de inteligencia artificial en una empresa con registros, no con encuestas: acceso, activación, uso habitual, procesos, integración, resultado, calidad y tiempo neto. Incluye un caso ilustrativo y plantillas para cargar tus datos en el navegador.">
+<meta name="author" content="Javier Forero">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://dashboards.javierforero.co/adopcion-ia/">
+<link rel="alternate" hreflang="es" href="https://dashboards.javierforero.co/adopcion-ia/">
+<link rel="alternate" hreflang="en" href="https://dashboards.javierforero.co/adopcion-ia/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://dashboards.javierforero.co/adopcion-ia/">
+<meta name="theme-color" content="#041c59">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Javier Forero">
+<meta property="og:locale" content="es_CO">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:url" content="https://dashboards.javierforero.co/adopcion-ia/">
+<meta property="og:title" content="Tablero de adopción de IA: cuatro preguntas, ocho indicadores">
+<meta property="og:description" content="Actividad, adopción, transformación e impacto, calculados desde registros de la empresa. Cada número se abre hasta su fórmula y sus filas. Caso ilustrativo con datos hipotéticos y plantillas para tus datos.">
+<meta property="og:image" content="https://dashboards.javierforero.co/adopcion-ia/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tablero de adopción de IA con cuatro bloques: actividad, adopción, transformación e impacto. Caso ilustrativo con datos hipotéticos.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tablero de adopción de IA: cuatro preguntas, ocho indicadores">
+<meta name="twitter:description" content="Ocho indicadores calculados desde registros, no desde encuestas. Carga tus datos: se procesan en tu navegador.">
+<meta name="twitter:image" content="https://dashboards.javierforero.co/adopcion-ia/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<!-- Analítica de la visita (convención del sitio). Se apaga con ga-disable en cuanto alguien pasa a «Mis datos»,
+     antes de leer cualquier archivo: ver usarMisDatos() en app.js. Ningún evento lleva datos cargados. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ3K8EVKV0"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js',new Date());
+  gtag('config','G-MQ3K8EVKV0',{content_group:'adopcion-ia',page_title:'Tablero de adopción de IA'});
+  function track(n,p){try{if(!window['ga-disable-G-MQ3K8EVKV0']&&typeof gtag==='function')gtag('event',n,p||{});}catch(e){}}
+</script>
+<script>
+  (function(){try{var t=localStorage.getItem('jf-theme');if(t!=='dark'&&t!=='light')t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+  (function(){var q=null,s=null;
+    try{q=new URLSearchParams(location.search).get('lang');}catch(e){}
+    try{s=localStorage.getItem('jf-lang')||localStorage.getItem('iac_lang');}catch(e){}
+    window.__lang0=(q==='en'||q==='es')?q:((s==='en'||s==='es')?s:(((navigator.language||'').toLowerCase().indexOf('es')!==0)?'en':'es'));})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Tablero de adopción de IA: cuatro preguntas, ocho indicadores",
+ "description":"Tablero mínimo para medir la adopción de inteligencia artificial en una empresa a partir de registros de sistemas, con un caso ilustrativo de datos hipotéticos y plantillas CSV.",
+ "url":"https://dashboards.javierforero.co/adopcion-ia/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["es","en"],
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+ "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"}}
+</script>
+<style>
+  @font-face{font-family:'Igra Sans';
+    src:url('../assets/fonts/IgraSans.otf') format('opentype'),url('/assets/fonts/IgraSans.otf') format('opentype'),
+        url('../fonts/IgraSans.otf') format('opentype'),url('/fonts/IgraSans.otf') format('opentype');
+    font-weight:100 900;font-style:normal;font-display:swap;}
+  /* Tokens del sitio (los mismos de /poblacion-latam/ y /tasas-cambio/). El ámbar (--stale*) se usa solo en alertas. */
+  :root{color-scheme:light;
+    --primary:#4e00ff;--primary-lt:#7c4dff;--navy:#041c59;--blue:#0048ff;
+    --bg:#f5f4ff;--bg2:#edeaff;--surface:#ffffff;--border:#ddd6ff;--border-soft:#ebe7ff;
+    --heading:#041c59;--text:#0d0a1e;--text-soft:#4a4568;--text-muted:#625a86;--grid:#eceaf7;--topbar:#041c59;
+    --stale:#8f5200;--stale-bg:#fff6e5;--stale-bd:#f1cf8d;--amber:#f5a623;
+    --err:#b3123b;--err-bg:#fdecef;--err-bd:#f4b4c3;
+    --l1:#9b7bff;--l2:#7c4dff;--l3:#4e00ff;--l4:#041c59;--cmp:#625a86;
+    --shadow:0 10px 28px rgba(4,28,89,.07);--r:14px;
+    --font:'Igra Sans','IgraSans',Aptos,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  :root[data-theme="dark"]{color-scheme:dark;
+    --primary:#9a78ff;--primary-lt:#b59cff;--navy:#dfe6ff;--blue:#7a98ff;
+    --bg:#070c1c;--bg2:#121a38;--surface:#101732;--border:#243057;--border-soft:#1b2447;
+    --heading:#dfe6ff;--text:#eaeef9;--text-soft:#c3c9dc;--text-muted:#9aa4bf;--grid:#1d2748;--topbar:#050a1a;
+    --stale:#f2b65a;--stale-bg:rgba(242,182,90,.10);--stale-bd:rgba(242,182,90,.40);--amber:#f5a623;
+    --err:#ff8099;--err-bg:rgba(255,128,153,.10);--err-bd:rgba(255,128,153,.40);
+    --l1:#b59cff;--l2:#9a78ff;--l3:#7a5cf0;--l4:#dfe6ff;--cmp:#9aa4bf;
+    --shadow:0 10px 28px rgba(0,0,0,.35);}
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.45;min-height:100vh;-webkit-font-smoothing:antialiased;font-variant-ligatures:none;transition:background-color .25s ease,color .25s ease}
+  a{color:var(--blue);text-underline-offset:2px}
+  :focus-visible{outline:3px solid var(--primary-lt);outline-offset:2px;border-radius:6px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+  .jf-topbar{background:var(--topbar);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .jf-topbar-left,.jf-topbar-right{display:flex;align-items:center;gap:10px;min-width:0}
+  .jf-topbar-logo{font-size:1.02rem;color:#fff;font-weight:600;text-decoration:none}
+  .jf-topbar-logo span{color:#b9a6ff}
+  .jf-topbar-back{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:6px 12px;text-decoration:none;white-space:nowrap}
+  .jf-topbar-tag{display:none;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media(min-width:900px){.jf-topbar{padding:10px 24px;flex-wrap:nowrap}.jf-topbar-tag{display:block}}
+  .lang-toggle{display:flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:3px;gap:2px}
+  .lang-opt{font-family:var(--font);min-height:44px;min-width:44px;padding:4px 12px;border:none;background:none;border-radius:100px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.85);cursor:pointer}
+  .lang-opt[aria-pressed="true"]{background:#4e00ff;color:#fff}
+  .theme-btn{font-size:.95rem;width:44px;height:44px;border-radius:100px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 16px 56px}
+  .header{padding:14px 0 2px}
+  @media(min-width:760px){.header{padding:20px 0 6px}}
+  .eyebrow{display:inline-block;font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--primary);background:color-mix(in srgb,var(--primary) 9%,transparent);border-radius:100px;padding:5px 11px;margin-bottom:8px}
+  h1{font-size:clamp(1.45rem,3.4vw,2.05rem);font-weight:700;line-height:1.15;color:var(--heading);margin-bottom:6px}
+  .deck{font-size:clamp(.98rem,1.7vw,1.1rem);color:var(--text-soft);max-width:72ch}
+  .deck a{font-weight:600}
+  h2{font-size:clamp(1.08rem,2vw,1.3rem);color:var(--heading);font-weight:700;line-height:1.2}
+  h3{font-size:1rem;color:var(--heading);font-weight:700;line-height:1.25}
+  .sub{font-size:.9rem;color:var(--text-soft);margin:4px 0 12px;max-width:80ch}
+  /* aviso permanente del caso ilustrativo / de privacidad */
+  .flag{display:flex;gap:10px;align-items:flex-start;margin-top:12px;border-radius:var(--r);padding:10px 14px;font-size:.9rem;font-weight:600;color:var(--heading);background:var(--bg2);border:1px solid var(--border)}
+  .flag b{color:var(--primary)}
+  .flag.priv{background:var(--surface);border:2px solid var(--primary)}
+  /* controles */
+  .controls{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;margin-top:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
+  .field{display:flex;flex-direction:column;gap:3px;font-size:.76rem;font-weight:600;color:var(--text-muted);min-width:0}
+  .field small{font-weight:400}
+  select,input[type=number],input[type=date],input[type=text]{font-family:var(--font);font-size:.95rem;min-height:44px;padding:6px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);max-width:100%}
+  input[type=number]{width:92px}
+  @media(max-width:719px){.controls .field{flex:1 1 150px}.controls .field input{width:100%}.controls .field:first-child,.controls .check{flex:1 1 100%}}
+  .seg{display:inline-flex;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:3px;gap:2px}
+  .seg button{font-family:var(--font);font-size:.86rem;font-weight:600;min-height:44px;padding:6px 14px;border:none;border-radius:100px;background:none;color:var(--text-soft);cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--primary);color:#fff}
+  :root[data-theme="dark"] .seg button[aria-pressed="true"]{background:#4e00ff}
+  .check{display:flex;align-items:center;gap:8px;min-height:44px;font-size:.86rem;font-weight:600;color:var(--text-soft);cursor:pointer}
+  .check input{width:22px;height:22px;accent-color:var(--primary)}
+  .btn{font-family:var(--font);font-size:.88rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 14px;border-radius:10px;border:1px solid var(--primary);background:var(--surface);color:var(--primary);cursor:pointer;text-decoration:none}
+  .btn.solid{background:#4e00ff;border-color:#4e00ff;color:#fff}
+  .btn.quiet{border-color:var(--border);color:var(--text-soft)}
+  /* pestañas */
+  .tabs{position:sticky;top:0;z-index:20;display:flex;gap:2px;margin:14px -16px 0;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-family:var(--font);font-size:.88rem;font-weight:600;flex:0 0 auto;min-height:48px;padding:10px 12px;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;background:none;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+  .tab:hover{color:var(--heading)}
+  .tab[aria-selected="true"]{color:var(--heading);border-bottom-color:var(--primary)}
+  .tab:focus-visible{outline-offset:-3px}
+  @media(min-width:900px){.tabs{margin:16px 0 0;padding:0}.tab{font-size:.92rem;padding:12px 16px}}
+  .panel:focus-visible{outline:none}
+  section.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin-top:16px;min-width:0}
+  @media(min-width:760px){section.card{padding:22px}}
+  /* las cuatro preguntas: bloques que se estrechan */
+  .funnel{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:16px}
+  .layer{width:100%;background:var(--surface);border:1px solid var(--border);border-top:5px solid var(--lc);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px 16px;min-width:0}
+  .layer.l1{--lc:var(--l1)}.layer.l2{--lc:var(--l2)}.layer.l3{--lc:var(--l3)}.layer.l4{--lc:var(--l4)}
+  @media(min-width:900px){.layer{padding:18px 22px 22px}.layer.l2{width:94%}.layer.l3{width:88%}.layer.l4{width:82%}}
+  .layer-head{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+  .layer-n{font-size:1.5rem;font-weight:700;color:var(--text-muted);line-height:1}
+  .layer-q{font-size:.92rem;color:var(--text-soft);flex:1 1 260px}
+  .kpis{display:grid;gap:12px;grid-template-columns:1fr;align-items:start}
+  @media(min-width:720px){.kpis.c2{grid-template-columns:1fr 1fr}.kpis.c3{grid-template-columns:repeat(3,1fr)}}
+  .kpi{border:1px solid var(--border-soft);border-radius:var(--r);padding:12px 14px;min-width:0;background:var(--surface)}
+  .kpi-name{font-size:.8rem;font-weight:700;color:var(--text-muted);letter-spacing:.02em}
+  .kpi-val{font-size:clamp(1.7rem,4.5vw,2.2rem);font-weight:700;color:var(--heading);line-height:1.1;margin-top:4px;overflow-wrap:break-word}
+  .kpi-val.none{font-size:1.2rem;color:var(--text-muted)}
+  .kpi-frac{font-size:.95rem;font-weight:600;color:var(--text);margin-top:2px}
+  .kpi-note{font-size:.84rem;color:var(--text-soft);margin-top:6px}
+  .warn{margin-top:8px;border-radius:10px;padding:8px 10px;font-size:.84rem;font-weight:600;color:var(--stale);background:var(--stale-bg);border:1px solid var(--stale-bd);border-left:4px solid var(--amber)}
+  .warn.top{margin:0 0 10px}
+  details.trace{margin-top:10px;border-top:1px dashed var(--border);padding-top:4px}
+  details.trace>summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;gap:6px;font-size:.86rem;font-weight:700;color:var(--blue)}
+  details.trace>summary::-webkit-details-marker{display:none}
+  details.trace>summary::before{content:'+';display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;border:1px solid currentColor;border-radius:50%;font-size:.9rem;line-height:1}
+  details.trace[open]>summary::before{content:'−'}
+  dl.tr{display:grid;grid-template-columns:1fr;gap:2px 12px;font-size:.84rem;margin:4px 0 10px}
+  dl.tr dt{font-weight:700;color:var(--text-muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+  dl.tr dd{color:var(--text);overflow-wrap:anywhere}
+  .mono{font-family:var(--font-mono);font-size:.82em}
+  /* tablas con desplazamiento propio */
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px;max-width:100%}
+  .tbl-wrap:focus-visible{outline-offset:0}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+  caption{text-align:left;font-size:.8rem;color:var(--text-muted);padding:8px 10px;caption-side:top}
+  th,td{padding:8px 10px;text-align:left;border-top:1px solid var(--border-soft);vertical-align:top}
+  thead th{border-top:none;background:var(--bg2);color:var(--heading);font-weight:700;white-space:nowrap;vertical-align:bottom}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  td small{display:block;color:var(--text-muted);font-size:.78rem}
+  td.muted{color:var(--text-muted);font-size:.8rem}
+  tbody th{font-weight:700;color:var(--heading)}
+  .sort{font:inherit;font-weight:700;color:inherit;background:none;border:none;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:4px;padding:0}
+  .sort::after{content:'↕';font-size:.8em;color:var(--text-muted)}
+  th[aria-sort="ascending"] .sort::after{content:'↑';color:var(--primary)}
+  th[aria-sort="descending"] .sort::after{content:'↓';color:var(--primary)}
+  tr.hit>*{background:color-mix(in srgb,var(--primary) 7%,transparent)}
+  tr.hit>th{box-shadow:inset 4px 0 0 var(--primary)}
+  .tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:100px;padding:3px 9px;border:1px solid var(--border);color:var(--text-soft);margin-bottom:4px}
+  .tag.on{background:#4e00ff;border-color:#4e00ff;color:#fff}
+  /* gráficos */
+  .charts{display:grid;gap:14px;grid-template-columns:1fr;margin-top:12px}
+  @media(min-width:860px){.charts{grid-template-columns:1fr 1fr}}
+  figure.chart{border:1px solid var(--border-soft);border-radius:var(--r);padding:12px;min-width:0}
+  figure.chart figcaption{font-size:.86rem;font-weight:700;color:var(--heading);margin-bottom:6px}
+  .chart-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .chart-scroll svg{display:block;max-width:100%;height:auto}
+  svg text{font-family:var(--font);fill:var(--text)}
+  svg .ax{fill:var(--text-muted);font-size:11px}
+  svg .lab{font-size:12px;font-weight:700}
+  svg .gl{stroke:var(--grid);stroke-width:1}
+  svg .s-ia{stroke:var(--primary);fill:var(--primary)}
+  svg .s-cmp{stroke:var(--cmp);fill:var(--cmp)}
+  svg text.s-ia{fill:var(--primary);stroke:none}
+  svg text.s-cmp{fill:var(--text-soft);stroke:none}
+  details.data{margin-top:8px;font-size:.84rem}
+  details.data>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700;color:var(--blue)}
+  .bar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin:10px 0 6px}
+  .bar i{display:block;height:100%}
+  .bar .top{background:var(--primary)}
+  .bar .rest{background:var(--bg2)}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.84rem;color:var(--text-soft)}
+  .legend b{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--border)}
+  .facts{display:grid;gap:12px;grid-template-columns:1fr;margin-top:10px}
+  @media(min-width:720px){.facts{grid-template-columns:repeat(3,1fr)}}
+  .reading{font-size:clamp(1rem,1.8vw,1.14rem);color:var(--heading);font-weight:600;line-height:1.5;max-width:80ch}
+  .reading span{white-space:nowrap}
+  /* carga de datos */
+  .drop{margin-top:12px;border:2px dashed var(--primary-lt);border-radius:var(--r);padding:18px 14px;text-align:center;background:var(--bg2)}
+  .drop.over{background:color-mix(in srgb,var(--primary) 14%,transparent)}
+  .drop p{font-size:.9rem;color:var(--text-soft);margin-bottom:10px}
+  .files{list-style:none;display:grid;gap:8px;margin-top:12px}
+  .files li{border:1px solid var(--border-soft);border-radius:12px;padding:10px 12px;display:grid;gap:4px 10px;grid-template-columns:1fr auto;align-items:center;min-width:0}
+  .files .fn{font-weight:700;color:var(--heading);overflow-wrap:anywhere}
+  .files .st{font-size:.84rem;color:var(--text-soft);grid-column:1/-1}
+  .files li.bad{border-color:var(--err-bd);background:var(--err-bg)}
+  .files li.bad .st,.msg.err{color:var(--err)}
+  .files ul{grid-column:1/-1;margin:2px 0 0 18px;font-size:.84rem}
+  .files ul li{border:none;padding:0;display:list-item;border-radius:0;background:none}
+  .dl{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .prose{font-size:.92rem;color:var(--text);max-width:82ch}
+  .prose p,.prose ul{margin:0 0 10px}
+  .prose ul{padding-left:20px}
+  .prose li{margin:4px 0}
+  .prose h3{margin:16px 0 6px}
+  .note{font-size:.84rem;color:var(--text-muted);margin-top:10px;max-width:82ch}
+  .jf-footer{margin-top:32px;border-top:1px solid var(--border);padding:16px 0 0;font-size:.8rem;color:var(--text-muted);text-align:center}
+  .jf-footer a{color:var(--blue);font-weight:700}
+  .jf-footer i{color:var(--primary);font-style:normal}
+  .jf-footer p{max-width:70ch;margin:0 auto 8px}
+</style>
+</head>
+<body>
+<nav class="jf-topbar" aria-label="Javier Forero">
+  <div class="jf-topbar-left">
+    <a class="jf-topbar-logo" href="https://javierforero.co">Javier<span>Forero</span>.co</a>
+    <a class="jf-topbar-back" href="https://dashboards.javierforero.co/claude/">&larr; Dashboards</a>
+  </div>
+  <div class="jf-topbar-right">
+    <span class="jf-topbar-tag" data-i18n="top.tag">Tablero y plantilla · registros, no encuestas</span>
+    <div class="lang-toggle" id="langToggle" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-opt" data-lang="es" aria-pressed="true" lang="es">ES</button>
+      <button type="button" class="lang-opt" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button type="button" class="theme-btn" id="themeToggle" aria-pressed="false" aria-label="Cambiar a tema oscuro">🌙</button>
+  </div>
+</nav>
+<main class="wrap">
+  <header class="header">
+    <span class="eyebrow" data-i18n="hd.eyebrow">Inteligencia artificial · Adopción y medición</span>
+    <h1 data-i18n="hd.title">Adopción de IA: cuatro preguntas, ocho indicadores</h1>
+    <p class="deck" id="deck">Un tablero mínimo para saber si tu empresa tiene inteligencia artificial (IA), la usa, la integró en sus procesos y obtiene resultados. Cada número sale de registros de sistemas, no de encuestas.</p>
+    <div class="flag" id="flag" role="note"></div>
+    <div class="controls" id="controls">
+      <div class="field"><span id="modeLab" data-i18n="ct.mode">Datos</span>
+        <div class="seg" role="group" aria-labelledby="modeLab">
+          <button type="button" id="modeEj" aria-pressed="true" data-i18n="ct.ej">Datos de ejemplo</button>
+          <button type="button" id="modeMis" aria-pressed="false" data-i18n="ct.mis">Mis datos</button>
+        </div></div>
+      <label class="field"><span data-i18n="ct.corte">Fecha de corte</span><input type="date" id="pCorte"></label>
+      <label class="field"><span data-i18n="ct.vact">Ventana de activación (días)</span><input type="number" id="pAct" min="7" max="120" step="1" inputmode="numeric"></label>
+      <label class="field"><span data-i18n="ct.vhab">Ventana de hábito (semanas)</span><input type="number" id="pHab" min="2" max="52" step="1" inputmode="numeric"></label>
+      <label class="field"><span data-i18n="ct.umb">Umbral de hábito (semanas activas)</span><input type="number" id="pUmb" min="1" max="52" step="1" inputmode="numeric"></label>
+      <label class="check"><input type="checkbox" id="pMitad"><span data-i18n="ct.mitad">Usar «al menos la mitad de las semanas»</span></label>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Secciones del tablero">
+    <button type="button" class="tab" role="tab" id="t-resumen" aria-controls="p-resumen" aria-selected="true" data-tab="resumen" data-i18n="tab.resumen">Las cuatro preguntas</button>
+    <button type="button" class="tab" role="tab" id="t-area" aria-controls="p-area" aria-selected="false" tabindex="-1" data-tab="area" data-i18n="tab.area">Por área</button>
+    <button type="button" class="tab" role="tab" id="t-proceso" aria-controls="p-proceso" aria-selected="false" tabindex="-1" data-tab="proceso" data-i18n="tab.proceso">Por proceso</button>
+    <button type="button" class="tab" role="tab" id="t-alertas" aria-controls="p-alertas" aria-selected="false" tabindex="-1" data-tab="alertas" data-i18n="tab.alertas">Alertas</button>
+    <button type="button" class="tab" role="tab" id="t-decidir" aria-controls="p-decidir" aria-selected="false" tabindex="-1" data-tab="decidir" data-i18n="tab.decidir">Qué decidir</button>
+    <button type="button" class="tab" role="tab" id="t-datos" aria-controls="p-datos" aria-selected="false" tabindex="-1" data-tab="datos" data-i18n="tab.datos">Usa tus datos</button>
+    <button type="button" class="tab" role="tab" id="t-metodo" aria-controls="p-metodo" aria-selected="false" tabindex="-1" data-tab="metodo" data-i18n="tab.metodo">Método</button>
+  </nav>
+
+  <div class="panel" id="p-resumen" role="tabpanel" aria-labelledby="t-resumen" tabindex="0"></div>
+  <div class="panel" id="p-area" role="tabpanel" aria-labelledby="t-area" tabindex="0" hidden></div>
+  <div class="panel" id="p-proceso" role="tabpanel" aria-labelledby="t-proceso" tabindex="0" hidden></div>
+  <div class="panel" id="p-alertas" role="tabpanel" aria-labelledby="t-alertas" tabindex="0" hidden></div>
+  <div class="panel" id="p-decidir" role="tabpanel" aria-labelledby="t-decidir" tabindex="0" hidden></div>
+  <div class="panel" id="p-datos" role="tabpanel" aria-labelledby="t-datos" tabindex="0" hidden></div>
+  <div class="panel" id="p-metodo" role="tabpanel" aria-labelledby="t-metodo" tabindex="0" hidden></div>
+
+  <noscript><section class="card"><p>Este tablero calcula los indicadores en tu navegador y necesita JavaScript. / This scorecard computes its metrics in your browser and needs JavaScript.</p></section></noscript>
+
+  <footer class="jf-footer">
+    <p id="footNote">Marco y tablero de elaboración propia. No es un estándar ni está validado comparativamente. Los datos de ejemplo son hipotéticos.</p>
+    <span>Javier Forero</span> <i>·</i> <a href="https://javierforero.co">javierforero.co</a> <i>·</i> <a id="footArt" href="https://javierforero.co/2026/11/14/medir-adopcion-ia-kpis/">Leer el artículo</a>
+  </footer>
+</main>
+<input type="file" id="fileInput" accept=".csv,text/csv,text/plain" multiple hidden>
+<div class="sr-only" id="live" role="status" aria-live="polite"></div>
+<script src="calc.js?v=1"></script>
+<script src="i18n.js?v=1"></script>
+<script src="data/ejemplo/etiquetas-en.js?v=1"></script>
+<script src="data/diccionario.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
