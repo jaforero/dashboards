@@ -6,8 +6,8 @@ window.STR = {
   'top.tag': ['Tablero y plantilla · registros, no encuestas', 'Scorecard and template · records, not surveys'],
   'hd.eyebrow': ['Inteligencia artificial · Adopción y medición', 'Artificial intelligence · Adoption and measurement'],
   'hd.title': ['Adopción de IA: cuatro preguntas, ocho indicadores', 'AI adoption: four questions, eight metrics'],
-  'hd.deck': ['Un tablero mínimo para saber si tu empresa tiene inteligencia artificial (IA), la usa, la integró en sus procesos y obtiene resultados. Cada número sale de registros de sistemas, no de encuestas. Acompaña el artículo <a href="{url}">«Medir la adopción de IA: no es un porcentaje, son cuatro preguntas»</a>.',
-    'A minimum scorecard to find out whether your company has artificial intelligence (AI), uses it, has built it into its processes and gets results. Every number comes from system records, not surveys. It goes with the article <a href="{url}">"Measuring AI adoption: it is not one percentage, it is four questions"</a>.'],
+  'hd.deck': ['Un tablero mínimo para saber si tu empresa tiene inteligencia artificial (IA), la usa, la integró en sus procesos y obtiene resultados. Cada número sale de registros de sistemas, no de encuestas. Recorre el caso de ejemplo o carga los registros de tu empresa. El porqué de cada indicador está en el artículo <a href="{url}">«Medir la adopción de IA: no es un porcentaje, son cuatro preguntas»</a>.',
+    'A minimum scorecard to find out whether your company has artificial intelligence (AI), uses it, has built it into its processes and gets results. Every number comes from system records, not surveys. Walk through the sample case or load the records from your own company. The reasoning behind each metric is in the article <a href="{url}">"Measuring AI adoption: it is not one percentage, it is four questions"</a>.'],
   'flag.ej': ['<span><b>Caso ilustrativo con datos hipotéticos.</b> {emp} es una distribuidora que no existe. Sus cifras son las del artículo.</span>', '<span><b>Illustrative case with hypothetical data.</b> {emp} is a distributor that does not exist. Its numbers are the ones in the article.</span>'],
   'flag.mis': ['<span><b>Mis datos.</b> Tus archivos se procesan en tu navegador. No se envían a ningún servidor ni se guardan.{extra}</span>', '<span><b>My data.</b> Your files are processed in your browser. They are not sent to any server and they are not stored.{extra}</span>'],
   'flag.vacio': [' Todavía no hay archivos cargados: ábrelos en «Usa tus datos».', ' No files loaded yet: add them under "Use your data".'],
@@ -22,6 +22,17 @@ window.STR = {
   'foot.note': ['Marco y tablero de elaboración propia. No es un estándar ni está validado comparativamente. Los datos de ejemplo son hipotéticos.', 'Framework and scorecard are my own work. This is not a standard and it has not been comparatively validated. The sample data is hypothetical.'],
   'foot.art': ['Leer el artículo', 'Read the article'],
   'loading': ['Cargando el caso ilustrativo…', 'Loading the illustrative case…'],
+
+  /* parámetros plegables, resumen y siguientes pasos */
+  'pm.sum': ['Corte: {c} · activación: {a} días · hábito: {u} de {n} semanas', 'Cutoff: {c} · activation: {a} days · habit: {u} of {n} weeks'],
+  'pm.edit': ['Cambiar', 'Change'],
+  'pm.aria': ['Parámetros del cálculo', 'Calculation settings'],
+  'dc.count': ['Coinciden <b>{k} de {n}</b> señales con los datos cargados.', '<b>{k} of {n}</b> signals match the loaded data.'],
+  'dc.countNo': ['{m} no se pueden evaluar: faltan datos.', '{m} cannot be evaluated: data is missing.'],
+  'nx.title': ['Qué hacer con estos números', 'What to do with these numbers'],
+  'nx.decidir': ['Ver qué decidir', 'See what to decide'], 'nx.decidir.d': ['Cinco señales, con la hipótesis que debes investigar y la acción que te corresponde.', 'Five signals, with the hypothesis to investigate and the action that falls to you.'],
+  'nx.datos': ['Calcularlo con tus datos', 'Run it on your data'], 'nx.datos.d': ['Cinco plantillas CSV. Se procesan en tu navegador y no se envían ni se guardan.', 'Five CSV templates. They are processed in your browser and never sent or stored.'],
+  'nx.art': ['Leer el artículo', 'Read the article'], 'nx.art.d': ['Por qué cuatro preguntas y no un porcentaje, y dónde la evidencia es floja.', 'Why four questions rather than one percentage, and where the evidence is thin.'],
 
   /* capas */
   'ly.1': ['Actividad', 'Activity'], 'ly.2': ['Adopción', 'Adoption'], 'ly.3': ['Transformación', 'Transformation'], 'ly.4': ['Impacto', 'Impact'],
@@ -40,9 +51,9 @@ window.STR = {
   'f.activacion': ['personas con acceso y al menos 1 acción en la ventana de activación ÷ personas con acceso', 'people with access and at least 1 action in the activation window ÷ people with access'],
   'f.habito': ['personas activas en al menos {u} de {n} semanas ÷ personas con al menos 1 semana activa en la ventana de hábito', 'people active in at least {u} of {n} weeks ÷ people with at least 1 active week in the habit window'],
   'f.cobertura': ['procesos con caso de uso verificado (2 o más evidencias) ÷ procesos donde la IA es aplicable', 'processes with a verified use case (2 or more pieces of evidence) ÷ processes where AI is applicable'],
-  'f.integracion': ['Σ unidades asistidas ÷ Σ unidades cerradas, en las últimas {s} semanas del periodo «después» del grupo con IA', 'Σ assisted units ÷ Σ closed units, over the last {s} weeks of the "after" period for the group with AI'],
-  'f.resultado': ['(media después − media antes en el grupo con IA) − (media después − media antes en el grupo de comparación); media = Σ resultado ÷ Σ unidades cerradas', '(after mean − before mean in the group with AI) − (after mean − before mean in the comparison group); mean = Σ outcome ÷ Σ closed units'],
-  'f.calidad': ['tasa = Σ unidades con retrabajo ÷ Σ unidades cerradas; efecto = (después − antes con IA) − (después − antes en comparación), en puntos porcentuales', 'rate = Σ reworked units ÷ Σ closed units; effect = (after − before with AI) − (after − before in comparison), in percentage points'],
+  'f.integracion': ['total de unidades asistidas ÷ total de unidades cerradas, en las últimas {s} semanas del periodo «después» del grupo con IA', 'total assisted units ÷ total closed units, over the last {s} weeks of the "after" period for the group with AI'],
+  'f.resultado': ['(promedio después − promedio antes en el grupo con IA) − (promedio después − promedio antes en el grupo de comparación); promedio = suma del resultado ÷ unidades cerradas', '(after average − before average in the group with AI) − (after average − before average in the comparison group); average = outcome total ÷ closed units'],
+  'f.calidad': ['tasa = unidades con retrabajo ÷ unidades cerradas; efecto = (después − antes con IA) − (después − antes en comparación), en puntos porcentuales', 'rate = reworked units ÷ closed units; effect = (after − before with AI) − (after − before in comparison), in percentage points'],
   'f.tiempo': ['(minutos de elaboración por unidad antes − después − aumento de minutos de revisión por unidad) × unidades asistidas de las últimas {s} semanas, en horas', '(drafting minutes per unit before − after − increase in review minutes per unit) × assisted units in the last {s} weeks, in hours'],
   'n.acceso': ['Personas elegibles con acceso', 'Eligible people with access'], 'd.acceso': ['Personas elegibles', 'Eligible people'],
   'n.activacion': ['Personas con acceso y al menos 1 acción en la ventana', 'People with access and at least 1 action in the window'], 'd.activacion': ['Personas con acceso', 'People with access'],
@@ -64,14 +75,15 @@ window.STR = {
   'nt.elig': ['Sobre los elegibles: {p} ({f}).', 'Over eligible people: {p} ({f}).'],
   'nt.integ': ['Últimas {s} semanas del periodo «después».', 'Last {s} weeks of the "after" period.'],
   'nt.integTodo': ['En todo el periodo «después» ({s} semanas): {p} ({f}).', 'Over the whole "after" period ({s} weeks): {p} ({f}).'],
-  'nt.rel': ['{p} sobre la media «antes» del grupo con IA.', '{p} against the "before" mean of the group with AI.'],
-  'nt.calc': ['Con IA: {a} → {b}. Comparación: {c} → {d}.', 'With AI: {a} → {b}. Comparison: {c} → {d}.'],
-  'nt.calcSolo': ['Con IA: {a} → {b}.', 'With AI: {a} → {b}.'],
+  'nt.rel': ['{p} frente al promedio «antes» del grupo con IA.', '{p} against the "before" average of the group with AI.'],
+  'nt.calc': ['Con IA: {a} → {b} ({x}). Comparación: {c} → {d} ({y}). El efecto es la diferencia entre esos dos cambios.', 'With AI: {a} → {b} ({x}). Comparison: {c} → {d} ({y}). The effect is the difference between those two changes.'],
+  'nt.calcSolo': ['Con IA: {a} → {b} ({x}).', 'With AI: {a} → {b} ({x}).'],
   'nt.tiempo': ['({a} − {b}) minutos × {u} unidades asistidas ÷ 60. Es capacidad, no dinero.', '({a} − {b}) minutes × {u} assisted units ÷ 60. This is capacity, not money.'],
   'nt.sinsigno': ['El signo no dice si es bueno o malo: depende de tu indicador.', 'The sign does not say whether this is good or bad: it depends on your metric.'],
   'w.sincmp': ['Sin grupo de comparación: esto no demuestra que la IA causó el cambio.', 'No comparison group: this does not prove that AI caused the change.'],
   'w.corto': ['Periodo corto: el lado con menos datos tiene {n} semanas. Con menos de {m} a cada lado, el resultado puede ser ruido.', 'Short period: the side with the least data has {n} weeks. With fewer than {m} on each side, the result may be noise.'],
-  'w.calidad': ['La calidad empeoró: el retrabajo subió {v}. Mira esto antes de leer el resultado.', 'Quality got worse: rework rose by {v}. Look at this before reading the outcome.'],
+  'w.calidad': ['La calidad empeoró: el retrabajo subió {v} más que en el grupo de comparación. Mira esto antes de leer el resultado.', 'Quality got worse: rework rose {v} more than in the comparison group. Look at this before reading the outcome.'],
+  'w.calidadSolo': ['La calidad empeoró: el retrabajo subió {v} entre antes y después. Mira esto antes de leer el resultado.', 'Quality got worse: rework rose by {v} from before to after. Look at this before reading the outcome.'],
   'u.h': ['horas', 'hours'], 'u.hmes': ['{v} horas al mes', '{v} hours a month'], 'u.hsem': ['{v} horas en {s} semanas', '{v} hours in {s} weeks'],
   'u.pp': ['{v} puntos porcentuales', '{v} percentage points'], 'u.min': ['{v} min', '{v} min'],
   'ej.unidad': ['cotizaciones', 'quotes'], 'gen.unidad': ['unidades', 'units'],
@@ -103,7 +115,7 @@ window.STR = {
 
   /* lectura */
   'rd.title': ['Lectura de arriba abajo', 'Reading from top to bottom'],
-  'rd.sub': ['La frase se arma con los valores de arriba. Describe; no califica.', 'This sentence is built from the values above. It describes; it does not grade.'],
+  'rd.sub': ['El caso en una frase, armada con los valores de las tarjetas de abajo. Describe; no califica.', 'The case in one sentence, built from the values in the cards below. It describes; it does not grade.'],
   'rd.act': ['<span>{v}</span> probó la herramienta', '<span>{v}</span> tried the tool'],
   'rd.hab': ['<span>{v}</span> de los elegibles la usa con hábito', '<span>{v}</span> of eligible people use it habitually'],
   'rd.cob': ['<span>{v}</span> de los procesos tiene uso verificado', '<span>{v}</span> of processes have verified use'],
@@ -129,7 +141,7 @@ window.STR = {
   'pr.meta': ['Área: {a}. Con IA: {x}. Comparación: {y}.', 'Department: {a}. With AI: {x}. Comparison: {y}.'],
   'pr.sin': ['ninguno', 'none'],
   'pr.unidad': ['Unidad del indicador de resultado (por ejemplo, horas)', 'Unit of the outcome metric (for example, hours)'],
-  'ch.res': ['Media del indicador de resultado por unidad cerrada', 'Mean of the outcome metric per closed unit'],
+  'ch.res': ['Promedio del indicador de resultado por unidad cerrada', 'Average of the outcome metric per closed unit'],
   'ch.cal': ['Unidades con retrabajo sobre unidades cerradas', 'Reworked units over closed units'],
   'ch.alt': ['Gráfico de pendientes entre antes y después.', 'Slope chart from before to after.'],
   'ch.altG': ['{g}: de {a} a {b}.', '{g}: from {a} to {b}.'],
@@ -152,7 +164,7 @@ window.STR = {
   'al.f.trafE': ['{e} solicitudes de red agregadas', '{e} aggregate network requests'],
   'al.f.gasto': ['<b>{s}</b> servicios de IA no autorizados con pagos en {m}', '<b>{s}</b> unapproved AI services with payments in {m}'],
   'al.f.gastoE': ['{e} líneas de gasto', '{e} expense lines'],
-  'al.f.note': ['El tráfico de red es una cota inferior: solo ve la red corporativa. Los dispositivos personales quedan fuera.', 'Network traffic is a lower bound: it only sees the corporate network. Personal devices are out of view.'],
+  'al.f.note': ['El tráfico de red muestra un mínimo, no el total: solo ve la red corporativa. El uso en dispositivos personales queda fuera, así que la cifra real puede ser mayor.', 'Network traffic shows a minimum, not the total: it only sees the corporate network. Use on personal devices is out of view, so the real figure may be higher.'],
   'al.f.mes': ['Mes', 'Month'], 'al.f.c1': ['Servicios con tráfico', 'Services with traffic'], 'al.f.c2': ['Solicitudes de red', 'Network requests'], 'al.f.c3': ['Servicios con pagos', 'Services with payments'], 'al.f.c4': ['Líneas de gasto', 'Expense lines'],
   'al.f.ch': ['Servicios de IA no autorizados con tráfico, por mes', 'Unapproved AI services with traffic, by month'],
   'al.f.alt': ['Gráfico de columnas por mes. Valores: {l}.', 'Column chart by month. Values: {l}.'],
@@ -160,7 +172,7 @@ window.STR = {
 
   /* qué decidir (texto del artículo) */
   'dc.title': ['Del tablero a la decisión', 'From scorecard to decision'],
-  'dc.sub': ['Las cinco lecturas más frecuentes, tomadas del artículo. Las filas resaltadas son las que coinciden con los datos cargados, y dicen con qué números. <b>Es orientación, no veredicto:</b> cada hipótesis se confirma hablando con quien hace el trabajo, no con el tablero.', 'The five most common readings, taken from the article. Highlighted rows are the ones that match the loaded data, and they say with which numbers. <b>This is guidance, not a verdict:</b> each hypothesis is confirmed by talking to the people who do the work, not by the scorecard.'],
+  'dc.sub': ['Cinco señales, con sus hipótesis y acciones, tomadas de la sección «Del tablero a la decisión» del <a href="{url}">artículo</a>. Las resaltadas coinciden con los datos cargados, y dicen con qué números. <b>Es orientación, no veredicto:</b> cada hipótesis se confirma hablando con quien hace el trabajo, no con el tablero.', 'Five signals, with their hypotheses and actions, taken from the "From scorecard to decision" section of the <a href="{url}">article</a>. The highlighted ones match the loaded data, and they say with which numbers. <b>This is guidance, not a verdict:</b> each hypothesis is confirmed by talking to the people who do the work, not by the scorecard.'],
   'dc.c1': ['Señal', 'Signal'], 'dc.c2': ['Hipótesis por investigar', 'Hypotheses to investigate'], 'dc.c3': ['Acción de la dirección', 'What leadership does'], 'dc.c4': ['En los datos cargados', 'In the loaded data'],
   'dc.on': ['Coincide', 'Matches'], 'dc.off': ['No aparece', 'Not present'],
   'dc.1.s': ['Mucho acceso, poca activación', 'Lots of access, little activation'],
@@ -193,7 +205,7 @@ window.STR = {
   'da.priv': ['Tus archivos se procesan en tu navegador. No se envían a ningún servidor ni se guardan.', 'Your files are processed in your browser. They are not sent to any server and they are not stored.'],
   'da.priv2': ['Puedes comprobarlo en la pestaña de red de tu navegador. Al pasar a «Mis datos» también se apaga la analítica de visitas de esta página. Si recargas la página, los datos desaparecen.', 'You can check this in your browser\'s network tab. Switching to "My data" also turns off this page\'s visit analytics. If you reload the page, the data is gone.'],
   'da.s1': ['1 · Descarga las plantillas', '1 · Download the templates'],
-  'da.s1sub': ['Cinco archivos CSV (valores separados por comas), en codificación UTF-8 y con fechas AAAA-MM-DD. Cada uno trae los encabezados y dos filas de ejemplo: reemplázalas por tus registros. Nunca pongas nombres, correos ni documentos: usa un identificador seudonimizado.', 'Five CSV (comma-separated values) files, UTF-8 encoded, with YYYY-MM-DD dates. Each has the headers and two sample rows: replace them with your records. Never include names, emails or ID numbers: use a pseudonymized identifier.'],
+  'da.s1sub': ['Cinco archivos CSV (valores separados por comas), en codificación UTF-8 y con fechas AAAA-MM-DD. Cada uno trae los encabezados y dos filas de ejemplo: reemplázalas por tus registros. Nunca pongas nombres, correos ni documentos: usa un identificador seudonimizado, es decir, un código que no permita saber quién es la persona.', 'Five CSV (comma-separated values) files, UTF-8 encoded, with YYYY-MM-DD dates. Each has the headers and two sample rows: replace them with your records. Never include names, emails or ID numbers: use a pseudonymized identifier, meaning a code that does not reveal who the person is.'],
   'da.dic': ['Diccionario de columnas (CSV)', 'Column dictionary (CSV)'],
   'da.dicSee': ['Ver las columnas de {f}', 'See the columns in {f}'],
   'da.fuente': ['Fuente: {f}.', 'Source: {f}.'],
@@ -235,15 +247,16 @@ window.STR = {
   'col.con_acceso': ['con acceso', 'with access'], 'col.con_accion_en_ventana': ['con acción en la ventana', 'with an action in the window'],
   'col.con_semana_activa': ['con al menos 1 semana activa', 'with at least 1 active week'], 'col.con_habito': ['con hábito', 'habitual'],
   'col.evidencias': ['evidencias', 'evidence count'], 'col.verificado': ['verificado', 'verified'], 'col.semanas': ['semanas', 'weeks'],
-  'col.media': ['media', 'mean'], 'col.tasa': ['tasa', 'rate'],
+  'col.media': ['promedio', 'average'], 'col.tasa': ['tasa', 'rate'],
   'col.min_elaboracion_por_unidad': ['min de elaboración por unidad', 'drafting min per unit'], 'col.min_revision_por_unidad': ['min de revisión por unidad', 'review min per unit'],
 
   /* método */
   'me.html': [`
+<section class="card prose"><p class="sub" style="margin:0">Esta pestaña resume las reglas con las que calcula el tablero. El razonamiento, las fuentes y los límites de la evidencia están en el artículo <a href="{url}">«Medir la adopción de IA: no es un porcentaje, son cuatro preguntas»</a>.</p></section>
 <section class="card prose"><h2>Tres definiciones antes de las fórmulas</h2>
 <p class="sub">Un indicador sirve si dos personas distintas lo calculan y llegan al mismo número. Fija esto por escrito antes de medir.</p>
 <ul>
-<li><b>Población elegible:</b> personas cuyo cargo incluye tareas donde la herramienta es aplicable. No es toda la plantilla.</li>
+<li><b>Población elegible:</b> personas cuyo cargo incluye tareas donde la herramienta es aplicable. No son todos los empleados.</li>
 <li><b>Acción intencional:</b> algo que la persona pidió, como una instrucción, un resumen o aceptar una sugerencia. Abrir el panel no cuenta.</li>
 <li><b>Ventanas y fecha de corte:</b> 28 días para activación y 12 semanas para hábito, contadas hacia atrás desde una fecha de corte fija. Puedes cambiarlas arriba; las tarjetas siempre dicen con cuál se calcularon.</li>
 </ul>
@@ -261,13 +274,14 @@ window.STR = {
 </ul></section>
 <section class="card prose"><h2>Lo que este tablero no demuestra</h2><ul>
 <li><b>Que la IA causó un cambio,</b> si no hay grupo de comparación o si los dos equipos no eran parecidos antes. La resta doble descuenta lo que también le pasó al equipo sin IA; no corrige una mala comparación.</li>
-<li><b>Que el tiempo recuperado sea dinero.</b> Son horas de capacidad. Se vuelven valor solo en la parte que tiene un destino verificable: más unidades atendidas, horas extra que dejaron de pagarse.</li>
+<li><b>Que el tiempo recuperado sea dinero.</b> Son horas de capacidad. Se vuelven valor solo en la parte que tiene un destino verificable: más unidades atendidas, horas extra que dejaron de pagarse. El artículo llama al indicador 8 «Tiempo neto recuperado y valor realizado»; el tablero calcula solo el tiempo, porque el destino de esas horas no está en los cinco archivos.</li>
 <li><b>Por qué pasa lo que pasa.</b> Los registros dicen qué ocurrió, no por qué. Cuando un área no usa la herramienta, la razón se averigua hablando con quien hace el trabajo.</li>
-<li><b>El uso en dispositivos y cuentas personales.</b> El tráfico de red solo ve la red corporativa: es una cota inferior.</li>
+<li><b>El uso en dispositivos y cuentas personales.</b> El tráfico de red solo ve la red corporativa: muestra un mínimo, no el total.</li>
 <li><b>Que más uso sea mejor.</b> Hay tareas donde la IA es la herramienta equivocada. Por eso no hay semáforos ni metas.</li>
 <li><b>Un nivel de madurez.</b> No hay índice compuesto ni puntaje único: ninguna ponderación tiene evidencia que la respalde. Tampoco hay cifras externas presentadas como meta; cada indicador se compara entre áreas y contra la medición anterior de la misma empresa.</li>
 </ul>
 <p>El umbral de «9 de 12 semanas» es la regla que publica un proveedor y nadie la ha validado. La cobertura de procesos, la integración, la regla de dos evidencias y las cuatro capas son síntesis y diseño de Javier Forero: no están probados comparativamente en una cartera real.</p></section>`, `
+<section class="card prose"><p class="sub" style="margin:0">This tab summarizes the rules the scorecard computes with. The reasoning, the sources and the limits of the evidence are in the article <a href="{url}">"Measuring AI adoption: it is not one percentage, it is four questions"</a>.</p></section>
 <section class="card prose"><h2>Three definitions before the formulas</h2>
 <p class="sub">A metric is useful if two different people compute it and land on the same number. Put this in writing before you measure.</p>
 <ul>
@@ -289,9 +303,9 @@ window.STR = {
 </ul></section>
 <section class="card prose"><h2>What this scorecard does not prove</h2><ul>
 <li><b>That AI caused a change,</b> if there is no comparison group or if the two teams were not alike beforehand. The double subtraction removes what also happened to the team without AI; it does not fix a bad comparison.</li>
-<li><b>That recovered time is money.</b> These are hours of capacity. They become value only for the part with a verifiable destination: more units handled, overtime no longer paid.</li>
+<li><b>That recovered time is money.</b> These are hours of capacity. They become value only for the part with a verifiable destination: more units handled, overtime no longer paid. The article calls metric 8 "Net time recovered and realized value"; the scorecard computes only the time, because where those hours went is not in the five files.</li>
 <li><b>Why things happen.</b> Records say what happened, not why. When a department does not use the tool, you find the reason by talking to the people who do the work.</li>
-<li><b>Use on personal devices and accounts.</b> Network traffic only sees the corporate network: it is a lower bound.</li>
+<li><b>Use on personal devices and accounts.</b> Network traffic only sees the corporate network: it shows a minimum, not the total.</li>
 <li><b>That more usage is better.</b> There are tasks where AI is the wrong tool. That is why there are no traffic lights and no targets.</li>
 <li><b>A maturity level.</b> There is no composite index and no single score: no weighting has evidence behind it. There are no outside figures presented as targets either; each metric is compared across departments and against the same company's previous measurement.</li>
 </ul>

@@ -26,7 +26,7 @@
   const isEj = () => ST.mode === 'ejemplo';
 
   /* ---------- texto y formato ---------- */
-  function T(k, p) { const s = STR[k]; if (!s) return k; return s[LANG === 'en' ? 1 : 0].replace(/\{(\w+)\}/g, (m, a) => p && p[a] != null ? p[a] : ''); }
+  function T(k, p) { const s = STR[k]; if (!s) return k; return s[LANG === 'en' ? 1 : 0].replace(/\{(\w+)\}/g, (m, a) => p && p[a] != null ? p[a] : a === 'url' ? ARTICLE_URL : ''); }
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const loc = () => LANG === 'en' ? 'en-US' : 'es-CO';
   const num = (v, d) => new Intl.NumberFormat(loc(), { maximumFractionDigits: d == null ? 2 : d, useGrouping: true }).format(Math.abs(v) < 5e-10 ? 0 : v);
@@ -68,6 +68,7 @@
     return `<div class="tbl-wrap" tabindex="0" role="region" aria-label="${esc(o.label || o.caption || '')}"><table>${o.caption ? `<caption>${esc(o.caption)}</caption>` : ''}<thead><tr>${cols.map((c, i) => `<th scope="col"${numCol(c, i) ? ' class="num"' : ''}>${esc(o.raw ? c : colName(c))}</th>`).join('')}</tr></thead><tbody>${rows.map(r => '<tr>' + r.map((v, i) => `<td${numCol(cols[i], i) && v != null ? ' class="num"' : v == null ? ' class="muted"' : ''}>${esc(o.raw ? v : cell(cols[i], v))}</td>`).join('') + '</tr>').join('')}</tbody></table></div>`;
   }
 
+  const qWarn = x => T(x.sinComparacion ? 'w.calidadSolo' : 'w.calidad', { v: T('u.pp', { v: num(x.value * 100, 2) }) });
   /* ---------- tarjeta de indicador con «Ver de dónde sale» ---------- */
   const NUMS = { acceso: 1, activacion: 2, habito: 3, cobertura: 4, integracion: 5, resultado: 6, calidad: 7, tiempo: 8 };
   function describe(key, x) {
@@ -79,9 +80,9 @@
       const d = key === 'calidad' ? v => T('u.pp', { v: signed(v * 100, 2) }) : v => withUnit(signed(v, 2));
       o.val = d(x.value);
       if (key === 'resultado' && x.relativo != null) o.notes.push(T('nt.rel', { p: spct(x.relativo) }));
-      o.notes.push(x.sinComparacion ? T('nt.calcSolo', { a: f(m.cA), b: f(m.cD) }) : T('nt.calc', { a: f(m.cA), b: f(m.cD), c: f(m.kA), d: f(m.kD) }));
+      o.notes.push(x.sinComparacion ? T('nt.calcSolo', { a: f(m.cA), b: f(m.cD), x: d(x.dCon) }) : T('nt.calc', { a: f(m.cA), b: f(m.cD), c: f(m.kA), d: f(m.kD), x: d(x.dCon), y: d(x.dCmp) }));
       if (key === 'resultado') o.notes.push(T('nt.sinsigno'));
-      if (key === 'calidad' && x.alerta) o.top.push(T('w.calidad', { v: T('u.pp', { v: num(x.value * 100, 2) }) }));
+      if (key === 'calidad' && x.alerta) o.top.push(qWarn(x));
       if (x.sinComparacion) o.warns.push(T('w.sincmp'));
       if (x.periodoCorto) o.warns.push(T('w.corto', { n: x.semanasMin, m: R.params.minSemanas }));
       o.t1 = T('n.resultado', { v: d(x.dCon) }); o.t2 = x.sinComparacion ? T('d.sincmp') : T('d.resultado', { v: d(x.dCmp) });
@@ -132,12 +133,17 @@
     const sel = R.procesosU.length > 1 ? `<label class="field" style="margin-bottom:10px"><span>${T('ly.proc')}</span><select id="procSel">${R.procesosU.map(p => `<option value="${esc(p.id)}"${P.proceso && p.id === P.proceso.id ? ' selected' : ''}>${esc(lab('procesos', p.nombre))}</option>`).join('')}</select></label>`
       : P.proceso ? `<p class="kpi-note" style="margin:0 0 10px">${T('ly.proc')}: <b>${esc(lab('procesos', P.proceso.nombre))}</b></p>` : '';
     const pid = P.proceso ? P.proceso.id : '-';
-    $('p-resumen').innerHTML = `<div class="funnel">
+    const qa = ok(P.calidad) && P.calidad.alerta ? `<p class="warn top" role="note">${qWarn(P.calidad)}</p>` : '';
+    const next = `<section class="card next" aria-labelledby="nx"><h2 id="nx">${T('nx.title')}</h2><div class="nexts">
+      <div><button type="button" class="btn solid" data-goto="decidir">${T('nx.decidir')} →</button><p>${T('nx.decidir.d')}</p></div>
+      <div><button type="button" class="btn" data-goto="datos">${T('nx.datos')} →</button><p>${T('nx.datos.d')}</p></div>
+      <div><a class="btn" href="${ARTICLE_URL}">${T('nx.art')} →</a><p>${T('nx.art.d')}</p></div></div></section>`;
+    $('p-resumen').innerHTML = `<section class="card lede"><h2>${T('rd.title')}</h2><p class="sub">${T('rd.sub')}</p>${reading(I, P)}</section><div class="funnel">
       ${layer(1, [card('g', 'acceso', I.acceso), card('g', 'activacion', I.activacion)])}
       ${layer(2, [card('g', 'habito', I.habito)])}
       ${layer(3, [card('g', 'cobertura', I.cobertura), card('g:' + pid, 'integracion', P.integracion)], sel)}
-      ${layer(4, [card('g:' + pid, 'resultado', P.resultado), card('g:' + pid, 'calidad', P.calidad), card('g:' + pid, 'tiempo', P.tiempo)])}
-    </div><section class="card"><h2>${T('rd.title')}</h2><p class="sub">${T('rd.sub')}</p>${reading(I, P)}</section>`;
+      ${layer(4, [card('g:' + pid, 'resultado', P.resultado), card('g:' + pid, 'calidad', P.calidad, true), card('g:' + pid, 'tiempo', P.tiempo)], qa)}
+    </div>${next}`;
   }
   function reading(I, P) {
     const parts = [], miss = [], unit = isEj() ? T('ej.unidad') : T('gen.unidad'), rn = isEj() ? T('ej.resName') : T('gen.resName');
@@ -221,7 +227,7 @@
       };
       const u = resUnit(), ctx = 'p:' + p.id;
       return `<section class="card" aria-labelledby="pr-${esc(p.id)}">
-        ${ok(p.calidad) && p.calidad.alerta ? `<p class="warn top" role="note">${T('w.calidad', { v: T('u.pp', { v: num(p.calidad.value * 100, 2) }) })}</p>` : ''}
+        ${ok(p.calidad) && p.calidad.alerta ? `<p class="warn top" role="note">${qWarn(p.calidad)}</p>` : ''}
         <h2 id="pr-${esc(p.id)}">${esc(lab('procesos', p.nombre))}</h2>
         <p class="sub">${T('pr.meta', { a: p.area ? esc(lab('areas', p.area)) : '—', x: eq('con_ia'), y: eq('comparacion') })}</p>
         <div class="kpis c2">${['integracion', 'resultado', 'calidad', 'tiempo'].map(k => card(ctx, k, p[k], true)).join('')}</div>
@@ -256,7 +262,7 @@
 
   /* ---------- 7 · qué decidir ---------- */
   function renderDecidir() {
-    const R = ST.R, I = R.ind, low = k => T('in.' + k).toLowerCase();
+    const R = ST.R, I = R.ind, low = k => T('in.' + k).toLowerCase(); let noEval = 0;
     const rows = ST.L.map((l, i) => {
       const n = i + 1; let ev = [], evaluable = true;
       if (l.pair) {
@@ -272,10 +278,11 @@
           if (l.extremos) ev.push(T('ev.ext', { a1: esc(lab('areas', l.extremos[0].area)), v1: pct(l.extremos[0].habito.value), a2: esc(lab('areas', l.extremos[1].area)), v2: pct(l.extremos[1].habito.value) })); }
       }
       const tag = !evaluable ? `<span class="tag">${T('nodata')}</span>` : l.match ? `<span class="tag on">${T('dc.on')}</span>` : `<span class="tag">${T('dc.off')}</span>`;
-      return `<tr${l.match ? ' class="hit"' : ''}><th scope="row">${T('dc.' + n + '.s')}</th><td>${T('dc.' + n + '.h')}</td><td>${T('dc.' + n + '.a')}</td><td>${tag}${ev.map(e => `<div>${e}</div>`).join('')}<small>${T('dc.' + n + '.r')}</small></td></tr>`;
+      if (!evaluable) noEval++;
+      return `<tr${l.match ? ' class="hit"' : ''}><th scope="row">${T('dc.' + n + '.s')}</th><td data-label="${T('dc.c2')}">${T('dc.' + n + '.h')}</td><td data-label="${T('dc.c3')}">${T('dc.' + n + '.a')}</td><td data-label="${T('dc.c4')}">${tag}${ev.map(e => `<div>${e}</div>`).join('')}<small>${T('dc.' + n + '.r')}</small></td></tr>`;
     });
-    $('p-decidir').innerHTML = `<section class="card"><h2>${T('dc.title')}</h2><p class="sub">${T('dc.sub')}</p>
-      <div class="tbl-wrap" tabindex="0" role="region" aria-label="${T('dc.title')}"><table style="min-width:760px"><thead><tr><th scope="col">${T('dc.c1')}</th><th scope="col">${T('dc.c2')}</th><th scope="col">${T('dc.c3')}</th><th scope="col">${T('dc.c4')}</th></tr></thead><tbody>${rows.join('')}</tbody></table></div></section>`;
+    $('p-decidir').innerHTML = `<section class="card"><h2>${T('dc.title')}</h2><p class="sub">${T('dc.sub')}</p><p class="count">${T('dc.count', { k: ST.L.filter(l => l.match).length, n: ST.L.length })}${noEval ? ' ' + T('dc.countNo', { m: noEval }) : ''}</p>
+      <div class="tbl-wrap dec" tabindex="0" role="region" aria-label="${T('dc.title')}"><table><thead><tr><th scope="col">${T('dc.c1')}</th><th scope="col">${T('dc.c2')}</th><th scope="col">${T('dc.c3')}</th><th scope="col">${T('dc.c4')}</th></tr></thead><tbody>${rows.join('')}</tbody></table></div></section>`;
   }
 
   /* ---------- 8 · usa tus datos ---------- */
@@ -331,6 +338,7 @@
     $('flag').className = 'flag' + (isEj() ? '' : ' priv');
     $('flag').innerHTML = isEj() ? T('flag.ej', { emp: T('emp') }) : T('flag.mis', { extra: Object.keys(D.data).length ? '' : T('flag.vacio') });
     $('modeEj').setAttribute('aria-pressed', String(isEj())); $('modeMis').setAttribute('aria-pressed', String(!isEj()));
+    $('pmSum').textContent = T('pm.sum', { c: fdate(ST.corte[ST.mode]), a: ST.P.ventanaAct, u: ST.R.params.umbral, n: ST.P.ventanaHab });
     $('pCorte').value = ST.corte[ST.mode]; $('pAct').value = ST.P.ventanaAct; $('pHab').value = ST.P.ventanaHab;
     $('pUmb').value = ST.R.params.umbral; $('pUmb').max = ST.P.ventanaHab; $('pUmb').disabled = ST.P.mitad; $('pMitad').checked = ST.P.mitad;
   }
@@ -426,8 +434,9 @@
     $('pMitad').addEventListener('change', e => { ST.P.mitad = e.target.checked; renderAll(); });
     $('fileInput').addEventListener('change', e => { if (e.target.files.length) readFiles(e.target.files).then(() => { e.target.value = ''; }); });
     document.addEventListener('click', e => {
-      const t = e.target.closest('[data-dl],[data-sort],[data-rm],#pick,#backEj'); if (!t) return;
+      const t = e.target.closest('[data-dl],[data-sort],[data-rm],[data-goto],#pick,#backEj'); if (!t) return;
       if (t.dataset.dl) download(t.dataset.dl);
+      else if (t.dataset.goto) { setTab(t.dataset.goto, { focus: true }); $('tabs').scrollIntoView({ block: 'start' }); }
       else if (t.dataset.sort) { const k = t.dataset.sort; ST.sort = { k, dir: ST.sort.k === k ? -ST.sort.dir : (k === 'area' ? 1 : -1) }; renderAll(); }
       else if (t.dataset.rm) { delete ST.mis.data[t.dataset.rm]; delete ST.mis.rep[t.dataset.rm]; if (!ST.corteManual) ST.corte.mis = C.defaultCorte(ST.mis.data) || today; renderAll(); }
       else if (t.id === 'pick') $('fileInput').click();

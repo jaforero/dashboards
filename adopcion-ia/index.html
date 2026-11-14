@@ -53,7 +53,8 @@
  "description":"Tablero mínimo para medir la adopción de inteligencia artificial en una empresa a partir de registros de sistemas, con un caso ilustrativo de datos hipotéticos y plantillas CSV.",
  "url":"https://dashboards.javierforero.co/adopcion-ia/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["es","en"],
  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
- "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"}}
+ "creator":{"@type":"Person","name":"Javier Forero","url":"https://javierforero.co"},
+ "subjectOf":{"@type":"Article","headline":"Medir la adopción de IA: no es un porcentaje, son cuatro preguntas","url":"https://javierforero.co/2026/11/14/medir-adopcion-ia-kpis/","author":{"@type":"Person","name":"Javier Forero"}}}
 </script>
 <style>
   @font-face{font-family:'Igra Sans';
@@ -235,6 +236,34 @@
   .jf-footer a{color:var(--blue);font-weight:700}
   .jf-footer i{color:var(--primary);font-style:normal}
   .jf-footer p{max-width:70ch;margin:0 auto 8px}
+  /* parámetros plegables: los valores siempre a la vista, los controles a un toque */
+  details.params{flex:1 1 320px;min-width:0}
+  details.params>summary{list-style:none;cursor:pointer;min-height:44px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:.86rem;color:var(--text-soft)}
+  details.params>summary::-webkit-details-marker{display:none}
+  .pm-sum{font-weight:600}
+  .pm-edit{font-weight:700;color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+  details.params[open] .pm-edit{display:none}
+  .pm-body{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;padding-top:8px}
+  @media(max-width:719px){.pm-body .field{flex:1 1 150px}.pm-body .field input{width:100%}.pm-body .check{flex:1 1 100%}}
+  /* lectura al inicio y siguientes pasos */
+  section.card.lede{margin-top:16px;border-left:5px solid var(--primary)}
+  .nexts{display:grid;gap:14px;margin-top:10px}
+  @media(min-width:760px){.nexts{grid-template-columns:repeat(3,1fr)}}
+  .nexts p{margin:6px 0 0;font-size:.86rem;color:var(--text-soft)}
+  .nexts .btn{width:100%}
+  .count{margin:0 0 10px;font-size:.92rem;color:var(--heading)}
+  .sub a,.prose a{color:var(--blue)}
+  /* «Qué decidir»: tabla en escritorio, fichas apiladas en móvil */
+  @media(min-width:760px){.dec table{min-width:760px}}
+  @media(max-width:759px){
+    .dec{overflow:visible;border:none}
+    .dec thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+    .dec table,.dec tbody,.dec tr,.dec th,.dec td{display:block;width:auto}
+    .dec tr{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+    .dec tbody th{font-size:1rem;padding:12px 12px 4px}
+    .dec td{padding:6px 12px 10px;border:none}
+    .dec td::before{content:attr(data-label);display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted);margin-bottom:2px}
+  }
 </style>
 </head>
 <body>
@@ -264,11 +293,13 @@
           <button type="button" id="modeEj" aria-pressed="true" data-i18n="ct.ej">Datos de ejemplo</button>
           <button type="button" id="modeMis" aria-pressed="false" data-i18n="ct.mis">Mis datos</button>
         </div></div>
+      <details class="params" id="params"><summary><span class="pm-sum" id="pmSum"></span><span class="pm-edit" data-i18n="pm.edit">Cambiar</span></summary><div class="pm-body">
       <label class="field"><span data-i18n="ct.corte">Fecha de corte</span><input type="date" id="pCorte"></label>
       <label class="field"><span data-i18n="ct.vact">Ventana de activación (días)</span><input type="number" id="pAct" min="7" max="120" step="1" inputmode="numeric"></label>
       <label class="field"><span data-i18n="ct.vhab">Ventana de hábito (semanas)</span><input type="number" id="pHab" min="2" max="52" step="1" inputmode="numeric"></label>
       <label class="field"><span data-i18n="ct.umb">Umbral de hábito (semanas activas)</span><input type="number" id="pUmb" min="1" max="52" step="1" inputmode="numeric"></label>
       <label class="check"><input type="checkbox" id="pMitad"><span data-i18n="ct.mitad">Usar «al menos la mitad de las semanas»</span></label>
+      </div></details>
     </div>
   </header>
 
@@ -299,10 +330,10 @@
 </main>
 <input type="file" id="fileInput" accept=".csv,text/csv,text/plain" multiple hidden>
 <div class="sr-only" id="live" role="status" aria-live="polite"></div>
-<script src="calc.js?v=1"></script>
-<script src="i18n.js?v=1"></script>
+<script src="calc.js?v=2"></script>
+<script src="i18n.js?v=2"></script>
 <script src="data/ejemplo/etiquetas-en.js?v=1"></script>
 <script src="data/diccionario.js?v=1"></script>
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
