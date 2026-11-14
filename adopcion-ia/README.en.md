@@ -7,7 +7,7 @@
 [![No dependencies](https://img.shields.io/badge/JavaScript-no%20dependencies-0048ff)](#files)
 [![Bilingual](https://img.shields.io/badge/ES%20%C2%B7%20EN-bilingual-7c4dff)](https://dashboards.javierforero.co/adopcion-ia/)
 
-The question it answers: **does your company have AI, use it, build it into its processes and get results?** Those are four different facts, and none follows from the one before. It goes with the article "Measuring AI adoption: it is not one percentage, it is four questions" (javierforero.co).
+The question it answers: **does your company have AI, use it, build it into its processes and get results?** Those are four different facts, and none follows from the one before. It goes with the article ["Measuring AI adoption: it is not one percentage, it is four questions"](https://javierforero.co/2026/11/14/medir-adopcion-ia-kpis/).
 
 > **Illustrative case with hypothetical data.** Northgate Supply (Aurora in Spanish) is a distributor that does not exist. Its numbers are the ones in the article. Framework and scorecard are the author's own work: this is not a standard and it has not been comparatively validated.
 

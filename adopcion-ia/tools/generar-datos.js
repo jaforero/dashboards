@@ -20,12 +20,14 @@ const SERVICIOS_NO_AUTORIZADOS = 9;         // cifra nueva: servicios con tráfi
 const ACC_TOTAL = 20000;                    // acciones en la ventana de hábito
 /* área: [empleados, elegibles, con acceso, activas en 28 días, con hábito (≥9 de 12), de ellas en el 10 % más activo] */
 const AREAS = [
-  ['Comercial', 150, 130, 90, 76, 24, 10],
-  ['Operaciones', 180, 120, 60, 44, 8, 2],
+  ['Comercial', 150, 130, 90, 76, 27, 13],
+  ['Operaciones', 180, 120, 60, 38, 8, 2],
   ['Finanzas', 70, 60, 40, 38, 4, 0],             // activación alta, hábito bajo
-  ['Atención al cliente', 110, 100, 70, 52, 12, 4],
+  ['Atención al cliente', 110, 100, 70, 58, 12, 4],
   ['Gestión humana', 50, 40, 25, 18, 6, 2],
-  ['Analítica', 40, 30, 15, 12, 12, 12],          // pocos usuarios, muy intensivos
+  ['Analítica', 40, 30, 15, 12, 9, 9],            // pocos usuarios, muy intensivos
+  /* A propósito, ningún área tiene acceso por encima del total y activación por debajo: la lectura 1
+     («mucho acceso, poca activación») no coincide con Aurora, como en el artículo (80 % probó la herramienta). */
 ];
 const AREAS_EN = { 'Comercial': 'Sales', 'Operaciones': 'Operations', 'Finanzas': 'Finance', 'Atención al cliente': 'Customer service', 'Gestión humana': 'Human resources', 'Analítica': 'Analytics' };
 const EQUIPOS_EN = { 'Zona norte': 'Midwest region', 'Zona sur': 'Southeast region' };

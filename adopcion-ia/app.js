@@ -6,8 +6,8 @@
   'use strict';
   const C = window.AdopcionCalc, STR = window.STR, EN = window.EJEMPLO_EN || { areas: {}, equipos: {}, procesos: {} };
   const $ = id => document.getElementById(id);
-  /* URL del artículo: es la del borrador con fecha 13-nov-2026. Cámbiala aquí (y en index.html) si se publica otro día. */
-  const ARTICLE_URL = 'https://javierforero.co/2026/11/13/medir-adopcion-ia-kpis/';
+  /* URL pública del artículo (publicado el 14-nov-2026). Si cambia, cámbiala aquí y en index.html. */
+  const ARTICLE_URL = 'https://javierforero.co/2026/11/14/medir-adopcion-ia-kpis/';
   const GA_OFF = 'ga-disable-G-MQ3K8EVKV0';
   const TABS = ['resumen', 'area', 'proceso', 'alertas', 'decidir', 'datos', 'metodo'];
   const KEYS = C.FILE_KEYS, MIN = C.DEFAULTS.minGrupo;

@@ -7,7 +7,7 @@
 [![Sin dependencias](https://img.shields.io/badge/JavaScript-sin%20dependencias-0048ff)](#archivos)
 [![Bilingüe](https://img.shields.io/badge/ES%20%C2%B7%20EN-biling%C3%BCe-7c4dff)](https://dashboards.javierforero.co/adopcion-ia/?lang=en)
 
-La pregunta que responde: **¿tu empresa tiene IA, la usa, la integró en sus procesos y obtiene resultados?** Son cuatro hechos distintos y ninguno se deduce del anterior. Acompaña el artículo «Medir la adopción de IA: no es un porcentaje, son cuatro preguntas» (javierforero.co).
+La pregunta que responde: **¿tu empresa tiene IA, la usa, la integró en sus procesos y obtiene resultados?** Son cuatro hechos distintos y ninguno se deduce del anterior. Acompaña el artículo [«Medir la adopción de IA: no es un porcentaje, son cuatro preguntas»](https://javierforero.co/2026/11/14/medir-adopcion-ia-kpis/).
 
 > **Caso ilustrativo con datos hipotéticos.** Aurora (Northgate Supply en inglés) es una distribuidora que no existe. Sus cifras son las del artículo. Marco y tablero de elaboración propia: no es un estándar ni está validado comparativamente.
 

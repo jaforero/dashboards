@@ -59,9 +59,9 @@ check('600 empleados', D.personas.length, 600);
 check('Concentración = 58 % (30 personas más activas de 300)', [+(R.concentracion.value * 100).toFixed(9), R.concentracion.top, R.concentracion.base].join(','), '58,30,300');
 check('Servicios no autorizados con tráfico en el último mes = 9', R.fuera.trafico[R.fuera.trafico.length - 1].servicios, 9);
 check('Un área con activación alta y hábito bajo (Finanzas)', (() => { const a = R.areas.find(x => x.area === 'Finanzas'); return a.activacion.value > R.ind.activacion.value && a.habito.value < R.ind.habito.value; })(), true);
-check('Un área con pocos usuarios muy intensivos (Analítica)', (() => { const a = R.areas.find(x => x.area === 'Analítica'); return a.habito.den <= 15 && a.habito.value === 1; })(), true);
+check('Un área con pocos usuarios muy intensivos (Analítica)', (() => { const a = R.areas.find(x => x.area === 'Analítica'); return a.habito.den <= 15 && a.habito.value >= 0.7 && a.habito.value > 2 * R.ind.habito.value; })(), true);
 check('Las áreas suman el total en cada indicador', ['acceso', 'activacion', 'habito'].map(k => R.areas.reduce((s, a) => s + a[k].num, 0)).join(','), '300,240,66');
-check('Lecturas: las cinco coinciden con algún dato del caso', C.lecturas(R).map(l => +l.match).join(''), '11111');
+check('Lecturas: coinciden cuatro de cinco; «mucho acceso, poca activación» no (80 % probó la herramienta)', C.lecturas(R).map(l => +l.match).join(''), '01111');
 
 console.log('\nReglas');
 { const d = clone(D); delete d.unidades; const r = C.compute(d, { corte: CORTE }), p = C.indProceso(r);
