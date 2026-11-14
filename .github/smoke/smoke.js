@@ -54,6 +54,7 @@ const PAGES = [
   { id: 'ia-compute', path: '/ia-compute/' },
   { id: 'tasas', path: '/tasas-cambio/' },
   { id: 'poblacion', path: '/poblacion-latam/' },
+  { id: 'adopcion-ia', path: '/adopcion-ia/' },
   { id: 'redir-pulso', path: '/pulso-financiero/', redirect: '/claude/pulso-financiero/' },
   { id: 'redir-sla', path: '/sla-operaciones/', redirect: '/claude/sla-operaciones/' },
 ].filter(p => !ONLY || ONLY.includes(p.id));

@@ -1,0 +1,13 @@
+mes,tipo,servicios_no_autorizados,eventos
+2026-05-01,trafico_red,5,1840
+2026-05-01,gasto,1,2
+2026-06-01,trafico_red,6,2210
+2026-06-01,gasto,1,3
+2026-07-01,trafico_red,6,2475
+2026-07-01,gasto,2,4
+2026-08-01,trafico_red,7,2930
+2026-08-01,gasto,2,5
+2026-09-01,trafico_red,8,3310
+2026-09-01,gasto,3,7
+2026-10-01,trafico_red,9,3620
+2026-10-01,gasto,3,8

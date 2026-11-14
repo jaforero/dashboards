@@ -1,0 +1,601 @@
+id_persona,area,elegible,tiene_acceso
+p-d4bb01,Operaciones,1,0
+p-639705,Operaciones,0,0
+p-580aeb,Operaciones,1,1
+p-2c3b4e,Operaciones,1,0
+p-a27085,Atención al cliente,1,1
+p-1e7db8,Finanzas,1,0
+p-994a93,Atención al cliente,1,1
+p-eec8d8,Atención al cliente,1,0
+p-95b8b4,Comercial,1,1
+p-8df48a,Comercial,1,1
+p-be7659,Finanzas,1,1
+p-d86bd0,Operaciones,0,0
+p-b4c05e,Atención al cliente,1,0
+p-57bb38,Gestión humana,1,1
+p-dfa206,Operaciones,1,1
+p-4c0473,Analítica,1,1
+p-962692,Operaciones,0,0
+p-e225a0,Analítica,1,0
+p-b8faaf,Atención al cliente,1,0
+p-5c4724,Atención al cliente,1,1
+p-55a2e7,Gestión humana,1,0
+p-43e9a9,Comercial,1,1
+p-70d932,Operaciones,0,0
+p-35bc39,Operaciones,1,0
+p-0d39c8,Comercial,1,1
+p-a6e54d,Comercial,0,0
+p-47628e,Gestión humana,1,1
+p-2641da,Atención al cliente,0,0
+p-f506b3,Finanzas,1,0
+p-4990b4,Comercial,0,0
+p-57c253,Operaciones,0,0
+p-351489,Operaciones,1,0
+p-2ac726,Operaciones,1,1
+p-fe481d,Gestión humana,0,0
+p-06d6d6,Gestión humana,0,0
+p-588337,Atención al cliente,1,1
+p-ef8ba9,Comercial,1,1
+p-853cdb,Comercial,1,1
+p-39edbf,Comercial,1,1
+p-26e101,Atención al cliente,1,1
+p-bc20f8,Comercial,1,0
+p-b305a3,Operaciones,0,0
+p-fc3698,Operaciones,0,0
+p-e6acdb,Analítica,1,0
+p-c9206c,Finanzas,0,0
+p-dddf83,Comercial,1,1
+p-aa54a0,Atención al cliente,1,1
+p-226c25,Analítica,1,1
+p-d8e78f,Finanzas,0,0
+p-9248fa,Operaciones,1,0
+p-b71f5a,Gestión humana,0,0
+p-f1b562,Atención al cliente,1,0
+p-3ac5e9,Operaciones,0,0
+p-d5a324,Comercial,1,1
+p-cf255d,Comercial,0,0
+p-4c6930,Atención al cliente,1,0
+p-b2ff72,Operaciones,1,0
+p-8964b4,Finanzas,1,1
+p-2d7fcc,Comercial,1,1
+p-b7cc40,Finanzas,1,0
+p-175ef8,Comercial,1,0
+p-22c8fb,Operaciones,0,0
+p-df640d,Atención al cliente,1,1
+p-2cc795,Operaciones,1,0
+p-7cf061,Operaciones,1,0
+p-95ad6f,Finanzas,1,0
+p-0e64e5,Analítica,1,1
+p-20e20b,Gestión humana,1,1
+p-e19f29,Comercial,1,1
+p-a6277b,Atención al cliente,1,1
+p-b8aa76,Finanzas,1,1
+p-2a5f93,Finanzas,1,1
+p-c0606a,Atención al cliente,1,0
+p-452c79,Atención al cliente,1,1
+p-2a43a1,Gestión humana,1,1
+p-297ddc,Comercial,1,1
+p-2f8c3a,Operaciones,1,0
+p-0b34b8,Gestión humana,1,1
+p-042fec,Comercial,1,1
+p-176df1,Comercial,1,1
+p-f41862,Operaciones,0,0
+p-474b70,Gestión humana,1,1
+p-aa389e,Comercial,1,1
+p-cedbd4,Operaciones,1,1
+p-39d93f,Operaciones,1,1
+p-79ff57,Operaciones,1,0
+p-5fe43a,Operaciones,1,0
+p-5af4a8,Analítica,1,0
+p-3fb085,Operaciones,1,1
+p-90ab5e,Operaciones,1,1
+p-4f0e83,Operaciones,1,1
+p-b64ecf,Operaciones,0,0
+p-4b4cfb,Gestión humana,1,1
+p-2ec3e3,Comercial,1,1
+p-22a715,Comercial,1,1
+p-630023,Operaciones,1,0
+p-fe0250,Analítica,0,0
+p-cc01aa,Comercial,1,0
+p-cb3f42,Comercial,1,1
+p-757c9b,Atención al cliente,1,0
+p-a0e307,Finanzas,1,1
+p-f55595,Analítica,1,1
+p-bd50f1,Comercial,1,0
+p-89c2de,Analítica,1,0
+p-04689b,Atención al cliente,1,1
+p-76b70f,Comercial,1,1
+p-0806fc,Finanzas,1,1
+p-34a717,Operaciones,1,1
+p-5ae556,Operaciones,0,0
+p-0fa91c,Operaciones,1,0
+p-9994b8,Comercial,1,1
+p-3d3b48,Operaciones,0,0
+p-70dec5,Comercial,0,0
+p-82a623,Atención al cliente,1,0
+p-e6cd1e,Operaciones,1,1
+p-faf6e6,Atención al cliente,1,0
+p-300a6a,Operaciones,1,1
+p-8df72c,Comercial,1,1
+p-9d6336,Operaciones,1,0
+p-77dde8,Atención al cliente,1,0
+p-a6bc8c,Comercial,1,1
+p-888f4f,Comercial,1,1
+p-b470d6,Gestión humana,0,0
+p-8c418e,Finanzas,1,1
+p-f0a7f2,Comercial,1,1
+p-ab5f59,Operaciones,1,1
+p-449364,Comercial,1,0
+p-a39744,Analítica,0,0
+p-7c8bb8,Comercial,1,0
+p-59cfa1,Atención al cliente,1,0
+p-5322b6,Operaciones,1,1
+p-b6a369,Gestión humana,1,1
+p-04a9a6,Operaciones,0,0
+p-a38e1c,Gestión humana,1,0
+p-9c42ff,Atención al cliente,1,1
+p-d1769f,Operaciones,0,0
+p-82ffcf,Operaciones,1,0
+p-3e3c59,Gestión humana,0,0
+p-e6477c,Comercial,1,0
+p-c0984f,Operaciones,1,1
+p-413d52,Finanzas,1,0
+p-1e3760,Atención al cliente,1,1
+p-d20813,Comercial,1,1
+p-178c14,Finanzas,1,1
+p-78699c,Finanzas,1,1
+p-819176,Gestión humana,1,1
+p-5a764e,Analítica,1,0
+p-8bb612,Finanzas,1,1
+p-c681c9,Gestión humana,0,0
+p-9658f0,Comercial,1,1
+p-769c91,Analítica,1,0
+p-0066c4,Finanzas,1,0
+p-9cb2f9,Analítica,0,0
+p-28c167,Analítica,1,0
+p-0a9857,Finanzas,1,1
+p-8bbdc0,Operaciones,1,0
+p-dce7fa,Operaciones,1,1
+p-b6a1e8,Comercial,1,1
+p-c493f8,Atención al cliente,1,0
+p-4972dc,Comercial,1,1
+p-a77c6d,Operaciones,1,0
+p-393901,Atención al cliente,1,1
+p-76b21a,Finanzas,1,1
+p-c74201,Comercial,1,1
+p-2ce185,Operaciones,1,0
+p-044442,Comercial,0,0
+p-2a862b,Comercial,1,0
+p-8733c8,Operaciones,1,0
+p-0550d4,Comercial,1,0
+p-50bd53,Operaciones,0,0
+p-60c6e0,Comercial,0,0
+p-6c3d15,Comercial,1,0
+p-b90177,Operaciones,1,0
+p-a76db2,Operaciones,1,0
+p-d15177,Atención al cliente,1,1
+p-239a63,Comercial,1,1
+p-7d7137,Operaciones,0,0
+p-54e567,Comercial,1,1
+p-cf882d,Atención al cliente,1,0
+p-b7fb3b,Operaciones,0,0
+p-d10465,Operaciones,0,0
+p-1031e3,Finanzas,1,0
+p-42b54a,Gestión humana,1,1
+p-2e6bf1,Comercial,0,0
+p-cac48d,Gestión humana,1,1
+p-41d330,Finanzas,1,1
+p-2e0797,Operaciones,1,1
+p-60fffa,Atención al cliente,1,1
+p-76055a,Finanzas,1,1
+p-150415,Comercial,1,1
+p-d3d875,Analítica,1,1
+p-56b642,Finanzas,1,1
+p-565105,Comercial,0,0
+p-e3640b,Operaciones,0,0
+p-a70705,Operaciones,1,0
+p-a906fb,Operaciones,1,0
+p-bae0ca,Operaciones,0,0
+p-a7c0b9,Gestión humana,1,1
+p-b716d0,Finanzas,1,1
+p-652c81,Operaciones,1,0
+p-a7e3b3,Operaciones,1,1
+p-ed1ba2,Atención al cliente,1,1
+p-92dbe1,Comercial,0,0
+p-f44a7b,Finanzas,1,1
+p-b8a5f1,Operaciones,1,1
+p-8bc74e,Operaciones,1,1
+p-5c93bf,Operaciones,1,1
+p-310d2a,Operaciones,1,1
+p-5350ed,Operaciones,1,1
+p-b25ddf,Atención al cliente,1,0
+p-cbc22a,Comercial,0,0
+p-3ca41a,Operaciones,1,1
+p-267cf4,Finanzas,1,1
+p-839803,Comercial,1,1
+p-a58ea0,Operaciones,1,1
+p-ee1e4e,Operaciones,0,0
+p-6fa782,Operaciones,1,1
+p-a63738,Atención al cliente,1,0
+p-5d1ec3,Gestión humana,1,1
+p-ee4d39,Comercial,1,1
+p-62c8e3,Finanzas,1,0
+p-b7e8a4,Atención al cliente,1,1
+p-348677,Operaciones,0,0
+p-2642bd,Comercial,1,0
+p-4a767f,Gestión humana,1,0
+p-887dde,Operaciones,0,0
+p-93c6a2,Comercial,1,1
+p-d76a4e,Atención al cliente,1,1
+p-28304c,Comercial,1,1
+p-9745fa,Operaciones,1,0
+p-a73ccd,Operaciones,1,0
+p-9d3487,Atención al cliente,1,0
+p-f0b33d,Atención al cliente,1,0
+p-3c8511,Atención al cliente,1,1
+p-c96a9a,Finanzas,1,0
+p-427ef8,Atención al cliente,1,1
+p-7d1105,Operaciones,0,0
+p-90d81c,Comercial,1,0
+p-02db6e,Atención al cliente,1,1
+p-cb56af,Operaciones,1,0
+p-b4e402,Operaciones,1,1
+p-a9fa09,Operaciones,1,1
+p-ccd4c1,Comercial,1,1
+p-548dc2,Operaciones,1,1
+p-ee5068,Operaciones,1,1
+p-cbd2ef,Comercial,1,1
+p-9e5c3b,Atención al cliente,0,0
+p-4c70b2,Operaciones,1,0
+p-1fc034,Analítica,1,0
+p-4b2f32,Comercial,1,1
+p-afbc95,Gestión humana,1,1
+p-3e8e0d,Operaciones,0,0
+p-87bc76,Atención al cliente,1,1
+p-565b08,Atención al cliente,1,0
+p-d83454,Comercial,1,1
+p-d47a2b,Comercial,1,0
+p-df8560,Finanzas,1,1
+p-7fcb74,Operaciones,1,0
+p-5f3ac8,Analítica,0,0
+p-68b9fa,Finanzas,1,1
+p-690058,Gestión humana,0,0
+p-32909f,Operaciones,0,0
+p-afe79f,Gestión humana,1,1
+p-a237d6,Atención al cliente,0,0
+p-49d12b,Comercial,1,1
+p-072191,Finanzas,1,0
+p-1e604b,Analítica,1,1
+p-162139,Operaciones,1,1
+p-a2fe20,Finanzas,0,0
+p-a93816,Gestión humana,1,1
+p-1417c8,Atención al cliente,1,1
+p-440d55,Gestión humana,1,0
+p-bd603c,Atención al cliente,1,1
+p-43bbab,Analítica,0,0
+p-e72eb6,Comercial,1,1
+p-03a8b1,Operaciones,0,0
+p-2dd405,Finanzas,1,0
+p-6f96ae,Finanzas,1,0
+p-d00791,Atención al cliente,1,1
+p-b7a69b,Atención al cliente,1,1
+p-67d22d,Operaciones,0,0
+p-993df2,Operaciones,1,1
+p-4153c4,Atención al cliente,1,1
+p-c192f6,Operaciones,0,0
+p-f3d605,Comercial,1,1
+p-e192f3,Operaciones,1,1
+p-a3464f,Atención al cliente,1,1
+p-024406,Comercial,1,1
+p-d1bbb2,Operaciones,1,1
+p-bc4780,Operaciones,1,1
+p-e935f5,Comercial,1,1
+p-f0d9c6,Atención al cliente,1,1
+p-625ae1,Atención al cliente,1,0
+p-3f85c2,Comercial,0,0
+p-4a4dd6,Finanzas,1,1
+p-1cde46,Operaciones,1,1
+p-17b886,Atención al cliente,1,1
+p-bf3247,Gestión humana,1,0
+p-f6cf52,Gestión humana,1,1
+p-f8a295,Operaciones,1,1
+p-4b1109,Comercial,1,1
+p-50db18,Atención al cliente,0,0
+p-64456a,Operaciones,1,0
+p-3fc6b4,Operaciones,1,0
+p-f0e79f,Operaciones,1,1
+p-66bf37,Comercial,1,1
+p-ea838f,Finanzas,1,0
+p-884592,Operaciones,1,1
+p-e50426,Comercial,0,0
+p-76b53d,Atención al cliente,1,0
+p-fac56a,Atención al cliente,1,1
+p-2aff24,Atención al cliente,1,0
+p-2a809e,Operaciones,1,0
+p-26260b,Atención al cliente,1,1
+p-d42afb,Comercial,1,1
+p-57a9e1,Comercial,1,1
+p-7b1d7d,Comercial,1,0
+p-7b34bb,Analítica,0,0
+p-9f32e6,Atención al cliente,1,1
+p-267f46,Atención al cliente,1,1
+p-8ac447,Operaciones,1,1
+p-fb42e5,Atención al cliente,1,0
+p-585a9c,Operaciones,1,0
+p-0c19c2,Atención al cliente,1,1
+p-f55336,Analítica,1,1
+p-f71fef,Finanzas,0,0
+p-9ee4d5,Atención al cliente,1,1
+p-e067c3,Finanzas,1,1
+p-aa70dc,Analítica,0,0
+p-308d9f,Finanzas,0,0
+p-32681f,Finanzas,0,0
+p-b1bf8a,Operaciones,1,0
+p-2532d9,Operaciones,1,0
+p-0d67e4,Comercial,1,1
+p-20e09b,Comercial,1,0
+p-b60616,Atención al cliente,1,1
+p-ab47b2,Operaciones,0,0
+p-4cc155,Analítica,1,1
+p-f64a61,Comercial,1,1
+p-3d23af,Comercial,1,0
+p-c9345d,Atención al cliente,0,0
+p-aea2b6,Finanzas,0,0
+p-cc7117,Atención al cliente,1,1
+p-c06f76,Atención al cliente,0,0
+p-6648cf,Atención al cliente,1,1
+p-3fa23a,Atención al cliente,1,1
+p-fde5e3,Operaciones,1,1
+p-b6a8a3,Analítica,1,1
+p-dabceb,Finanzas,1,0
+p-3fa543,Finanzas,0,0
+p-3d5d3c,Comercial,1,0
+p-738887,Gestión humana,1,0
+p-cb0108,Operaciones,1,1
+p-56e29d,Operaciones,0,0
+p-a9585f,Analítica,1,1
+p-5cbc07,Comercial,1,0
+p-14aa9a,Comercial,1,1
+p-538828,Atención al cliente,1,1
+p-6986a4,Analítica,1,0
+p-582bae,Comercial,1,1
+p-437223,Operaciones,1,0
+p-f795bc,Operaciones,1,0
+p-644350,Operaciones,0,0
+p-e83bd3,Gestión humana,1,1
+p-bfe6f8,Operaciones,0,0
+p-410cc1,Finanzas,1,1
+p-454454,Atención al cliente,1,0
+p-e7fc70,Finanzas,0,0
+p-92b512,Atención al cliente,1,0
+p-1469d0,Operaciones,1,0
+p-25c49c,Operaciones,0,0
+p-1f2c31,Operaciones,0,0
+p-04ecd8,Atención al cliente,1,1
+p-add74a,Comercial,1,0
+p-c7be28,Gestión humana,1,0
+p-1d7853,Operaciones,1,0
+p-fdf716,Comercial,1,0
+p-02f703,Operaciones,1,0
+p-75778e,Comercial,1,1
+p-bc1277,Comercial,1,1
+p-68f110,Operaciones,0,0
+p-c316b3,Atención al cliente,1,1
+p-66ce3a,Operaciones,1,0
+p-86b9b1,Atención al cliente,1,1
+p-57f7b6,Atención al cliente,0,0
+p-c58aa9,Comercial,1,1
+p-c4bf00,Operaciones,1,0
+p-1ed06b,Atención al cliente,0,0
+p-b79a1d,Comercial,1,0
+p-bd0863,Comercial,1,0
+p-410d0d,Atención al cliente,1,1
+p-69ee07,Atención al cliente,1,1
+p-7d9219,Finanzas,1,1
+p-225894,Atención al cliente,1,0
+p-32cbd8,Comercial,1,1
+p-e948cf,Atención al cliente,1,1
+p-9f8142,Atención al cliente,1,1
+p-9548e1,Comercial,1,0
+p-b04d37,Atención al cliente,1,0
+p-124730,Comercial,1,1
+p-3ecc44,Operaciones,0,0
+p-3156c4,Finanzas,1,1
+p-bb12de,Analítica,1,0
+p-640bd3,Comercial,0,0
+p-19a44b,Comercial,1,1
+p-5b9987,Gestión humana,1,1
+p-70de27,Comercial,1,1
+p-37e9ef,Analítica,1,0
+p-f242a1,Gestión humana,1,0
+p-261b02,Atención al cliente,1,1
+p-b51ced,Atención al cliente,1,1
+p-5822c9,Operaciones,0,0
+p-9be04b,Gestión humana,1,1
+p-d2b170,Operaciones,1,1
+p-6567a5,Finanzas,1,1
+p-1f4d06,Analítica,1,1
+p-151c9a,Operaciones,0,0
+p-46a700,Atención al cliente,1,1
+p-d8814d,Comercial,1,1
+p-79ff9e,Comercial,1,1
+p-2d260a,Operaciones,1,1
+p-b9658a,Comercial,1,0
+p-260381,Comercial,1,0
+p-da57bc,Comercial,0,0
+p-9f5b04,Finanzas,1,1
+p-4ee0c1,Comercial,1,1
+p-a9558a,Comercial,1,0
+p-ebdd6c,Atención al cliente,1,1
+p-5e04cf,Comercial,1,0
+p-d943c4,Atención al cliente,1,0
+p-5bf7cd,Finanzas,1,1
+p-97bba7,Finanzas,1,1
+p-ba937e,Gestión humana,0,0
+p-2b7d9f,Comercial,1,1
+p-0d9f20,Comercial,1,1
+p-8e4957,Operaciones,1,1
+p-960cbc,Atención al cliente,1,1
+p-1c850d,Operaciones,0,0
+p-d93753,Comercial,1,1
+p-1b2eab,Operaciones,1,1
+p-a78d35,Operaciones,1,1
+p-ab0845,Atención al cliente,1,0
+p-46985d,Operaciones,1,1
+p-a24bd5,Atención al cliente,1,1
+p-2de094,Finanzas,1,0
+p-8c6659,Operaciones,1,1
+p-64356a,Operaciones,0,0
+p-bec73c,Comercial,1,0
+p-3501c5,Finanzas,1,1
+p-944969,Operaciones,0,0
+p-abd7fe,Comercial,1,1
+p-d3d318,Operaciones,1,0
+p-12b3b1,Operaciones,0,0
+p-b7b431,Atención al cliente,0,0
+p-af20e7,Comercial,1,1
+p-09a631,Gestión humana,0,0
+p-d9af26,Operaciones,1,1
+p-6ff839,Comercial,1,1
+p-a632b0,Finanzas,1,1
+p-5c3121,Finanzas,1,1
+p-47abec,Comercial,1,1
+p-a4f302,Analítica,0,0
+p-9dfb6e,Gestión humana,1,1
+p-1508d6,Gestión humana,1,1
+p-9b6ab1,Operaciones,1,0
+p-8c0c59,Operaciones,0,0
+p-0a0694,Operaciones,1,0
+p-1c0e64,Analítica,1,1
+p-dae8bf,Finanzas,1,1
+p-93b5ad,Operaciones,1,0
+p-9d03ab,Comercial,1,1
+p-15e93a,Comercial,1,1
+p-1b8e6f,Gestión humana,1,1
+p-d0f05a,Comercial,1,0
+p-036a87,Analítica,1,0
+p-db59d2,Comercial,0,0
+p-6e6c88,Operaciones,0,0
+p-0fc137,Comercial,1,1
+p-5a246d,Comercial,1,1
+p-edcbd7,Gestión humana,1,1
+p-0120f7,Operaciones,0,0
+p-9bf125,Operaciones,0,0
+p-51d5e5,Comercial,0,0
+p-37e1f5,Comercial,1,0
+p-81b565,Gestión humana,1,0
+p-e380d5,Comercial,1,0
+p-c7fca0,Analítica,0,0
+p-20b0e5,Operaciones,1,1
+p-a5ddb4,Operaciones,0,0
+p-3ec802,Comercial,1,1
+p-f1610b,Gestión humana,1,1
+p-bf3c92,Operaciones,1,1
+p-103f9b,Analítica,1,1
+p-2e9897,Operaciones,0,0
+p-78f866,Analítica,0,0
+p-bf0915,Atención al cliente,1,1
+p-1e5adb,Comercial,1,0
+p-9fb67e,Operaciones,1,0
+p-d6939e,Finanzas,1,1
+p-1f5375,Operaciones,0,0
+p-15c491,Comercial,1,1
+p-bcf189,Comercial,1,0
+p-9c6da7,Comercial,1,1
+p-f3cfeb,Operaciones,1,1
+p-d720a7,Operaciones,1,1
+p-5b5477,Comercial,1,1
+p-1d8b91,Atención al cliente,0,0
+p-143396,Operaciones,1,1
+p-72ec66,Gestión humana,1,0
+p-96ff6d,Atención al cliente,1,0
+p-2fe98a,Atención al cliente,1,1
+p-14e934,Operaciones,0,0
+p-65e144,Gestión humana,1,0
+p-c505a7,Comercial,0,0
+p-c83f08,Finanzas,0,0
+p-3a34b8,Atención al cliente,1,1
+p-70d499,Finanzas,1,0
+p-9a24bf,Finanzas,1,0
+p-8873e1,Comercial,1,0
+p-692aa7,Finanzas,1,1
+p-745406,Comercial,1,0
+p-813dfa,Operaciones,1,0
+p-967f0a,Analítica,1,1
+p-9da2e9,Operaciones,0,0
+p-7ac4cb,Comercial,1,0
+p-bed4a1,Atención al cliente,1,0
+p-ce214e,Comercial,1,1
+p-e91ce3,Operaciones,1,1
+p-0ac2c8,Operaciones,1,0
+p-5864ad,Atención al cliente,1,1
+p-66ff77,Comercial,1,0
+p-a11189,Finanzas,1,1
+p-123c6a,Atención al cliente,1,1
+p-d14f37,Comercial,1,0
+p-784855,Comercial,1,1
+p-9724c7,Operaciones,1,0
+p-e53e67,Atención al cliente,1,1
+p-2fafc2,Operaciones,1,0
+p-365de8,Finanzas,1,1
+p-c71175,Operaciones,0,0
+p-73a543,Atención al cliente,1,1
+p-9c121d,Analítica,1,0
+p-8458ef,Comercial,1,1
+p-c2b9f9,Finanzas,1,0
+p-c1dbfc,Finanzas,1,1
+p-2ac299,Comercial,1,1
+p-e4d335,Analítica,1,1
+p-2360e2,Atención al cliente,1,1
+p-4e50fa,Operaciones,1,1
+p-f9fd53,Comercial,0,0
+p-9ae89a,Operaciones,1,0
+p-ce4f34,Operaciones,1,0
+p-24aeb3,Atención al cliente,1,1
+p-fe43a9,Comercial,1,1
+p-2ab37e,Atención al cliente,1,1
+p-2e5b43,Comercial,1,0
+p-490138,Gestión humana,1,0
+p-c25c32,Operaciones,0,0
+p-9889b8,Comercial,1,1
+p-45d34b,Finanzas,1,1
+p-19d962,Operaciones,1,0
+p-b87f60,Analítica,1,0
+p-b73b80,Operaciones,1,1
+p-10334c,Operaciones,1,0
+p-99c9b8,Finanzas,1,0
+p-daf640,Operaciones,0,0
+p-c44f50,Comercial,1,1
+p-843329,Operaciones,1,1
+p-620df3,Operaciones,0,0
+p-6ad520,Operaciones,1,0
+p-781d60,Analítica,1,0
+p-e613ef,Gestión humana,1,0
+p-039f7e,Operaciones,1,0
+p-94830e,Operaciones,0,0
+p-9b162f,Comercial,1,0
+p-f3bffe,Comercial,1,1
+p-972b42,Finanzas,1,1
+p-462148,Gestión humana,1,0
+p-24642e,Atención al cliente,1,1
+p-8a4ab5,Atención al cliente,1,1
+p-ea1727,Comercial,1,1
+p-94c694,Atención al cliente,1,1
+p-faf492,Comercial,1,1
+p-666dd2,Atención al cliente,1,1
+p-02e8a1,Gestión humana,1,0
+p-466876,Operaciones,0,0
+p-39b37e,Comercial,0,0
+p-8190a9,Comercial,0,0
+p-41793e,Operaciones,1,1
+p-ea1e90,Atención al cliente,1,1
+p-48173c,Gestión humana,0,0
+p-9d2dc3,Comercial,1,1
+p-9c35d3,Operaciones,0,0
+p-e7496c,Atención al cliente,1,1
+p-393229,Comercial,1,1
+p-b7df71,Operaciones,1,0
+p-cf70b3,Operaciones,1,1
+p-b61770,Operaciones,1,0
+p-e10926,Finanzas,1,0
+p-0d0a33,Operaciones,1,0

@@ -1,0 +1,3 @@
+process_id,department,name,ai_applicable,ev_procedure,ev_logs,ev_deliverables,ev_owner
+PR-001,Sales,Sales quotes,1,1,1,0,1
+PR-002,Finance,Bank reconciliations,1,0,0,0,0
